@@ -7,7 +7,7 @@
 </template>
 
 <style lang="scss">
-#app {
+#portal {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
