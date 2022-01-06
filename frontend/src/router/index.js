@@ -6,10 +6,12 @@ import Tasks from '../views/Tasks.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    {path: '/home', component: Home, alias: '/'},
-    {path: '/finances', component: Finances, alias: '/finances'},
-    {path: '/tasks', component: Tasks, alias: '/tasks'}
+    {path: '/home', component: Home, title: 'Главная', alias: '/'},
+    {path: '/finances', component: Finances, title: 'Финансы', alias: '/finances'},
+    {path: '/tasks', component: Tasks, title: 'Задачи', alias: '/tasks'}
   ],
-  linkActiveClass: 'active',
-  linkExactActiveClass: 'active'
+  linkActiveClass: 'is-active',
+  linkExactActiveClass: 'is-active'
 })
+
+export default router

@@ -1,22 +1,23 @@
 <template>
-  <el-row class="tac">
-    <el-col :span="24">
-      <el-menu default-active="2" class="el-menu-vertical">
-        <el-menu-item index="1">
-          <el-icon><icon-menu /></el-icon>
-          <span>Главная</span>
-        </el-menu-item>
-        <el-menu-item index="2">
-          <el-icon><document /></el-icon>
-          <span>Финансы</span>
-        </el-menu-item>
-        <el-menu-item index="3">
-          <el-icon><setting /></el-icon>
-          <span>Задачи</span>
-        </el-menu-item>
-      </el-menu>
-    </el-col>
-  </el-row>
+  <el-aside width="200px">
+    <div class="block">
+      <el-avatar :size="50"></el-avatar>
+    </div>
+    <el-menu class="el-menu-vertical" :router="true">
+      <el-menu-item index="/1">
+        <el-icon><icon-menu /></el-icon>
+        <span>Главная</span>
+      </el-menu-item>
+      <el-menu-item index="/2">
+        <el-icon><document /></el-icon>
+        <span>Финансы</span>
+      </el-menu-item>
+      <el-menu-item index="/3">
+        <el-icon><setting /></el-icon>
+        <span>Задачи</span>
+      </el-menu-item>
+    </el-menu>
+  </el-aside>
 </template>
 
 <script setup>
@@ -28,8 +29,12 @@
 </script>
 
 <style scoped>
+  .el-aside {
+    height: 100%;
+    overflow: hidden;
+    background-color: rgb(238, 241, 246);
+  }
   .el-menu-vertical:not(.el-menu--collapse) {
-    width: 200px;
     min-height: 100%;
   }
   .el-menu-item {

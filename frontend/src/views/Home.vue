@@ -1,5 +1,4 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-  </div>
+  <el-header>Header</el-header>
+  <el-main>Main</el-main>
 </template>
