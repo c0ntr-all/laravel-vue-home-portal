@@ -1,5 +1,10 @@
 <template>
-  <the-sidebar></the-sidebar>
+  <div class="area">
+    <div class="panes">
+      <the-sidebar></the-sidebar>
+      <div class="content"></div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -12,10 +17,26 @@ export default {
 
 <style lang="scss">
   #portal {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
+    display: flex;
+    flex-direction: column;
+  }
+  .area {
+    flex: auto 1 1;
+    height: 100%;
+    overflow: hidden;
+  }
+  .panes {
+    flex: auto 1 1;
+    height: 100%;
+    display: flex;
+    overflow: hidden;
+  }
+  .content {
+    flex: auto 1 1;
+    width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
   }
 </style>
