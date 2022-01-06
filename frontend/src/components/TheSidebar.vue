@@ -30,7 +30,7 @@
 <style scoped>
   .el-menu-vertical:not(.el-menu--collapse) {
     width: 200px;
-    min-height: 400px;
+    min-height: 100%;
   }
   .el-menu-item {
     --el-menu-item-height: 44px;

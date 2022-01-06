@@ -19,6 +19,7 @@ export default {
   #portal {
     display: flex;
     flex-direction: column;
+    height: 100%;
   }
   .area {
     flex: auto 1 1;
