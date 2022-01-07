@@ -48,6 +48,10 @@
       font-weight: 300;
     }
   }
+  .el-menu-item {
+    --el-menu-item-height: 44px;
+    --el-menu-item-font-size: 16px;
+  }
   .el-footer {
     display: flex;
     align-items: center;
