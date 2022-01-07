@@ -4,18 +4,12 @@
       <el-avatar :size="50"></el-avatar>
     </div>
     <el-menu class="el-menu-vertical" :router="true">
-      <el-menu-item index="/1">
-        <el-icon><icon-menu /></el-icon>
-        <span>Главная</span>
-      </el-menu-item>
-      <el-menu-item index="/2">
-        <el-icon><document /></el-icon>
-        <span>Финансы</span>
-      </el-menu-item>
-      <el-menu-item index="/3">
-        <el-icon><setting /></el-icon>
-        <span>Задачи</span>
-      </el-menu-item>
+      <template v-for="item in $router.options.routes">
+        <el-menu-item index="item.path">
+          <el-icon><icon-menu /></el-icon>
+          <span>{{ item.title }}</span>
+        </el-menu-item>
+      </template>
     </el-menu>
   </el-aside>
 </template>
