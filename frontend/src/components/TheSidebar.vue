@@ -3,7 +3,7 @@
     <div class="avatar">
       <el-avatar :size="50"></el-avatar>
     </div>
-    <el-menu class="el-menu-vertical" :router="true">
+    <el-menu class="el-menu-vertical" :router="true" :default-active="$route.path">
       <template v-for="item in $router.options.routes">
         <el-menu-item :index="item.path">
           <el-icon><icon-menu /></el-icon>
