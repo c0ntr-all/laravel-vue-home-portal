@@ -1,7 +1,28 @@
 <template>
   <el-aside width="200px">
     <div class="avatar">
-      <el-avatar :size="50"></el-avatar>
+      <el-popover placement="bottom" :width="200" trigger="click">
+        <template #reference>
+          <el-button>
+            <span>Профиль</span>
+            <el-icon class="el-icon--right">
+              <arrow-down />
+            </el-icon>
+          </el-button>
+        </template>
+        <div class="popover-content">
+          <el-menu class="el-menu-vertical" :router="true">
+            <el-menu-item :index="1">
+              <el-icon><icon-menu /></el-icon>
+              <span>Настройки</span>
+            </el-menu-item>
+            <el-menu-item :index="2">
+              <el-icon><icon-menu /></el-icon>
+              <span>Выйти</span>
+            </el-menu-item>
+          </el-menu>
+        </div>
+      </el-popover>
     </div>
     <el-menu class="el-menu-vertical" :router="true" :default-active="$route.path">
       <template v-for="item in $router.options.routes">
@@ -19,6 +40,7 @@
     Document,
     Menu as IconMenu,
     Setting,
+    ArrowDown
   } from '@element-plus/icons-vue'
 </script>
 
