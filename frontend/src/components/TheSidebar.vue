@@ -1,11 +1,11 @@
 <template>
   <el-aside width="200px">
-    <div class="block">
+    <div class="avatar">
       <el-avatar :size="50"></el-avatar>
     </div>
     <el-menu class="el-menu-vertical" :router="true">
       <template v-for="item in $router.options.routes">
-        <el-menu-item index="item.path">
+        <el-menu-item :index="item.path">
           <el-icon><icon-menu /></el-icon>
           <span>{{ item.title }}</span>
         </el-menu-item>
@@ -27,6 +27,11 @@
     height: 100%;
     overflow: hidden;
     background-color: rgb(238, 241, 246);
+  }
+  .avatar {
+    display: flex;
+    justify-content: flex-start;
+    padding: 15px 20px;
   }
   .el-menu-vertical:not(.el-menu--collapse) {
     min-height: 100%;

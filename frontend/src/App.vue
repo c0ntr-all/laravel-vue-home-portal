@@ -39,4 +39,17 @@
       flex-direction: column;
     }
   }
+  .el-header {
+    display: flex;
+    align-items: center;
+
+    .page-header {
+      font-size: 28px;
+      font-weight: 300;
+    }
+  }
+  .el-footer {
+    display: flex;
+    align-items: center;
+  }
 </style>
