@@ -1,4 +1,56 @@
 <template>
   <el-header><h2 class="page-header">Финансы</h2></el-header>
-  <el-main>Content</el-main>
+  <el-main>
+    <app-preloader v-if="loading"></app-preloader>
+    <app-finances-list
+      v-else
+      :data="data"
+      @load="loadData"
+    >
+    </app-finances-list>
+  </el-main>
 </template>
+
+<script>
+  import AppFinancesList from "../components/finances/AppFinancesList"
+  import AppPreloader from '../components/default/AppPreloader'
+  import axios from 'axios'
+
+  export default {
+    data() {
+      return {
+        data: [],
+        loading: false
+      }
+    },
+    methods: {
+      loadData() {
+        this.loading = true
+
+        setTimeout(async() => {
+          try {
+            const {data} = await axios.get('https://vue-temp-portal-default-rtdb.europe-west1.firebasedatabase.app/.json')
+            if(!data) {
+              throw new Error('Нет данных!')
+            }
+            this.data = Object.keys(data).map(key => {
+              return {
+                id: key,
+                ...data[key]
+              }
+            })
+            this.loading = false
+          }catch(e) {
+            this.alert = {
+              type: 'danger',
+              title: 'Ошибка',
+              text: e.message
+            }
+            this.loading = false
+          }
+        })
+      }
+    },
+    components: {AppFinancesList,AppPreloader}
+  }
+</script>
