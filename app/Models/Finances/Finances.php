@@ -4,7 +4,6 @@ namespace App\Models\Finances;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Finances\FinancesShop;
 
 class Finances extends Model
 {
