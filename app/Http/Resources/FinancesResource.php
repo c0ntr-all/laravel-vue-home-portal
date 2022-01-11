@@ -15,14 +15,14 @@ class FinancesResource extends JsonResource
             'summ' => $this->summ,
             'comment' => $this->comment,
             'createdAt' => $this->created_at,
-            'updatedAt' => $this->updated_at,
+            'doneAt' => $this->done_at,
             'shop' => [
                 'image' => $this->shop->image,
                 'value' => $this->shop->value,
             ],
             'author' => [
-                'username' => $this->user->username,
-                'image' => $this->user->image,
+                'username' => $this->user->name,
+                'image' => $this->user->email,
             ]
         ];
     }
