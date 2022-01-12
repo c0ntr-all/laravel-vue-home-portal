@@ -29,14 +29,14 @@
 
         setTimeout(async() => {
           try {
-            const {data} = await axios.get('https://vue-temp-portal-default-rtdb.europe-west1.firebasedatabase.app/.json')
+            const {data} = await axios.get('api/finances')
             if(!data) {
               throw new Error('Нет данных!')
             }
-            this.data = Object.keys(data).map(key => {
+            this.data = Object.keys(data.finances).map(key => {
               return {
                 id: key,
-                ...data[key]
+                ...data.finances[key]
               }
             })
             this.loading = false
@@ -51,6 +51,9 @@
         })
       }
     },
-    components: {AppFinancesList,AppPreloader}
+    components: {AppFinancesList,AppPreloader},
+    mounted() {
+      this.loadData()
+    }
   }
 </script>
