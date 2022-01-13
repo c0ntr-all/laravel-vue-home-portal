@@ -1,11 +1,11 @@
 <template>
   <el-header><h2 class="page-header">Финансы</h2></el-header>
   <el-main>
-    <app-preloader v-if="loading"></app-preloader>
     <app-finances-list
-      v-else
       :data="data"
       @load="loadData"
+      v-loading="loading"
+      style="width: 100%; height: 100%"
     >
     </app-finances-list>
   </el-main>
@@ -13,7 +13,6 @@
 
 <script>
   import AppFinancesList from "../components/finances/AppFinancesList"
-  import AppPreloader from '../components/default/AppPreloader'
   import axios from 'axios'
 
   export default {
@@ -51,7 +50,7 @@
         })
       }
     },
-    components: {AppFinancesList,AppPreloader},
+    components: {AppFinancesList},
     mounted() {
       this.loadData()
     }

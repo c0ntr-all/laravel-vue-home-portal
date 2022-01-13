@@ -1,5 +1,5 @@
 <template>
-  <div v-if="data.length !== 0">
+  <div>
     <el-space direction="vertical">
       <el-card v-for="item in data"  class="box-card" shadow="hover">
         <div class="box-card__image">
@@ -12,10 +12,6 @@
         </div>
       </el-card>
     </el-space>
-  </div>
-  <div v-else class="card error">
-    <h4>Данных нет</h4>
-    <button @click="$emit('load')">Загрузить</button>
   </div>
 </template>
 
