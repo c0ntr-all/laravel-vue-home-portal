@@ -1,9 +1,10 @@
 <template>
   <el-header><h2 class="page-header">Задачи</h2></el-header>
   <el-main>
-    <app-tasks-list>
-
-    </app-tasks-list>
+    <el-row class="mb-4">
+      <el-button type="primary">Добавить карточку</el-button>
+    </el-row>
+    <app-tasks-list />
   </el-main>
 </template>
 <script>
@@ -17,7 +18,7 @@
     },
     methods: {
       async createList() {
-        const response = await fetch('api/tasks', {
+        const response = await fetch('api/tasks/create', {
           methods: 'POST',
           headers: {
             'Content-Type': 'application/json'

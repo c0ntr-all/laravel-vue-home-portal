@@ -13,7 +13,7 @@
       }
     },
     methods: {
-      addTask() {
+      async addTask() {
         const response = await fetch('api/tasks/create', {
           method: 'POST',
           headers: {

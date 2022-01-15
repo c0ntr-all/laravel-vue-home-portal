@@ -9,7 +9,7 @@
     <div class="text item" v-for="item in items">
       {{ item }}
     </div>
-    <el-form @submit.prevent="addItem">
+    <el-form @submit.prevent="createitem">
       <el-input placeholder="Введите заголовок!" v-model="title" />
     </el-form>
   </el-card>
@@ -24,7 +24,7 @@
       }
     },
     methods: {
-      async addItem() {
+      async createItem() {
         const response = await fetch('api/tasks/lists/create', {
           method: 'POST',
           headers: {
