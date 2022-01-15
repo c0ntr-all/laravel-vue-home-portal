@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Finances\FinancesController;
+use App\Http\Controllers\Tasks\TaskListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,4 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('finances')->group(function() {
     Route::get('/', [FinancesController::class, 'index']);
     Route::get('{finance}', [FinancesController::class, 'show']);
+});
+
+Route::prefix('tasks')->group(function() {
+    Route::get('/', [TaskListController::class, 'index']);
+    Route::get('{task}', [TaskListController::class, 'show']);
 });
