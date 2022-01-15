@@ -6,15 +6,29 @@
         <el-button class="button" type="text">Operation button</el-button>
       </div>
     </template>
-    <el-form>
-      <el-input placeholder="Введите заголовок!" />
+    <div class="text item" v-for="item in items">
+      {{ item }}
+    </div>
+    <el-form @submit.prevent="addItem">
+      <el-input placeholder="Введите заголовок!" v-model="title" />
     </el-form>
   </el-card>
 </template>
 
 <script>
   export default {
-
+    data() {
+      return {
+        items: [],
+        title: ''
+      }
+    },
+    methods: {
+      addItem() {
+        this.items.push(this.title)
+        this.title = ''
+      },
+    }
   }
 </script>
 

@@ -8,7 +8,7 @@
   import AppTask from "./AppTask";
   export default {
     data() {
-      items: []
+      tasks: []
     },
     components: {AppTask}
   }
