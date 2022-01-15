@@ -1,13 +1,16 @@
 <template>
   <el-space wrap>
-    <app-tasks-item v-for="i in 7"></app-tasks-item>
+    <app-task v-for="i in 7"></app-task>
   </el-space>
 </template>
 
 <script>
-  import AppTasksItem from "./AppTasksItem";
+  import AppTask from "./AppTask";
   export default {
-    components: {AppTasksItem}
+    data() {
+      items: []
+    },
+    components: {AppTask}
   }
 </script>
 

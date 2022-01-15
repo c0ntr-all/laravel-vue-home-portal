@@ -6,12 +6,15 @@
         <el-button class="button" type="text">Operation button</el-button>
       </div>
     </template>
-    <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
+    <el-form>
+      <el-input placeholder="Введите заголовок!" />
+    </el-form>
   </el-card>
 </template>
 
 <script>
   export default {
+
   }
 </script>
 
