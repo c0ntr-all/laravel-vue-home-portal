@@ -6,7 +6,7 @@
         <router-view/>
       </el-container>
     </el-container>
-    <el-footer>Footer</el-footer>
+    <el-footer>Home Portal v.0.0.4</el-footer>
   </div>
 </template>
 
@@ -54,6 +54,9 @@
   }
   .el-footer {
     display: flex;
+    justify-content: center;
     align-items: center;
+    background-color: #b3c0d1;
+    color: var(--el-text-color-primary);
   }
 </style>
