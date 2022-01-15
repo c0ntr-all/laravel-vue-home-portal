@@ -14,8 +14,12 @@ class CreateTaskItemsTable extends Migration
     public function up()
     {
         Schema::create('task_items', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
+            $table->integer('list_id')->unsigned();
+            $table->string('title');
+            $table->text('content')->nullable()->default(NULL);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
