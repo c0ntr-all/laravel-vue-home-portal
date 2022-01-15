@@ -8,7 +8,29 @@
   import AppTask from "./AppTask";
   export default {
     data() {
-      tasks: []
+      return {
+        tasks: []
+      }
+    },
+    methods: {
+      addTask() {
+        const response = await fetch('api/tasks/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: this.title
+          })
+        })
+
+        const data = await response.json()
+        this.tasks.push({
+          title: this.title,
+        })
+
+        this.title = ''
+      }
     },
     components: {AppTask}
   }
