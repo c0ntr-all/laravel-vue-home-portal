@@ -24,8 +24,22 @@
       }
     },
     methods: {
-      addItem() {
-        this.items.push(this.title)
+      async addItem() {
+        const response = await fetch('api/tasks/lists/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: this.title
+          })
+        })
+
+        const data = await response.json()
+        this.items.push({
+          title: this.title,
+        })
+
         this.title = ''
       },
     }

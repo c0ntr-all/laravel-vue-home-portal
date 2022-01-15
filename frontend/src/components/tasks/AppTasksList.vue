@@ -1,5 +1,5 @@
 <template>
-  <el-space wrap>
+  <el-space alignment="flex-start" wrap>
     <app-task v-for="i in 7"></app-task>
   </el-space>
 </template>
@@ -14,6 +14,6 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>
