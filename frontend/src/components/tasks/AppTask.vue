@@ -9,7 +9,7 @@
     <div class="text item" v-for="item in items">
       {{ item }}
     </div>
-    <el-form @submit.prevent="createitem">
+    <el-form @submit.prevent="createItem">
       <el-input placeholder="Введите заголовок!" v-model="title" />
     </el-form>
   </el-card>
