@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Finances\Finances;
 use App\Models\Finances\FinancesShop;
+use App\Models\Tasks\TaskList;
+use App\Models\Tasks\TaskItem;
 
 
 class DatabaseSeeder extends Seeder
@@ -20,5 +22,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->count(10)->create();
         Finances::factory()->count(100)->create();
         FinancesShop::factory()->count(10)->create();
+        TaskList::factory()->count(10)->create();
+        TaskItem::factory()->count(100)->create();
     }
 }
