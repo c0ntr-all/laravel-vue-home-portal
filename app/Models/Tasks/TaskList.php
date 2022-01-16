@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\User;
 
@@ -13,7 +14,6 @@ class TaskList extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
     protected $fillable = [
         'id',
         'user_id',
@@ -22,9 +22,9 @@ class TaskList extends Model
         'updated_at',
         'deleted_at',
     ];
-    public function items()
+    public function items(): HasMany
     {
-        return $this->hasMany(TaskItem::class);
+        return $this->hasMany(TaskItem::class, 'list_id', 'id');
     }
 
     public function user(): BelongsTo
