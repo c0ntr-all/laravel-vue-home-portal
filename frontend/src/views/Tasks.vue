@@ -4,12 +4,17 @@
     <el-row class="mb-4">
       <el-button type="primary">Добавить карточку</el-button>
     </el-row>
-    <app-tasks-list />
+    <app-tasks-list
+      :data="data"
+      @load="loadData"
+      v-loading="loading"
+    />
   </el-main>
 </template>
 <script>
   import AppTasksList from "../components/tasks/AppTasksList";
   import axios from 'axios'
+
   export default {
     data() {
       return {
@@ -28,10 +33,10 @@
             if(!data) {
               throw new Error('Нет данных!')
             }
-            this.data = Object.keys(data.tasks).map(key => {
+            this.data = Object.keys(data.lists).map(key => {
               return {
                 id: key,
-                ...data.tasks[key]
+                ...data.lists[key]
               }
             })
             this.loading = false
@@ -58,6 +63,9 @@
         const data = await response.json()
       }
     },
-    components: {AppTasksList}
+    components: {AppTasksList},
+    mounted() {
+      this.loadData()
+    }
   }
 </script>

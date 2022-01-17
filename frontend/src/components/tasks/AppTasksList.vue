@@ -1,12 +1,17 @@
 <template>
   <el-space alignment="flex-start" wrap>
-    <app-task v-for="i in 7"></app-task>
+    <app-task
+      v-for="list in data"
+      :name="list.title"
+    ></app-task>
   </el-space>
 </template>
 
 <script>
   import AppTask from "./AppTask";
   export default {
+    emits: ['load'],
+    props: ['data'],
     data() {
       return {
         tasks: []

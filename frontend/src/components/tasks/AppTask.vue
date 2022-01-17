@@ -2,12 +2,11 @@
   <el-card class="box-card">
     <template #header>
       <div class="card-header">
-        <span>Card name</span>
+        <span>{{ name }}</span>
         <el-button class="button" type="text">Operation button</el-button>
       </div>
     </template>
-    <div class="text item" v-for="item in items">
-      {{ item }}
+    <div class="text item">
     </div>
     <el-form @submit.prevent="createItem">
       <el-input placeholder="Введите заголовок!" v-model="title" />
@@ -17,6 +16,7 @@
 
 <script>
   export default {
+    props: ['name'],
     data() {
       return {
         items: [],
