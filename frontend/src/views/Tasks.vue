@@ -13,10 +13,38 @@
   export default {
     data() {
       return {
-        title: ''
+        title: '',
+        data: [],
+        loading: false
       }
     },
     methods: {
+      loadData() {
+        this.loading = true
+
+        setTimeout(async() => {
+          try {
+            const {data} = await axios.get('api/tasks')
+            if(!data) {
+              throw new Error('Нет данных!')
+            }
+            this.data = Object.keys(data.tasks).map(key => {
+              return {
+                id: key,
+                ...data.tasks[key]
+              }
+            })
+            this.loading = false
+          }catch(e) {
+            this.alert = {
+              type: 'danger',
+              title: 'Ошибка',
+              text: e.message
+            }
+            this.loading = false
+          }
+        })
+      },
       async createList() {
         const response = await fetch('api/tasks/create', {
           methods: 'POST',
