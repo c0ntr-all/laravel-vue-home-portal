@@ -3,6 +3,7 @@
     <app-task
       v-for="list in data"
       :name="list.title"
+      :items="list.items"
     ></app-task>
   </el-space>
 </template>
