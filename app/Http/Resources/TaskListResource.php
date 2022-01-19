@@ -3,17 +3,18 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\TaskResource;
 
-class TaskItemsResource extends JsonResource
+class TaskListResource extends JsonResource
 {
-    public static $wrap = 'items';
+    public static $wrap = 'lists';
 
     public function toArray($request): array
     {
         return [
             'title' => $this->title,
-            'content' => $this->content,
             'createdAt' => $this->created_at,
+            'items' => $this->items,
         ];
     }
 }

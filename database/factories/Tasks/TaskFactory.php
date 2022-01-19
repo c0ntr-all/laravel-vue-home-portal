@@ -2,12 +2,12 @@
 
 namespace Database\Factories\Tasks;
 
-use App\Models\Tasks\TaskItem;
+use App\Models\Tasks\Task;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TaskItemFactory extends Factory
+class TaskFactory extends Factory
 {
-    protected $model = TaskItem::class;
+    protected $model = Task::class;
 
     public function definition()
     {

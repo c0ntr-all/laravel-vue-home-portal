@@ -24,7 +24,7 @@ class TaskList extends Model
     ];
     public function items(): HasMany
     {
-        return $this->hasMany(TaskItem::class, 'list_id', 'id');
+        return $this->hasMany(Task::class, 'list_id', 'id');
     }
 
     public function user(): BelongsTo

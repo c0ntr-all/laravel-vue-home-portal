@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class TaskListsCollection extends ResourceCollection
+class TaskListCollection extends ResourceCollection
 {
     public static $wrap = '';
 

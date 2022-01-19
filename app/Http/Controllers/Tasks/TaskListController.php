@@ -6,30 +6,30 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Tasks\IndexRequest;
 use App\Models\Tasks\TaskList;
-use App\Http\Resources\TaskListsCollection;
-use App\Http\Resources\TaskListsResource;
+use App\Http\Resources\TaskListCollection;
+use App\Http\Resources\TaskListResource;
 
 class TaskListController extends Controller
 {
     protected $taskLists;
 
-    public function __construct(TaskList $taskLists)
+    public function __construct(TaskList $taskList)
     {
-        $this->taskLists = $taskLists;
+        $this->taskList = $taskList;
     }
 
-    public function index(IndexRequest $request): TaskListsCollection
+    public function index(IndexRequest $request): TaskListCollection
     {
-        return new TaskListsCollection($this->taskLists->getItems());
+        return new TaskListCollection($this->taskList->getItems());
     }
 
-    public function show(TaskList $taskLists): TaskListsResource
+    public function show(TaskList $taskList): TaskListResource
     {
-        return $this->taskListsResponse($taskLists);
+        return $this->taskListResponse($taskList);
     }
 
-    protected function taskListsResponse(TaskList $taskLists): TaskListsResource
+    protected function taskListResponse(TaskList $taskList): TaskListResource
     {
-        return new TaskListsResource($taskLists->load('user', 'items'));
+        return new TaskListResource($taskList->load('user', 'items'));
     }
 }

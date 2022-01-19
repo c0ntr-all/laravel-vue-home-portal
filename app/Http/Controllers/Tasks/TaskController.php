@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Tasks;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tasks\StoreRequest;
 use App\Models\User;
-use App\Models\Tasks\TaskItem;
-use App\Http\Resources\TaskItemsResource;
+use App\Models\Tasks\Task;
+use App\Http\Resources\TaskResource;
 
-class TaskItemController extends Controller
+class TaskController extends Controller
 {
-    public function __construct(TaskItem $task, User $user)
+    public function __construct(Task $task, User $user)
     {
         $this->task = $task;
         $this->user = $user;
@@ -23,8 +23,8 @@ class TaskItemController extends Controller
         //return $this->taskResponse($task);
 
     }
-    protected function taskResponse(TaskItem $task): TaskItemsResource
+    protected function taskResponse(Task $task): TaskResource
     {
-        return new TaskItemsResource($task->load('user'));
+        return new TaskResource($task->load('user'));
     }
 }
