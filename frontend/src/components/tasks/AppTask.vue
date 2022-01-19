@@ -28,7 +28,7 @@
     },
     methods: {
       async createItem() {
-        const response = await fetch('api/tasks/lists/create', {
+        const response = await fetch('api/tasks/store', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
