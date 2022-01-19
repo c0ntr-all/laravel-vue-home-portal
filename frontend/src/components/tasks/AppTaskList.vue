@@ -5,11 +5,14 @@
       :name="list.title"
       :items="list.items"
     ></app-task>
+    <app-task-create-button></app-task-create-button>
   </el-space>
 </template>
 
 <script>
   import AppTask from "./AppTask";
+  import AppTaskCreateButton from "./AppTaskCreateButton";
+
   export default {
     emits: ['load'],
     props: ['data'],
@@ -38,7 +41,7 @@
         this.title = ''
       }
     },
-    components: {AppTask}
+    components: {AppTask,AppTaskCreateButton}
   }
 </script>
 
