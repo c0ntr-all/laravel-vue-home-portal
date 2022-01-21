@@ -3,7 +3,7 @@
     <template #header>
       <div class="card-header">
         <el-form>
-          <el-input placeholder="Введите заголовок!" />
+          <el-input placeholder="Введите заголовок!" v-model="listName" />
         </el-form>
       </div>
     </template>
@@ -25,8 +25,9 @@
 <script>
   export default {
     props: {
-      show: Boolean
-    }
+      show: Boolean,
+      listName: String
+    },
   }
 </script>
 <script setup>
