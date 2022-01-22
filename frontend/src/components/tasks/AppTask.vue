@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card">
+  <el-card class="box-card" :listId="id">
     <template #header>
       <div class="card-header">
         <span>{{ name }}</span>
@@ -19,12 +19,8 @@
   export default {
     props: {
       name: String,
-      items: Array
-    },
-    data() {
-      return {
-        title: ''
-      }
+      items: Array,
+      listId: Number
     },
     methods: {
       async createItem() {

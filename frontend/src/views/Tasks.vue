@@ -1,7 +1,7 @@
 <template>
   <el-header><h2 class="page-header">Задачи</h2></el-header>
   <el-main>
-    <app-task-list
+    <app-task-lists
       :data="data"
       @load="loadData"
       v-loading="loading"
@@ -9,7 +9,7 @@
   </el-main>
 </template>
 <script>
-  import AppTaskList from "../components/tasks/AppTaskList";
+  import AppTaskLists from "../components/tasks/AppTaskLists";
   import axios from 'axios'
 
   export default {
@@ -60,7 +60,7 @@
         const data = await response.json()
       }
     },
-    components: {AppTaskList},
+    components: {AppTaskLists},
     mounted() {
       this.loadData()
     }
