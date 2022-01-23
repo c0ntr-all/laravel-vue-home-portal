@@ -29,5 +29,5 @@ Route::prefix('finances')->group(function() {
 Route::prefix('tasks')->group(function() {
     Route::get('/', [TaskListController::class, 'index']);
     Route::get('{task}', [TaskListController::class, 'show']);
-    Route::get('/store', [TaskListController::class, 'store']);
+    Route::post('list/store', [TaskListController::class, 'store']);
 });

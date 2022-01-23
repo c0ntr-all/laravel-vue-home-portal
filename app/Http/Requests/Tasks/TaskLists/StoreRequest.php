@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Http\Requests\Tasks;
+namespace App\Http\Requests\Tasks\TaskLists;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        //Временно, для тестов
         return true;
     }
 
     public function rules(): array
     {
         return [
-            'title' => 'sometimes|string'
+            'tasks.title' => 'required|string|max:30',
         ];
     }
 }

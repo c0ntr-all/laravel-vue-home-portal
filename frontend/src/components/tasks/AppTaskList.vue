@@ -10,7 +10,7 @@
       {{ item.title }}
     </div>
     <el-form @submit.prevent="createItem">
-      <el-input placeholder="Введите заголовок!" v-model="title" />
+      <el-input placeholder="Введите заголовок!" v-model="listName" />
     </el-form>
   </el-card>
 </template>
@@ -20,11 +20,12 @@
     props: {
       name: String,
       items: Array,
+      listName: String,
       listId: Number
     },
     methods: {
       async createItem() {
-        const response = await fetch('api/tasks/store', {
+        const response = await fetch('api/tasks/list/store', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -35,11 +36,9 @@
         })
 
         const data = await response.json()
-        this.items.push({
-          title: this.title,
-        })
-
-        this.title = ''
+        if(data) {
+          console.log(data.result)
+        }
       },
     }
   }

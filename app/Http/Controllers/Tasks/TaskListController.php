@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Tasks;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Requests\Tasks\IndexRequest;
+use App\Http\Requests\Tasks\TaskLists\IndexRequest;
+use App\Http\Requests\Tasks\TaskLists\StoreRequest;
 use App\Models\Tasks\TaskList;
 use App\Http\Resources\TaskListCollection;
 use App\Http\Resources\TaskListResource;
 
 class TaskListController extends Controller
 {
-    protected $taskLists;
+    protected $taskList;
 
     public function __construct(TaskList $taskList)
     {
@@ -26,6 +26,14 @@ class TaskListController extends Controller
     public function show(TaskList $taskList): TaskListResource
     {
         return $this->taskListResponse($taskList);
+    }
+
+    public function store(StoreRequest $request)
+    {
+        //$task = auth()->user()->tasks()->create($request->validated()['task']);
+
+        //return $this->taskResponse($task);
+
     }
 
     protected function taskListResponse(TaskList $taskList): TaskListResource

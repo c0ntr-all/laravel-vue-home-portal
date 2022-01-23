@@ -15,14 +15,6 @@ class TaskController extends Controller
         $this->task = $task;
         $this->user = $user;
     }
-
-    public function store(StoreRequest $request)
-    {
-        //$task = auth()->user()->tasks()->create($request->validated()['task']);
-
-        //return $this->taskResponse($task);
-
-    }
     protected function taskResponse(Task $task): TaskResource
     {
         return new TaskResource($task->load('user'));
