@@ -1,21 +1,20 @@
 <template>
   <el-space alignment="flex-start" wrap>
-    <app-task
+    <app-task-list
       v-for="list in data"
       :id="list.id"
       :name="list.title"
       :items="list.items"
-    ></app-task>
+    ></app-task-list>
     <app-list-create-button></app-list-create-button>
   </el-space>
 </template>
 
 <script>
-  import AppTask from "./AppTask";
+  import AppTaskList from "./AppTaskList";
   import AppListCreateButton from "./AppListCreateButton";
 
   export default {
-    emits: ['load'],
     props: ['data'],
     data() {
       return {
@@ -42,7 +41,7 @@
         this.title = ''
       }
     },
-    components: {AppTask,AppListCreateButton}
+    components: {AppTaskList,AppListCreateButton}
   }
 </script>
 

@@ -3,7 +3,6 @@
   <el-main>
     <app-task-lists
       :data="data"
-      @load="loadData"
       v-loading="loading"
     />
   </el-main>
