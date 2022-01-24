@@ -32,7 +32,7 @@ class TaskListController extends Controller
     {
         $task = auth()->user()->taskLists()->create($request->validated()['taskList']);
 
-        //return $this->taskResponse($task);
+        return $this->taskListResponse($task);
 
     }
 
