@@ -2,8 +2,8 @@
   <el-card class="box-card" v-if="show">
     <template #header>
       <div class="card-header">
-        <el-form>
-          <el-input placeholder="Введите заголовок!" v-model="listName" />
+        <el-form @submit.prevent="createList">
+          <el-input placeholder="Введите заголовок!" v-model="newListTitle" />
         </el-form>
       </div>
     </template>
@@ -26,9 +26,27 @@
   export default {
     data() {
       return {
-        show: Boolean,
-        listName: String
+        show: 0,
+        newListTitle: ''
       }
+    },
+    methods: {
+      async createList() {
+        const response = await fetch('api/tasks/list/store', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: this.newListTitle
+          })
+        })
+
+        const data = await response.json()
+        if(data) {
+          console.log(data.result)
+        }
+      },
     }
   }
 </script>

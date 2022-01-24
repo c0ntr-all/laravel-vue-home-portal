@@ -2,7 +2,7 @@
   <el-card class="box-card">
     <template #header>
       <div class="card-header">
-        <span>{{ name }}</span>
+        <span>{{ listTitle }}</span>
         <el-button class="button" type="text">Operation button</el-button>
       </div>
     </template>
@@ -10,7 +10,7 @@
       {{ item.title }}
     </div>
     <el-form @submit.prevent="createItem">
-      <el-input placeholder="Введите заголовок!" v-model="newListTitle" />
+      <el-input placeholder="Введите заголовок!" v-model="newItemTitle" />
     </el-form>
   </el-card>
 </template>
@@ -19,7 +19,7 @@
   export default {
     data() {
       return {
-        newListTitle: '',
+        newItemTitle: '',
       }
     },
     props: {
@@ -28,20 +28,21 @@
     },
     methods: {
       async createItem() {
-        const response = await fetch('api/tasks/list/store', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            title: this.title
-          })
-        })
-
-        const data = await response.json()
-        if(data) {
-          console.log(data.result)
-        }
+        console.log(this.newListTitle)
+        // const response = await fetch('api/tasks/list/store', {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json'
+        //   },
+        //   body: JSON.stringify({
+        //     title: this.newListTitle
+        //   })
+        // })
+        //
+        // const data = await response.json()
+        // if(data) {
+        //   console.log(data.result)
+        // }
       },
     }
   }

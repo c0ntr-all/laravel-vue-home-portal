@@ -14,11 +14,7 @@ class TaskListResource extends JsonResource
         return [
             'title' => $this->title,
             'createdAt' => $this->created_at,
-            'items' => [
-                'title' => $this->title,
-                'content' => $this->content,
-                'createdAt' => $this->created_at,
-            ],
+            'items' => $this->items,
         ];
     }
 }
