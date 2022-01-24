@@ -11,11 +11,11 @@
       </template>
       <div class="popover-content">
         <el-menu class="el-menu-vertical" :router="true">
-          <el-menu-item :index="1">
+          <el-menu-item :index="'1'">
             <el-icon><icon-menu /></el-icon>
             <span>Настройки</span>
           </el-menu-item>
-          <el-menu-item :index="2">
+          <el-menu-item :index="'2'">
             <el-icon><icon-menu /></el-icon>
             <span>Выйти</span>
           </el-menu-item>

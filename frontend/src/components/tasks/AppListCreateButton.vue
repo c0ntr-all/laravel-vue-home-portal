@@ -24,10 +24,12 @@
 
 <script>
   export default {
-    props: {
-      show: Boolean,
-      listName: String
-    },
+    data() {
+      return {
+        show: Boolean,
+        listName: String
+      }
+    }
   }
 </script>
 <script setup>
