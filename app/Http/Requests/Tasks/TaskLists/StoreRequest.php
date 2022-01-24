@@ -14,7 +14,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tasks.title' => 'required|string|max:30',
+            'title' => 'required|string|max:30',
         ];
     }
 }

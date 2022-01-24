@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Tasks;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tasks\TaskLists\IndexRequest;
 use App\Http\Requests\Tasks\TaskLists\StoreRequest;
-use App\Models\Tasks\TaskList;
 use App\Http\Resources\TaskListCollection;
 use App\Http\Resources\TaskListResource;
+use App\Models\Tasks\TaskList;
+use App\Models\User;
 
 class TaskListController extends Controller
 {
@@ -30,10 +31,9 @@ class TaskListController extends Controller
 
     public function store(StoreRequest $request): TaskListResource
     {
-        $task = auth()->user()->taskLists()->create($request->validated()['taskList']);
+        $task = TaskList::create(array_merge($request->validated(), ['user_id' => 1]));
 
         return $this->taskListResponse($task);
-
     }
 
     protected function taskListResponse(TaskList $taskList): TaskListResource
