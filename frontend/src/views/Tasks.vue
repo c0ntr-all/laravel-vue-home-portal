@@ -2,7 +2,7 @@
   <el-header><h2 class="page-header">Задачи</h2></el-header>
   <el-main>
     <app-task-lists
-      :data="data"
+      :lists="lists"
       v-loading="loading"
     />
   </el-main>
@@ -15,7 +15,7 @@
     data() {
       return {
         title: '',
-        data: [],
+        lists: [],
         loading: false
       }
     },
@@ -29,7 +29,7 @@
             if(!data) {
               throw new Error('Нет данных!')
             }
-            this.data = Object.keys(data.lists).map(key => {
+            this.lists = Object.keys(data.lists).map(key => {
               return {
                 id: key,
                 ...data.lists[key]

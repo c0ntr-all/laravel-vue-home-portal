@@ -10,7 +10,7 @@
       {{ item.title }}
     </div>
     <el-form @submit.prevent="createItem">
-      <el-input placeholder="Введите заголовок!" v-model="listName" />
+      <el-input placeholder="Введите заголовок!" v-model="newListTitle" />
     </el-form>
   </el-card>
 </template>
@@ -19,11 +19,11 @@
   export default {
     data() {
       return {
-        listName: '',
+        newListTitle: '',
       }
     },
     props: {
-      name: String,
+      listTitle: String,
       items: Array,
     },
     methods: {

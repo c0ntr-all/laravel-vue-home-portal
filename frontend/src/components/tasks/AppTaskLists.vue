@@ -1,9 +1,8 @@
 <template>
   <el-space alignment="flex-start" wrap>
     <app-task-list
-      v-for="list in data"
-      :id="list.id"
-      :name="list.title"
+      v-for="list in lists"
+      :listTitle="list.title"
       :items="list.items"
     ></app-task-list>
     <app-list-create-button></app-list-create-button>
@@ -15,7 +14,7 @@
   import AppListCreateButton from "./AppListCreateButton";
 
   export default {
-    props: ['data'],
+    props: ['lists'],
     data() {
       return {
         tasks: []
