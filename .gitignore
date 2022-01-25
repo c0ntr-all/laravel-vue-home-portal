@@ -18,3 +18,4 @@ public/js
 
 #IDE folders
 .idea
+.phpunit.result.cache
