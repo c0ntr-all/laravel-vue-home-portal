@@ -1,20 +1,33 @@
 <template>
   <div class="area">
-    <el-container>
-      <the-sidebar></the-sidebar>
-      <el-container class="content">
-        <router-view/>
+    <div class="main" v-if="isAuth">
+      <el-container>
+        <the-sidebar></the-sidebar>
+        <el-container class="content">
+          <router-view/>
+        </el-container>
       </el-container>
-    </el-container>
-    <el-footer>Home Portal v.0.0.4</el-footer>
+      <el-footer>Home Portal v.0.0.4</el-footer>
+    </div>
+    <div class="auth" v-else>
+      <app-login></app-login>
+    </div>
   </div>
 </template>
 
 <script>
+  import AppLogin from './views/auth/Login'
   import TheSidebar from './components/TheSidebar.vue'
 
   export default {
-    components: {TheSidebar}
+    data() {
+      return {
+        isAuth: false,
+      }
+    },
+    methods: {
+    },
+    components: {TheSidebar,AppLogin}
   }
 </script>
 
@@ -26,6 +39,12 @@
     overflow: hidden;
   }
   .area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  .main {
     flex: auto 1 1;
     display: flex;
     flex-direction: column;

@@ -11,8 +11,9 @@
       >
         <el-form-item prop="username">
           <el-input
-            v-model="model.username"
-            placeholder="Username"
+            v-model="model.email"
+            placeholder="Email"
+            type="email"
             :prefix-icon="User"
           ></el-input>
         </el-form-item>
@@ -46,28 +47,30 @@
   } from '@element-plus/icons-vue'
 </script>
 <script>
+  import axios from "axios";
+
   export default {
     data() {
       return {
         validCredentials: {
-          username: "lightscope",
+          email: "lightscope",
           password: "lightscope"
         },
         model: {
-          username: "",
-          password: ""
+          email: null,
+          password: null
         },
         loading: false,
         rules: {
-          username: [
+          email: [
             {
               required: true,
-              message: "Введите Имя пользователя!",
+              message: "Введите ваш email!",
               trigger: "blur"
             },
             {
               min: 3,
-              message: "Имя пользователя должно быть не менее 3 символов!",
+              message: "Email должен быть не менее 3 символов!",
               trigger: "blur"
             }
           ],
@@ -88,23 +91,27 @@
           setTimeout(resolve, 800);
         });
       },
-      async login() {
-        let valid = await this.$refs.form.validate();
-        if (!valid) {
-          return;
-        }
-        this.loading = true;
-        await this.simulateLogin();
-        this.loading = false;
-        if (
-          this.model.username === this.validCredentials.username &&
-          this.model.password === this.validCredentials.password
-        ) {
-          this.$message.success("Вы успешно вошли в систему!");
-        } else {
-          this.$message.error("Неверные данные для входа!");
-        }
-      }
+      login() {
+        axios.post('api/auth/login', {email: this.model.email, password: this.model.password})
+          .then(response => {
+            console.log(response)
+          })
+        // let valid = await this.$refs.form.validate();
+        // if (!valid) {
+        //   return;
+        // }
+        // this.loading = true;
+        // this.simulateLogin();
+        // this.loading = false;
+        // if (
+        //   this.model.username === this.validCredentials.username &&
+        //   this.model.password === this.validCredentials.password
+        // ) {
+        //   this.$message.success("Вы успешно вошли в систему!");
+        // } else {
+        //   this.$message.error("Неверные данные для входа!");
+        // }
+      },
     }
   };
 </script>
