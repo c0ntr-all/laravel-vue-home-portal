@@ -23,20 +23,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('finances')->group(function() {
-    Route::get('/', [FinancesController::class, 'index']);
-    Route::get('{finance}', [FinancesController::class, 'show']);
-});
-
-Route::prefix('tasks')->group(function() {
-    Route::get('/', [TaskListController::class, 'index']);
-    Route::get('{task}', [TaskListController::class, 'show']);
-    Route::post('list/store', [TaskListController::class, 'store']);
-});
-
-Route::prefix('auth')->middleware('api')->group(function ($router) {
+Route::prefix('auth')->middleware('api')->group(function($router) {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
+
+    Route::middleware('auth:api')->group(function() {
+        Route::prefix('finances')->group(function() {
+            Route::get('/', [FinancesController::class, 'index']);
+            Route::get('{finance}', [FinancesController::class, 'show']);
+        });
+
+        Route::prefix('tasks')->group(function() {
+            Route::get('/', [TaskListController::class, 'index']);
+            Route::get('{task}', [TaskListController::class, 'show']);
+            Route::post('list/store', [TaskListController::class, 'store']);
+        });
+    });
 });
