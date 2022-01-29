@@ -22,7 +22,7 @@
   export default {
     data() {
       return {
-        isAuth: false,
+        isAuth: true,
       }
     },
     methods: {

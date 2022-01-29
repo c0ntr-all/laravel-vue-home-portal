@@ -13,7 +13,7 @@
 
 <script>
   import AppFinancesList from "../components/finances/AppFinancesList"
-  import axios from 'axios'
+  import API from '../utils/api'
 
   export default {
     data() {
@@ -28,7 +28,7 @@
 
         setTimeout(async() => {
           try {
-            const {data} = await axios.get('api/finances')
+            const {data} = await API.get('api/auth/finances')
             if(!data) {
               throw new Error('Нет данных!')
             }

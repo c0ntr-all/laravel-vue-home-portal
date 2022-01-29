@@ -31,7 +31,7 @@ class TaskListController extends Controller
 
     public function store(StoreRequest $request): TaskListResource
     {
-        $task = TaskList::create(array_merge($request->validated(), ['user_id' => 1]));
+        $task = auth()->user()->taskLists()->create($request->validated());
 
         return $this->taskListResponse($task);
     }

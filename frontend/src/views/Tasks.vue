@@ -9,7 +9,7 @@
 </template>
 <script>
   import AppTaskLists from "../components/tasks/AppTaskLists";
-  import axios from 'axios'
+  import API from '../utils/api'
 
   export default {
     data() {
@@ -25,7 +25,7 @@
 
         setTimeout(async() => {
           try {
-            const {data} = await axios.get('api/tasks')
+            const {data} = await API.get('api/auth/tasks')
             if(!data) {
               throw new Error('Нет данных!')
             }
@@ -47,11 +47,7 @@
         })
       },
       async createList() {
-        const response = await fetch('api/tasks/create', {
-          methods: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+        const response = await API.post('api/auth/tasks/create', {
           body: JSON.stringify({
             title: this.title
           })
