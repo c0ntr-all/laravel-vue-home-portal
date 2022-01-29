@@ -94,7 +94,7 @@
       login() {
         axios.post('api/auth/login', {email: this.model.email, password: this.model.password})
           .then(response => {
-            console.log(response)
+            localStorage.access_token = response.data.access_token
           })
         // let valid = await this.$refs.form.validate();
         // if (!valid) {
