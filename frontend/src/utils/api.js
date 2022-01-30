@@ -6,9 +6,7 @@ const api = axios.create()
 //start request
 api.interceptors.request.use(config => {
   if(localStorage.access_token) {
-    config.headers = {
-      'authorization': `Bearer ${localStorage.access_token}`
-    }
+    config.headers.authorization = `Bearer ${localStorage.access_token}`
   }
 
   //Надо возвращать конфиг после его модификации
@@ -22,9 +20,7 @@ api.interceptors.request.use(config => {
 //start response
 api.interceptors.response.use(config => {
   if(localStorage.access_token) {
-    config.headers = {
-      'authorization': `Bearer ${localStorage.access_token}`
-    }
+    config.headers.authorization = `Bearer ${localStorage.access_token}`
   }
 
   return config

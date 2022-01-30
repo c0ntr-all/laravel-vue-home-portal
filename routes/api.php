@@ -29,7 +29,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
 
-    Route::middleware('auth:api')->group(function() {
+    Route::middleware('jwt.auth')->group(function() {
         Route::prefix('finances')->group(function() {
             Route::get('/', [FinancesController::class, 'index']);
             Route::get('{finance}', [FinancesController::class, 'show']);
