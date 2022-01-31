@@ -47,6 +47,11 @@ const router = createRouter({
       name: 'tasks',
       alias: '/tasks',
       menu: 1
+    },
+    {
+      path: '/:catchAll(.*)',
+      component: Home,
+      name: '404'
     }
   ],
   linkActiveClass: 'is-active',
