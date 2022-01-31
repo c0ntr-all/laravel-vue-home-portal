@@ -1,6 +1,6 @@
 <template>
   <div class="area">
-    <div class="main" v-if="isAuth">
+    <div class="main">
       <el-container>
         <the-sidebar></the-sidebar>
         <el-container class="content">
@@ -9,25 +9,30 @@
       </el-container>
       <el-footer>Home Portal v.0.0.4</el-footer>
     </div>
-    <div class="auth" v-else>
-      <app-login></app-login>
-    </div>
   </div>
 </template>
 
 <script>
-  import AppLogin from './views/auth/Login'
   import TheSidebar from './components/TheSidebar.vue'
 
   export default {
     data() {
       return {
-        isAuth: true,
+        accessToken: null,
       }
     },
     methods: {
+      getAccessToken() {
+        this.accessToken = localStorage.access_token
+      }
     },
-    components: {TheSidebar,AppLogin}
+    mounted() {
+      this.getAccessToken()
+    },
+    updated() {
+      this.getAccessToken()
+    },
+    components: {TheSidebar}
   }
 </script>
 
