@@ -1,16 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import Finances from '../views/Finances.vue'
-import Tasks from '../views/Tasks.vue'
-import Profile from '../views/Profile.vue'
-import Login from '../views/auth/Login.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/profile',
-      component: Profile,
+      component: () => import('../views/Profile'),
       title: 'Профиль',
       name: 'profile',
       alias: '/profile',
@@ -18,7 +13,7 @@ const router = createRouter({
     },
     {
       path: '/login',
-      component: Login,
+      component: () => import('../views/auth/Login'),
       title: 'Авторизация',
       name: 'login',
       alias: '/login',
@@ -26,7 +21,7 @@ const router = createRouter({
     },
     {
       path: '/home',
-      component: Home,
+      component: () => import('../views/Home'),
       title: 'Главная',
       name: 'home',
       alias: '/',
@@ -34,7 +29,7 @@ const router = createRouter({
     },
     {
       path: '/finances',
-      component: Finances,
+      component: () => import('../views/Finances'),
       title: 'Финансы',
       name: 'finances',
       alias: '/finances',
@@ -42,7 +37,7 @@ const router = createRouter({
     },
     {
       path: '/tasks',
-      component: Tasks,
+      component: () => import('../views/Tasks'),
       title: 'Задачи',
       name: 'tasks',
       alias: '/tasks',
@@ -50,7 +45,7 @@ const router = createRouter({
     },
     {
       path: '/:catchAll(.*)',
-      component: Home,
+      component: () => import('../views/Home'),
       name: '404'
     }
   ],
