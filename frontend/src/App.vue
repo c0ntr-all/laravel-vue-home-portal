@@ -2,12 +2,12 @@
   <div class="area">
     <div class="main">
       <el-container>
-        <the-sidebar></the-sidebar>
+        <the-sidebar v-if="accessToken"></the-sidebar>
         <el-container class="content">
           <router-view/>
         </el-container>
       </el-container>
-      <el-footer>Home Portal v.0.0.4</el-footer>
+      <el-footer v-if="accessToken">Home Portal v.0.0.4</el-footer>
     </div>
   </div>
 </template>
