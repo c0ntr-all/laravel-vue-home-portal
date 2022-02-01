@@ -1,21 +1,26 @@
 <template>
   <div class="avatar">
-    <el-popover placement="bottom" :width="200" trigger="click">
+    <el-popover placement="bottom" :width="200" trigger="click" v-model:visible="profileMenuVisible">
       <template #reference>
-        <el-button>
-          <span>Профиль</span>
-          <el-icon class="el-icon--right">
-            <arrow-down />
-          </el-icon>
-        </el-button>
+        <div class="avatar__inner">
+          <div class="avatar__block">
+            <el-avatar :size="32" :src="circleUrl"></el-avatar>
+          </div>
+          <div class="avatar__block">
+            <el-icon><arrow-down /></el-icon>
+          </div>
+        </div>
       </template>
-      <div class="popover-content">
+      <div class="popover-content avatar-menu">
         <el-menu class="el-menu-vertical" :router="true">
-          <el-menu-item :index="'/profile'">
-            <el-icon><icon-menu /></el-icon>
+          <el-menu-item :index="'/profile'" @click="profileMenuVisible = false">
+            <el-icon><user /></el-icon>
             <span>Профиль</span>
           </el-menu-item>
-          <el-menu-item :index="'2'" @click="logout"><span>Выйти</span></el-menu-item>
+          <el-menu-item :index="'2'" @click="logout">
+            <el-icon><d-arrow-left /></el-icon>
+            <span>Выйти</span>
+          </el-menu-item>
         </el-menu>
       </div>
     </el-popover>
@@ -25,13 +30,21 @@
 <script setup>
   import {
     Menu as IconMenu,
-    ArrowDown
+    ArrowDown,
+    DArrowLeft,
+    User
   } from '@element-plus/icons-vue'
 </script>
 <script>
   import API from "../utils/api";
 
   export default {
+    data() {
+      return {
+        circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+        profileMenuVisible: false
+      }
+    },
     methods: {
       logout() {
         API.post('/api/auth/logout')
@@ -39,15 +52,39 @@
             localStorage.removeItem('access_token')
             this.$router.push({name: 'login'})
           })
+        this.profileMenuVisible = false
       }
     }
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .avatar {
     display: flex;
     justify-content: flex-start;
-    padding: 15px 20px;
+    padding: 0 15px;
+
+    &__inner {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #d3ecfb;
+      }
+
+      .el-icon {
+        margin: 0 8px 0 6px;
+      }
+    }
+    &__block {
+      display: flex;
+    }
+    &-menu {
+      .el-menu {
+        border: none;
+      }
+    }
   }
 </style>
