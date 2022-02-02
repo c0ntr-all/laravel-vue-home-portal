@@ -86,32 +86,13 @@
       };
     },
     methods: {
-      simulateLogin() {
-        return new Promise(resolve => {
-          setTimeout(resolve, 800);
-        });
-      },
-      login() {
-        axios.post('api/auth/login', {email: this.model.email, password: this.model.password})
+      async login() {
+        await axios.post('api/auth/login', {email: this.model.email, password: this.model.password})
           .then(response => {
-            localStorage.access_token = response.data.access_token
-            this.$router.push('/home')
+            if(!response) {
+              console.log('test')
+            }
           })
-        // let valid = await this.$refs.form.validate();
-        // if (!valid) {
-        //   return;
-        // }
-        // this.loading = true;
-        // this.simulateLogin();
-        // this.loading = false;
-        // if (
-        //   this.model.username === this.validCredentials.username &&
-        //   this.model.password === this.validCredentials.password
-        // ) {
-        //   this.$message.success("Вы успешно вошли в систему!");
-        // } else {
-        //   this.$message.error("Неверные данные для входа!");
-        // }
       },
     }
   };

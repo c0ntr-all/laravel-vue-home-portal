@@ -27,6 +27,7 @@ class HomeController extends Controller
     }
 
     public function test() {
-        dd(auth()->user());
+//        dd(auth()->user()->taskLists()->get());
+        dd($_COOKIE);
     }
 }
