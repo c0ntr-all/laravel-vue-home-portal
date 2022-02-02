@@ -14,6 +14,7 @@
 
 <script>
   import TheSidebar from './components/TheSidebar.vue'
+  import API from "./utils/api";
 
   export default {
     data() {
@@ -24,6 +25,13 @@
     methods: {
       getAccessToken() {
         this.accessToken = localStorage.access_token
+      },
+      logout() {
+        API.post('/api/auth/logout')
+          .then(response => {
+            localStorage.removeItem('access_token')
+            this.$router.push({name: 'login'})
+          })
       }
     },
     mounted() {
@@ -31,6 +39,11 @@
     },
     updated() {
       this.getAccessToken()
+    },
+    provide() {
+      return {
+        logout: this.logout
+      }
     },
     components: {TheSidebar}
   }

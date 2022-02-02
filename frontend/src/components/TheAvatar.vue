@@ -17,7 +17,7 @@
             <el-icon><user /></el-icon>
             <span>Профиль</span>
           </el-menu-item>
-          <el-menu-item :index="'2'" @click="logout">
+          <el-menu-item :index="'2'" @click="[hideProfileMenu(), logout()]">
             <el-icon><d-arrow-left /></el-icon>
             <span>Выйти</span>
           </el-menu-item>
@@ -36,9 +36,8 @@
   } from '@element-plus/icons-vue'
 </script>
 <script>
-  import API from "../utils/api";
-
   export default {
+    inject: ['logout'],
     data() {
       return {
         circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
@@ -46,12 +45,7 @@
       }
     },
     methods: {
-      logout() {
-        API.post('/api/auth/logout')
-          .then(response => {
-            localStorage.removeItem('access_token')
-            this.$router.push({name: 'login'})
-          })
+      hideProfileMenu() {
         this.profileMenuVisible = false
       }
     }

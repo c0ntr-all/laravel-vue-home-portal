@@ -91,6 +91,9 @@
           .then(response => {
             if(!response) {
               console.log('test')
+            }else{
+              localStorage.access_token = response.data.access_token
+              this.$router.push('/home')
             }
           })
       },
