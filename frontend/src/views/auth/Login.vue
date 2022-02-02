@@ -82,18 +82,21 @@
               trigger: "blur"
             }
           ]
-        }
+        },
+        error: null
       };
     },
     methods: {
       async login() {
         await axios.post('api/auth/login', {email: this.model.email, password: this.model.password})
           .then(response => {
-            if(!response) {
-              console.log('test')
-            }else{
-              localStorage.access_token = response.data.access_token
-              this.$router.push('/home')
+            this.$message.success("Вы успешно вошли в систему!");
+            
+            localStorage.access_token = response.data.access_token
+            this.$router.push('/home')
+          }).catch(error => {
+            if(error.response.data.error) {
+              this.$message.error(error.response.data.error);
             }
           })
       },
