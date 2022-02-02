@@ -18,7 +18,7 @@ api.interceptors.request.use(config => {
 //end request
 
 //start response
-api.interceptors.response.use(config => {}, error => {
+api.interceptors.response.use({}, error => {
   //Этот блок кода срабатывает когда прилетает ошибка с бэка
 
   if(error.response.data.message === 'Token has expired') {
