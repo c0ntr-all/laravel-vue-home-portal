@@ -1,7 +1,12 @@
 <template>
   <el-header><h2 class="page-header">Профиль</h2></el-header>
   <el-main>
-    <p>Логин: {{ login }}</p>
+    <p v-if="loading === false">Логин: {{ login }}</p>
+    <el-skeleton v-if="loading !== false" style="width: 240px" animated>
+      <template #template>
+        <el-skeleton-item variant="text" style="margin-right: 16px" />
+      </template>
+    </el-skeleton>
   </el-main>
 </template>
 <script>
@@ -10,7 +15,8 @@
   export default {
     data() {
       return {
-        login: ''
+        login: '',
+        loading: false
       }
     },
     methods: {
