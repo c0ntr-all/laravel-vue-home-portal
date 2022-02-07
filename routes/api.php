@@ -40,5 +40,11 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::get('{task}', [TaskListController::class, 'show']);
             Route::post('list/store', [TaskListController::class, 'store']);
         });
+
+        Route::prefix('Reminds')->group(function() {
+            Route::get('/', [RemindController::class, 'index']);
+            Route::get('{remind}', [RemindController::class, 'show']);
+            Route::post('store', [RemindController::class, 'store']);
+        });
     });
 });
