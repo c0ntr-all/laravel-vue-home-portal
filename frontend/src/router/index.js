@@ -44,6 +44,14 @@ const router = createRouter({
       menu: 1
     },
     {
+      path: '/reminds',
+      component: () => import('../views/Reminds'),
+      title: 'Напоминания',
+      name: 'reminds',
+      alias: '/reminder',
+      menu: 1
+    },
+    {
       path: '/:catchAll(.*)',
       component: () => import('../views/Home'),
       name: '404'
