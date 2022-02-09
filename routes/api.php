@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 
 use App\Http\Controllers\Finances\FinancesController;
 use App\Http\Controllers\Tasks\TaskListController;
+use App\Http\Controllers\Reminds\RemindController;
 
 /*
 |--------------------------------------------------------------------------
