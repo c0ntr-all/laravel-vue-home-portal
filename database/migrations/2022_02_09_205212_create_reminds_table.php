@@ -15,7 +15,12 @@ class CreateRemindsTable extends Migration
     {
         Schema::create('reminds', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->bigInteger('user_id')->unsigned();
+            $table->string('title');
+            $table->date('datetime');
+            $table->timestamp('created_at')->default(date('Y-m-d H:i:s'));
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
