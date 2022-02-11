@@ -7,7 +7,10 @@
         </el-form>
       </div>
     </template>
-    <el-button type="primary">Добавить</el-button>
+    <el-button
+      type="primary"
+      @click="createList"
+    >Добавить</el-button>
     <el-button
       type="danger"
       :icon="CloseBold"
@@ -23,6 +26,8 @@
 </template>
 
 <script>
+  import API from '../../utils/api'
+
   export default {
     data() {
       return {
@@ -32,14 +37,12 @@
     },
     methods: {
       async createList() {
-        const response = await fetch('api/tasks/list/store', {
+        const response = await API.post('api/auth/tasks/list/store', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            title: this.newListTitle
-          })
+          title: this.newListTitle
         })
 
         const data = await response.json()
