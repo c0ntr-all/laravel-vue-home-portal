@@ -19,11 +19,9 @@
   export default {
     methods: {
       logout() {
-        API.post('/api/auth/logout')
-          .then(response => {
-            localStorage.removeItem('access_token')
-            this.$router.push({name: 'login'})
-          })
+        this.$store.dispatch('logout').then(() => {
+          this.$router.push({name: 'login'})
+        })
       }
     },
     provide() {

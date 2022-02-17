@@ -38,12 +38,14 @@ export default createStore({
           }
         })
     },
-    logout({commit}) {
-      API.post('/api/auth/logout')
-        .then(response => {
-          localStorage.removeItem('access_token')
-        })
-      commit('logout')
+    logout({commit, dispatch}) {
+      return new Promise((resolve, reject) => {
+        API.post('/api/auth/logout')
+          .then(response => {
+            localStorage.removeItem('access_token')
+          })
+        commit('logout')
+      })
     }
   },
   modules: {
