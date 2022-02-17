@@ -26,8 +26,9 @@ export default createStore({
     },
   },
   actions: {
-    async login({commit}, email, password) {
-      await axios.post('api/auth/login', {email: email, password: password})
+    login({commit}, data) {
+      return new Promise((resolve, reject) => {
+        axios.post('api/auth/login', data)
         .then(response => {
           localStorage.setItem('access_token', response.data.access_token)
           commit('auth_success', token, user)
@@ -37,6 +38,7 @@ export default createStore({
             localStorage.removeItem('access_token')
           }
         })
+      })
     },
     logout({commit, dispatch}) {
       return new Promise((resolve, reject) => {
