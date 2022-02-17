@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '../store/index'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -62,16 +63,14 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next ) => {
-  const accessToken = localStorage.access_token
-
   if(to.name !== 'login') {
-    if(!accessToken) {
+    if(!store.getters.isLoggedIn) {
       return next({
         name: 'login'
       })
     }
   }
-  if(to.name === 'login' && accessToken) {
+  if(to.name === 'login' && store.getters.isLoggedIn) {
     return next({
       name: 'home'
     })

@@ -14,7 +14,6 @@
 
 <script>
   import TheSidebar from './components/TheSidebar.vue'
-  import API from "./utils/api";
 
   export default {
     methods: {
