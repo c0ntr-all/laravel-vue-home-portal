@@ -26,18 +26,17 @@ export default createStore({
     },
   },
   actions: {
-    login({commit}, data) {
-      return new Promise((resolve, reject) => {
-        axios.post('api/auth/login', data)
-        .then(response => {
-          localStorage.setItem('access_token', response.data.access_token)
-          commit('auth_success', token, user)
-        }).catch(error => {
-          if(error.response.data.error) {
-            commit('auth_error')
-            localStorage.removeItem('access_token')
-          }
-        })
+    async login({commit}, data) {
+      await axios.post('api/auth/login', data)
+      .then(response => {
+        localStorage.setItem('access_token', response.data.access_token)
+        commit('auth_success', response.data.access_token, data.email)
+      }).catch(error => {
+        console.log(error)
+        if(error.response.data.error) {
+          commit('auth_error')
+          localStorage.removeItem('access_token')
+        }
       })
     },
     logout({commit, dispatch}) {
