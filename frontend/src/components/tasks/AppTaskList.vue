@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card">
+  <el-card class="task-list">
     <template #header>
       <div class="card-header">
         <span>{{ listTitle }}</span>
@@ -52,22 +52,25 @@
 </script>
 
 <style lang="scss" scoped>
+  .task-list {
+    background-color: #ebecf0;
+    border-radius: 3px;
+  }
   .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-
   .text {
     font-size: 14px;
   }
-
   .task {
-    margin-bottom: 18px;
+    margin-bottom: 8px;
 
     &__link {
       display: block;
       padding: 8px;
+      background-color: #fff;
       text-decoration: none;
       color: #000;
       border-radius: 3px;
@@ -78,8 +81,5 @@
         border-bottom-color: #091e4240;
       }
     }
-  }
-
-  .box-card {
   }
 </style>
