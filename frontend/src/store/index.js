@@ -5,6 +5,7 @@ import API from "../utils/api";
 export default createStore({
   state: {
     status: '',
+    message: '',
     token: localStorage.getItem('access_token') || '',
     user: {}
   },
@@ -17,8 +18,9 @@ export default createStore({
       state.token = token
       state.user = user
     },
-    auth_error(state){
+    auth_error(state, message){
       state.status = 'error'
+      state.message = message
     },
     logout(state){
       state.status = ''
@@ -32,9 +34,8 @@ export default createStore({
         localStorage.setItem('access_token', response.data.access_token)
         commit('auth_success', response.data.access_token, data.email)
       }).catch(error => {
-        console.log(error)
         if(error.response.data.error) {
-          commit('auth_error')
+          commit('auth_error', error.response.data.error)
           localStorage.removeItem('access_token')
         }
       })
