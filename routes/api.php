@@ -39,9 +39,12 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
 
         Route::prefix('tasks')->group(function() {
             Route::get('/', [TaskListController::class, 'index']);
-            Route::get('{task}', [TaskListController::class, 'show']);
-            Route::get('list/{task}/store', [TaskController::class, 'store']);
-            Route::post('list/store', [TaskListController::class, 'store']);
+            Route::put('list/store', [TaskListController::class, 'store']);
+            Route::post('list/{list}/update', [TaskListController::class, 'update']);
+            Route::delete('list/{list}/delete', [TaskListController::class, 'delete']);
+            Route::put('store', [TaskController::class, 'store']);
+            Route::post('{task}/update', [TaskController::class, 'update']);
+            Route::delete('{task}/delete', [TaskController::class, 'delete']);
         });
 
         Route::prefix('Reminds')->group(function() {
