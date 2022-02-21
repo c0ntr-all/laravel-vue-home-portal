@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 
 use App\Http\Controllers\Finances\FinancesController;
 use App\Http\Controllers\Tasks\TaskListController;
+use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Reminds\RemindController;
 
 /*
@@ -39,6 +40,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
         Route::prefix('tasks')->group(function() {
             Route::get('/', [TaskListController::class, 'index']);
             Route::get('{task}', [TaskListController::class, 'show']);
+            Route::get('list/{task}/store', [TaskController::class, 'store']);
             Route::post('list/store', [TaskListController::class, 'store']);
         });
 
