@@ -11,8 +11,8 @@
     <div class="text task" v-for="item in items">
       <a href="#" class="task__link" @click.prevent="openTask">{{ item.title }}</a>
     </div>
-    <el-form @submit.prevent="createItem">
-      <el-input placeholder="Введите заголовок!" v-model="newItemTitle" />
+    <el-form @submit.prevent="createTask">
+      <el-input placeholder="Введите заголовок!" v-model="newTaskTitle" />
     </el-form>
   </el-card>
 </template>
@@ -24,10 +24,12 @@
 </script>
 
 <script>
+  import API from '../../utils/api'
+
   export default {
     data() {
       return {
-        newItemTitle: '',
+        newTaskTitle: '',
       }
     },
     props: {
@@ -35,8 +37,9 @@
       items: Array,
     },
     methods: {
-      async createItem() {
+      async createTask() {
         console.log(this.newListTitle)
+        const {data} = await API.post('api/auth/tasks/store')
         // const response = await fetch('api/tasks/list/store', {
         //   method: 'POST',
         //   headers: {
@@ -45,12 +48,12 @@
         //   body: JSON.stringify({
         //     title: this.newListTitle
         //   })
-        // })
-        //
-        // const data = await response.json()
-        // if(data) {
-        //   console.log(data.result)
-        // }
+        })
+
+        const data = await response.json()
+        if(data) {
+          console.log(data.result)
+        }
       },
       openTask() {
         alert('open task')
