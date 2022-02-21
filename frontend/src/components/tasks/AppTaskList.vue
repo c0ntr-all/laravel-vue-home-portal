@@ -3,7 +3,9 @@
     <template #header>
       <div class="card-header">
         <span>{{ listTitle }}</span>
-        <el-button class="button" type="text">Operation button</el-button>
+        <el-button class="button" type="text">
+          <el-icon :size="20"><edit /></el-icon>
+        </el-button>
       </div>
     </template>
     <div class="text task" v-for="item in items">
@@ -14,6 +16,12 @@
     </el-form>
   </el-card>
 </template>
+
+<script setup>
+  import {
+    Edit,
+  } from '@element-plus/icons-vue'
+</script>
 
 <script>
   export default {
