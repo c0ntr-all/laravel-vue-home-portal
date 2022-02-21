@@ -48,9 +48,9 @@
         //   body: JSON.stringify({
         //     title: this.newListTitle
         //   })
-        })
+        // })
 
-        const data = await response.json()
+        // const data = await response.json()
         if(data) {
           console.log(data.result)
         }
