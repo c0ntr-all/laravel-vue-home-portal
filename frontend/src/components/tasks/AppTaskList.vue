@@ -38,19 +38,7 @@
     },
     methods: {
       async createTask() {
-        console.log(this.newListTitle)
-        const {data} = await API.post('api/auth/tasks/store')
-        // const response = await fetch('api/tasks/list/store', {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json'
-        //   },
-        //   body: JSON.stringify({
-        //     title: this.newListTitle
-        //   })
-        // })
-
-        // const data = await response.json()
+        const {data} = await API.put('api/auth/tasks/store', {'title': this.newTaskTitle})
         if(data) {
           console.log(data.result)
         }
