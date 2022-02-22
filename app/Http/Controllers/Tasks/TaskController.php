@@ -7,12 +7,14 @@ use App\Http\Requests\Tasks\Tasks\StoreRequest;
 use App\Http\Requests\Tasks\Tasks\UpdateRequest;
 use App\Models\User;
 use App\Models\Tasks\Task;
+use App\Models\Tasks\TaskList;
 use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
 
 class TaskController extends Controller
 {
     protected Task $task;
+    protected TaskList $taskList;
     protected TaskService $taskService;
     protected User $user;
 
@@ -26,9 +28,9 @@ class TaskController extends Controller
         return new TaskResource($task->load('user'));
     }
 
-    public function store(StoreRequest $request): TaskResource
+    public function store(StoreRequest $request, $taskList): TaskResource
     {
-        $task = auth()->user()->task()->create($request->validated());
+        $task = $taskList->tasks()->create($request->validated());
 
         return $this->taskResponse($task);
     }

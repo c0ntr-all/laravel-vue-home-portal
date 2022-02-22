@@ -31,9 +31,9 @@ class TaskListController extends Controller
 
     public function store(StoreRequest $request): TaskListResource
     {
-        $task = auth()->user()->taskLists()->create($request->validated());
+        $taskList = auth()->user()->taskLists()->create($request->validated());
 
-        return $this->taskListResponse($task);
+        return $this->taskListResponse($taskList);
     }
 
     protected function taskListResponse(TaskList $taskList): TaskListResource

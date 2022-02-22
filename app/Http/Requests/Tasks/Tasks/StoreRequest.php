@@ -15,6 +15,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:30',
+            'list_id' => 'required|int'
         ];
     }
 }

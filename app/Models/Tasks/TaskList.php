@@ -22,7 +22,7 @@ class TaskList extends Model
         'updated_at',
         'deleted_at',
     ];
-    public function items(): HasMany
+    public function tasks(): HasMany
     {
         return $this->hasMany(Task::class, 'list_id', 'id');
     }
