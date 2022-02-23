@@ -26,20 +26,15 @@ class TaskController extends Controller
     }
     protected function taskResponse(Task $task): TaskResource
     {
-        return new TaskResource($task->load('user'));
+        return new TaskResource($task);
     }
 
     public function store(StoreRequest $request): TaskResource
     {
-        dd($request->validated());
-
-        $task = $this->taskList->tasks()->create($request->validated());
+//        dd($request->validated());
+        $task = Task::create($request->validated());
 
         return $this->taskResponse($task);
-    }
-
-    public function show() {
-        return view('tasks.test');
     }
 
     public function update(Task $task, UpdateRequest $request): TaskResource

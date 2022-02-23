@@ -38,6 +38,6 @@ class TaskListController extends Controller
 
     protected function taskListResponse(TaskList $taskList): TaskListResource
     {
-        return new TaskListResource($taskList->load('user', 'items'));
+        return new TaskListResource($taskList->load('user', 'tasks'));
     }
 }

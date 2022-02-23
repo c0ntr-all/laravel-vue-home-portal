@@ -30,6 +30,7 @@
     data() {
       return {
         newTaskTitle: '',
+        list_id: 0
       }
     },
     props: {
@@ -38,7 +39,10 @@
     },
     methods: {
       async createTask() {
-        const {data} = await API.put('api/auth/tasks/store', {'title': this.newTaskTitle})
+        const {data} = await API.put('api/auth/tasks/store', {
+          'title': this.newTaskTitle,
+          'list_id': 28
+        })
         if(data) {
           console.log(data.result)
         }

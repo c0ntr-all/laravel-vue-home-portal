@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\TaskResource;
 
 class TaskListResource extends JsonResource
 {
@@ -14,7 +13,7 @@ class TaskListResource extends JsonResource
         return [
             'title' => $this->title,
             'createdAt' => $this->created_at,
-            'items' => $this->items,
+            'items' => $this->tasks,
         ];
     }
 }
