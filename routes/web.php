@@ -18,3 +18,7 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'test'])->name('tes
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+/*Для тестирования*/
+Route::get('/tasks/store', [App\Http\Controllers\Tasks\TaskController::class, 'store'])->name('store');
+Route::get('/tasks/show', [App\Http\Controllers\Tasks\TaskController::class, 'show'])->name('show');

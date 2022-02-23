@@ -18,9 +18,10 @@ class TaskController extends Controller
     protected TaskService $taskService;
     protected User $user;
 
-    public function __construct(Task $task, User $user)
+    public function __construct(Task $task, TaskList $taskList, User $user)
     {
         $this->task = $task;
+        $this->taskList = $taskList;
         $this->user = $user;
     }
     protected function taskResponse(Task $task): TaskResource
@@ -28,11 +29,17 @@ class TaskController extends Controller
         return new TaskResource($task->load('user'));
     }
 
-    public function store(StoreRequest $request, $taskList): TaskResource
+    public function store(StoreRequest $request): TaskResource
     {
-        $task = $taskList->tasks()->create($request->validated());
+        dd($request->validated());
+
+        $task = $this->taskList->tasks()->create($request->validated());
 
         return $this->taskResponse($task);
+    }
+
+    public function show() {
+        return view('tasks.test');
     }
 
     public function update(Task $task, UpdateRequest $request): TaskResource
