@@ -37,17 +37,11 @@
     },
     methods: {
       async createList() {
-        const response = await API.post('api/auth/tasks/list/store', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+        const {data} = await API.put('api/auth/tasks/list/store', {
           title: this.newListTitle
         })
-
-        const data = await response.json()
         if(data) {
-          console.log(data.result)
+          this.$emit('listCreated', data.lists)
         }
       },
     }

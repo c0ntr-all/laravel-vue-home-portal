@@ -6,7 +6,9 @@
       :listTitle="list.title"
       :items="list.items"
     ></app-task-list>
-    <app-list-create-button></app-list-create-button>
+    <app-list-create-button
+      @listCreated="addList"
+    ></app-list-create-button>
   </el-space>
 </template>
 
@@ -22,23 +24,8 @@
       }
     },
     methods: {
-      async createTask() {
-        const response = await fetch('api/tasks/create', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            title: this.title
-          })
-        })
-
-        const data = await response.json()
-        this.tasks.push({
-          title: this.title,
-        })
-
-        this.title = ''
+      addList(data) {
+        this.lists.push(data)
       }
     },
     components: {AppTaskList,AppListCreateButton}
