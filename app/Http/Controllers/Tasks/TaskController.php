@@ -29,10 +29,9 @@ class TaskController extends Controller
         return new TaskResource($task);
     }
 
-    public function store(StoreRequest $request): TaskResource
+    public function store(StoreRequest $request, TaskList $taskList): TaskResource
     {
-//        dd($request->validated());
-        $task = Task::create($request->validated());
+        $task = $taskList->tasks()->create($request->validated());
 
         return $this->taskResponse($task);
     }

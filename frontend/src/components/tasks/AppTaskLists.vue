@@ -2,6 +2,7 @@
   <el-space alignment="flex-start" wrap>
     <app-task-list
       v-for="list in lists"
+      :listId="list.id"
       :listTitle="list.title"
       :items="list.items"
     ></app-task-list>

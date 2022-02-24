@@ -11,7 +11,7 @@
     <div class="text task" v-for="item in items">
       <a href="#" class="task__link" @click.prevent="openTask">{{ item.title }}</a>
     </div>
-    <el-form @submit.prevent="createTask">
+    <el-form @submit.prevent="createTask(listId)">
       <el-input placeholder="Введите заголовок!" v-model="newTaskTitle" />
     </el-form>
   </el-card>
@@ -30,21 +30,20 @@
     data() {
       return {
         newTaskTitle: '',
-        list_id: 0
       }
     },
     props: {
+      listId: Number,
       listTitle: String,
       items: Array,
     },
     methods: {
-      async createTask() {
-        const {data} = await API.put('api/auth/tasks/store', {
-          'title': this.newTaskTitle,
-          'list_id': 28
+      async createTask(listId) {
+        const {data} = await API.put('api/auth/tasks/store/' + listId, {
+          'title': this.newTaskTitle
         })
         if(data) {
-          console.log(data.result)
+          console.log(data.items)
         }
       },
       openTask() {
