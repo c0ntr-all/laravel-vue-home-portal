@@ -43,7 +43,7 @@
           'title': this.newTaskTitle
         })
         if(data) {
-          console.log(data.items)
+          this.items.push(data.items)
         }
       },
       openTask() {
