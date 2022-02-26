@@ -9,7 +9,10 @@
       </div>
     </template>
     <div class="text task" v-for="item in items">
-      <a href="#" class="task__link" @click.prevent="openTask">{{ item.title }}</a>
+      <a href="#" class="task__link" @click.prevent="openTask = true">{{ item.title }}</a>
+      <transition name="modal">
+        <app-modal v-if="openTask" @close="openTask = false"></app-modal>
+      </transition>
     </div>
     <el-form @submit.prevent="createTask(listId)">
       <el-input placeholder="Введите заголовок!" v-model="newTaskTitle" />
@@ -26,10 +29,13 @@
 <script>
   import API from '../../utils/api'
 
+  import AppModal from '../default/AppModal'
+
   export default {
     data() {
       return {
         newTaskTitle: '',
+        openTask: false
       }
     },
     props: {
@@ -45,11 +51,9 @@
         if(data) {
           this.items.push(data.items)
         }
-      },
-      openTask() {
-        alert('open task')
       }
-    }
+    },
+    components: {AppModal}
   }
 </script>
 

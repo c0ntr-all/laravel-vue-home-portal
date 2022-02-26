@@ -20,16 +20,6 @@
   </div>
 </template>
 
-<script>
-  export default {
-    data() {
-      return {
-        showModal: false
-      }
-    }
-  }
-</script>
-
 <style lang="scss" scoped>
   .modal-mask {
     position: fixed;
