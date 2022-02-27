@@ -2,7 +2,11 @@
   <div class="text task">
     <a href="#" class="task__link" @click.prevent="openTask = true">{{ item.title }}</a>
     <transition name="modal">
-      <app-modal v-if="openTask" @closeModal="openTask = false"></app-modal>
+      <app-modal
+        v-if="openTask"
+        @closeModal="openTask = false"
+        :item="item"
+      ></app-modal>
     </transition>
   </div>
 </template>

@@ -2,23 +2,32 @@
   <div class="modal-mask">
     <div class="modal-wrapper">
       <div class="modal-container">
-
         <div class="modal-header">
-          default header
+          {{ item.title }}
         </div>
 
         <div class="modal-body">
-          default body
+          {{ item.content }}
         </div>
 
         <div class="modal-footer">
-          default footer
           <button class="modal-default-button" @click="this.$emit('closeModal')">OK</button>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+  export default {
+    props: {
+      item: Object
+    },
+    mounted() {
+      console.log(this.item)
+    },
+  }
+</script>
 
 <style lang="scss" scoped>
   .modal-mask {
@@ -38,7 +47,7 @@
   }
 
   .modal-container {
-    width: 300px;
+    width: 768px;
     margin: 0px auto;
     padding: 20px 30px;
     background-color: #fff;
