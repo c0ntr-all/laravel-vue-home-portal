@@ -1,0 +1,51 @@
+<template>
+  <div class="text task">
+    <a href="#" class="task__link" @click.prevent="openTask = true">{{ item.title }}</a>
+    <transition name="modal">
+      <app-modal v-if="openTask" @closeModal="openTask = false"></app-modal>
+    </transition>
+  </div>
+</template>
+<script>
+  import AppModal from '../default/AppModal'
+
+  export default {
+    data() {
+      return {
+        openTask: false
+      }
+    },
+    props: {
+      item: Object
+    },
+    components: {AppModal}
+  }
+</script>
+<style lang="scss">
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .text {
+    font-size: 14px;
+  }
+  .task {
+    margin-bottom: 8px;
+
+    &__link {
+      display: block;
+      padding: 8px;
+      background-color: #fff;
+      text-decoration: none;
+      color: #000;
+      border-radius: 3px;
+      box-shadow: 0 1px 0 #091e4240;
+
+      &:hover {
+        background-color: #f4f5f7;
+        border-bottom-color: #091e4240;
+      }
+    }
+  }
+</style>

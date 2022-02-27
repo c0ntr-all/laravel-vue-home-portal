@@ -8,12 +8,7 @@
         </el-button>
       </div>
     </template>
-    <div class="text task" v-for="item in items">
-      <a href="#" class="task__link" @click.prevent="openTask = true">{{ item.title }}</a>
-      <transition name="modal">
-        <app-modal v-if="openTask" @close="openTask = false"></app-modal>
-      </transition>
-    </div>
+    <app-task v-for="item in items" :key="item.id" :item="item"></app-task>
     <el-form @submit.prevent="createTask(listId)">
       <el-input placeholder="Введите заголовок!" v-model="newTaskTitle" />
     </el-form>
@@ -29,13 +24,12 @@
 <script>
   import API from '../../utils/api'
 
-  import AppModal from '../default/AppModal'
+  import AppTask from './AppTask'
 
   export default {
     data() {
       return {
-        newTaskTitle: '',
-        openTask: false
+        newTaskTitle: ''
       }
     },
     props: {
@@ -50,10 +44,11 @@
         })
         if(data) {
           this.items.push(data.items)
+          this.newTaskTitle = ''
         }
-      }
+      },
     },
-    components: {AppModal}
+    components: {AppTask}
   }
 </script>
 
@@ -61,31 +56,5 @@
   .task-list {
     background-color: #ebecf0;
     border-radius: 3px;
-  }
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .text {
-    font-size: 14px;
-  }
-  .task {
-    margin-bottom: 8px;
-
-    &__link {
-      display: block;
-      padding: 8px;
-      background-color: #fff;
-      text-decoration: none;
-      color: #000;
-      border-radius: 3px;
-      box-shadow: 0 1px 0 #091e4240;
-
-      &:hover {
-        background-color: #f4f5f7;
-        border-bottom-color: #091e4240;
-      }
-    }
   }
 </style>
