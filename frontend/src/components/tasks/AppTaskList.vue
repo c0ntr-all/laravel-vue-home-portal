@@ -54,6 +54,7 @@
 
 <style lang="scss" scoped>
   .task-list {
+    width: 272px;
     background-color: #ebecf0;
     border-radius: 3px;
   }
