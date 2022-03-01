@@ -2,29 +2,28 @@
   <div class="modal-mask">
     <div class="modal-wrapper">
       <div class="modal-container">
-        <div class="modal-header">
-          <div class="modal-header__title">
-            <h2>{{ item.title }}</h2>
-          </div>
-          <div class="modal-header__close">
-            <a class="modal-header__close-btn" href="#" @click.prevent="this.$emit('closeModal')">
-              <el-icon><close-bold /></el-icon>
-            </a>
-          </div>
-        </div>
-
-        <div class="modal-body">
-          <div class="modal-block">
-            <div class="modal-block__title"><h3>Описание</h3></div>
-            <div class="modal-block__content">
-              <textarea v-if="item.content">{{ item.content }}</textarea>
-              <p v-else>Добавьте более подробное описание...</p>
+        <el-form @submit.prevent="storeTask">
+          <div class="modal-header">
+            <div class="modal-header__title"><h2>{{ item.title }}</h2></div>
+            <div class="modal-header__close">
+              <a class="modal-header__close-btn" href="#" @click.prevent="this.$emit('closeModal')">
+                <el-icon><close-bold /></el-icon>
+              </a>
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <el-button type="primary" round>Сохранить</el-button>
-        </div>
+          <div class="modal-body">
+            <div class="modal-block">
+                <div class="modal-block__title"><h3>Описание</h3></div>
+                <div class="modal-block__content">
+                  <textarea v-if="item.content">{{ item.content }}</textarea>
+                  <p v-else>Добавьте более подробное описание...</p>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <el-button type="primary" round>Сохранить</el-button>
+          </div>
+        </el-form>
       </div>
     </div>
   </div>
