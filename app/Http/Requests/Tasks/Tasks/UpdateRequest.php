@@ -15,7 +15,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:30',
-            'content' => 'string'
+            'content' => 'max:1000'
         ];
     }
 }
