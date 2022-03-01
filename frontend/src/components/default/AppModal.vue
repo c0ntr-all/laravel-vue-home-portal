@@ -2,9 +2,12 @@
   <div class="modal-mask">
     <div class="modal-wrapper">
       <div class="modal-container">
-        <el-form @submit.prevent="storeTask">
+        <el-form>
           <div class="modal-header">
-            <div class="modal-header__title"><h2>{{ item.title }}</h2></div>
+            <div class="modal-header__title">
+              <el-input placeholder="Введите заголовок!" v-model="model.title" />
+              <h2>{{ item.title }}</h2>
+            </div>
             <div class="modal-header__close">
               <a class="modal-header__close-btn" href="#" @click.prevent="this.$emit('closeModal')">
                 <el-icon><close-bold /></el-icon>
@@ -15,13 +18,13 @@
             <div class="modal-block">
                 <div class="modal-block__title"><h3>Описание</h3></div>
                 <div class="modal-block__content">
-                  <textarea v-if="item.content">{{ item.content }}</textarea>
+                  <textarea v-if="item.content" v-model="model.content">{{ item.content }}</textarea>
                   <p v-else>Добавьте более подробное описание...</p>
                 </div>
             </div>
           </div>
           <div class="modal-footer">
-            <el-button type="primary" round>Сохранить</el-button>
+            <el-button type="primary" @click="updateTask(item.id)" round>Сохранить</el-button>
           </div>
         </el-form>
       </div>
@@ -36,10 +39,32 @@
 
 </script>
 <script>
+  import API from '../../utils/api'
+
   export default {
+    data() {
+      return {
+        model: {
+          title: '',
+          content: ''
+        }
+      }
+    },
     props: {
       item: Object
     },
+    methods: {
+      async updateTask(id) {
+        const {data} = await API.post(`api/auth/tasks/${id}/update`, {
+          title: this.model.title,
+          content: this.model.content
+        })
+        if(data) {
+          this.$message.success("Изменения успешно сохранены!");
+        }
+
+      }
+    }
   }
 </script>
 
