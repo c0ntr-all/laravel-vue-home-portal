@@ -15,17 +15,15 @@
 
         <div class="modal-body">
           <div class="modal-block">
-            <div class="modal-block__title">
-              <h3>Описание</h3>
-              <div class="modal-block__content">
-                <textarea v-if="item.content">{{ item.content }}</textarea>
-                <p v-else>Добавьте более подробное описание...</p>
-              </div>
+            <div class="modal-block__title"><h3>Описание</h3></div>
+            <div class="modal-block__content">
+              <textarea v-if="item.content">{{ item.content }}</textarea>
+              <p v-else>Добавьте более подробное описание...</p>
             </div>
           </div>
         </div>
-
         <div class="modal-footer">
+          <el-button type="primary" round>Сохранить</el-button>
         </div>
       </div>
     </div>
@@ -92,8 +90,8 @@
     }
   }
 
-  .modal-body {
-    margin: 20px 0;
+  .modal-block {
+    margin-bottom: 1rem;
   }
 
   .modal-default-button {

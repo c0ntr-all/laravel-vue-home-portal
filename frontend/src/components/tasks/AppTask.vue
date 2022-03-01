@@ -35,6 +35,7 @@
     font-size: 14px;
   }
   .task {
+    word-break: break-all;
     margin-bottom: 8px;
 
     &__link {
