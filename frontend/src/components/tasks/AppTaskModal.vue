@@ -6,7 +6,6 @@
           <div class="modal-header">
             <div class="modal-header__title">
               <el-input placeholder="Введите заголовок!" v-model="model.title" />
-              <h2>{{ item.title }}</h2>
             </div>
             <div class="modal-header__close">
               <a class="modal-header__close-btn" href="#" @click.prevent="this.$emit('closeModal')">
@@ -18,8 +17,7 @@
             <div class="modal-block">
                 <div class="modal-block__title"><h3>Описание</h3></div>
                 <div class="modal-block__content">
-                  <textarea v-if="item.content" v-model="model.content">{{ item.content }}</textarea>
-                  <p v-else>Добавьте более подробное описание...</p>
+                  <el-input v-model="model.content" type="textarea">{{ item.content }}</el-input>
                 </div>
             </div>
           </div>
@@ -45,8 +43,8 @@
     data() {
       return {
         model: {
-          title: '',
-          content: ''
+          title: this.item.title,
+          content: this.item.content ? this.item.content : 'Добавьте более подробное описание...'
         }
       }
     },
