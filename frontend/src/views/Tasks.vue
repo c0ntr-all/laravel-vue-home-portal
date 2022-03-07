@@ -1,14 +1,21 @@
 <template>
   <el-header><h2 class="page-header">Задачи</h2></el-header>
   <el-main>
-    <app-task-lists
-      :lists="this.$store.state.lists"
-      v-loading="loading"
-    />
+    <el-space alignment="flex-start" v-loading="loading" wrap>
+      <app-task-list
+        v-for="list in this.$store.state.lists"
+        :listId="list.id"
+        :listTitle="list.title"
+        :items="list.items"
+      ></app-task-list>
+      <app-list-create-button @listCreated="addList"></app-list-create-button>
+    </el-space>
   </el-main>
 </template>
 <script>
-  import AppTaskLists from "../components/tasks/AppTaskLists";
+  import AppTaskList from "../components/tasks/AppTaskList";
+  import AppListCreateButton from "../components/tasks/AppListCreateButton";
+
   import API from '../utils/api'
 
   export default {
@@ -42,16 +49,11 @@
           this.loading = false
         }
       },
-      async createList() {
-        const response = await API.post('api/auth/tasks/create', {
-          body: JSON.stringify({
-            title: this.title
-          })
-        })
-        const data = await response.json()
+      addList(list) {
+        this.$store.commit('ADD_LIST', list)
       }
     },
-    components: {AppTaskLists},
+    components: {AppTaskList,AppListCreateButton},
     mounted() {
       this.loadData()
     }
