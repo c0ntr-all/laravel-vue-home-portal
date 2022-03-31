@@ -88,7 +88,7 @@
     },
     methods: {
       login() {
-        this.$store.dispatch('auth/login', {email: this.model.email, password: this.model.password})
+        this.$store.dispatch('login', {email: this.model.email, password: this.model.password})
         .then(() => {
           if(this.$store.state.auth.status === 'success') {
             this.$message.success("Вы успешно вошли в систему!");

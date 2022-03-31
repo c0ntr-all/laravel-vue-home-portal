@@ -3,7 +3,7 @@
   <el-main>
     <el-space alignment="flex-start" v-loading="loading" wrap>
       <app-task-list
-        v-for="list in this.$store.state.lists"
+        v-for="list in this.$store.getters.lists"
         :listId="list.id"
         :listTitle="list.title"
         :items="list.items"
@@ -33,12 +33,13 @@
           if(!data) {
             throw new Error('Нет данных!')
           }
-          this.$store.state.lists = Object.keys(data.lists).map(key => {
+          const lists = Object.keys(data.lists).map(key => {
             return {
               id: key,
               ...data.lists[key]
             }
           })
+          this.$store.dispatch('loadLists', lists)
           this.loading = false
         }catch(e) {
           this.alert = {
@@ -56,6 +57,6 @@
     components: {AppTaskList,AppListCreateButton},
     mounted() {
       this.loadData()
-    }
+    },
   }
 </script>

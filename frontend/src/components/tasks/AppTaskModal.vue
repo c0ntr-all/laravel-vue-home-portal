@@ -58,6 +58,7 @@
           content: this.model.content
         })
         if(data) {
+          // this.$emit('taskUpdated', data.items.title)
           this.$message.success("Изменения успешно сохранены!");
         }
       }

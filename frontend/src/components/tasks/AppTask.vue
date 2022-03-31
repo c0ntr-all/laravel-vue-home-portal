@@ -1,6 +1,11 @@
 <template>
   <div class="text task">
-    <a href="#" class="task__link" @click.prevent="openTask = true">{{ item.title }}</a>
+    <a
+      href="#"
+      class="task__link"
+      @click.prevent="openTask = true"
+      @taskUpdated="taskUpdated"
+    >{{ item.title }}</a>
     <transition name="modal">
       <app-task-modal
         v-if="openTask"
@@ -16,11 +21,17 @@
   export default {
     data() {
       return {
-        openTask: false
+        openTask: false,
+        title: this.item.title
       }
     },
     props: {
       item: Object
+    },
+    methods: {
+      taskUpdated(title) {
+        this.title = title
+      }
     },
     components: {AppTaskModal}
   }
