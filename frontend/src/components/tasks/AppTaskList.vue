@@ -3,9 +3,18 @@
     <template #header>
       <div class="card-header">
         <span>{{ listTitle }}</span>
-        <el-button class="button" type="text">
-          <el-icon :size="20"><edit /></el-icon>
-        </el-button>
+        <el-popover v-model:visible="visible" placement="left" :width="160">
+          <p>Are you sure to delete this?</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="small" type="text" @click="visible = false">cancel</el-button>
+            <el-button size="small" type="primary" @click="visible = false">confirm</el-button>
+          </div>
+          <template #reference>
+            <el-button @click="visible = true" class="button" type="text">
+              <el-icon :size="20"><edit /></el-icon>
+            </el-button>
+          </template>
+        </el-popover>
       </div>
     </template>
     <app-task v-for="item in items" :key="item.id" :item="item"></app-task>
@@ -19,17 +28,20 @@
   import {
     Edit,
   } from '@element-plus/icons-vue'
+  import { ref } from 'vue'
 </script>
 
 <script>
   import API from '../../utils/api'
 
   import AppTask from './AppTask'
+  import {ref} from "vue";
 
   export default {
     data() {
       return {
-        newTaskTitle: ''
+        newTaskTitle: '',
+        visible: ref(false)
       }
     },
     props: {
