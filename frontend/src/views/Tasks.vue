@@ -7,6 +7,7 @@
         :listId="list.id"
         :listTitle="list.title"
         :items="list.items"
+        :key="list.id"
       ></app-task-list>
       <app-list-create-button @listCreated="addList"></app-list-create-button>
     </el-space>
