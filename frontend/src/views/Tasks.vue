@@ -3,11 +3,13 @@
   <el-main>
     <el-space alignment="flex-start" v-loading="loading" wrap>
       <app-task-list
-        v-for="list in this.$store.getters.lists"
+        v-for="(list, index) in this.$store.getters.lists"
         :listId="list.id"
         :listTitle="list.title"
         :items="list.items"
         :key="list.id"
+        :isActive="activeList === index"
+        @onTitleEdit="editListTitle(index)"
       ></app-task-list>
       <app-list-create-button @listCreated="addList"></app-list-create-button>
     </el-space>
@@ -23,7 +25,8 @@
     data() {
       return {
         title: '',
-        loading: false
+        loading: false,
+        activeList: null
       }
     },
     methods: {
@@ -53,11 +56,18 @@
       },
       addList(list) {
         this.$store.commit('ADD_LIST', list)
+      },
+      editListTitle(index) {
+        if (this.activeList === index) {
+          this.activeList = null;
+        } else {
+          this.activeList = index;
+        }
       }
     },
     components: {AppTaskList,AppListCreateButton},
     mounted() {
       this.loadData()
-    },
+    }
   }
 </script>

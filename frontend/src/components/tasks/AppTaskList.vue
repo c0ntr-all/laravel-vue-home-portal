@@ -1,9 +1,9 @@
 <template>
   <div class="list">
-    <div class="list__header" :ref="'listHeader' + listId">
+    <div class="list__header">
       <div class="list__header--cover js-header-cover"
-           :class="{'is-hidden':headerEdit}"
-           @click="headerEdit = !headerEdit">
+           @click="headerEdit"
+           :class="{'is-hidden':isActive}">
       </div>
       <textarea class="list__header-name"
                 spellcheck="false"
@@ -11,7 +11,7 @@
                 maxlength="512"
                 data-autosize="true"
                 style="overflow: hidden; overflow-wrap: break-word; height: 28px;"
-                :class="{'is-active':headerEdit}"
+                :class="{'is-active':isActive}"
       >{{ listTitle }}</textarea>
       <el-popover v-model:visible="visible" placement="left" :width="160">
         <p>Are you sure to delete this?</p>
@@ -55,13 +55,15 @@
       return {
         newTaskTitle: '',
         visible: ref(false),
-        headerEdit: false
+        activeList: null
       }
     },
+    emits: ['onTitleEdit'],
     props: {
       listId: Number,
       listTitle: String,
       items: Array,
+      isActive: Boolean
     },
     methods: {
       async createTask(listId) {
@@ -73,8 +75,7 @@
           this.newTaskTitle = ''
         }
       },
-      editHeader(e){
-        console.log(this.$refs)
+      editHeader(event){
         let el = this.$refs.listHeader + this.listId;
         let textarea = (this.$refs.listHeader + this.listId).querySelector('textarea');
         textarea.focus();
@@ -84,13 +85,16 @@
           this.headerEdit = false
         }
       },
+      headerEdit() {
+        this.$emit('onTitleEdit')
+      }
     },
     components: {AppTask},
     created(){
-      document.addEventListener('click', this.editHeader)
+      //document.addEventListener('click', this.editHeader)
     },
     destroyed () {
-      document.removeEventListener('click', this.editHeader)
+      //document.removeEventListener('click', this.editHeader)
     },
   }
 </script>
