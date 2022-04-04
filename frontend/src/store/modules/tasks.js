@@ -1,4 +1,3 @@
-import axios from "axios";
 import API from "../../utils/api";
 
 export default {
@@ -20,7 +19,6 @@ export default {
         for(let taskKey in state.lists[listKey].items) {
           if(state.lists[listKey].items[taskKey].id === task.id) {
             state.lists[listKey].items[taskKey] = task
-            console.log(state.lists[listKey].items[taskKey])
           }
         }
       }
