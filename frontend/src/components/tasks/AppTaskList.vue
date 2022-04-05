@@ -75,6 +75,8 @@
         }).catch(error => {
           this.$message.error(error);
         })
+
+        this.newTaskTitle = ''
       },
       editHeader(event){
         let el = this.$refs.listHeader + this.listId;
