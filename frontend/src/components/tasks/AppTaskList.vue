@@ -66,11 +66,15 @@
     },
     methods: {
       createTask() {
-        this.$store.dispatch('createTask', {
+        //TODO: Сделать человеческую обработку результата и ошибок из запроса
+        let test = this.$store.dispatch('createTask', {
           title: this.newTaskTitle,
           list_id: this.list.id
+        }).then(result => {
+          this.$message.success("Карточка успешно добавлена!");
+        }).catch(error => {
+          this.$message.error(error);
         })
-        this.newTaskTitle = ''
       },
       editHeader(event){
         let el = this.$refs.listHeader + this.listId;

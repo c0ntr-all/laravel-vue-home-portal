@@ -37,9 +37,7 @@ export default {
         content: task.content
       })
       if(data) {
-        //TODO: добавить поля на бэке и передавать тут data. Сделать отображение сообщений.
-        context.commit('UPDATE_TASK', task)
-        //this.$message.success("Изменения успешно сохранены!");
+        context.commit('UPDATE_TASK', data.items)
       }
     },
     async createTask(context, newList) {
@@ -48,6 +46,7 @@ export default {
       })
       if(data) {
         context.commit('CREATE_TASK', data.items)
+        return 'test'
       }
     },
   },
