@@ -12,7 +12,7 @@
                 data-autosize="true"
                 style="overflow: hidden; overflow-wrap: break-word; height: 28px;"
                 :class="{'is-active':isActive}"
-      >{{ listTitle }}</textarea>
+      >{{ this.list.title }}</textarea>
       <el-popover v-model:visible="visible" placement="left" :width="160">
         <p>Are you sure to delete this?</p>
         <div style="text-align: right; margin: 0">
@@ -30,7 +30,7 @@
       <app-task v-for="item in items" :key="item.id" :item="item"></app-task>
     </div>
     <div class="list__footer">
-      <el-form @submit.prevent="createTask(listId)">
+      <el-form @submit.prevent="createTask(this.list.id)">
         <el-input placeholder="Введите заголовок!" v-model="newTaskTitle" />
       </el-form>
     </div>
@@ -60,20 +60,20 @@
     },
     emits: ['onTitleEdit'],
     props: {
-      listId: Number,
-      listTitle: String,
+      list: Object,
       items: Array,
       isActive: Boolean
     },
     methods: {
       async createTask(listId) {
-        const {data} = await API.put('api/auth/tasks/store/' + listId, {
-          'title': this.newTaskTitle
-        })
-        if(data) {
-          this.items.push(data.items)
-          this.newTaskTitle = ''
-        }
+        this.$store.dispatch('createTask', {title: this.newTaskTitle, list_id: this.list.id})
+        // const {data} = await API.put('api/auth/tasks/store/' + listId, {
+        //   'title': this.newTaskTitle
+        // })
+        // if(data) {
+        //   this.items.push(data.items)
+        //   this.newTaskTitle = ''
+        // }
       },
       editHeader(event){
         let el = this.$refs.listHeader + this.listId;

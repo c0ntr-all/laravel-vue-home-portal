@@ -4,8 +4,7 @@
     <el-space alignment="flex-start" v-loading="loading" wrap>
       <app-task-list
         v-for="(list, index) in this.$store.getters.lists"
-        :listId="list.id"
-        :listTitle="list.title"
+        :list="list"
         :items="list.items"
         :key="list.id"
         :isActive="activeList === index"
