@@ -65,15 +65,12 @@
       isActive: Boolean
     },
     methods: {
-      async createTask(listId) {
-        this.$store.dispatch('createTask', {title: this.newTaskTitle, list_id: this.list.id})
-        // const {data} = await API.put('api/auth/tasks/store/' + listId, {
-        //   'title': this.newTaskTitle
-        // })
-        // if(data) {
-        //   this.items.push(data.items)
-        //   this.newTaskTitle = ''
-        // }
+      createTask() {
+        this.$store.dispatch('createTask', {
+          title: this.newTaskTitle,
+          list_id: this.list.id
+        })
+        this.newTaskTitle = ''
       },
       editHeader(event){
         let el = this.$refs.listHeader + this.listId;
