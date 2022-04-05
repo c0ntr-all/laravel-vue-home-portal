@@ -22,6 +22,9 @@ export default {
           }
         }
       }
+    },
+    CREATE_TASK(state, task) {
+      state.lists.find(item => task.list_id === item.id).items.push(task)
     }
   },
   actions: {
@@ -38,7 +41,15 @@ export default {
         context.commit('UPDATE_TASK', task)
         //this.$message.success("Изменения успешно сохранены!");
       }
-    }
+    },
+    async createTask(context, newList) {
+      const {data} = await API.put('api/auth/tasks/store/' + newList.list_id, {
+        'title': newList.title
+      })
+      if(data) {
+        context.commit('CREATE_TASK', data.items)
+      }
+    },
   },
   getters: {
     lists(state) {
