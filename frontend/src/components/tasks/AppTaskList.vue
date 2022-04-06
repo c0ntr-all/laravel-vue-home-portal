@@ -67,7 +67,7 @@
     methods: {
       createTask() {
         //TODO: Сделать человеческую обработку результата и ошибок из запроса
-        let test = this.$store.dispatch('createTask', {
+        this.$store.dispatch('createTask', {
           title: this.newTaskTitle,
           list_id: this.list.id
         }).then(result => {

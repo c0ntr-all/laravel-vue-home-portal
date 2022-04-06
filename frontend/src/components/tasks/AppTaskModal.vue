@@ -44,7 +44,11 @@
     },
     methods: {
       updateTask(item) {
-        this.$store.dispatch('updateTask', item)
+        this.$store.dispatch('updateTask', item).then(result => {
+          this.$message.success("Карточка успешно обновлена!");
+        }).catch(error => {
+          this.$message.error(error);
+        })
       }
     }
   }
