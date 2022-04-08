@@ -2,7 +2,7 @@
   <div class="list">
     <div class="list__header">
       <div class="list__header--cover js-header-cover"
-           @click="headerEdit"
+           @click="headerEdit($event, list.id)"
            :class="{'is-hidden':isActive}">
       </div>
       <textarea class="list__header-name"
@@ -55,7 +55,7 @@
       return {
         newTaskTitle: '',
         visible: ref(false),
-        activeList: null
+        activeList: null,
       }
     },
     emits: ['onTitleEdit'],
@@ -78,26 +78,24 @@
 
         this.newTaskTitle = ''
       },
-      editHeader(event){
-        let el = this.$refs.listHeader + this.listId;
-        let textarea = (this.$refs.listHeader + this.listId).querySelector('textarea');
-        textarea.focus();
-        textarea.selectionStart = textarea.value.length;
-        let target = e.target;
-        if (el !== target && !el.contains(target) && textarea !== target){
-          this.headerEdit = false
-        }
-      },
+      // editHeader(e){
+      //   let el = this.$refs['list-ref-' + this.activeList]
+      //   let textarea = (this.$refs['list-ref-' + this.activeList]).querySelector('textarea');
+      //   let target = e.target;
+      //   if (el !== target && !el.contains(target) && textarea !== target){
+      //     this.headerEdit = false
+      //   }
+      // },
       headerEdit() {
         this.$emit('onTitleEdit')
       }
     },
     components: {AppTask},
     created(){
-      //document.addEventListener('click', this.editHeader)
+      // document.addEventListener('click', this.editHeader)
     },
     destroyed () {
-      //document.removeEventListener('click', this.editHeader)
+      // document.removeEventListener('click', this.editHeader)
     },
   }
 </script>

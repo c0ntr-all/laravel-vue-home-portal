@@ -9,6 +9,7 @@
         :key="list.id"
         :isActive="activeList === index"
         @onTitleEdit="editListTitle(index)"
+        :ref="'list-ref-' + index"
       ></app-task-list>
       <app-list-create-button @listCreated="addList"></app-list-create-button>
     </el-space>
@@ -62,11 +63,30 @@
         } else {
           this.activeList = index;
         }
+      },
+      clickOutside(e) {
+        this.$store.getters.lists.forEach((list, index) => {
+          let el = this.$refs['list-ref-' + index]
+          console.log(index)
+          return
+          let textarea = (this.$refs['list-ref-' + index]).querySelector('textarea');
+          let target = e.target;
+          if (el !== target && !el.contains(target) && textarea !== target){
+            this.activeList = null
+          }
+        })
       }
     },
     components: {AppTaskList,AppListCreateButton},
     mounted() {
       this.loadData()
-    }
+      // document.addEventListener('click', this.clickOutside)
+    },
+    created(){
+      document.addEventListener('click', this.clickOutside)
+    },
+    destroyed () {
+      document.removeEventListener('click', this.clickOutside)
+    },
   }
 </script>
