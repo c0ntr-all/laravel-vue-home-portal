@@ -5,7 +5,17 @@
         <el-form>
           <div class="modal-header">
             <div class="modal-header__title">
-              <el-input placeholder="Введите заголовок!" v-model="item.title" />
+              <div class="modal-header__title-text" v-show="isEditTitle === false">
+                <h3>{{ item.title }}</h3>
+                <el-button @click="isEditTitle = true" class="button" type="text">
+                  <el-icon><edit /></el-icon>
+                </el-button>
+              </div>
+              <div class="modal-header__title-input" v-show="isEditTitle === true">
+                <el-input v-model="item.title" />
+                <el-button type="primary" @click="editTitle" >Сохранить</el-button>
+                <el-button type="danger" :icon="CloseBold" @click="isEditTitle = false" circle></el-button>
+              </div>
             </div>
             <div class="modal-header__close">
               <a class="modal-header__close-btn" href="#" @click.prevent="this.$emit('closeModal')">
@@ -32,13 +42,19 @@
 
 <script setup>
   import {
-    CloseBold
+    CloseBold,
+    Edit
   } from '@element-plus/icons-vue'
 
 </script>
 <script>
 
   export default {
+    data() {
+      return {
+        isEditTitle: false
+      }
+    },
     props: {
       item: Object
     },
@@ -49,6 +65,9 @@
         }).catch(error => {
           this.$message.error(error);
         })
+      },
+      editTitle() {
+        console.log('editTitle')
       }
     }
   }
@@ -97,6 +116,12 @@
       &:hover {
         background: #e7e5e5;
       }
+    }
+
+    &__title-text {
+      display: flex;
+      align-items: center;
+      column-gap: 10px;
     }
   }
 

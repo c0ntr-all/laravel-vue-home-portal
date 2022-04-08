@@ -80,7 +80,7 @@
     components: {AppTaskList,AppListCreateButton},
     mounted() {
       this.loadData()
-      // document.addEventListener('click', this.clickOutside)
+      // document.addEventListener('click', this.clickOutside) 
     },
     created(){
       document.addEventListener('click', this.clickOutside)
