@@ -25,9 +25,21 @@
           </div>
           <div class="modal-body">
             <div class="modal-block">
-                <div class="modal-block__title"><h3>Описание</h3></div>
-                <div class="modal-block__content">
+                <div class="modal-block__title">
+                  <div class="modal-header__title-text">
+                    <h3>Описание</h3>
+                    <el-button @click="openEditContent(item.content)" class="button" type="text">
+                      <el-icon><edit /></el-icon>
+                    </el-button>
+                  </div>
+                </div>
+                <div class="modal-block__content-input"  v-show="isEditContent === false">
+                  <p>{{ item.content }}</p>
+                </div>
+                <div class="modal-block__content"  v-show="isEditContent === true">
                   <el-input v-model="item.content" type="textarea">{{ item.content }}</el-input>
+                  <el-button type="primary" @click="editContent">Сохранить</el-button>
+                  <el-button type="danger" :icon="CloseBold" @click="closeEditContent" circle></el-button>
                 </div>
             </div>
           </div>
@@ -53,7 +65,9 @@
     data() {
       return {
         isEditTitle: false,
-        legacyTitle: null
+        legacyTitle: null,
+        isEditContent: false,
+        legacyContent: null
       }
     },
     props: {
@@ -77,6 +91,19 @@
       closeEditTitle() {
         this.isEditTitle = false
         this.item.title = this.legacyTitle
+      },
+      openEditContent(legacyContent) {
+        this.isEditContent = !this.isEditContent
+        this.legacyContent = legacyContent
+
+      },
+      closeEditContent() {
+        this.isEditContent = false
+        this.item.content = this.legacyContent
+
+      },
+      editContent() {
+        console.log('editContent')
       }
     }
   }
