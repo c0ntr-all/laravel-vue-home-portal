@@ -7,14 +7,14 @@
             <div class="modal-header__title">
               <div class="modal-header__title-text" v-show="isEditTitle === false">
                 <h3>{{ item.title }}</h3>
-                <el-button @click="isEditTitle = true" class="button" type="text">
+                <el-button @click="openEditTitle(item.title)" class="button" type="text">
                   <el-icon><edit /></el-icon>
                 </el-button>
               </div>
               <div class="modal-header__title-input" v-show="isEditTitle === true">
                 <el-input v-model="item.title" />
                 <el-button type="primary" @click="editTitle" >Сохранить</el-button>
-                <el-button type="danger" :icon="CloseBold" @click="isEditTitle = false" circle></el-button>
+                <el-button type="danger" :icon="CloseBold" @click="closeEditTitle" circle></el-button>
               </div>
             </div>
             <div class="modal-header__close">
@@ -52,7 +52,8 @@
   export default {
     data() {
       return {
-        isEditTitle: false
+        isEditTitle: false,
+        legacyTitle: null
       }
     },
     props: {
@@ -68,6 +69,14 @@
       },
       editTitle() {
         console.log('editTitle')
+      },
+      openEditTitle(legacyTitle) {
+        this.isEditTitle = true
+        this.legacyTitle = legacyTitle
+      },
+      closeEditTitle() {
+        this.isEditTitle = false
+        this.item.title = this.legacyTitle
       }
     }
   }
