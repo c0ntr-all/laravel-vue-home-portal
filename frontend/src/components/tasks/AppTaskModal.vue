@@ -34,9 +34,10 @@
                   </div>
                 </div>
                 <div class="modal-block__content-input"  v-show="isEditContent === false">
-                  <p>{{ item.content }}</p>
+                  <p v-if="item.content">{{ item.content }}</p>
+                  <el-button v-else @click="openEditContent(item.content)" type="text">Добавьте более подробное описание...</el-button>
                 </div>
-                <div class="modal-block__content"  v-show="isEditContent === true">
+                <div class="modal-block__content" v-show="isEditContent === true">
                   <el-input v-model="item.content" type="textarea">{{ item.content }}</el-input>
                   <el-button type="primary" @click="editContent">Сохранить</el-button>
                   <el-button type="danger" :icon="CloseBold" @click="closeEditContent" circle></el-button>
