@@ -53,6 +53,14 @@ const router = createRouter({
       menu: 1
     },
     {
+      path: '/restaurants',
+      component: () => import('../views/Restaurants'),
+      title: 'Рестораны',
+      name: 'restaurants',
+      alias: '/restaurants',
+      menu: 1
+    },
+    {
       path: '/:catchAll(.*)',
       component: () => import('../views/Home'),
       name: '404'
