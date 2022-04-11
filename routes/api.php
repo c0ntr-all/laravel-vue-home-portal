@@ -43,10 +43,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::put('list/store', [TaskListController::class, 'store']);
             Route::post('list/{list}/update', [TaskListController::class, 'update']);
             Route::delete('list/{list}/delete', [TaskListController::class, 'delete']);
-        });
-
-        Route::prefix('tasks')->group(function() {
-            Route::post('/store/{taskList}', [TaskController::class, 'store']);
+            Route::post('store/{taskList}', [TaskController::class, 'store']);
             Route::post('{task}/update', [TaskController::class, 'update']);
             Route::delete('{task}/delete', [TaskController::class, 'delete']);
         });
