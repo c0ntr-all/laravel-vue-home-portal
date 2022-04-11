@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Restaurant;
 
 class RestaurantSeeder extends Seeder
 {
@@ -13,6 +14,6 @@ class RestaurantSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Restaurant::factory()->count(25)->create();
     }
 }
