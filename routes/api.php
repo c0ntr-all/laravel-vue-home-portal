@@ -9,6 +9,7 @@ use App\Http\Controllers\Finances\FinancesController;
 use App\Http\Controllers\Tasks\TaskListController;
 use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Reminds\RemindController;
+use App\Http\Controllers\RestaurantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +46,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
         });
 
         Route::prefix('tasks')->group(function() {
-            Route::put('/store/{taskList}', [TaskController::class, 'store']);
+            Route::post('/store/{taskList}', [TaskController::class, 'store']);
             Route::post('{task}/update', [TaskController::class, 'update']);
             Route::delete('{task}/delete', [TaskController::class, 'delete']);
         });
@@ -54,6 +55,12 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::get('/', [RemindController::class, 'index']);
             Route::get('{remind}', [RemindController::class, 'show']);
             Route::post('store', [RemindController::class, 'store']);
+        });
+
+        Route::prefix('Restaurants')->group(function() {
+            Route::get('/', [RestaurantController::class, 'index']);
+            Route::post('store', [RestaurantController::class, 'store']);
+            Route::patch('update', [RestaurantController::class, 'update']);
         });
     });
 });
