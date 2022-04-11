@@ -1,10 +1,11 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Restaurants;
 
+use App\Models\Restaurants\RestaurantVisit;
 use Illuminate\Database\Seeder;
 
-class Restaurants/RestaurantVisitTableSeeder extends Seeder
+class RestaurantVisitTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,6 +14,6 @@ class Restaurants/RestaurantVisitTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Restaurant::factory()->count(50)->create();
     }
 }
