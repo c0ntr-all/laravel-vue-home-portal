@@ -20,8 +20,7 @@ class RemindFactory extends Factory
             'user_id' => 1,
             'title' => $this->faker->word,
             'is_active' => $isActive,
-            'datetime' => $this->faker->dateTimeBetween('2022-04-20', '2022-12-31')->format('Y-m-d H:i:s'),
-            'published_at' => $isActive ? $this->faker->dateTimeBetween('-2 months', '-1 days') : null,
+            'datetime' => $this->faker->dateTimeBetween('2022-04-20', '2022-12-31'),
             'created_at'   => $createdAt,
             'updated_at'   => $createdAt
         ];

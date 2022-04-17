@@ -9,12 +9,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Remind extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
     protected $fillable = [
         'title',
         'content',
         'datetime',
         'is_active',
+        'created_at',
+        'updated_at'
     ];
 }
