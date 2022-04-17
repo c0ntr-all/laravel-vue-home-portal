@@ -13,8 +13,17 @@ class RemindFactory extends Factory
      */
     public function definition()
     {
+        $isActive = rand(1, 5) > 1;
+
+        $createdAt = $this->faker->dateTimeBetween('-3 months', '-2 months');
         return [
-            //
+            'user_id' => 1,
+            'title' => $this->faker->word,
+            'is_active' => $isActive,
+            'datetime' => $this->faker->dateTimeBetween('2022-04-20', '2022-12-31')->format('Y-m-d H:i:s'),
+            'published_at' => $isActive ? $this->faker->dateTimeBetween('-2 months', '-1 days') : null,
+            'created_at'   => $createdAt,
+            'updated_at'   => $createdAt
         ];
     }
 }

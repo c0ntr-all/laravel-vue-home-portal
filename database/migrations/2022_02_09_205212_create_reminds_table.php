@@ -18,7 +18,6 @@ class CreateRemindsTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->string('title');
             $table->date('datetime');
-            $table->timestamp('created_at')->default(date('Y-m-d H:i:s'));
 
             $table->foreign('user_id')->references('id')->on('users');
         });
