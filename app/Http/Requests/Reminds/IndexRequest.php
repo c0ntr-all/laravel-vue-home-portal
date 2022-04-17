@@ -13,7 +13,7 @@ class IndexRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'sometimes|string'
+            'title' => 'required|string|max:30',
+            'content' => 'max:1000'
         ];
     }
 }

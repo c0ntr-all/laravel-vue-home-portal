@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Collection;
 
 class Remind extends Model
 {
@@ -18,4 +18,9 @@ class Remind extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function getItems(): Collection
+    {
+        return Remind::all();
+    }
 }

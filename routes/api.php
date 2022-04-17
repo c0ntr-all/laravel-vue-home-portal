@@ -48,13 +48,13 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::delete('{task}/delete', [TaskController::class, 'delete']);
         });
 
-        Route::prefix('Reminds')->group(function() {
+        Route::prefix('reminds')->group(function() {
             Route::get('/', [RemindController::class, 'index']);
-            Route::get('{remind}', [RemindController::class, 'show']);
             Route::post('store', [RemindController::class, 'store']);
+            Route::post('/{remind}/update', [RemindController::class, 'update']);
         });
 
-        Route::prefix('Restaurants')->group(function() {
+        Route::prefix('restaurants')->group(function() {
             Route::get('/', [RestaurantController::class, 'index']);
             Route::post('store', [RestaurantController::class, 'store']);
             Route::patch('update', [RestaurantController::class, 'update']);
