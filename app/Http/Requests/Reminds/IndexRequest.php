@@ -24,8 +24,7 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|max:30',
-            'content' => 'max:1000'
+            'title' => 'sometimes|string'
         ];
     }
 }
