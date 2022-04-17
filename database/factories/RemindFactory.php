@@ -13,7 +13,7 @@ class RemindFactory extends Factory
      */
     public function definition()
     {
-        $isActive = rand(1, 5) > 1;
+        $isActive = rand(1, 2) > 1;
 
         $createdAt = $this->faker->dateTimeBetween('-3 months', '-2 months');
         return [
