@@ -1,31 +1,61 @@
 <template>
   <el-header><h2 class="page-header">Напоминания</h2></el-header>
   <el-main v-loading="loading">
+    <el-button
+      type="primary"
+      @click="openModal = true"
+    >Добавить</el-button>
+    <app-modal :openModal="openModal" @closeModal="openModal = false">
+      <template v-slot:title>
+        Создать напоминание
+      </template>
+      <template v-slot:content>
+        <el-input
+          v-model="this.model.title"
+          maxlength="10"
+          placeholder="Please input"
+          show-word-limit
+          type="text"
+        />
+        <el-input
+          v-model="this.model.content"
+          :rows="2"
+          show-word-limit
+          maxlength="1000"
+          type="textarea"
+          placeholder="Please input"
+        />
+      </template>
+      <template v-slot:footer>
+        <el-button type="primary" @click="createRemind" round>Создать</el-button>
+      </template>
+    </app-modal>
     <el-table :data="this.$store.getters.reminds" style="width: 100%">
       <el-table-column type="expand">
         <template #default="props">
-          <p>Title: {{ props.row.title }}</p>
           <p>Content: {{ props.row.content }}</p>
-          <p>Date: {{ props.row.datetime }}</p>
         </template>
       </el-table-column>
       <el-table-column label="Title" prop="title" />
       <el-table-column label="Date" prop="datetime" />
+      <el-table-column label="Active" prop="isActive" />
     </el-table>
-    <el-button
-      type="primary"
-      @click="showAddModal"
-      circle
-    >+</el-button>
   </el-main>
 </template>
 <script>
   import API from "../utils/api";
 
+  import AppModal from '../components/default/AppModal'
+
   export default {
     data() {
       return {
         loading: false,
+        openModal: false,
+        model: {
+          title: null,
+          content: null
+        }
       }
     },
     methods: {
@@ -53,9 +83,12 @@
           this.loading = false
         }
       },
-      showAddModal() {
-        console.log(this.$store.getters.reminds)
+      createRemind() {
+
       }
+    },
+    components: {
+      AppModal
     },
     mounted() {
       this.loadData();
@@ -63,6 +96,9 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  textarea {
+    width: 100%;
+    border: 1px dashed #ccc;
+  }
 </style>
