@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Tasks\TaskList;
+use App\Models\Remind;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -24,6 +25,11 @@ class User extends Authenticatable implements JWTSubject
     public function taskLists(): HasMany
     {
         return $this->hasMany(TaskList::class);
+    }
+
+    public function reminds(): HasMany
+    {
+        return $this->hasMany(Remind::class);
     }
 
     public function setPasswordAttribute(string $password): void
