@@ -13,7 +13,7 @@
         <el-input
           v-model="this.model.title"
           maxlength="10"
-          placeholder="Please input"
+          placeholder="Введите заголовок"
           show-word-limit
           type="text"
         />
@@ -23,7 +23,7 @@
           show-word-limit
           maxlength="1000"
           type="textarea"
-          placeholder="Please input"
+          placeholder="Описание для напоминания..."
         />
       </template>
       <template v-slot:footer>
@@ -97,8 +97,5 @@
 </script>
 
 <style lang="scss" scoped>
-  textarea {
-    width: 100%;
-    border: 1px dashed #ccc;
-  }
+
 </style>

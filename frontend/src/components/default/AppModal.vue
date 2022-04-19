@@ -91,6 +91,13 @@
     }
   }
 
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
   .modal-block {
     margin-bottom: 1rem;
   }
