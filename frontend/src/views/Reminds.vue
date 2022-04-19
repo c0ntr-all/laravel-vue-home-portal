@@ -84,7 +84,18 @@
         }
       },
       createRemind() {
+        //TODO: Сделать человеческую обработку результата и ошибок из запроса
+        this.$store.dispatch('createRemind', {
+          title: this.model.title,
+          content: this.model.content,
+        }).then(result => {
+          this.$message.success("Напоминание успешно добавлена!");
+        }).catch(error => {
+          this.$message.error(error);
+        })
 
+        this.model.title = ''
+        this.model.content = ''
       }
     },
     components: {
