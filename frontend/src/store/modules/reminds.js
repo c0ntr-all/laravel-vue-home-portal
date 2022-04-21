@@ -11,6 +11,7 @@ export default {
       state.reminds = reminds
     },
     ADD_REMIND(state, remind) {
+      state.reminds.push(remind)
     }
   },
   actions: {
@@ -23,7 +24,7 @@ export default {
         'content': newRemind.content,
       })
       if(data) {
-        context.commit('ADD_REMIND', data.items)
+        context.commit('ADD_REMIND', data.reminds)
         return 'test'
       }
     }
