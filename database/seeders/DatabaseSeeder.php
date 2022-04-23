@@ -9,6 +9,7 @@ use App\Models\Finances\FinancesShop;
 use App\Models\Tasks\TaskList;
 use App\Models\Tasks\Task;
 use App\Models\Remind;
+use App\Models\Comment;
 
 
 class DatabaseSeeder extends Seeder
@@ -26,5 +27,6 @@ class DatabaseSeeder extends Seeder
         TaskList::factory()->count(10)->create();
         Task::factory()->count(100)->create();
         Remind::factory()->count(15)->create();
+        Comment::factory()->count(100)->create();
     }
 }
