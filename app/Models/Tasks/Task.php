@@ -4,6 +4,7 @@ namespace App\Models\Tasks;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Comment;
 
 class Task extends Model
 {
@@ -18,4 +19,9 @@ class Task extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 }
