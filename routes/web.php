@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Tasks\Task;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,4 +21,9 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 /*Для тестирования*/
-Route::get('/tasks/test', [App\Http\Controllers\Tasks\TaskListController::class, 'test'])->name('test');
+Route::get('/tasks/test', function() {
+    $tasks = Task::find(5);
+    $taskResource = new \App\Http\Resources\TaskResource($tasks);
+    dd($taskResource->toArray([]));
+
+})->name('test');
