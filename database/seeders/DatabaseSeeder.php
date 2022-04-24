@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         Finances::factory()->count(100)->create();
         FinancesShop::factory()->count(10)->create();
         TaskList::factory()->count(10)->create();
-        Task::factory()->count(100)->create();
+        Task::factory()->count(50)->create();
         Remind::factory()->count(15)->create();
         Comment::factory()->count(100)->create();
     }
