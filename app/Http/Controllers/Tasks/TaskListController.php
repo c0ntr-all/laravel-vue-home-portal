@@ -40,4 +40,9 @@ class TaskListController extends Controller
     {
         return new TaskListResource($taskList->load('user', 'tasks'));
     }
+
+    public function test(IndexRequest $request): TaskListCollection
+    {
+        return new TaskListCollection($this->taskList->getItems());
+    }
 }

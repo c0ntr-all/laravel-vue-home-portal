@@ -20,5 +20,4 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 /*Для тестирования*/
-Route::get('/tasks/store', [App\Http\Controllers\Tasks\TaskController::class, 'store'])->name('store');
-Route::get('/tasks/show', [App\Http\Controllers\Tasks\TaskController::class, 'show'])->name('show');
+Route::get('/tasks/test', [App\Http\Controllers\Tasks\TaskListController::class, 'test'])->name('test');

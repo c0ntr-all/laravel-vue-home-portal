@@ -16,6 +16,7 @@ class TaskResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'createdAt' => $this->created_at,
+            'comments' => $this->comments
         ];
     }
 }
