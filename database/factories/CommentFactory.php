@@ -17,7 +17,7 @@ class CommentFactory extends Factory
 
         return [
             'user_id' => 1,
-            'comment_id' => rand(1, 100), //Столько генерится тасков в фабрике тасков
+            'comment_id' => rand(1, 10),
             'comment_type' => 'App\\Models\\Tasks\\Task',
             'content' => $this->faker->word,
             'created_at' => $date,

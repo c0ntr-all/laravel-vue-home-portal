@@ -17,7 +17,7 @@ class Comment extends Model
         'deleted_at',
     ];
 
-    public function commentable()
+    public function comment()
     {
         return $this->morphTo();
     }
