@@ -13,7 +13,7 @@
               </div>
               <div class="modal-header__title-input" v-show="isEditTitle === true">
                 <el-input v-model="item.title" />
-                <el-button type="primary" @click="editTitle" >Сохранить</el-button>
+                <el-button type="primary" @click="editTitle">Сохранить</el-button>
                 <el-button type="danger" :icon="CloseBold" @click="closeEditTitle" circle></el-button>
               </div>
             </div>
@@ -44,7 +44,19 @@
                 </div>
                 <div class="modal-block__comments">
                   <h3>Комментарии</h3>
-
+                  <el-space :fill="true" wrap>
+                    <el-card v-for="comment in this.comments" :key="comment.id">
+                      <template #header>
+                        <div class="card-header">
+                          <span>{{ comment.name }}</span>
+                          <time class="time">{{ comment.date }}</time>
+                        </div>
+                      </template>
+                      <div class="card-body">
+                        {{ comment.content }}
+                      </div>
+                    </el-card>
+                  </el-space>
                 </div>
             </div>
           </div>
@@ -76,17 +88,17 @@
         comments: [
           {
             name: 'Name Surname 1',
-            comment: 'test Comment 1',
+            content: 'test Comment 1',
             date: '24.04.2022 16:34'
           },
           {
             name: 'Name Surname 2',
-            comment: 'test Comment 2',
+            content: 'test Comment 2',
             date: '21.03.2022 12:12'
           },
           {
             name: 'Name Surname 2',
-            comment: 'test Comment 2',
+            content: 'test Comment 2',
             date: '05.01.2022 20:58'
           },
         ]
