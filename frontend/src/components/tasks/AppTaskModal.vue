@@ -42,6 +42,10 @@
                   <el-button type="primary" @click="editContent">Сохранить</el-button>
                   <el-button type="danger" :icon="CloseBold" @click="closeEditContent" circle></el-button>
                 </div>
+                <div class="modal-block__comments">
+                  <h3>Комментарии</h3>
+
+                </div>
             </div>
           </div>
           <div class="modal-footer">
@@ -68,7 +72,24 @@
         isEditTitle: false,
         legacyTitle: null,
         isEditContent: false,
-        legacyContent: null
+        legacyContent: null,
+        comments: [
+          {
+            name: 'Name Surname 1',
+            comment: 'test Comment 1',
+            date: '24.04.2022 16:34'
+          },
+          {
+            name: 'Name Surname 2',
+            comment: 'test Comment 2',
+            date: '21.03.2022 12:12'
+          },
+          {
+            name: 'Name Surname 2',
+            comment: 'test Comment 2',
+            date: '05.01.2022 20:58'
+          },
+        ]
       }
     },
     props: {
