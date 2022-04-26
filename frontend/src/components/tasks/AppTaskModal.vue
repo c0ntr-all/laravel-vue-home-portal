@@ -44,7 +44,7 @@
                 </div>
                 <div class="modal-block__comments">
                   <h3>Комментарии</h3>
-                  <el-space :fill="true" wrap>
+                  <el-space :fill="true" wrap v-if="item.comments.length">
                     <el-card v-for="comment in item.comments" :key="comment.id">
                       <template #header>
                         <div class="card-header">
@@ -57,6 +57,7 @@
                       </div>
                     </el-card>
                   </el-space>
+                  <p style="color: #C0C4CC" v-else>Комментарии отсутствуют!</p>
                 </div>
             </div>
           </div>
