@@ -45,11 +45,11 @@
                 <div class="modal-block__comments">
                   <h3>Комментарии</h3>
                   <el-space :fill="true" wrap>
-                    <el-card v-for="comment in this.comments" :key="comment.id">
+                    <el-card v-for="comment in item.comments" :key="comment.id">
                       <template #header>
                         <div class="card-header">
-                          <span>{{ comment.name }}</span>
-                          <time class="time">{{ comment.date }}</time>
+                          <span>{{ comment.user_id }}</span>
+                          <time class="time">{{ comment.created_at }}</time>
                         </div>
                       </template>
                       <div class="card-body">
@@ -162,6 +162,8 @@
 
   .modal-container {
     width: 768px;
+    max-height: 100vh;
+    overflow-y: scroll;
     margin: 0px auto;
     padding: 20px 30px;
     background-color: #fff;
