@@ -35,6 +35,6 @@ class TaskList extends Model
     public function getItems(): Collection
     {
         // Пока все берем
-        return TaskList::all();
+        return TaskList::with('tasks.comments')->get();
     }
 }
