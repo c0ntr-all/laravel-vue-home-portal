@@ -56,6 +56,14 @@ export default {
       if(data) {
         context.commit('UPDATE_TASK', data.items)
       }
+    },
+    async editTaskTitle(context, task) {
+      const {data} = await API.patch(`api/auth/tasks/${task.id}/update`, {
+        title: task.title
+      })
+      if(data) {
+        context.commit('UPDATE_TASK', data.items)
+      }
     }
   },
   getters: {

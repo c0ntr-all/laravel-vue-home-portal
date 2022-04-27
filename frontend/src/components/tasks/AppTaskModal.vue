@@ -13,7 +13,7 @@
               </div>
               <div class="modal-header__title-input" v-show="isEditTitle === true">
                 <el-input v-model="item.title" />
-                <el-button type="primary" @click="editTitle">Сохранить</el-button>
+                <el-button type="primary" @click="editTitle(item)">Сохранить</el-button>
                 <el-button type="danger" :icon="CloseBold" @click="closeEditTitle" circle></el-button>
               </div>
             </div>
@@ -99,9 +99,6 @@
           this.$message.error(error);
         })
       },
-      editTitle() {
-        console.log('editTitle')
-      },
       openEditTitle(legacyTitle) {
         this.isEditTitle = true
         this.legacyTitle = legacyTitle
@@ -119,6 +116,13 @@
         this.isEditContent = false
         this.item.content = this.legacyContent
 
+      },
+      editTitle(item) {
+        this.$store.dispatch('editTaskTitle', item).then(result => {
+          this.$message.success("Заголовок карточки успешно обновлен!");
+        }).catch(error => {
+          this.$message.error(error);
+        })
       },
       editContent(item) {
         this.$store.dispatch('editTaskContent', item).then(result => {
