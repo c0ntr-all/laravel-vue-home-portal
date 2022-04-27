@@ -39,7 +39,7 @@
                 </div>
                 <div class="modal-block__content" v-show="isEditContent === true">
                   <el-input v-model="item.content" type="textarea">{{ item.content }}</el-input>
-                  <el-button type="primary" @click="editContent">Сохранить</el-button>
+                  <el-button type="primary" @click="editContent(item)">Сохранить</el-button>
                   <el-button type="danger" :icon="CloseBold" @click="closeEditContent" circle></el-button>
                 </div>
                 <div class="modal-block__comments">
@@ -120,8 +120,8 @@
         this.item.content = this.legacyContent
 
       },
-      editContent() {
-        this.$store.dispatch('editTaskContent', this.item.content).then(result => {
+      editContent(item) {
+        this.$store.dispatch('editTaskContent', item).then(result => {
           this.$message.success("Контент карточки успешно обновлен!");
         }).catch(error => {
           this.$message.error(error);
