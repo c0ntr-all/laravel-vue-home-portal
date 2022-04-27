@@ -86,23 +86,6 @@
         legacyTitle: null,
         isEditContent: false,
         legacyContent: null,
-        comments: [
-          {
-            name: 'Name Surname 1',
-            content: 'test Comment 1',
-            date: '24.04.2022 16:34'
-          },
-          {
-            name: 'Name Surname 2',
-            content: 'test Comment 2',
-            date: '21.03.2022 12:12'
-          },
-          {
-            name: 'Name Surname 2',
-            content: 'test Comment 2',
-            date: '05.01.2022 20:58'
-          },
-        ]
       }
     },
     props: {
@@ -138,7 +121,11 @@
 
       },
       editContent() {
-        console.log('editContent')
+        this.$store.dispatch('editTaskContent', this.item.content).then(result => {
+          this.$message.success("Контент карточки успешно обновлен!");
+        }).catch(error => {
+          this.$message.error(error);
+        })
       }
     }
   }

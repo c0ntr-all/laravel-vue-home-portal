@@ -25,7 +25,7 @@ export default {
     },
     CREATE_TASK(state, task) {
       state.lists.find(item => task.list_id === item.id).items.push(task)
-    }
+    },
   },
   actions: {
     loadLists(context, lists) {
@@ -49,6 +49,14 @@ export default {
         return 'test'
       }
     },
+    async editTaskContent(context, task) {
+      const {data} = await API.patch(`api/auth/tasks/${task.id}/update`, {
+        content: task.content
+      })
+      if(data) {
+        context.commit('UPDATE_TASK', data.items)
+      }
+    }
   },
   getters: {
     lists(state) {
