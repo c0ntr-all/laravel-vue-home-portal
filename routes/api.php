@@ -44,7 +44,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::post('list/{list}/update', [TaskListController::class, 'update']);
             Route::delete('list/{list}/delete', [TaskListController::class, 'delete']);
             Route::post('store/{taskList}', [TaskController::class, 'store']);
-            Route::post('{task}/update', [TaskController::class, 'update']);
+            Route::patch('{task}/update', [TaskController::class, 'update']);
             Route::delete('{task}/delete', [TaskController::class, 'delete']);
         });
 
