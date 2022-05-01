@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Comment extends Model
 {
@@ -16,7 +18,7 @@ class Comment extends Model
         'user_id',
         'content',
         'updated_at',
-        'deleted_at',
+        'deleted_at'
     ];
 
     public function comment()
@@ -24,8 +26,19 @@ class Comment extends Model
         return $this->morphTo();
     }
 
-    public function getCreatedAtAttribute($value){
+    public function getCreatedAtAttribute($value)
+    {
         $date = Carbon::parse($value);
         return $date->format('Y-m-d H:i');
+    }
+
+    public function getUserNameAttribute()
+    {
+        return $this->user()->get()[0]->name;
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

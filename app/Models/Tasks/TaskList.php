@@ -34,7 +34,7 @@ class TaskList extends Model
 
     public function getItems(): Collection
     {
-        // Пока все берем
+        // Аксессор user_name не работает, потому что используется прямой запрос без использования модели
         return TaskList::with('tasks.comments')->get();
     }
 }
