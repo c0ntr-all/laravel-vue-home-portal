@@ -48,7 +48,7 @@
                     <el-card v-for="comment in item.comments" :key="comment.id">
                       <template #header>
                         <div class="card-header">
-                          <span>{{ comment.user_id }}</span>
+                          <span>{{ comment.user_name }}</span>
                           <time class="time">{{ comment.created_at }}</time>
                         </div>
                       </template>
