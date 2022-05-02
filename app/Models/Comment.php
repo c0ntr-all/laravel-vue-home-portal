@@ -21,6 +21,8 @@ class Comment extends Model
         'deleted_at'
     ];
 
+    protected $appends = ['user_name'];
+
     public function comment()
     {
         return $this->morphTo();
