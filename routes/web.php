@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Tasks\Task;
+use App\Models\Tasks\TaskList;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,3 +28,8 @@ Route::get('/tasks/test', function() {
     dd($taskResource->toArray([]));
 
 })->name('test');
+Route::get('/tasks/test2', function() {
+    $tasks = TaskList::find(1);
+    dd($tasks->getItems()->toArray());
+
+})->name('test2');
