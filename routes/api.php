@@ -10,6 +10,7 @@ use App\Http\Controllers\Tasks\TaskListController;
 use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Reminds\RemindController;
 use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,9 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::post('store/{taskList}', [TaskController::class, 'store']);
             Route::patch('{task}/update', [TaskController::class, 'update']);
             Route::delete('{task}/delete', [TaskController::class, 'delete']);
+
+            Route::post('comments/store', [CommentController::class], 'store');
+            Route::post('comments/delete', [CommentController::class], 'delete');
         });
 
         Route::prefix('reminds')->group(function() {
