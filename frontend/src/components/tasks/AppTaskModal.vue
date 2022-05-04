@@ -62,7 +62,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <el-button type="primary" @click="updateTask(item)" round>Сохранить</el-button>
+
           </div>
         </el-form>
       </div>
@@ -92,13 +92,13 @@
       item: Object
     },
     methods: {
-      updateTask(item) {
-        this.$store.dispatch('updateTask', item).then(result => {
-          this.$message.success("Карточка успешно обновлена!");
-        }).catch(error => {
-          this.$message.error(error);
-        })
-      },
+      // updateTask(item) {
+      //   this.$store.dispatch('updateTask', item).then(result => {
+      //     this.$message.success("Карточка успешно обновлена!");
+      //   }).catch(error => {
+      //     this.$message.error(error);
+      //   })
+      // },
       openEditTitle(legacyTitle) {
         this.isEditTitle = true
         this.legacyTitle = legacyTitle
