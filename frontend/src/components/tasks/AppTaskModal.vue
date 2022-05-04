@@ -149,6 +149,13 @@
         }).catch(error => {
           this.$message.error(error);
         })
+      },
+      createComment() {
+        this.$store.dispatch('createTaskComment', this.model.comment).then(result => {
+          this.$message.success("Комментарий успешно добавлен!");
+        }).catch(error => {
+          this.$message.error(error);
+        })
       }
     }
   }

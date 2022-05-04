@@ -26,6 +26,9 @@ export default {
     CREATE_TASK(state, task) {
       state.lists.find(item => task.list_id === item.id).items.push(task)
     },
+    CREATE_TASK_COMMENT(state, comment) {
+      state.lists.find(item => task.list_id === item.id).items.push(task)
+    },
   },
   actions: {
     loadLists(context, lists) {
@@ -64,7 +67,16 @@ export default {
       if(data) {
         context.commit('UPDATE_TASK', data.items)
       }
-    }
+    },
+    async createTaskComment(context, comment) {
+      const {data} = await API.post('api/auth/tasks/comment/store', {
+        'comment': item.comment,
+        'taskId': item.id,
+      })
+      if(data) {
+        context.commit('CREATE_TASK_COMMENT', data.comments)
+      }
+    },
   },
   getters: {
     lists(state) {
