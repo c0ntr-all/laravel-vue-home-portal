@@ -44,6 +44,22 @@
                 </div>
                 <div class="modal-block__comments">
                   <h3>Комментарии</h3>
+                  <div class="modal-block__comments-create">
+                    <el-input
+                      v-model="this.model.content"
+                      :rows="2"
+                      show-word-limit
+                      maxlength="1000"
+                      type="textarea"
+                      placeholder="Добавить комментарий"
+                    />
+                    <el-button
+                      type="primary"
+                      @click="createComment"
+                      style="margin-top: .5rem"
+                      round
+                    >Отправить</el-button>
+                  </div>
                   <el-space :fill="true" wrap v-if="item.comments.length">
                     <el-card v-for="comment in item.comments" :key="comment.id">
                       <template #header>
@@ -86,6 +102,9 @@
         legacyTitle: null,
         isEditContent: false,
         legacyContent: null,
+        model: {
+          comment: ''
+        }
       }
     },
     props: {
@@ -191,6 +210,12 @@
 
   .modal-block {
     margin-bottom: 1rem;
+
+    &__comments-create {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #ccc;
+    }
   }
 
   .modal-default-button {
