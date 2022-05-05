@@ -33,6 +33,7 @@ export default {
     },
     async switchActive(context, remind) {
       const {data} = await API.post('api/auth/reminds/'+remind.id+'/update', {
+        'id': remind.id,
         'isActive': remind.isActive,
       })
       if(data) {
