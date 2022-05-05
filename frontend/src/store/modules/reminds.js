@@ -12,6 +12,9 @@ export default {
     },
     ADD_REMIND(state, remind) {
       state.reminds.push(remind)
+    },
+    SWITCH_ACTIVE(state, remind) {
+      state.reminds[remind.id].isActive = remind.isActive
     }
   },
   actions: {
@@ -25,6 +28,15 @@ export default {
       })
       if(data) {
         context.commit('ADD_REMIND', data.reminds)
+        return 'test'
+      }
+    },
+    async switchActive(context, remind) {
+      const {data} = await API.post('api/auth/reminds/'+remind.id+'/update', {
+        'isActive': remind.isActive,
+      })
+      if(data) {
+        context.commit('SWITCH_ACTIVE', data.reminds)
         return 'test'
       }
     }

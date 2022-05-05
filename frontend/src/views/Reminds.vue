@@ -40,7 +40,7 @@
       <el-table-column label="Date" prop="datetime" />
       <el-table-column label="Active" prop="isActive">
         <template #default="scope">
-          <el-switch @click="test(this.$store.state.reminds.reminds[0])" v-model="scope.row.isActive" />
+          <el-switch @click="switchActive(scope.row)" v-model="scope.row.isActive" />
         </template>
       </el-table-column>
     </el-table>
@@ -57,6 +57,10 @@
       return {
         loading: false,
         openModal: false,
+        model: {
+          title: null,
+          content: null
+        }
       }
     },
     methods: {
@@ -98,8 +102,13 @@
         this.model.title = ''
         this.model.content = ''
       },
-      test(scope) {
-        console.log(scope)
+      switchActive(remind) {
+        this.$store.dispatch('switchActive', remind)
+        .then(result => {
+          this.$message.success("Статус напоминания изменен!");
+        }).catch(error => {
+          this.$message.error(error);
+        })
       }
     },
     components: {
