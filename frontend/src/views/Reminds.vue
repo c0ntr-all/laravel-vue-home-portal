@@ -25,6 +25,12 @@
           type="textarea"
           placeholder="Описание для напоминания..."
         />
+        <el-date-picker
+          v-model="this.model.date"
+          type="datetime"
+          placeholder="Выберите время"
+          format="DD.MM.YYYY HH:mm:ss"
+        />
       </template>
       <template v-slot:footer>
         <el-button type="primary" @click="createRemind" round>Создать</el-button>
@@ -59,7 +65,8 @@
         openModal: false,
         model: {
           title: null,
-          content: null
+          content: null,
+          date: null
         }
       }
     },
