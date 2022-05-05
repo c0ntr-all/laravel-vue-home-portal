@@ -8,6 +8,8 @@ use App\Http\Resources\RemindCollection;
 use App\Http\Resources\RemindResource;
 use App\Http\Requests\Reminds\IndexRequest;
 use App\Http\Requests\Reminds\StoreRequest;
+use App\Http\Requests\Reminds\UpdateRequest;
+use R64\NovaFields\Boolean;
 
 class RemindController extends Controller
 {
@@ -29,6 +31,14 @@ class RemindController extends Controller
 
         return $this->remindResponse($remind);
     }
+
+    public function update(Remind $remind, UpdateRequest $request)
+    {
+        if($remind->update($request->validated())) {
+            return $this->remindResponse($remind);
+        }
+    }
+
     protected function remindResponse(Remind $remind): RemindResource
     {
         return new RemindResource($remind);
