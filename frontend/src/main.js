@@ -4,6 +4,7 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store/index'
 import Element from 'element-plus'
+import ru from 'element-plus/es/locale/lang/ru'
 import 'element-plus/dist/index.css'
 import './styles.scss'
 
@@ -23,5 +24,7 @@ createApp(App)
   })
   .use(store)
   .use(router)
-  .use(Element)
+  .use(Element, {
+    locale: ru
+  })
   .mount('#portal')

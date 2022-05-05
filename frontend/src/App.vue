@@ -1,21 +1,31 @@
 <template>
-  <div class="area">
-    <div class="main">
-      <el-container>
-        <the-sidebar v-if="$store.getters.isLoggedIn"></the-sidebar>
-        <el-container class="content">
-          <router-view/>
+  <el-config-provider :locale="locale">
+    <div class="area">
+      <div class="main">
+        <el-container>
+          <the-sidebar v-if="$store.getters.isLoggedIn"></the-sidebar>
+          <el-container class="content">
+            <router-view/>
+          </el-container>
         </el-container>
-      </el-container>
-      <el-footer v-if="$store.getters.isLoggedIn">Home Portal v.0.0.4</el-footer>
+        <el-footer v-if="$store.getters.isLoggedIn">Home Portal v.0.0.4</el-footer>
+      </div>
     </div>
-  </div>
+  </el-config-provider>
 </template>
 
 <script>
+  import { ElConfigProvider } from 'element-plus'
+  import ru from 'element-plus/lib/locale/lang/ru'
+
   import TheSidebar from './components/TheSidebar.vue'
 
   export default {
+    setup() {
+      return {
+        locale: ru,
+      }
+    },
     methods: {
       logout() {
         this.$store.dispatch('logout').then(() => {
@@ -28,7 +38,7 @@
         logout: this.logout
       }
     },
-    components: {TheSidebar}
+    components: {ElConfigProvider,TheSidebar}
   }
 </script>
 
