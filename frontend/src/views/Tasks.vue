@@ -67,7 +67,6 @@
       clickOutside(e) {
         this.$store.getters.lists.forEach((list, index) => {
           let el = this.$refs['list-ref-' + index]
-          console.log(index)
           return
           let textarea = (this.$refs['list-ref-' + index]).querySelector('textarea');
           let target = e.target;
@@ -80,7 +79,7 @@
     components: {AppTaskList,AppListCreateButton},
     mounted() {
       this.loadData()
-      // document.addEventListener('click', this.clickOutside) 
+      // document.addEventListener('click', this.clickOutside)
     },
     created(){
       document.addEventListener('click', this.clickOutside)

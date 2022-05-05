@@ -38,11 +38,16 @@
       </el-table-column>
       <el-table-column label="Title" prop="title" />
       <el-table-column label="Date" prop="datetime" />
-      <el-table-column label="Active" prop="isActive" />
+      <el-table-column label="Active" prop="isActive">
+        <template #default="scope">
+          <el-switch @click="test(this.$store.state.reminds.reminds[0])" v-model="scope.row.isActive" />
+        </template>
+      </el-table-column>
     </el-table>
   </el-main>
 </template>
 <script>
+  import { ref } from 'vue'
   import API from "../utils/api";
 
   import AppModal from '../components/default/AppModal'
@@ -52,10 +57,6 @@
       return {
         loading: false,
         openModal: false,
-        model: {
-          title: null,
-          content: null
-        }
       }
     },
     methods: {
@@ -96,6 +97,9 @@
 
         this.model.title = ''
         this.model.content = ''
+      },
+      test(scope) {
+        console.log(scope)
       }
     },
     components: {
