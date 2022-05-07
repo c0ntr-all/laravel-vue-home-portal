@@ -36,14 +36,18 @@
         <el-button type="primary" @click="createRemind" round>Создать</el-button>
       </template>
     </app-modal>
-    <el-table :data="this.$store.getters.reminds" style="width: 100%">
+    <el-table
+      :data="this.$store.getters.reminds"
+      :default-sort="{ prop: 'isActive', order: 'descending' }"
+      style="width: 100%"
+    >
       <el-table-column type="expand">
         <template #default="props">
           <p>Content: {{ props.row.content }}</p>
         </template>
       </el-table-column>
       <el-table-column label="Title" prop="title" />
-      <el-table-column label="Date" prop="datetime" />
+      <el-table-column label="Date" prop="datetime" sortable />
       <el-table-column label="Active" prop="isActive">
         <template #default="scope">
           <el-switch @click="switchActive(scope.row)" v-model="scope.row.isActive" />
