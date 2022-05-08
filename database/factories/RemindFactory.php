@@ -19,6 +19,7 @@ class RemindFactory extends Factory
         return [
             'user_id' => 1,
             'title' => $this->faker->word,
+            'content' => $this->faker->text,
             'is_active' => $isActive,
             'datetime' => $this->faker->dateTimeBetween('2022-04-20', '2022-12-31'),
             'created_at'   => $createdAt,
