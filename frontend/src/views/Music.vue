@@ -4,7 +4,7 @@
     <div class="tags">
       <h3>Genres</h3>
       <div class="tags-list">
-        <a href="" class="tag-link" @click.prevent="filterBands(tag.label)" v-for="tag in tags">
+        <a href="" class="tag-link" @click.prevent="this.activeTag = tag.label" v-for="tag in tags">
           <el-tag
             :key="tag.label"
             :type="tag.type"
@@ -19,7 +19,7 @@
     <div class="bands">
       <h3>Artists</h3>
       <div class="bands-list">
-        <div class="band-item" v-for="band in bands">
+        <div class="band-item" v-for="band in filteredBands">
           {{ band.name }}
         </div>
       </div>
@@ -33,6 +33,7 @@
     data() {
       return {
         loading: false,
+        activeTag: '',
         tags: [
           {type: '', label: 'Metal'},
           {type: 'success', label: 'Rock'},
@@ -54,11 +55,19 @@
       }
     },
     methods: {
-      filterBands(tag) {
-        console.log(tag)
-      },
       loadData() {
 
+      }
+    },
+    computed: {
+      filteredBands() {
+        return this.bands.filter(elem => {
+          if(this.activeTag === '') {
+            return true
+          }else{
+            return elem.tags.indexOf(this.activeTag) > -1
+          }
+        })
       }
     },
     mounted() {
