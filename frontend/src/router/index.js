@@ -61,6 +61,14 @@ const router = createRouter({
       menu: 1
     },
     {
+      path: '/music',
+      component: () => import('../views/Music'),
+      title: 'Музыка',
+      name: 'music',
+      alias: '/music',
+      menu: 1
+    },
+    {
       path: '/:catchAll(.*)',
       component: () => import('../views/Home'),
       name: '404'
