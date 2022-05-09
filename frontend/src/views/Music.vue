@@ -4,6 +4,9 @@
     <div class="tags">
       <h3>Genres</h3>
       <div class="tags-list">
+        <a href="" class="tag-link" @click.prevent="this.activeTag = ''">
+          <el-tag class="mx-1" effect="light">All</el-tag>
+        </a>
         <a href="" class="tag-link" @click.prevent="this.activeTag = tag.label" v-for="tag in tags">
           <el-tag
             :key="tag.label"
