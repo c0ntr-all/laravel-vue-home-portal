@@ -26,10 +26,11 @@
           placeholder="Описание для напоминания..."
         />
         <el-date-picker
-          v-model="this.model.date"
+          v-model="this.model.datetime"
           type="datetime"
           placeholder="Выберите время"
           format="DD.MM.YYYY HH:mm:ss"
+          value-format="YYYY-MM-DD HH:mm:ss"
         />
       </template>
       <template v-slot:footer>
@@ -70,7 +71,7 @@
         model: {
           title: null,
           content: null,
-          date: null
+          datetime: null
         }
       }
     },
@@ -104,6 +105,7 @@
         this.$store.dispatch('createRemind', {
           title: this.model.title,
           content: this.model.content,
+          datetime: this.model.datetime,
         }).then(result => {
           this.$message.success("Напоминание успешно добавлена!");
         }).catch(error => {
@@ -112,6 +114,7 @@
 
         this.model.title = ''
         this.model.content = ''
+        this.model.datetime = ''
       },
       switchActive(remind) {
         this.$store.dispatch('switchActive', remind)

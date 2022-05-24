@@ -25,6 +25,8 @@ export default {
       const {data} = await API.post('api/auth/reminds/store', {
         'title': newRemind.title,
         'content': newRemind.content,
+        'datetime': newRemind.datetime,
+        'is_active': true
       })
       if(data) {
         context.commit('ADD_REMIND', data.reminds)
