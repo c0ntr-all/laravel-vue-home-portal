@@ -1,51 +1,45 @@
 <template>
-  <el-header><h2 class="page-header">Музыка</h2></el-header>
-  <el-main>
-    <router-view />
-    <div class="tags">
-      <h3>Genres</h3>
-      <div class="tags-list">
-        <a href="" class="tag-link" @click.prevent="this.activeTag = ''">
-          <el-tag class="mx-1" effect="light">All</el-tag>
-        </a>
-        <a href="" class="tag-link" @click.prevent="this.activeTag = tag.label" v-for="tag in tags">
-          <el-tag
-            :key="tag.label"
-            :type="tag.type"
-            class="mx-1"
-            effect="dark"
-          >
-            {{ tag.label }}
-          </el-tag>
-        </a>
-      </div>
+  <div class="tags">
+    <h3>Genres</h3>
+    <div class="tags-list">
+      <a href="" class="tag-link" @click.prevent="this.activeTag = ''">
+        <el-tag class="mx-1" effect="light">All</el-tag>
+      </a>
+      <a href="" class="tag-link" @click.prevent="this.activeTag = tag.label" v-for="tag in tags">
+        <el-tag
+          :key="tag.label"
+          :type="tag.type"
+          class="mx-1"
+          effect="dark"
+        >
+          {{ tag.label }}
+        </el-tag>
+      </a>
     </div>
-    <div class="artists">
-      <h3>Artists</h3>
-      <el-space alignment="flex-start" wrap>
-        <el-card class="artist-card" :body-style="{ padding: '0px' }" v-for="band in filteredBands" :key="band.id">
-          <div class="artist-card__image">
-            <img
-              src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-              class="image"
-            />
-          </div>
-          <div style="padding: 14px">
-            <router-link :to="'/music/artists/' + band.id"><span>{{ band.name }}</span></router-link>
-            <div class="artist-card__footer">
-              <div class="tags-list">
-                <el-tag v-for="tag in band.tags" class="mx-1">{{ tag }}</el-tag>
-              </div>
+  </div>
+  <div class="artists">
+    <h3>Artists</h3>
+    <el-space alignment="flex-start" wrap>
+      <el-card class="artist-card" :body-style="{ padding: '0px' }" v-for="band in filteredBands" :key="band.id">
+        <div class="artist-card__image">
+          <img
+            src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+            class="image"
+          />
+        </div>
+        <div style="padding: 14px">
+          <router-link :to="'/music/artists/' + band.id"><span>{{ band.name }}</span></router-link>
+          <div class="artist-card__footer">
+            <div class="tags-list">
+              <el-tag v-for="tag in band.tags" class="mx-1">{{ tag }}</el-tag>
             </div>
           </div>
-        </el-card>
-      </el-space>
-    </div>
-  </el-main>
+        </div>
+      </el-card>
+    </el-space>
+  </div>
 </template>
 <script>
-  import API from "../utils/api";
-
   export default {
     data() {
       return {
@@ -116,7 +110,7 @@
       }
     },
     mounted() {
-      console.log(this.$router.currentRoute.name)
+      console.log(this.$router)
       this.loadData();
     }
   }
