@@ -19,13 +19,26 @@
         </a>
       </div>
     </div>
-    <div class="bands">
+    <div class="artists">
       <h3>Artists</h3>
-      <div class="bands-list">
-        <div class="band-item" v-for="band in filteredBands">
-          {{ band.name }}
-        </div>
-      </div>
+      <el-space alignment="flex-start" wrap>
+        <el-card class="artist-card" :body-style="{ padding: '0px' }" v-for="band in filteredBands" :key="band.name">
+          <div class="artist-card__image">
+            <img
+              src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+              class="image"
+            />
+          </div>
+          <div style="padding: 14px">
+            <span>{{ band.name }}</span>
+            <div class="artist-card__footer">
+              <div class="tags-list">
+                <el-tag v-for="tag in band.tags" class="mx-1">{{ tag }}</el-tag>
+              </div>
+            </div>
+          </div>
+        </el-card>
+      </el-space>
     </div>
   </el-main>
 </template>
@@ -83,13 +96,46 @@
   h3 {
     margin-top: 0;
   }
- .tags-list {
-   display: flex;
-   column-gap: 1rem;
-   margin-bottom: 1rem;
- }
+  .tags-list {
+    display: flex;
+    column-gap: 1rem;
+    margin-bottom: 1rem;
+
+    .artist-card & {
+      column-gap: .250rem;
+      margin-bottom: 0;
+    }
+  }
   .tag-link {
     display: block;
     text-decoration: none;
+  }
+
+  .artist-card {
+    background-color: #ebecf0;
+    border-radius: 3px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    position: relative;
+    white-space: normal;
+    width: 237px;
+
+    &__footer {
+      margin-top: 13px;
+      line-height: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    &__image {
+
+      img {
+        max-height: 150px;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
   }
 </style>
