@@ -1,7 +1,13 @@
 <template>
   <el-button type="primary" :icon="ArrowLeft" @click="this.$router.push('/music')">Вернуться назад</el-button>
-  <h3></h3>
-  <div>Artist id - {{ artistId }}</div>
+  <h3>{{ artist.name }}</h3>
+  <img :src="this.artist.image" alt="">
+  <div class="artist-description">
+    {{ artist.content }}
+  </div>
+  <div class="tags-list">
+    <el-tag v-for="tag in artist.tags" class="mx-1">{{ tag }}</el-tag>
+  </div>
 </template>
 <script setup>
   import {
@@ -19,10 +25,17 @@
         }
       }
     },
-    props: ['artistId'],
+    props: {
+      'artistId': String
+    },
     methods: {
       loadData() {
 
+      }
+    },
+    computed: {
+      artist() {
+        return this.$store.getters.music.bands.find(item => item.id === Number(this.artistId))
       }
     },
     mounted() {

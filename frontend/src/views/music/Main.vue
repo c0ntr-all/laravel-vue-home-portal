@@ -66,7 +66,6 @@
       }
     },
     mounted() {
-      console.log(this.$store.getters.music.tags)
       this.loadData();
     }
   }
