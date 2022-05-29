@@ -1,5 +1,5 @@
 <template>
-  <el-header><h2 class="page-header">Музыка</h2></el-header>
+  <el-header><h1 class="page-header">Музыка</h1></el-header>
   <el-main>
     <router-view />
   </el-main>
