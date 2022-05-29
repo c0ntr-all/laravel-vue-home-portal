@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from '../store/index'
-import Music from '../views/Music'
-import Artist from '../views/music/Artist'
 
 
 const router = createRouter({
@@ -65,16 +63,21 @@ const router = createRouter({
     },
     {
       path: '/music',
-      components: {
-        default: Music,
-        artist: Artist
-      },
+      component: () => import('../views/music/Music'),
       title: 'Музыка',
       name: 'music',
       alias: '/music',
       menu: 1,
       children: [
-        {path: '/music/artists/:artistId', component: () => import('../views/music/Artist'), props: true}
+        {
+          path: '/music',
+          component: () => import('../views/music/Main')
+        },
+        {
+          path: '/music/artists/:artistId',
+          component: () => import('../views/music/Artist'),
+          props: true
+        }
       ]
     },
     {

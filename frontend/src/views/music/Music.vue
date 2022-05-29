@@ -1,5 +1,8 @@
 <template>
-  <div>Artist id - {{ artistId }}</div>
+  <el-header><h2 class="page-header">Музыка</h2></el-header>
+  <el-main>
+    <router-view />
+  </el-main>
 </template>
 <script>
   import API from "../../utils/api";
@@ -7,12 +10,8 @@
   export default {
     data() {
       return {
-        loading: false,
-        model: {
-        }
       }
     },
-    props: ['artistId'],
     methods: {
       loadData() {
 
