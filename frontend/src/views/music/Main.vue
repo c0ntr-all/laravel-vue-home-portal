@@ -5,7 +5,7 @@
       <a href="" class="tag-link" @click.prevent="this.activeTag = ''">
         <el-tag class="mx-1" effect="light">All</el-tag>
       </a>
-      <a href="" class="tag-link" @click.prevent="this.activeTag = tag.label" v-for="tag in tags">
+      <a href="" class="tag-link" @click.prevent="this.activeTag = tag.label" v-for="tag in this.$store.getters.music.tags">
         <el-tag
           :key="tag.label"
           :type="tag.type"
@@ -45,50 +45,6 @@
       return {
         loading: false,
         activeTag: '',
-        tags: [
-          {type: '', label: 'Metal'},
-          {type: 'success', label: 'Rock'},
-          {type: 'info', label: 'Break Beat'},
-          {type: 'danger', label: 'Industrial'},
-          {type: 'warning', label: 'Classic'},
-        ],
-        bands: [
-          {
-            id: 1,
-            name: 'Fear Factory',
-            tags: ['Metal','Rock','Industrial']
-          },
-          {
-            id: 2,
-            name: 'Metallica',
-            tags: ['Metal','Rock']
-          },
-          {
-            id: 3,
-            name: 'Soulfly',
-            tags: ['Metal','Rock']
-          },
-          {
-            id: 4,
-            name: 'Slipknot',
-            tags: ['Metal','Rock']
-          },
-          {
-            id: 5,
-            name: 'Cannibal Corpse',
-            tags: ['Metal','Rock']
-          },
-          {
-            id: 6,
-            name: 'Prodigy',
-            tags: ['Break Beat','Industrial']
-          },
-          {
-            id: 7,
-            name: 'Bach',
-            tags: ['Classic']
-          }
-        ],
         model: {
         }
       }
@@ -100,7 +56,7 @@
     },
     computed: {
       filteredBands() {
-        return this.bands.filter(elem => {
+        return this.$store.getters.music.bands.filter(elem => {
           if(this.activeTag === '') {
             return true
           }else{
@@ -110,7 +66,7 @@
       }
     },
     mounted() {
-      console.log(this.$router)
+      console.log(this.$store.getters.music.tags)
       this.loadData();
     }
   }
