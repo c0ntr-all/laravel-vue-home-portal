@@ -1,64 +1,77 @@
 <template>
   <el-header><h1 class="page-header">Загрузка музыки</h1></el-header>
   <el-main>
-    <el-form>
-      <el-row :gutter="10">
-        <el-col :xs="24" :sm="12" :md="10" :lg="8" :xl="5">
-          <div class="grid-content bg-purple"/>
-          <el-input
-            v-model="this.model.title"
-            maxlength="10"
-            placeholder="Введите заголовок"
-            show-word-limit
-            type="text"
-          />
-          <el-input
-            v-model="this.model.content"
-            :rows="2"
-            show-word-limit
-            maxlength="1000"
-            type="textarea"
-            placeholder="Описание для напоминания..."
-          />
-          <el-date-picker
-            v-model="this.model.datetime"
-            type="datetime"
-            placeholder="Выберите время"
-            format="DD.MM.YYYY HH:mm:ss"
-            value-format="YYYY-MM-DD HH:mm:ss"
-          />
-          <el-button type="primary" @click="createRemind" round>Создать</el-button>
-        </el-col>
-        <el-col :xs="24" :sm="12" :md="10" :lg="8" :xl="5">
-          <div class="grid-content bg-purple"/>
-          <el-input
-            v-model="this.model.title"
-            maxlength="10"
-            placeholder="Введите заголовок"
-            show-word-limit
-            type="text"
-          />
-          <el-input
-            v-model="this.model.content"
-            :rows="2"
-            show-word-limit
-            maxlength="1000"
-            type="textarea"
-            placeholder="Описание для напоминания..."
-          />
-          <el-date-picker
-            v-model="this.model.datetime"
-            type="datetime"
-            placeholder="Выберите время"
-            format="DD.MM.YYYY HH:mm:ss"
-            value-format="YYYY-MM-DD HH:mm:ss"
-          />
-          <el-button type="primary" @click="createRemind" round>Создать</el-button>
-        </el-col>
-      </el-row>
-    </el-form>
+    <el-row :gutter="10">
+      <el-col :xs="24" :sm="12" :md="10" :lg="8" :xl="5">
+        <h3>Загрузка Банды</h3>
+        <el-form :label-position="'right'">
+          <el-form-item label="Название банды" prop="name">
+            <el-input
+              v-model="this.model.artist.name"
+              maxlength="100"
+              placeholder="Введите название"
+              show-word-limit
+              type="text"
+            />
+          </el-form-item>
+          <el-form-item label="Описание банды" prop="desc">
+            <el-input type="textarea" placeholder="Описание банды..." v-model="this.model.artist.content" maxlength="10000" show-word-limit />
+          </el-form-item>
+          <el-form-item>
+            <el-upload
+              class="poster-uploader"
+              action="#"
+              :auto-upload="false"
+              :show-file-list="false"
+            >
+              <img v-if="this.model.artist.poster.length" :src="this.model.artist.poster" class="poster" />
+              <el-icon class="poster-uploader-icon"><plus /></el-icon>
+            </el-upload>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="createArtist">Создать</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+      <el-col :xs="24" :sm="12" :md="10" :lg="8" :xl="5">
+        <h3>Загрузка Альбома</h3>
+        <el-form :label-position="'right'">
+          <el-form-item label="Название альбома" prop="title">
+            <el-input
+              v-model="this.model.album.title"
+              maxlength="100"
+              placeholder="Введите название"
+              show-word-limit
+              type="text"
+            />
+          </el-form-item>
+          <el-form-item label="Описание альбома" prop="desc">
+            <el-input type="textarea" placeholder="Описание альбома..." v-model="this.model.album.content" maxlength="10000" show-word-limit />
+          </el-form-item>
+          <el-form-item>
+            <el-upload
+              class="poster-uploader"
+              action="#"
+              :auto-upload="false"
+              :show-file-list="false"
+            >
+              <img v-if="this.model.artist.poster.length" :src="this.model.artist.poster" class="poster" />
+              <el-icon class="poster-uploader-icon"><plus /></el-icon>
+            </el-upload>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="createAlbum">Создать</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
   </el-main>
 </template>
+<script setup>
+  import {
+    Plus
+  } from '@element-plus/icons-vue'
+</script>
 <script>
   import API from "../../utils/api";
 
@@ -67,15 +80,35 @@
       return {
         model: {
           artist: {
-
+            name: '',
+            poster: []
           },
           album: {
-
+            title: '',
+            poster: []
           }
         }
       }
     },
     methods: {
+      createArtist() {
+
+      },
+      createAlbum() {
+
+      },
+      removePoster() {
+
+      },
+      beforeRemovePoster() {
+
+      },
+      previewPoster() {
+
+      },
+      exceedPoster() {
+
+      },
       loadData() {
 
       }
@@ -86,7 +119,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .el-row {
     margin-bottom: 20px;
   }
@@ -97,11 +130,30 @@
     border-radius: 4px;
   }
 
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
+  .poster-uploader {
+    .poster {
+      display: block;
+      width: 178px;
+      height: 178px;
+    }
+    .el-upload {
+      border: 1px dashed #dcdfe6;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: .2s;
+    }
+    .el-upload:hover {
+      border-color: #409eff;
+    }
   }
-  .bg-purple {
-    background: purple;
+
+  .el-icon.poster-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    text-align: center;
   }
 </style>
