@@ -1,34 +1,33 @@
 <template>
   <el-row :gutter="10">
     <el-col :xs="24" :sm="12" :md="10" :lg="8" :xl="5">
-      <h3>Загрузка Банды</h3>
+      <h3>Загрузка Альбома</h3>
       <el-form :label-position="'right'">
-        <el-form-item label="Название банды" prop="name">
+        <el-form-item label="Название альбома" prop="title">
           <el-input
-            v-model="this.model.artist.name"
+            v-model="this.model.album.title"
             maxlength="100"
             placeholder="Введите название"
             show-word-limit
             type="text"
           />
         </el-form-item>
-        <el-form-item label="Описание банды" prop="desc">
-          <el-input type="textarea" placeholder="Описание банды..." v-model="this.model.artist.content" maxlength="10000" show-word-limit />
+        <el-form-item label="Описание альбома" prop="desc">
+          <el-input type="textarea" placeholder="Описание альбома..." v-model="this.model.album.content" maxlength="10000" show-word-limit />
         </el-form-item>
         <el-form-item>
           <el-upload
             class="poster-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="#"
+            :auto-upload="false"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
           >
-            <img v-if="this.model.artist.poster.length" :src="this.model.artist.poster" class="poster" />
+            <img v-if="this.model.album.poster.length" :src="this.model.album.poster" class="poster" />
             <el-icon class="poster-uploader-icon"><plus /></el-icon>
           </el-upload>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="createArtist">Создать</el-button>
+          <el-button type="primary" @click="createAlbum">Создать</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -46,15 +45,15 @@
     data() {
       return {
         model: {
-          artist: {
-            name: '',
-            poster: []
+          album: {
+            title: '',
+            poster: ''
           }
         }
       }
     },
     methods: {
-      createArtist() {
+      createAlbum() {
 
       },
       removePoster() {

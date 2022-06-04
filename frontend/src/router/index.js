@@ -74,14 +74,7 @@ const router = createRouter({
       component: () => import('../views/music/MusicUpload'),
       title: 'Загрузка музыки',
       name: 'musicupload',
-      alias: '/musicupload',
-      children: [{
-        path: '/musicupload/artist',
-        component: () => import('../views/music/MusicUploadArtist')
-      },{
-        path: '/musicupload/album',
-        component: () => import('../views/music/MusicUploadAlbum')
-      }]
+      alias: '/musicupload'
     },{
       path: '/:catchAll(.*)',
       component: () => import('../views/Home'),

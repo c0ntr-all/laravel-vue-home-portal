@@ -82,6 +82,12 @@ export default {
   mutations: {
   },
   actions: {
+    async createMusicArtist(context, newArtist) {
+      const {data} = await API.post('api/auth/music/artist/store', newArtist)
+      if(data) {
+        return 'test'
+      }
+    }
   },
   getters: {
     music(state) {
