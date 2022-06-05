@@ -13,16 +13,11 @@
           />
         </el-form-item>
         <el-form-item label="Описание банды" prop="desc">
-          <el-input type="textarea" placeholder="Описание банды..." v-model="this.model.artist.content" maxlength="10000" show-word-limit />
+          <el-input type="textarea" placeholder="Описание банды..." v-model="this.model.artist.description" maxlength="10000" show-word-limit />
         </el-form-item>
         <el-form-item>
-          <el-upload
-            class="poster-uploader"
-            :limit="1"
-            :auto-upload="false"
-          >
-            <el-button type="primary">select file</el-button>
-          </el-upload>
+          <input type="file" id="poster" ref="poster" @change="onChangePoster"/>
+          <img v-if="posterPreview" :src="posterPreview" alt="">
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="createArtist">Создать</el-button>
@@ -42,26 +37,38 @@
   export default {
     data() {
       return {
+        posterPreview: null,
         model: {
           artist: {
             name: '',
+            description: '',
             poster: ''
           }
         }
       }
     },
     methods: {
-      createArtist() {
+      async createArtist(e) {
+        const image = e.target.files[0];
+        console.log(image)
 
+        return
+        const reader = new FileReader();
+
+
+        this.$store.dispatch('createMusicArtist', {
+          data: this.model.artist,
+        }).then(result => {
+          this.$message.success("Артист успешно добавлен!");
+        }).catch(error => {
+          this.$message.error(error);
+        })
+
+        this.model.artist = ''
       },
-      removePoster() {
-
-      },
-      beforePosterUpload() {
-
-      },
-      handlePosterSuccess() {
-
+      onChangePoster($event) {
+        const file = event.target.files[0]
+        this.posterPreview = URL.createObjectURL(file)
       },
       loadData() {
 
