@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Music;
 
-use App\Http\Requests\Reminds\IndexRequest;
-use App\Http\Requests\Reminds\StoreRequest;
+use App\Http\Requests\Music\Artist\IndexRequest;
+use App\Http\Requests\Music\Artist\StoreRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Music\Artist;
 use App\Http\Resources\Music\ArtistResource;
