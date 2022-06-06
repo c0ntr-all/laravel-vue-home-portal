@@ -12,7 +12,7 @@ class Artist extends Model
     use HasFactory;
     use SoftDeletes;
 
-    private $table = 'music_artists';
+    protected $table = 'music_artists';
 
     protected $fillable = [
         'user_id',

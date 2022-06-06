@@ -11,6 +11,7 @@ use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Reminds\RemindController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Music\ArtistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +63,11 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::get('/', [RestaurantController::class, 'index']);
             Route::post('store', [RestaurantController::class, 'store']);
             Route::patch('update', [RestaurantController::class, 'update']);
+        });
+
+        Route::prefix('music')->group(function() {
+            Route::post('artist/index', [ArtistController::class, 'index']);
+            Route::post('artist/store', [ArtistController::class, 'store']);
         });
     });
 });
