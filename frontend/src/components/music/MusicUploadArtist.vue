@@ -16,8 +16,12 @@
           <el-input type="textarea" placeholder="Описание банды..." v-model="this.model.artist.description" maxlength="10000" show-word-limit />
         </el-form-item>
         <el-form-item>
-          <input type="file" id="poster" ref="poster" @change="onChangePoster"/>
-          <img v-if="posterPreview" :src="posterPreview" alt="">
+          <div class="input-poster">
+            <input type="file" id="poster" ref="poster" @change="onChangePoster"/>
+          </div>
+          <div class="poster-preview">
+            <img v-if="posterPreview" :src="posterPreview" alt="">
+          </div>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="createArtist">Создать</el-button>
@@ -42,22 +46,20 @@
           artist: {
             name: '',
             description: '',
-            poster: ''
+            image: ''
           }
         }
       }
     },
     methods: {
       async createArtist(e) {
-        const image = e.target.files[0];
-        console.log(image)
-
-        return
-        const reader = new FileReader();
-
+        const formData = new FormData();
+        formData.append('name', this.model.artist.name)
+        formData.append('description', this.model.artist.description)
+        formData.append('image', this.model.artist.image)
 
         this.$store.dispatch('createMusicArtist', {
-          data: this.model.artist,
+          data: formData,
         }).then(result => {
           this.$message.success("Артист успешно добавлен!");
         }).catch(error => {
@@ -68,6 +70,7 @@
       },
       onChangePoster($event) {
         const file = event.target.files[0]
+        this.model.artist.image = file
         this.posterPreview = URL.createObjectURL(file)
       },
       loadData() {
@@ -116,5 +119,12 @@
     width: 178px;
     height: 178px;
     text-align: center;
+  }
+  .poster-preview {
+    position: relative;
+
+    img {
+      width: 100%
+    }
   }
 </style>
