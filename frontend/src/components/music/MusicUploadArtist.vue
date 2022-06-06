@@ -58,9 +58,7 @@
         formData.append('description', this.model.artist.description)
         formData.append('image', this.model.artist.image)
 
-        this.$store.dispatch('createMusicArtist', {
-          data: formData,
-        }).then(result => {
+        this.$store.dispatch('createMusicArtist', formData).then(result => {
           this.$message.success("Артист успешно добавлен!");
         }).catch(error => {
           this.$message.error(error);
