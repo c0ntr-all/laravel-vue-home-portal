@@ -46,7 +46,7 @@
           artist: {
             name: '',
             description: '',
-            image: ''
+            image: null
           }
         }
       }
@@ -60,11 +60,17 @@
 
         this.$store.dispatch('createMusicArtist', formData).then(result => {
           this.$message.success("Артист успешно добавлен!");
+
+          for (let key in this.model.artist) {
+            this.model.artist[key] = ''
+            if(key === 'image') {
+              this.$refs.poster.value = ''
+            }
+          }
+          this.posterPreview = null
         }).catch(error => {
           this.$message.error(error);
         })
-
-        this.model.artist = ''
       },
       onChangePoster($event) {
         const file = event.target.files[0]
