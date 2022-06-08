@@ -55,7 +55,7 @@
       async createArtist(e) {
         const formData = new FormData();
         formData.append('name', this.model.artist.name)
-        formData.append('description', this.model.artist.description)
+        formData.append('content', this.model.artist.description)
         formData.append('image', this.model.artist.image)
 
         this.$store.dispatch('createMusicArtist', formData).then(result => {

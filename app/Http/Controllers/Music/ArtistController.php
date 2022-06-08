@@ -8,14 +8,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Music\Artist;
 use App\Http\Resources\Music\ArtistResource;
 use App\Http\Resources\Music\ArtistCollection;
+use App\Services\UploadImageService;
 
 class ArtistController extends Controller
 {
     protected $artists;
 
-    public function __construct(Artist $artists)
+    public function __construct(Artist $artists, UploadImageService $uploadImageService)
     {
         $this->artists = $artists;
+        $this->uploadImageService = $uploadImageService;
     }
 
     public function index(IndexRequest $request): ArtistCollection
@@ -25,7 +27,14 @@ class ArtistController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $artist = Artist::create($request->validated());
+        $imagePath = $this->uploadImageService->upload($request->image, $request->name);
+
+        $artist = Artist::create([
+            'user_id' => auth()->id(),
+            'name' => $request->name,
+            'content' => $request->content,
+            'image' => $imagePath
+        ]);
 
         return $this->artistResponse($artist);
     }
