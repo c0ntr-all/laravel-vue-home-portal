@@ -51,7 +51,7 @@
     },
     computed: {
       artist() {
-        return this.$store.getters.music.bands.find(item => item.id === Number(this.artistId))
+        return this.$store.getters.music.artists.find(item => item.id === Number(this.artistId))
       }
     },
     mounted() {
