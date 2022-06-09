@@ -25,7 +25,10 @@ class Artist extends Model
 
     public function getItems()
     {
-        return Artist::all();
+        return Artist::all()->map(function($item, $key) {
+            $item->image = env('APP_URL') . '/storage/' . $item->image;
+            return $item;
+        });
     }
 
     public function albums(): HasMany
