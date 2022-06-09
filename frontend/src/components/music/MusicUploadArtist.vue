@@ -1,58 +1,65 @@
 <template>
-  <el-row :gutter="10">
-    <el-col :xs="24" :sm="12" :md="10" :lg="8" :xl="5">
-      <h3>Загрузка Банды</h3>
-      <el-form :label-position="'right'">
-        <el-form-item label="Название банды" prop="name">
-          <el-input
-            v-model="this.model.artist.name"
-            maxlength="100"
-            placeholder="Введите название"
-            show-word-limit
-            type="text"
-          />
-        </el-form-item>
-        <el-form-item label="Описание банды" prop="content">
-          <el-input type="textarea" placeholder="Описание банды..." v-model="this.model.artist.content" maxlength="10000" show-word-limit />
-        </el-form-item>
-        <el-form-item label="Постер">
-          <div class="input-poster">
-            <input type="file" id="poster" ref="poster" @change="onChangePoster"/>
-          </div>
-          <div class="poster-preview">
-            <img v-if="posterPreview" :src="posterPreview" alt="">
-          </div>
-        </el-form-item>
-        <el-form-item label="Теги">
-          <el-tag
-            v-for="tag in this.model.artist.tags"
-            :key="tag"
-            class="mx-1"
-            closable
-            :disable-transitions="false"
-            @close="closeTag(tag)"
-          >
-            {{ tag }}
-          </el-tag>
-          <el-input
-            v-if="tagInputVisible"
-            ref="taginput"
-            v-model="tagInputValue"
-            class="ml-1 tag-input"
-            size="small"
-            @keyup.enter="tagInputConfirm"
-            @blur="tagInputConfirm"
-          />
-          <el-button v-else class="button-new-tag ml-1" size="small" @click="showTagInput">
-            + New Tag
-          </el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="createArtist">Создать</el-button>
-        </el-form-item>
-      </el-form>
-    </el-col>
-  </el-row>
+  <h3>Загрузка Банды</h3>
+  <el-tabs tab-position="top">
+    <el-tab-pane label="Вручную">
+      <el-row :gutter="10">
+        <el-col :xs="24" :sm="12" :md="10" :lg="8" :xl="5">
+          <el-form :label-position="'right'">
+            <el-form-item label="Название банды" prop="name">
+              <el-input
+                v-model="this.model.artist.name"
+                maxlength="100"
+                placeholder="Введите название"
+                show-word-limit
+                type="text"
+              />
+            </el-form-item>
+            <el-form-item label="Описание банды" prop="content">
+              <el-input type="textarea" placeholder="Описание банды..." v-model="this.model.artist.content" maxlength="10000" show-word-limit />
+            </el-form-item>
+            <el-form-item label="Постер">
+              <div class="input-poster">
+                <input type="file" id="poster" ref="poster" @change="onChangePoster"/>
+              </div>
+              <div class="poster-preview">
+                <img v-if="posterPreview" :src="posterPreview" alt="">
+              </div>
+            </el-form-item>
+            <el-form-item label="Теги">
+              <el-tag
+                v-for="tag in this.model.artist.tags"
+                :key="tag"
+                class="mx-1"
+                closable
+                :disable-transitions="false"
+                @close="closeTag(tag)"
+              >
+                {{ tag }}
+              </el-tag>
+              <el-input
+                v-if="tagInputVisible"
+                ref="taginput"
+                v-model="tagInputValue"
+                class="ml-1 tag-input"
+                size="small"
+                @keyup.enter="tagInputConfirm"
+                @blur="tagInputConfirm"
+              />
+              <el-button v-else class="button-new-tag ml-1" size="small" @click="showTagInput">
+                + New Tag
+              </el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="createArtist">Создать</el-button>
+            </el-form-item>
+          </el-form>
+        </el-col>
+      </el-row>
+    </el-tab-pane>
+    <el-tab-pane label="Автоматически">
+      test
+    </el-tab-pane>
+  </el-tabs>
 </template>
 <script setup>
   import {
