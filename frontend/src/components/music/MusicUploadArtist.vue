@@ -12,16 +12,40 @@
             type="text"
           />
         </el-form-item>
-        <el-form-item label="Описание банды" prop="desc">
-          <el-input type="textarea" placeholder="Описание банды..." v-model="this.model.artist.description" maxlength="10000" show-word-limit />
+        <el-form-item label="Описание банды" prop="content">
+          <el-input type="textarea" placeholder="Описание банды..." v-model="this.model.artist.content" maxlength="10000" show-word-limit />
         </el-form-item>
-        <el-form-item>
+        <el-form-item label="Постер">
           <div class="input-poster">
             <input type="file" id="poster" ref="poster" @change="onChangePoster"/>
           </div>
           <div class="poster-preview">
             <img v-if="posterPreview" :src="posterPreview" alt="">
           </div>
+        </el-form-item>
+        <el-form-item label="Теги">
+          <el-tag
+            v-for="tag in this.model.artist.tags"
+            :key="tag"
+            class="mx-1"
+            closable
+            :disable-transitions="false"
+            @close="closeTag(tag)"
+          >
+            {{ tag }}
+          </el-tag>
+          <el-input
+            v-if="tagInputVisible"
+            ref="taginput"
+            v-model="tagInputValue"
+            class="ml-1 tag-input"
+            size="small"
+            @keyup.enter="tagInputConfirm"
+            @blur="tagInputConfirm"
+          />
+          <el-button v-else class="button-new-tag ml-1" size="small" @click="showTagInput">
+            + New Tag
+          </el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="createArtist">Создать</el-button>
@@ -42,10 +66,13 @@
     data() {
       return {
         posterPreview: null,
+        tagInputVisible: false,
+        tagInputValue: '',
         model: {
           artist: {
             name: '',
-            description: '',
+            content: '',
+            tags: [],
             image: null
           }
         }
@@ -55,7 +82,7 @@
       async createArtist(e) {
         const formData = new FormData();
         formData.append('name', this.model.artist.name)
-        formData.append('content', this.model.artist.description)
+        formData.append('content', this.model.artist.content)
         formData.append('image', this.model.artist.image)
 
         this.$store.dispatch('createMusicArtist', formData).then(result => {
@@ -76,6 +103,22 @@
         const file = event.target.files[0]
         this.model.artist.image = file
         this.posterPreview = URL.createObjectURL(file)
+      },
+      closeTag(tag) {
+        this.model.artist.tags.splice(this.model.artist.tags.indexOf(tag), 1)
+      },
+      showTagInput() {
+        this.tagInputVisible = true
+        this.$nextTick(() => {
+          this.$refs.taginput.focus()
+        })
+      },
+      tagInputConfirm() {
+        if (this.tagInputValue) {
+          this.model.artist.tags.push(this.tagInputValue)
+        }
+        this.tagInputVisible = false
+        this.tagInputValue = ''
       },
       loadData() {
 
@@ -130,5 +173,8 @@
     img {
       width: 100%
     }
+  }
+  .tag-input {
+    width: 100px;
   }
 </style>
