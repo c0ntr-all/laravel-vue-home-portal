@@ -23,6 +23,11 @@ class Artist extends Model
         'deleted_at'
     ];
 
+    public function getItems()
+    {
+        return Artist::all();
+    }
+
     public function albums(): HasMany
     {
         return $this->hasMany(Album::class, 'artist_id', 'id');

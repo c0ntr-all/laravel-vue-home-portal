@@ -66,8 +66,11 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
         });
 
         Route::prefix('music')->group(function() {
-            Route::post('artist/index', [ArtistController::class, 'index']);
-            Route::post('artist/store', [ArtistController::class, 'store']);
+            Route::prefix('artists')->group(function() {
+                Route::get('/', [ArtistController::class, 'index']);
+                Route::get('{id}', [ArtistController::class, 'show']);
+                Route::post('store', [ArtistController::class, 'store']);
+            });
         });
     });
 });
