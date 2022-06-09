@@ -4,6 +4,7 @@ export default {
   state() {
     return {
       music: {
+        artists: [],
         tags: [
           {type: '', label: 'Metal'},
           {type: 'success', label: 'Rock'},
@@ -80,12 +81,34 @@ export default {
     }
   },
   mutations: {
+    LOAD_ARTISTS(state, artists) {
+      state.music.artists = artists
+    }
   },
   actions: {
     async createMusicArtist(context, newArtist) {
       const {data} = await API.post('api/auth/music/artist/store', newArtist)
       if(data) {
         return 'test'
+      }
+    },
+    async loadArtists(context) {
+      try {
+        const {data} = await API.get('api/auth/music/artists')
+        if(!data) {
+          throw new Error('Нет данных!')
+        }
+        const artists = Object.keys(data.lists).map(key => {
+          return {
+            id: key,
+            ...data.lists[key]
+          }
+        })
+        console.log(artists)
+        return
+        context.commit('LOAD_ARTISTS', artists)
+      }catch(e) {
+
       }
     }
   },

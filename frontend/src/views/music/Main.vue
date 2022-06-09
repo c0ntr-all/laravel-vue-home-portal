@@ -51,7 +51,9 @@
     },
     methods: {
       loadData() {
-
+        this.loading = true
+        this.$store.dispatch('loadArtists')
+        this.loading = false
       }
     },
     computed: {
