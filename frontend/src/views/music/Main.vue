@@ -20,18 +20,15 @@
   <div class="artists">
     <h3>Artists</h3>
     <el-space alignment="flex-start" wrap>
-      <el-card class="artist-card" :body-style="{ padding: '0px' }" v-for="band in filteredBands" :key="band.id">
+      <el-card class="artist-card" :body-style="{ padding: '0px' }" v-for="artist in filteredBands" :key="artist.id">
         <div class="artist-card__image">
-          <img
-            src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-            class="image"
-          />
+          <img :src="artist.image" class="image"/>
         </div>
         <div style="padding: 14px">
-          <router-link :to="'/music/artists/' + band.id"><span>{{ band.name }}</span></router-link>
+          <router-link :to="'/music/artists/' + artist.id"><span>{{ artist.name }}</span></router-link>
           <div class="artist-card__footer">
             <div class="tags-list">
-              <el-tag v-for="tag in band.tags" class="mx-1">{{ tag }}</el-tag>
+              <el-tag v-for="tag in artist.tags" class="mx-1">{{ tag }}</el-tag>
             </div>
           </div>
         </div>
@@ -51,14 +48,12 @@
     },
     methods: {
       loadData() {
-        this.loading = true
         this.$store.dispatch('loadArtists')
-        this.loading = false
       }
     },
     computed: {
       filteredBands() {
-        return this.$store.getters.music.bands.filter(elem => {
+        return this.$store.getters.music.artists.filter(elem => {
           if(this.activeTag === '') {
             return true
           }else{

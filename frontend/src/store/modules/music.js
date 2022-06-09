@@ -87,7 +87,7 @@ export default {
   },
   actions: {
     async createMusicArtist(context, newArtist) {
-      const {data} = await API.post('api/auth/music/artist/store', newArtist)
+      const {data} = await API.post('api/auth/music/artists/store', newArtist)
       if(data) {
         return 'test'
       }
@@ -98,15 +98,7 @@ export default {
         if(!data) {
           throw new Error('Нет данных!')
         }
-        const artists = Object.keys(data.lists).map(key => {
-          return {
-            id: key,
-            ...data.lists[key]
-          }
-        })
-        console.log(artists)
-        return
-        context.commit('LOAD_ARTISTS', artists)
+        context.commit('LOAD_ARTISTS', data['artists'])
       }catch(e) {
 
       }
