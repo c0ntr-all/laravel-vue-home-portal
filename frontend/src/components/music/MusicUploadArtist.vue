@@ -90,6 +90,7 @@
         const formData = new FormData();
         formData.append('name', this.model.artist.name)
         formData.append('content', this.model.artist.content)
+        formData.append('tags', this.model.artist.tags)
         formData.append('image', this.model.artist.image)
 
         this.$store.dispatch('createMusicArtist', formData).then(result => {

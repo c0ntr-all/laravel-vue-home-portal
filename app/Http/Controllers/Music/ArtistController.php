@@ -27,8 +27,6 @@ class ArtistController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $imagePath = $this->uploadImageService->upload($request->image, $request->name);
-
         $artist = Artist::create([
             'user_id' => auth()->id(),
             'name' => $request->name,
