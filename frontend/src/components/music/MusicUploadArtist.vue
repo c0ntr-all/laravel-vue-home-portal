@@ -57,7 +57,16 @@
       </el-row>
     </el-tab-pane>
     <el-tab-pane label="Автоматически">
-      test
+      <el-button @click="openFolderModal = true">Выбрать папку</el-button>
+      <app-modal :openModal="openFolderModal" @closeModal="openFolderModal = false">
+        <template v-slot:title>
+          Выбрать папку для загрузки
+        </template>
+        <template v-slot:content>
+        </template>
+        <template v-slot:footer>
+        </template>
+      </app-modal>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -69,12 +78,15 @@
 <script>
   import API from "../../utils/api";
 
+  import AppModal from "../default/AppModal";
+
   export default {
     data() {
       return {
         posterPreview: null,
         tagInputVisible: false,
         tagInputValue: '',
+        openFolderModal: false,
         model: {
           artist: {
             name: '',
@@ -128,12 +140,14 @@
         this.tagInputVisible = false
         this.tagInputValue = ''
       },
-      loadData() {
-
+      folderModal() {
+        alert('test')
       }
     },
+    components: {
+      AppModal
+    },
     mounted() {
-      this.loadData();
     }
   }
 </script>
