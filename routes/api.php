@@ -12,6 +12,7 @@ use App\Http\Controllers\Reminds\RemindController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Music\ArtistController;
+use App\Http\Controllers\FolderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,10 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 Route::get('{id}', [ArtistController::class, 'show']);
                 Route::post('store', [ArtistController::class, 'store']);
             });
+        });
+
+        Route::prefix('folders')->group(function() {
+            Route::post('/', [FolderController::class, 'index']);
         });
     });
 });
