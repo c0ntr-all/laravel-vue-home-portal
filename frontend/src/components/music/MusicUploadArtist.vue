@@ -57,12 +57,13 @@
       </el-row>
     </el-tab-pane>
     <el-tab-pane label="Автоматически">
-      <el-button @click="openFolderModal = true">Выбрать папку</el-button>
+      <el-button @click="handlerFolderModal">Выбрать папку</el-button>
       <app-modal :openModal="openFolderModal" @closeModal="openFolderModal = false">
         <template v-slot:title>
           Выбрать папку для загрузки
         </template>
         <template v-slot:content>
+
         </template>
         <template v-slot:footer>
         </template>
@@ -87,6 +88,7 @@
         tagInputVisible: false,
         tagInputValue: '',
         openFolderModal: false,
+        folder: '',
         model: {
           artist: {
             name: '',
@@ -140,8 +142,15 @@
         this.tagInputVisible = false
         this.tagInputValue = ''
       },
-      folderModal() {
-        alert('test')
+      async handlerFolderModal() {
+        this.openFolderModal = true
+
+        const {data} = await API.post('api/auth/folders', {
+          'folder': ''
+        })
+        if(data) {
+          this.folder = data
+        }
       }
     },
     components: {
