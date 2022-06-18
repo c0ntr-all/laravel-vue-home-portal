@@ -63,7 +63,11 @@
           Выбрать папку для загрузки
         </template>
         <template v-slot:content>
-
+          <div class="folders">
+            <div class="folders__item" v-for="folder in this.folder">
+              <a class="folders__link" href="#" @click.prevent="getFolder">{{ folder }}</a>
+            </div>
+          </div>
         </template>
         <template v-slot:footer>
         </template>
@@ -88,7 +92,7 @@
         tagInputVisible: false,
         tagInputValue: '',
         openFolderModal: false,
-        folder: '',
+        folder: {},
         model: {
           artist: {
             name: '',
@@ -151,6 +155,9 @@
         if(data) {
           this.folder = data
         }
+      },
+      getFolder() {
+        console.log('test')
       }
     },
     components: {
