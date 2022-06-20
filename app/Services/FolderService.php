@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Storage;
 
 class FolderService
 {
-    public function showDisks()
+    private function showDisks()
     {
         if(php_uname('s')=='Windows NT'){
             // windows
@@ -32,6 +32,23 @@ class FolderService
             }
 
             return $disks;
+        }
+    }
+
+    public function getFolder($folder)
+    {
+        if(!empty($folder)) {
+            $dirElements = scandir($folder);
+            $dirs = [];
+            foreach($dirElements as $dirItem) {
+                if(is_dir($folder . $dirItem)) {
+                    $dirs[] = $dirItem;
+                }
+            }
+
+            return $dirs;
+        }else{
+            return $this->showDisks();
         }
     }
 }

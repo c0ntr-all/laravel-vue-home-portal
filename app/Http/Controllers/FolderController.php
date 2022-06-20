@@ -12,8 +12,8 @@ class FolderController extends Controller
         $this->folderService = $folderService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return $this->folderService->showDisks();
+        return $this->folderService->getFolder($request->folder);
     }
 }
