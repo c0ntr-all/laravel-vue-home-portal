@@ -63,11 +63,17 @@
           Выбрать папку для загрузки
         </template>
         <template v-slot:content>
-          <div class="folders">
-            <div class="folders__item" v-for="folder in this.folder">
-              <a class="folders__link" href="#" @click.prevent="getFolder">{{ folder }}</a>
-            </div>
-          </div>
+          <el-tree
+            v-loading="folderLoading"
+            :load="loadNode"
+            lazy
+            :props="this.defaultProps"
+          />
+<!--          <div class="folders" v-loading="folderLoading">-->
+<!--            <div class="folders__item" v-for="folder in this.folder">-->
+<!--              <a class="folders__link" href="#" @click.prevent="getFolder">{{ folder }}</a>-->
+<!--            </div>-->
+<!--          </div>-->
         </template>
         <template v-slot:footer>
         </template>
@@ -92,7 +98,12 @@
         tagInputVisible: false,
         tagInputValue: '',
         openFolderModal: false,
-        folder: {},
+        folder: [],
+        defaultProps: {
+          children: 'children',
+          label: 'label',
+        },
+        folderLoading: false,
         model: {
           artist: {
             name: '',
@@ -146,18 +157,37 @@
         this.tagInputVisible = false
         this.tagInputValue = ''
       },
-      async handlerFolderModal() {
+      handlerFolderModal() {
         this.openFolderModal = true
-
+        this.folderLoading = true
+      },
+      async getFolder(folder) {
         const {data} = await API.post('api/auth/folders', {
-          'folder': ''
+          'folder': folder || ''
         })
         if(data) {
-          this.folder = data
+          return Object.values(data).map(value => {
+            return {
+              label: value,
+            }
+          })
         }
+
+        return false
       },
-      getFolder() {
-        console.log('test')
+      async loadNode(node, resolve) {
+        console.log(node.label)
+        if(node.level === 0) {
+          let list = await this.getFolder()
+
+          if(list) {
+            this.folderLoading = false
+            return resolve(list)
+          }
+        }else{
+          let list = await this.getFolder(node.label)
+          return resolve(list)
+        }
       }
     },
     components: {
