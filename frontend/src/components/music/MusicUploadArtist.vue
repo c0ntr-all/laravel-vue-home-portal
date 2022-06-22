@@ -58,6 +58,13 @@
     </el-tab-pane>
     <el-tab-pane label="Автоматически">
       <el-button @click="handlerFolderModal">Выбрать папку</el-button>
+      <div class="upload-zone" v-if="selectedFolder">
+        <el-divider border-style="dashed" />
+        <div class="upload-folder">
+          <p class="selected-folder">{{ selectedFolder }}</p>
+          <el-button type="primary" @click="handlerUploadFromFolder">Загрузить</el-button>
+        </div>
+      </div>
       <app-modal :openModal="openFolderModal" @closeModal="openFolderModal = false">
         <template v-slot:title>
           Выбрать папку для загрузки
@@ -68,12 +75,9 @@
             :load="loadNode"
             lazy
             :props="this.defaultProps"
+            :expand-on-click-node="false"
+            @node-click="handleNodeClick"
           />
-<!--          <div class="folders" v-loading="folderLoading">-->
-<!--            <div class="folders__item" v-for="folder in this.folder">-->
-<!--              <a class="folders__link" href="#" @click.prevent="getFolder">{{ folder }}</a>-->
-<!--            </div>-->
-<!--          </div>-->
         </template>
         <template v-slot:footer>
         </template>
@@ -104,6 +108,7 @@
           label: 'label',
         },
         folderLoading: false,
+        selectedFolder: '',
         model: {
           artist: {
             name: '',
@@ -177,7 +182,7 @@
       },
       getFullPath(node, path = '') {
         if(node.level > 1) {
-          return this.getFullPath(node.parent, node.label + '/' + path)
+          return this.getFullPath(node.parent, node.label + '\\' + path)
         }else{
           return node.label + path
         }
@@ -192,11 +197,16 @@
           }
         }else{
           let path = this.getFullPath(node)
-          console.log(path)
           let list = await this.getFolder(path)
           return resolve(list)
         }
       },
+      handleNodeClick(data, node) {
+        this.selectedFolder = this.getFullPath(node)
+      },
+      handlerUploadFromFolder() {
+        alert('Загрузка из папки - ' + this.selectedFolder)
+      }
     },
     components: {
       AppModal
@@ -252,5 +262,10 @@
   }
   .tag-input {
     width: 100px;
+  }
+  .upload-folder {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 </style>
