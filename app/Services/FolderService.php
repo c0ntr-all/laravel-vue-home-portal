@@ -41,7 +41,7 @@ class FolderService
             $dirElements = scandir($folder);
             $dirs = [];
             foreach($dirElements as $dirItem) {
-                if(is_dir($folder . $dirItem)) {
+                if($dirItem != '..' && $dirItem != '.' && is_dir($folder . '/' . $dirItem)) {
                     $dirs[] = $dirItem;
                 }
             }

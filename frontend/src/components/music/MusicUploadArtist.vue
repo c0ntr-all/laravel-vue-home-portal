@@ -177,7 +177,7 @@
       },
       getFullPath(node, path = '') {
         if(node.level > 1) {
-          return this.getFullPath(node.parent, node.label)
+          return this.getFullPath(node.parent, node.label + '/' + path)
         }else{
           return node.label + path
         }
@@ -192,6 +192,7 @@
           }
         }else{
           let path = this.getFullPath(node)
+          console.log(path)
           let list = await this.getFolder(path)
           return resolve(list)
         }
