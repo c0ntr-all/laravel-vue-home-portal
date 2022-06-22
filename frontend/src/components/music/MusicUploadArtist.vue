@@ -175,8 +175,14 @@
 
         return false
       },
+      getFullPath(node, path = '') {
+        if(node.level > 1) {
+          return this.getFullPath(node.parent, node.label)
+        }else{
+          return node.label + path
+        }
+      },
       async loadNode(node, resolve) {
-        console.log(node.label)
         if(node.level === 0) {
           let list = await this.getFolder()
 
@@ -185,10 +191,11 @@
             return resolve(list)
           }
         }else{
-          let list = await this.getFolder(node.label)
+          let path = this.getFullPath(node)
+          let list = await this.getFolder(path)
           return resolve(list)
         }
-      }
+      },
     },
     components: {
       AppModal
