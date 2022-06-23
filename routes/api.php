@@ -12,6 +12,7 @@ use App\Http\Controllers\Reminds\RemindController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Music\ArtistController;
+use App\Http\Controllers\Music\UploadController;
 use App\Http\Controllers\FolderController;
 
 /*
@@ -67,6 +68,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
         });
 
         Route::prefix('music')->group(function() {
+            Route::post('upload', [UploadController::class, 'upload']);
             Route::prefix('artists')->group(function() {
                 Route::get('/', [ArtistController::class, 'index']);
                 Route::get('{id}', [ArtistController::class, 'show']);
