@@ -204,8 +204,13 @@
       handleNodeClick(data, node) {
         this.selectedFolder = this.getFullPath(node)
       },
-      handlerUploadFromFolder() {
-        alert('Загрузка из папки - ' + this.selectedFolder)
+      async handlerUploadFromFolder() {
+        const response = await API.post('api/auth/music/upload', {
+          'folder': this.selectedFolder
+        })
+        if(response) {
+          console.log(response)
+        }
       }
     },
     components: {
