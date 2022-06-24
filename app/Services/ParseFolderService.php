@@ -11,13 +11,13 @@ class ParseFolderService
      */
     public function validateAlbums($folders)
     {
-        $result = [];
         foreach($folders as $folder) {
             if(!preg_match('/[0-9]{4} - .*/i', $folder)) {
-                //throw exception
+                throw new \Exception('В каталоге присутствуют папки неверного вормата: ' . $folder);
             }
         }
-        return $result;
+
+        return true;
     }
 
     /**
@@ -42,10 +42,26 @@ class ParseFolderService
         }
     }
 
-    public function parseFolder($folder)
+
+    /**
+     * @param $folder
+     * @return mixed
+     */
+    public function parseFolder($folder): mixed
     {
         $folders = $this->getFolders($folder);
 
-        return $this->validateAlbums($folders);
+        try {
+            $this->validateAlbums($folders);
+        }catch(\Exception $exception) {
+            return $exception->getMessage();
+        }
+
+        $result = [];
+        foreach($folders as $folder) {
+            $result[] = $folder;
+        }
+
+        return $result;
     }
 }
