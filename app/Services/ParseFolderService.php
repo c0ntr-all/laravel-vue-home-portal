@@ -13,7 +13,7 @@ class ParseFolderService
     {
         foreach($folders as $folder) {
             if(!preg_match('/[0-9]{4} - .*/i', $folder)) {
-                throw new \Exception('В каталоге присутствуют папки неверного вормата: ' . $folder);
+                throw new \Exception('В каталоге присутствует папка неверного вормата: ' . $folder);
             }
         }
 
@@ -21,7 +21,7 @@ class ParseFolderService
     }
 
     /**
-     * Получает все все вложенные каталоги конкретного каталога
+     * Возвращает все вложенные каталоги конкретного каталога
      *
      * @param $folder
      * @return array
@@ -44,6 +44,20 @@ class ParseFolderService
 
 
     /**
+     * Возвращает имя выбранного каталога из пути
+     *
+     * @param $folder
+     * @return mixed|string
+     */
+    public function getFolderName($folder): string
+    {
+        $foldersPath = explode('\\', rtrim($folder, '\\'));
+
+        return array_pop($foldersPath);
+    }
+
+
+    /**
      * @param $folder
      * @return mixed
      */
@@ -57,9 +71,16 @@ class ParseFolderService
             return $exception->getMessage();
         }
 
+        $artistName = $this->getFolderName($folder);
+
         $result = [];
         foreach($folders as $folder) {
-            $result[] = $folder;
+            preg_match_all('/([0-9]{4}) - (.*)/i', $folder, $match);
+            $albumParts = array_column($match, 0);
+            $year = $albumParts[1];
+            $albumName = $albumParts[2];
+
+
         }
 
         return $result;
