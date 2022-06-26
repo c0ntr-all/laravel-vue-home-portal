@@ -20,6 +20,6 @@ class UploadController extends Controller
 
     public function upload(UploadRequest $request)
     {
-        dd($this->parseFolderService->parseFolder($request->validated()['folder']));
+        dd($this->parseFolderService->collectData($request->validated()['folder']));
     }
 }
