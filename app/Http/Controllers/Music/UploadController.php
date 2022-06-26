@@ -4,22 +4,22 @@ namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Music\Upload\UploadRequest;
-use App\Services\ParseFolderService;
+use App\Services\Music\ParseArtistService;
 
 class UploadController extends Controller
 {
     /**
-     * @var ParseFolderService
+     * @var ParseArtistService
      */
-    private $parseFolderService;
+    private $parseArtistService;
 
-    public function __construct(ParseFolderService $parseFolderService)
+    public function __construct(ParseArtistService $parseArtistService)
     {
-        $this->parseFolderService = $parseFolderService;
+        $this->parseArtistService = $parseArtistService;
     }
 
     public function upload(UploadRequest $request)
     {
-        dd($this->parseFolderService->collectData($request->validated()['folder']));
+        dd($this->parseArtistService->collectData($request->validated()['folder']));
     }
 }

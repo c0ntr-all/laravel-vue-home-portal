@@ -1,40 +1,24 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Music;
 
-use Mockery\Exception;
-
-class ParseFolderService
+class ParseArtistService
 {
     /**
      * Проверяет являются ли переданные каталоги музыкальными альбомами формата 2019 - AlbumName
      *
      * @param $folders
+     * @return bool
+     * @throws \Exception
      */
-    public function validateAlbums($folders)
+    private function validateAlbums($folders): bool
     {
         if(empty($folders))
             throw new \Exception('В каталоге отсутствуют папки');
 
         foreach($folders as $folder) {
             if(!preg_match('/[0-9]{4} - .*/i', $folder)) {
-                throw new \Exception('В каталоге присутствует папка неверного вормата: ' . $folder);
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Проверяет являются ли переданные файлы музыкальными файлами формата 01.Track Name.mp3
-     *
-     * @param $folders
-     */
-    public function validateTracks($folders)
-    {
-        foreach($folders as $folder) {
-            if(!preg_match('/[0-9]{4} - .*/i', $folder)) {
-                throw new \Exception('В каталоге присутствует папка неверного вормата: ' . $folder);
+                throw new \Exception('В каталоге присутствует папка неверного формата: ' . $folder);
             }
         }
 
@@ -47,13 +31,13 @@ class ParseFolderService
      * @param $folder
      * @return array
      */
-    public function parseFolder($folder, $mode = 'folders'): array
+    private function parseFolder($folder, $mode = 'folders'): array
     {
         if(!empty($folder)) {
             $dirElements = scandir($folder);
             $items = [];
 
-            foreach($dirElements as $dirItem) {
+            foreach($dirElements as $key => $dirItem) {
                 if($dirItem != '..' && $dirItem != '.') {
                     switch($mode) {
                         case 'folders':
@@ -67,9 +51,11 @@ class ParseFolderService
                             if($info['extension'] === 'mp3') {
                                 preg_match_all('/([0-9]{2}).\s(.*)/i', $info['filename'], $match);
                                 $trackParts = array_column($match, 0);
-                                $items[$trackParts[1]] = $trackParts[2];
+                                $items[$key]['number'] = $trackParts[1];
+                                $items[$key]['name'] = $trackParts[2];
+                                $items[$key]['path'] = $folder . '\\' . $dirItem;
                             }elseif ($info['extension'] === 'jpg' || $info['extension'] === 'jpeg' || $info['extension'] === 'png') {
-                                $items['cover'] = $info['basename'];
+                                $items['cover'] = $folder . '\\' . $info['basename'];
                             }
                             break;
                     }
@@ -86,7 +72,7 @@ class ParseFolderService
      * @param $folder
      * @return mixed|string
      */
-    public function getFolderName($folder): string
+    private function getFolderName($folder): string
     {
         $foldersPath = explode('\\', rtrim($folder, '\\'));
 
@@ -94,6 +80,8 @@ class ParseFolderService
     }
 
     /**
+     * Собирает данные по исполнителю в каталоге и формирует массив для загрузки в БД
+     *
      * @param $folder
      * @return mixed
      */
@@ -119,6 +107,7 @@ class ParseFolderService
             $albumFolder = $folder . $item;
             $tracks = $this->parseFolder($albumFolder, 'tracks');
             $cover = $tracks['cover'] ?: null;
+
             unset($tracks['cover']);
 
             array_push($result['albums'], [
