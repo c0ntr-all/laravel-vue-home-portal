@@ -109,6 +109,7 @@
         },
         folderLoading: false,
         selectedFolder: '',
+        defaultFolder: 'F:\\Music\\',
         model: {
           artist: {
             name: '',
@@ -168,7 +169,7 @@
       },
       async getFolder(folder) {
         const {data} = await API.post('api/auth/folders', {
-          'folder': folder || ''
+          'folder': folder || this.defaultFolder
         })
         if(data) {
           return Object.values(data).map(value => {
@@ -182,7 +183,11 @@
       },
       getFullPath(node, path = '') {
         if(node.level > 1) {
-          return this.getFullPath(node.parent, node.label + '\\' + path)
+          let nextPath = node.label + '\\' + path
+          if(this.defaultFolder && node.level === 2) {
+            nextPath = '\\' + nextPath
+          }
+          return this.getFullPath(node.parent, nextPath)
         }else{
           return node.label + path
         }
@@ -196,13 +201,13 @@
             return resolve(list)
           }
         }else{
-          let path = this.getFullPath(node)
+          let path = this.defaultFolder ? this.defaultFolder + this.getFullPath(node) : this.getFullPath(node)
           let list = await this.getFolder(path)
           return resolve(list)
         }
       },
       handleNodeClick(data, node) {
-        this.selectedFolder = this.getFullPath(node)
+        this.selectedFolder = this.defaultFolder ? this.defaultFolder + this.getFullPath(node) : this.getFullPath(node)
       },
       async handlerUploadFromFolder() {
         const response = await API.post('api/auth/music/upload', {
