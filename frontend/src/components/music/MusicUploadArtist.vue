@@ -58,10 +58,10 @@
     </el-tab-pane>
     <el-tab-pane label="Автоматически">
       <el-button @click="handlerFolderModal">Выбрать папку</el-button>
-      <div class="upload-zone" v-if="selectedFolder">
+      <div class="upload-zone">
         <el-divider border-style="dashed" />
         <div class="upload-folder">
-          <p class="selected-folder">{{ selectedFolder }}</p>
+          <el-input v-model="selectedFolder" placeholder="Путь до папки с исполнителем" />
           <el-button type="primary" @click="handlerUploadFromFolder">Загрузить</el-button>
         </div>
       </div>
