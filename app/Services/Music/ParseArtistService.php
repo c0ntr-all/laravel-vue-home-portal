@@ -25,7 +25,15 @@ class ParseArtistService
         return true;
     }
 
-    private function parseTrack($track)
+
+    /**
+     * Проверяет трек на валидность и в случае true возвращает результат разбивки по регулярному выражению
+     *
+     * @param $track
+     * @return mixed
+     * @throws \Exception
+     */
+    private function parseTrack($track): mixed
     {
         preg_match_all('/([0-9]{2}).\s(.*)/i', $track, $match);
 
