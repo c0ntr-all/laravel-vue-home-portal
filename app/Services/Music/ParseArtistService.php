@@ -52,6 +52,7 @@ class ParseArtistService
     private function parseFolder($folder, $mode = 'folders'): array
     {
         if (!empty($folder)) {
+            $folder = strpos($folder, '\\', -1) ? $folder : $folder . '\\';
             $dirElements = scandir($folder);
             $items = [];
 
@@ -104,7 +105,6 @@ class ParseArtistService
     public function collectData($folder): mixed
     {
         $folders = $this->parseFolder($folder);
-
         try {
             $this->validateAlbums($folders);
         } catch (\Exception $exception) {
