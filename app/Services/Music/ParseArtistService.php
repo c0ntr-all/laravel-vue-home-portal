@@ -13,16 +13,26 @@ class ParseArtistService
      */
     private function validateAlbums($folders): bool
     {
-        if(empty($folders))
+        if (empty($folders))
             throw new \Exception('В каталоге отсутствуют папки');
 
-        foreach($folders as $folder) {
-            if(!preg_match('/[0-9]{4} - .*/i', $folder)) {
+        foreach ($folders as $folder) {
+            if (!preg_match('/[0-9]{4} - .*/i', $folder)) {
                 throw new \Exception('В каталоге присутствует папка неверного формата: ' . $folder);
             }
         }
 
         return true;
+    }
+
+    private function parseTrack($track)
+    {
+        preg_match_all('/([0-9]{2}).\s(.*)/i', $track, $match);
+
+        if (empty($match[0]))
+            throw new \Exception('Трек неверного формата - ' . $track);
+
+        return $match;
     }
 
     /**
@@ -33,29 +43,27 @@ class ParseArtistService
      */
     private function parseFolder($folder, $mode = 'folders'): array
     {
-        if(!empty($folder)) {
+        if (!empty($folder)) {
             $dirElements = scandir($folder);
             $items = [];
 
-            foreach($dirElements as $key => $dirItem) {
-                if($dirItem != '..' && $dirItem != '.') {
-                    switch($mode) {
+            foreach ($dirElements as $key => $dirItem) {
+                if ($dirItem != '..' && $dirItem != '.') {
+                    switch ($mode) {
                         case 'folders':
-                            if(is_dir($folder . $dirItem)) {
+                            if (is_dir($folder . $dirItem)) {
                                 $items[] = $dirItem;
                             }
                             break;
 
                         case 'tracks':
-                            $info = pathinfo($folder . '\\' . $dirItem);
-                            if($info['extension'] === 'mp3') {
-                                preg_match_all('/([0-9]{2}).\s(.*)/i', $info['filename'], $match);
-                                $trackParts = array_column($match, 0);
-                                $items[$key]['number'] = $trackParts[1];
-                                $items[$key]['name'] = $trackParts[2];
-                                $items[$key]['path'] = $folder . '\\' . $dirItem;
-                            }elseif ($info['extension'] === 'jpg' || $info['extension'] === 'jpeg' || $info['extension'] === 'png') {
-                                $items['cover'] = $folder . '\\' . $info['basename'];
+                            if (!is_dir($folder . '\\' . $dirItem)) {
+                                $info = pathinfo($folder . '\\' . $dirItem);
+                                if ($info['extension'] === 'mp3') {
+                                    $items[] = $info['basename'];
+                                } elseif ($info['extension'] === 'jpg' || $info['extension'] === 'jpeg' || $info['extension'] === 'png') {
+                                    $items['cover'] = $folder . '\\' . $info['basename'];
+                                }
                             }
                             break;
                     }
@@ -91,7 +99,7 @@ class ParseArtistService
 
         try {
             $this->validateAlbums($folders);
-        }catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             return ['success' => 'false', 'message' => $exception->getMessage()];
         }
 
@@ -100,14 +108,30 @@ class ParseArtistService
         $result = ['artist' => $artistName];
         $result['albums'] = [];
 
-        foreach($folders as $item) {
+        foreach ($folders as $albumKey => $item) {
             preg_match_all('/([0-9]{4}) - (.*)/i', $item, $match);
             $albumParts = array_column($match, 0);
 
             $albumFolder = $folder . $item;
-            $tracks = $this->parseFolder($albumFolder, 'tracks');
-            $cover = $tracks['cover'] ?: null;
+            $rawTracks = $this->parseFolder($albumFolder, 'tracks');
 
+            $tracks = [];
+
+            foreach ($rawTracks as $trackKey => $track) {
+                try {
+                    $match = $this->parseTrack($track);
+                } catch (\Exception $exception) {
+                    return ['success' => 'false', 'message' => $exception->getMessage()];
+                }
+
+                $trackParts = array_column($match, 0);
+
+                $tracks[$trackKey]['number'] = $trackParts[1];
+                $tracks[$trackKey]['name'] = rtrim($trackParts[2], '.mp3');
+                $tracks[$trackKey]['path'] = $folder . '\\' . $track;
+            }
+
+            $cover = $rawTracks['cover'] ?: null;
             unset($tracks['cover']);
 
             array_push($result['albums'], [
