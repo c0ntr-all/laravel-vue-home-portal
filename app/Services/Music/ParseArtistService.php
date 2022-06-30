@@ -52,7 +52,6 @@ class ParseArtistService
     private function parseFolder($folder, $mode = 'folders'): array
     {
         if (!empty($folder)) {
-            $folder = strpos($folder, '\\', -1) ? $folder : $folder . '\\';
             $dirElements = scandir($folder);
             $items = [];
 
@@ -102,8 +101,10 @@ class ParseArtistService
      * @param $folder
      * @return mixed
      */
-    public function collectData($folder): mixed
+    private function collectData($folder): mixed
     {
+        $folder = strpos($folder, '\\', -1) ? $folder : $folder . '\\';
+
         $folders = $this->parseFolder($folder);
         try {
             $this->validateAlbums($folders);
@@ -113,7 +114,10 @@ class ParseArtistService
 
         $artistName = $this->getFolderName($folder);
 
-        $result = ['artist' => $artistName];
+        $result = [
+            'success' => true,
+            'artist' => $artistName
+        ];
         $result['albums'] = [];
 
         foreach ($folders as $albumKey => $item) {
@@ -151,5 +155,10 @@ class ParseArtistService
         }
 
         return $result;
+    }
+
+    public function upload(): void
+    {
+
     }
 }
