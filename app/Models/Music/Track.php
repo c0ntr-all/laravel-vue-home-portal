@@ -10,10 +10,11 @@ class Track extends Model
 {
     use HasFactory;
 
-    private $table = 'music_albums';
+    protected $table = 'music_tracks';
 
     protected $fillable = [
         'album_id',
+        'number',
         'name',
         'image',
         'updated_at',
