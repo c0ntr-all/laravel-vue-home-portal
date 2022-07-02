@@ -2,6 +2,10 @@
 
 namespace App\Services\Music;
 
+use App\Models\Music\Artist;
+use App\Models\Music\Album;
+use App\Models\Music\Track;
+
 class ParseArtistService
 {
     /**
@@ -157,8 +161,46 @@ class ParseArtistService
         return $result;
     }
 
-    public function upload(): void
+    public function upload($folder): void
     {
+        $data = $this->collectData($folder);
 
+        if ($data['success']) {
+            $artist = Artist::where(['name' => $data['artist']])->first();
+
+            if(empty($artist)) {
+                $artist = Artist::create([
+                    'user_id' => auth()->user()->id,
+                    'name' => $data['artist']
+                ]);
+            }
+
+            foreach ($data['albums'] as $album) {
+
+                $albumModel = $artist->albums()->where(['name' => $album['name']])->first();
+
+                if(empty($albumModel)) {
+                    $albumModel = $artist->albums()->create([
+                        'user_id' => auth()->user()->id,
+                        'name' => $album['name'],
+                        'year' => $album['year'],
+                        'image' => $album['cover']
+                    ]);
+                }
+
+                foreach ($album['tracks'] as $track) {
+
+                    $trackModel = $albumModel->tracks()->where(['name' => $track['name']])->first();
+
+                    if(empty($trackModel)) {
+                        $trackModel = $albumModel->tracks()->create([
+                            'user_id' => auth()->user()->id,
+                            'number' => $track['number'],
+                            'name' => $track['name']
+                        ]);
+                    }
+                }
+            }
+        }
     }
 }
