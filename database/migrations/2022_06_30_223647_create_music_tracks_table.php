@@ -16,8 +16,8 @@ class CreateMusicTracksTable extends Migration
         Schema::create('music_tracks', function (Blueprint $table) {
             $table->id();
             $table->integer('album_id');
+            $table->integer('number');
             $table->string('name');
-            $table->string('image')->nullable()->default(NULL);
             $table->timestamps();
         });
     }

@@ -17,7 +17,7 @@ class CreateMusicArtistsTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('name');
-            $table->text('content');
+            $table->text('content')->nullable();
             $table->string('image')->nullable()->default(NULL);
             $table->timestamps();
             $table->softDeletes();

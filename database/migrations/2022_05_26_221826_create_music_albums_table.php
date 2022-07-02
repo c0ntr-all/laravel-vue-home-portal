@@ -18,7 +18,8 @@ class CreateMusicAlbumsTable extends Migration
             $table->integer('user_id');
             $table->integer('artist_id');
             $table->string('name');
-            $table->text('content');
+            $table->integer('year');
+            $table->text('content')->nullable();
             $table->string('image')->nullable()->default(NULL);
             $table->timestamps();
             $table->softDeletes();
