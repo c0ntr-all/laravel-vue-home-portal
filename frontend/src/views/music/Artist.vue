@@ -31,7 +31,7 @@
   } from '@element-plus/icons-vue'
 </script>
 <script>
-  import API from "../../utils/api";
+  import API from '../../utils/api'
 
   export default {
     data() {
@@ -45,17 +45,28 @@
       'artistId': String
     },
     methods: {
-      loadData() {
-
+      async loadAlbums() {
+        this.loading = true
+        try {
+          const {data} = await API.post('api/auth/music/albums', {
+            artist_id: this.artistId
+          })
+          if(!data) {
+            throw new Error('Нет данных!')
+          }
+          this.loading = false
+        }catch(e) {
+          this.loading = false
+        }
       }
     },
     computed: {
       artist() {
         return this.$store.getters.music.artists.find(item => item.id === Number(this.artistId))
-      }
+      },
     },
     mounted() {
-      this.loadData();
+      this.loadAlbums();
     }
   }
 </script>
