@@ -33,7 +33,7 @@
       async loadData() {
         this.loading = true
         try {
-          const {data} = await API.get('api/auth/tasks')
+          const {data} = await API.get('tasks')
           if(!data) {
             throw new Error('Нет данных!')
           }

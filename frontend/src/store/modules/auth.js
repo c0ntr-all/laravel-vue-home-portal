@@ -30,7 +30,7 @@ export default {
   },
   actions: {
     async login({commit}, data) {
-      await axios.post('api/auth/login', data)
+      await axios.post('login', data)
         .then(response => {
           localStorage.setItem('access_token', response.data.access_token)
           commit('auth_success', response.data.access_token, data.email)
@@ -43,7 +43,7 @@ export default {
     },
     logout({commit, dispatch}) {
       return new Promise((resolve, reject) => {
-        API.post('/api/auth/logout')
+        API.post('logout')
           .then(response => {
             localStorage.removeItem('access_token')
           })

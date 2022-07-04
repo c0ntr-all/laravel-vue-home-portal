@@ -37,7 +37,7 @@
     },
     methods: {
       async createList() {
-        const {data} = await API.put('api/auth/tasks/list/store', {
+        const {data} = await API.put('tasks/list/store', {
           title: this.newListTitle
         })
         if(data) {

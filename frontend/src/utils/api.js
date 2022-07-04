@@ -8,6 +8,7 @@ api.interceptors.request.use(config => {
   if(localStorage.access_token) {
     config.headers.authorization = `Bearer ${localStorage.access_token}`
   }
+  config.baseURL = '/api/auth/'
 
   //Надо возвращать конфиг после его модификации
   return config

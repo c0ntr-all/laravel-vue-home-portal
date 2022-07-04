@@ -25,7 +25,7 @@
 
         setTimeout(async() => {
           try {
-            const {data} = await API.post('api/auth/me')
+            const {data} = await API.post('me')
             if(!data) {
               throw new Error('Нет данных!')
             }

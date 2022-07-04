@@ -168,7 +168,7 @@
         this.folderLoading = true
       },
       async getFolder(folder) {
-        const {data} = await API.post('api/auth/folders', {
+        const {data} = await API.post('folders', {
           'folder': folder || this.defaultFolder
         })
         if(data) {
@@ -210,7 +210,7 @@
         this.selectedFolder = this.defaultFolder ? this.defaultFolder + this.getFullPath(node) : this.getFullPath(node)
       },
       async handlerUploadFromFolder() {
-        const response = await API.post('api/auth/music/upload', {
+        const response = await API.post('music/upload', {
           'folder': this.selectedFolder
         })
         if(response) {

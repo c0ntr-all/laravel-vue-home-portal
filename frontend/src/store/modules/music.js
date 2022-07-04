@@ -22,14 +22,14 @@ export default {
   },
   actions: {
     async createMusicArtist(context, newArtist) {
-      const {data} = await API.post('api/auth/music/artists/store', newArtist)
+      const {data} = await API.post('music/artists/store', newArtist)
       if(data) {
         return 'test'
       }
     },
     async loadArtists(context) {
       try {
-        const {data} = await API.get('api/auth/music/artists')
+        const {data} = await API.get('music/artists')
         if(!data) {
           throw new Error('Нет данных!')
         }

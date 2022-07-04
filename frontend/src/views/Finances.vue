@@ -28,7 +28,7 @@
 
         setTimeout(async() => {
           try {
-            const {data} = await API.get('api/auth/finances')
+            const {data} = await API.get('finances')
             if(!data) {
               throw new Error('Нет данных!')
             }

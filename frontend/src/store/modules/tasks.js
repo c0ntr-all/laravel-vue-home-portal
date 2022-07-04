@@ -35,7 +35,7 @@ export default {
       context.commit('LOAD_LISTS', lists)
     },
     async updateTask(context, task) {
-      const {data} = await API.post(`api/auth/tasks/${task.id}/update`, {
+      const {data} = await API.post(`tasks/${task.id}/update`, {
         title: task.title,
         content: task.content
       })
@@ -44,7 +44,7 @@ export default {
       }
     },
     async createTask(context, newList) {
-      const {data} = await API.put('api/auth/tasks/store/' + newList.list_id, {
+      const {data} = await API.put('tasks/store/' + newList.list_id, {
         'title': newList.title
       })
       if(data) {
@@ -53,7 +53,7 @@ export default {
       }
     },
     async editTaskContent(context, task) {
-      const {data} = await API.patch(`api/auth/tasks/${task.id}/update`, {
+      const {data} = await API.patch(`tasks/${task.id}/update`, {
         content: task.content
       })
       if(data) {
@@ -61,7 +61,7 @@ export default {
       }
     },
     async editTaskTitle(context, task) {
-      const {data} = await API.patch(`api/auth/tasks/${task.id}/update`, {
+      const {data} = await API.patch(`tasks/${task.id}/update`, {
         title: task.title
       })
       if(data) {
@@ -69,7 +69,7 @@ export default {
       }
     },
     async createTaskComment(context, comment) {
-      const {data} = await API.post('api/auth/tasks/comment/store', {
+      const {data} = await API.post('tasks/comment/store', {
         'comment': item.comment,
         'taskId': item.id,
       })

@@ -22,7 +22,7 @@ export default {
       context.commit('LOAD_REMINDS', reminds)
     },
     async createRemind(context, newRemind) {
-      const {data} = await API.post('api/auth/reminds/store', {
+      const {data} = await API.post('reminds/store', {
         'title': newRemind.title,
         'content': newRemind.content,
         'datetime': newRemind.datetime,
@@ -34,7 +34,7 @@ export default {
       }
     },
     async switchActive(context, remind) {
-      const {data} = await API.post('api/auth/reminds/'+remind.id+'/update', {
+      const {data} = await API.post('reminds/'+remind.id+'/update', {
         'id': remind.id,
         'is_active': remind.isActive,
       })

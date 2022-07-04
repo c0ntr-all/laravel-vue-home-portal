@@ -79,7 +79,7 @@
       async loadData() {
         this.loading = true
         try {
-          const {data} = await API.get('api/auth/reminds')
+          const {data} = await API.get('reminds')
           if(!data) {
             throw new Error('Нет данных!')
           }
