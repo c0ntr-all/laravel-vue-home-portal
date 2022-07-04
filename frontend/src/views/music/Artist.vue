@@ -49,6 +49,7 @@
     data() {
       return {
         loading: false,
+        artist: {},
         model: {
         }
       }
@@ -57,28 +58,24 @@
       'artistId': String
     },
     methods: {
-      async loadAlbums() {
+      async loadArtist() {
         this.loading = true
         try {
-          const {data} = await API.post('api/auth/music/albums', {
+          const {data} = await API.post('api/auth/music/artist', {
             artist_id: this.artistId
           })
           if(!data) {
             throw new Error('Нет данных!')
           }
+          this.artist = data
           this.loading = false
         }catch(e) {
           this.loading = false
         }
       }
     },
-    computed: {
-      artist() {
-        return this.$store.getters.music.artists.find(item => item.id === Number(this.artistId))
-      },
-    },
     mounted() {
-      this.loadAlbums();
+      this.loadArtist();
     }
   }
 </script>
