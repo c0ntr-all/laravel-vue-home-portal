@@ -29,7 +29,7 @@ export default {
     },
     async loadArtists(context) {
       try {
-        const {data} = await API.get('music/artists')
+        const {data} = await API.post('music/artists')
         if(!data) {
           throw new Error('Нет данных!')
         }

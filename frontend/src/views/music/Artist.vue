@@ -61,13 +61,13 @@
       async loadArtist() {
         this.loading = true
         try {
-          const {data} = await API.post('api/auth/music/artist', {
+          const {data} = await API.post('music/artists', {
             artist_id: this.artistId
           })
           if(!data) {
             throw new Error('Нет данных!')
           }
-          this.artist = data
+          this.artist = data.artists
           this.loading = false
         }catch(e) {
           this.loading = false

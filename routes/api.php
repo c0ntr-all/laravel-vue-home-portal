@@ -70,8 +70,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
         Route::prefix('music')->group(function() {
             Route::post('upload', [UploadController::class, 'upload']);
             Route::prefix('artists')->group(function() {
-                Route::get('/', [ArtistController::class, 'index']);
-                Route::get('{id}', [ArtistController::class, 'show']);
+                Route::post('/', [ArtistController::class, 'index']);
                 Route::post('store', [ArtistController::class, 'store']);
             });
             Route::post('albums', [ArtistController::class, 'albums']);

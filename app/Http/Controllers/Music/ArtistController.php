@@ -21,9 +21,13 @@ class ArtistController extends Controller
         $this->uploadImageService = $uploadImageService;
     }
 
-    public function index(IndexRequest $request): ArtistCollection
+    public function index(IndexRequest $request): ArtistResource|ArtistCollection
     {
-        return new ArtistCollection($this->artists->getitems());
+        if(empty($request->validated())) {
+            return new ArtistCollection($this->artists->getitems());
+        } else {
+            return $this->artistResponse(Artist::find($request->validated()['artist_id']));
+        }
     }
 
     public function store(StoreRequest $request)
@@ -40,7 +44,7 @@ class ArtistController extends Controller
         return $this->artistResponse($artist);
     }
 
-    public function albums(AlbumsRequest $request)
+    public function artist(AlbumsRequest $request)
     {
         dd($request->validated());
     }
