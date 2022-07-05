@@ -26,7 +26,7 @@ class ArtistController extends Controller
         if(empty($request->validated())) {
             return new ArtistCollection($this->artists->getitems());
         } else {
-            return $this->artistResponse(Artist::find($request->validated()['artist_id']));
+            return $this->artistResponse(Artist::find($request->validated()['id']));
         }
     }
 

@@ -30,7 +30,7 @@ export default {
   },
   actions: {
     async login({commit}, data) {
-      await axios.post('login', data)
+      await API.post('login', data)
         .then(response => {
           localStorage.setItem('access_token', response.data.access_token)
           commit('auth_success', response.data.access_token, data.email)

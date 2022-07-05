@@ -24,7 +24,7 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'artist_id' => 'sometimes|integer'
+            'id' => 'sometimes|integer'
         ];
     }
 }

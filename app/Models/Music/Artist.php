@@ -23,12 +23,17 @@ class Artist extends Model
         'deleted_at'
     ];
 
-    public function getItems()
+    public function getItems(Array $filter = [])
     {
-        return Artist::all()->map(function($item, $key) {
+        return Artist::where($filter)->get()->map(function($item, $key) {
             $item->image = env('APP_URL') . '/storage/' . $item->image;
             return $item;
         });
+    }
+
+    public function getFullImageAttribute(): string
+    {
+        return env('APP_URL') . '/storage/' . $this->image;
     }
 
     public function albums(): HasMany
