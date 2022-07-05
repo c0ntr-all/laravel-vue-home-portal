@@ -45,7 +45,7 @@
                 <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="40%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
               </div>
               <div style="padding: 14px">
-                <router-link :to="'/music/artists/' + this.artist.id + '/albums/' + album.id"><span>{{ album.year }} - {{ album.title }}</span></router-link>
+                <router-link :to="'/music/artists/' + this.artist.id + '/albums/' + album.id"><span>{{ album.year }} - {{ album.name }}</span></router-link>
                 <div class="artist-card__footer">
 
                 </div>
