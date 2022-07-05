@@ -67,6 +67,10 @@ const router = createRouter({
           path: '/music/artists/:artistId',
           component: () => import('../views/music/Artist'),
           props: true
+        },{
+          path: '/music/albums/:albumId',
+          component: () => import('../views/music/Album'),
+          props: true
         }
       ]
     },{
