@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Music;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
 
 class ArtistResource extends JsonResource
 {
@@ -20,7 +21,8 @@ class ArtistResource extends JsonResource
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
             'deletedAt' => $this->deleted_at,
-            'albums' => $this->albums
+            'albums' => $this->albums,
+            'tags' => $this->tags->pluck('tag')
         ];
     }
 }

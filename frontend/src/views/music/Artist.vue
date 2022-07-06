@@ -37,7 +37,7 @@
             </div>
           </div>
         </div>
-        <div class="artist-albums" v-if="this.artist.albums.length">
+        <div class="artist-albums" v-if="this.artist.albums">
           <h3>Альбомы</h3>
           <el-space alignment="flex-start" wrap>
             <el-card class="album-card" :body-style="{ padding: '0px' }" v-for="album in this.artist.albums" :key="album.id">
@@ -116,6 +116,10 @@
       font-size: 45px;
       line-height: 45px;
       font-weight: 700;
+    }
+
+    &__description {
+      margin: 0 0 1rem 0;
     }
   }
 </style>

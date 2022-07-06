@@ -17,11 +17,21 @@ class Tag extends Model
         'updated_at',
     ];
 
-    public function tagable(): morphTo
+    /**
+     * Получить родительскую модель (Artist, Album и т.д.), к которой относится комментарий.
+     *
+     * @return MorphTo
+     */
+    public function tagable(): MorphTo
     {
         return $this->morphTo();
     }
 
+    /**
+     * Получить пользователя, создавшего тег
+     *
+     * @return BelongsTo
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

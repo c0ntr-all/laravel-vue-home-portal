@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use App\Models\Tag;
 
 class Artist extends Model
 {
@@ -39,5 +41,15 @@ class Artist extends Model
     public function albums(): HasMany
     {
         return $this->hasMany(Album::class, 'artist_id', 'id');
+    }
+    
+    /**
+     * Получает все теги модели
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function tags(): MorphMany
+    {
+        return $this->morphMany(Tag::class, 'tagable');
     }
 }
