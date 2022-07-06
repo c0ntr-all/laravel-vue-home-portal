@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Music;
 
 use App\Http\Requests\Music\Artist\IndexRequest;
 use App\Http\Requests\Music\Artist\StoreRequest;
-use App\Http\Requests\Music\Artist\AlbumsRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Music\Artist;
 use App\Http\Resources\Music\ArtistResource;
@@ -14,6 +13,7 @@ use App\Services\UploadImageService;
 class ArtistController extends Controller
 {
     protected $artists;
+    protected $uploadImageService;
 
     public function __construct(Artist $artists, UploadImageService $uploadImageService)
     {
@@ -42,11 +42,6 @@ class ArtistController extends Controller
         ]);
 
         return $this->artistResponse($artist);
-    }
-
-    public function artist(AlbumsRequest $request)
-    {
-        dd($request->validated());
     }
 
     protected function artistResponse(Artist $artist): ArtistResource

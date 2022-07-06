@@ -22,7 +22,7 @@
         <div class="artist-head">
           <div class="artist-head__left">
             <div class="artist-head__image">
-              <a :href="this.artist.image"><img :src="this.artist.fullImage" alt=""></a>
+              <a :href="this.artist.image"><img :src="this.artist.image" alt=""></a>
             </div>
           </div>
           <div class="artist-head__right">
