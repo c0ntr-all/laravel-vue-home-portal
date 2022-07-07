@@ -22,7 +22,7 @@
         <div class="album-head">
           <div class="album-head__left">
             <div class="album-head__image">
-              <a :href="this.album.image"><img :src="this.album.fullImage" alt=""></a>
+              <a :href="this.album.image"><img :src="this.album.image" alt=""></a>
             </div>
           </div>
           <div class="album-head__right">
