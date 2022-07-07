@@ -11,6 +11,7 @@ use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Reminds\RemindController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\Music\ArtistController;
 use App\Http\Controllers\Music\AlbumController;
 use App\Http\Controllers\Music\UploadController;
@@ -52,8 +53,8 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::patch('{task}/update', [TaskController::class, 'update']);
             Route::delete('{task}/delete', [TaskController::class, 'delete']);
 
-            Route::post('comments/store', [CommentController::class], 'store');
-            Route::post('comments/delete', [CommentController::class], 'delete');
+            Route::post('comments/store', [CommentController::class, 'store']);
+            Route::post('comments/delete', [CommentController::class, 'delete']);
         });
 
         Route::prefix('reminds')->group(function() {
@@ -76,6 +77,8 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             });
             Route::post('albums', [AlbumController::class, 'index']);
         });
+
+        Route::post('tags', [TagController::class, 'index']);
 
         Route::prefix('folders')->group(function() {
             Route::post('/', [FolderController::class, 'index']);

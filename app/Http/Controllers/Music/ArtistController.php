@@ -24,7 +24,7 @@ class ArtistController extends Controller
     public function index(IndexRequest $request): ArtistResource|ArtistCollection
     {
         if(empty($request->validated())) {
-            return new ArtistCollection($this->artists->getitems());
+            return new ArtistCollection(Artist::all());
         } else {
             return $this->artistResponse(Artist::find($request->validated()['id']));
         }

@@ -25,26 +25,30 @@ class Artist extends Model
         'deleted_at'
     ];
 
-    public function getItems(Array $filter = [])
-    {
-        return Artist::where($filter)->get()->map(function($item, $key) {
-            $item->image = env('APP_URL') . '/storage/' . $item->image;
-            return $item;
-        });
-    }
 
+    /**
+     * Аксессор на получение абсолютного пути до изображения
+     *
+     * @return string
+     */
     public function getFullImageAttribute(): string
     {
         return env('APP_URL') . '/storage/' . $this->image;
     }
 
+
+    /**
+     * Получает все альбомы исполнителя
+     *
+     * @return HasMany
+     */
     public function albums(): HasMany
     {
         return $this->hasMany(Album::class, 'artist_id', 'id');
     }
 
     /**
-     * Получает все теги модели
+     * Получает все теги исполнителя
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */

@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Music;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Collection;
 
 class ArtistResource extends JsonResource
 {
