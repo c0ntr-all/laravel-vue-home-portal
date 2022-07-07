@@ -5,19 +5,16 @@ export default {
     return {
       music: {
         artists: [],
-        tags: [
-          {type: '', label: 'Metal'},
-          {type: 'success', label: 'Rock'},
-          {type: 'info', label: 'Break Beat'},
-          {type: 'danger', label: 'Industrial'},
-          {type: 'warning', label: 'Classic'},
-        ]
+        tags: []
       }
     }
   },
   mutations: {
     LOAD_ARTISTS(state, artists) {
       state.music.artists = artists
+    },
+    LOAD_TAGS(state, tags) {
+      state.music.tags = tags
     }
   },
   actions: {
@@ -34,6 +31,17 @@ export default {
           throw new Error('Нет данных!')
         }
         context.commit('LOAD_ARTISTS', data['artists'])
+      }catch(e) {
+
+      }
+    },
+    async loadTags(context) {
+      try {
+        const {data} = await API.post('tags')
+        if(!data) {
+          throw new Error('Нет данных!')
+        }
+        context.commit('LOAD_TAGS', data['tags'])
       }catch(e) {
 
       }
