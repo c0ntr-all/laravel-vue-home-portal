@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasDates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,6 +13,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory;
+    use HasDates;
 
     protected $fillable = ['username', 'email', 'password', 'bio', 'images'];
 

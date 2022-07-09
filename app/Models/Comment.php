@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasDates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,6 +14,7 @@ class Comment extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use HasDates;
 
     protected $fillable = [
         'user_id',
@@ -26,12 +28,6 @@ class Comment extends Model
     public function comment()
     {
         return $this->morphTo();
-    }
-
-    public function getCreatedAtAttribute($value)
-    {
-        $date = Carbon::parse($value);
-        return $date->format('Y-m-d H:i');
     }
 
     public function getUserNameAttribute()

@@ -3,6 +3,7 @@
 namespace App\Models\Music;
 
 use App\Models\Tag;
+use App\Models\Traits\HasDates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -14,6 +15,7 @@ class Album extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use HasDates;
 
     protected $table = 'music_albums';
 
