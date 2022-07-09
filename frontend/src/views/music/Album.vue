@@ -37,6 +37,14 @@
           </div>
         </div>
         <div class="album-tracks" v-if="this.album.tracks">
+          <h3>Треки</h3>
+          <div class="album-tracks__list">
+            <el-row :gutter="12" v-for="track in this.album.tracks">
+              <el-col :span="24">
+                <el-card shadow="hover"> {{ track.number }} {{ track.name }} </el-card>
+              </el-col>
+            </el-row>
+          </div>
         </div>
       </template>
     </el-skeleton>
@@ -84,5 +92,11 @@
 </script>
 
 <style lang="scss" scoped>
-
+.album-tracks {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    row-gap: .5rem;
+  }
+}
 </style>
