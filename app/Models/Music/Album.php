@@ -39,6 +39,16 @@ class Album extends Model
     }
 
     /**
+     * Возвращает треки текущего альбома с указанными полями
+     *
+     * @return mixed
+     */
+    public function getTracks()
+    {
+        return Track::where(['album_id' => $this->id])->get(['number', 'name']);
+    }
+
+    /**
      * Получает все теги модели
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
