@@ -32,7 +32,7 @@ class ArtistController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $imagePath = $this->uploadImageService->upload($request->image, $request->name);
+        $imagePath = $this->uploadImageService->uploadFromForm($request->image, $request->name, 'music/artists/posters');
 
         $artist = Artist::create([
             'user_id' => auth()->id(),

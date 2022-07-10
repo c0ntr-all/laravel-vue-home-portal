@@ -5,6 +5,8 @@ namespace App\Services\Music;
 use App\Models\Music\Artist;
 use App\Models\Music\Album;
 use App\Models\Music\Track;
+use App\Services\UploadImageService;
+use Illuminate\Http\File;
 
 class ParseArtistService
 {
@@ -28,7 +30,6 @@ class ParseArtistService
 
         return true;
     }
-
 
     /**
      * Проверяет трек на валидность и в случае true возвращает результат разбивки по регулярному выражению
@@ -161,15 +162,21 @@ class ParseArtistService
         return $result;
     }
 
+    /**
+     * Заносит собранную информацию по папкам в базу данных
+     *
+     * @param $folder
+     */
     public function upload($folder): void
     {
         $data = $this->collectData($folder);
 
         if ($data['success']) {
-            $artist = Artist::where(['name' => $data['artist']])->first();
 
-            if(empty($artist)) {
-                $artist = Artist::create([
+            $artistModel = Artist::where(['name' => $data['artist']])->first();
+
+            if(empty($artistModel)) {
+                $artistModel = Artist::create([
                     'user_id' => auth()->user()->id,
                     'name' => $data['artist']
                 ]);
@@ -177,14 +184,21 @@ class ParseArtistService
 
             foreach ($data['albums'] as $album) {
 
-                $albumModel = $artist->albums()->where(['name' => $album['name']])->first();
+                $albumModel = $artistModel->albums()->where(['name' => $album['name']])->first();
 
                 if(empty($albumModel)) {
-                    $albumModel = $artist->albums()->create([
+
+                    $posterPath = (new UploadImageService())->uploadFromFolder(
+                        new File($album['cover']),
+                        $album['name'],
+                        'music/albums/posters'
+                    );
+
+                    $albumModel = $artistModel->albums()->create([
                         'user_id' => auth()->user()->id,
                         'name' => $album['name'],
                         'year' => $album['year'],
-                        'image' => $album['cover']
+                        'image' => $posterPath
                     ]);
                 }
 
