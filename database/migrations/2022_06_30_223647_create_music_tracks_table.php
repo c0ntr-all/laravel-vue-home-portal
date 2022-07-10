@@ -18,6 +18,8 @@ class CreateMusicTracksTable extends Migration
             $table->integer('album_id');
             $table->integer('number');
             $table->string('name');
+            $table->string('path_windows');
+            $table->time('duration');
             $table->timestamps();
         });
     }
