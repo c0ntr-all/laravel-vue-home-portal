@@ -4,17 +4,19 @@
     <el-skeleton :loading="loading" animated>
       <template #template>
         <div class="album">
-          <div class="album-head__left">
-            <div class="album-head__image">
-              <el-skeleton-item variant="image" style="width: 200px; height: 200px"/>
+          <div class="album-head">
+            <div class="album-head__left">
+              <div class="album-head__image">
+                <el-skeleton-item variant="image" style="width: 200px; height: 200px"/>
+              </div>
             </div>
-          </div>
-          <div class="album-head__right">
-            <el-skeleton-item variant="text" style="width: 500px; height: 50px; margin: 10px 0" />
-            <el-skeleton-item variant="text" style="width: 80%; margin: 10px 0" />
-            <el-skeleton-item variant="text" style="width: 90%; margin: 10px 0" />
-            <el-skeleton-item variant="text" style="width: 100%; margin: 10px 0" />
-            <el-skeleton-item variant="text" style="width: 60%; margin: 10px 0" />
+            <div class="album-head__right">
+              <el-skeleton-item variant="text" style="width: 500px; height: 50px; margin: 10px 0" />
+              <el-skeleton-item variant="text" style="width: 80%; margin: 10px 0" />
+              <el-skeleton-item variant="text" style="width: 90%; margin: 10px 0" />
+              <el-skeleton-item variant="text" style="width: 100%; margin: 10px 0" />
+              <el-skeleton-item variant="text" style="width: 60%; margin: 10px 0" />
+            </div>
           </div>
         </div>
       </template>
@@ -28,6 +30,8 @@
           <div class="album-head__right">
             <h2 class="album-head__name">{{ album.name }}</h2>
             <div class="album-head__description">
+              <p>Artist</p>
+              <p>{{ album.year }}</p>
             </div>
             <div class="album-head__tags">
               <div class="tags-list">
@@ -92,11 +96,34 @@
 </script>
 
 <style lang="scss" scoped>
-.album-tracks {
-  &__list {
+  .album-head {
     display: flex;
-    flex-direction: column;
-    row-gap: .5rem;
+    column-gap: 1rem;
+    padding: 1rem 0 0 0;
+
+    &__image {
+      img {
+        width: 200px;
+        height: 200px;
+      }
+    }
+
+    &__name {
+      margin: 0 0 1rem 0;
+      font-size: 45px;
+      line-height: 45px;
+      font-weight: 700;
+    }
+
+    &__description {
+      margin: 0 0 1rem 0;
+    }
   }
-}
+  .album-tracks {
+    &__list {
+      display: flex;
+      flex-direction: column;
+      row-gap: .5rem;
+    }
+  }
 </style>

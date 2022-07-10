@@ -41,8 +41,15 @@
           <h3>Альбомы</h3>
           <el-space alignment="flex-start" wrap>
             <el-card class="album-card" :body-style="{ padding: '0px' }" v-for="album in this.artist.albums" :key="album.id">
-              <div class="album-card__image">
-                <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="40%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg>
+              <div class="album-card__image" v-if="album.image">
+                <img :src="'http://home-portal.local/storage/' + album.image" alt="">
+              </div>
+              <div class="album-card__image" v-else>
+                <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false">
+                  <title>Placeholder</title>
+                  <rect width="100%" height="100%" fill="#868e96"></rect>
+                  <text x="40%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
+                </svg>
               </div>
               <div style="padding: 14px">
                 <router-link :to="'/music/albums/' + album.id"><span>{{ album.year }} - {{ album.name }}</span></router-link>
@@ -120,6 +127,14 @@
 
     &__description {
       margin: 0 0 1rem 0;
+    }
+  }
+  .album-card {
+    &__image {
+      img {
+        width: 200px;
+        height: 200px;
+      }
     }
   }
 </style>
