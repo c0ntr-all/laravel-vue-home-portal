@@ -10,6 +10,7 @@ use Illuminate\Http\File;
 
 class ParseArtistService
 {
+    private string $noImage = 'no-image.gif';
     /**
      * Проверяет являются ли переданные каталоги музыкальными альбомами формата 2019 - AlbumName
      *
@@ -178,7 +179,8 @@ class ParseArtistService
             if(empty($artistModel)) {
                 $artistModel = Artist::create([
                     'user_id' => auth()->user()->id,
-                    'name' => $data['artist']
+                    'name' => $data['artist'],
+                    'image' => $this->noImage
                 ]);
             }
 

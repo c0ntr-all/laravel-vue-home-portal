@@ -5,14 +5,14 @@
     highlight-current-row
   >
     <el-table-column prop="id" label="Id" width="70" sortable />
-    <el-table-column prop="image" label="Изображение" width="200">
+    <el-table-column prop="image" label="Изображение" width="100">
       <template #default="scope">
         <div class="artist-row__image">
-          <img :src="scope.row.image" alt="" style="width:100px">
+          <img :src="scope.row.image" alt="">
         </div>
       </template>
     </el-table-column>
-    <el-table-column prop="name" label="Name" width="200" />
+    <el-table-column prop="name" label="Name" width="200" sortable />
     <el-table-column prop="tags" label="Теги" width="400">
       <template #default="props">
         <span v-for="tag in props.row.tags" class="artist-row__tag">{{ tag }}</span>
@@ -60,8 +60,8 @@
 <style lang="scss">
   .artist-row {
     &__image {
-      width: 100px;
-      height: 100px;
+      width: 50px;
+      height: 50px;
 
       img {
         width: 100%;
