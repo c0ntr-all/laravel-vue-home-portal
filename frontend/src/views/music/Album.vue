@@ -30,8 +30,11 @@
           <div class="album-head__right">
             <h2 class="album-head__name">{{ album.name }}</h2>
             <div class="album-head__description">
-              <p>Artist</p>
-              <p>{{ album.year }}</p>
+              <p class="album-head__description-item album-artist">{{ album.artist }}</p>
+              <p class="album-head__description-item album-year">{{ album.year }}</p>
+              <div class="album-head__description-item album-content">
+                {{ album.content }}
+              </div>
             </div>
             <div class="album-head__tags">
               <div class="tags-list">
@@ -117,6 +120,10 @@
 
     &__description {
       margin: 0 0 1rem 0;
+
+      &-item {
+        margin-bottom: 1rem;
+      }
     }
   }
   .album-tracks {
@@ -125,5 +132,11 @@
       flex-direction: column;
       row-gap: .5rem;
     }
+  }
+  .album-artist {
+
+  }
+  .album-year {
+    color: #777;
   }
 </style>

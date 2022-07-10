@@ -15,7 +15,7 @@ class UploadImageService
     public function uploadFromForm($image, $name = 'none', $folder = 'unsorted'): string
     {
         try{
-            $name = str_replace(' ', '_', $name) . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $name = str_replace(' ', '_', strtolower($name)) . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
             $path = Storage::disk('public')->putFileAs($folder, $image, $name);
 
             return $path;
@@ -27,7 +27,7 @@ class UploadImageService
     public function uploadFromFolder($image, $name = 'none', $folder = 'unsorted'): string
     {
         try{
-            $name = str_replace(' ', '_', $name) . '_' . uniqid() . '.' . $image->extension();
+            $name = str_replace(' ', '_', strtolower($name)) . '_' . uniqid() . '.' . $image->extension();
             $path = Storage::disk('public')->putFileAs($folder, $image, $name);
 
             return $path;
