@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Music\Artist;
+use App\Models\Music\Album;
+use App\Models\Music\Track;
 use App\Models\Traits\HasDates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Tag extends Model
 {
@@ -15,18 +18,23 @@ class Tag extends Model
 
     protected $fillable = [
         'user_id',
-        'tag',
+        'name',
         'updated_at',
     ];
 
-    /**
-     * Получить родительскую модель (Artist, Album и т.д.), к которой относится комментарий.
-     *
-     * @return MorphTo
-     */
-    public function tagable(): MorphTo
+    public function artists(): MorphToMany
     {
-        return $this->morphTo();
+        return $this->morphedByMany(Artist::class, 'tagable');
+    }
+
+    public function albums(): MorphToMany
+    {
+        return $this->morphedByMany(Album::class, 'tagable');
+    }
+
+    public function tracks(): MorphToMany
+    {
+        return $this->morphedByMany(Track::class, 'tagable');
     }
 
     /**

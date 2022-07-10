@@ -19,8 +19,8 @@ class TagCollection extends ResourceCollection
 
     private function prepareTags(): Collection
     {
-        return $this->collection->get()->unique('tag')->map(function($item){
-            return ['label' => $item->tag, 'type' => ''];
+        return $this->collection->get()->unique('name')->map(function($item){
+            return ['label' => $item->name, 'type' => ''];
         });
     }
 }

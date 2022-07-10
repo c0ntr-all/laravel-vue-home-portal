@@ -18,7 +18,7 @@ class ArtistResource extends JsonResource
             'image' => $this->full_image,
             'createdAt' => $this->created_at,
             'albums' => $this->albums,
-            'tags' => $this->tags->pluck('tag')
+            'tags' => $this->tags->pluck('name')
         ];
     }
 }

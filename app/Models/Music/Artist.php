@@ -3,18 +3,18 @@
 namespace App\Models\Music;
 
 use App\Models\Traits\HasDates;
+use App\Models\Traits\HasTags;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use App\Models\Tag;
 
 class Artist extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use HasDates;
+    use HasTags;
 
     protected $table = 'music_artists';
 
@@ -27,7 +27,6 @@ class Artist extends Model
         'deleted_at'
     ];
 
-
     /**
      * Аксессор на получение абсолютного пути до изображения
      *
@@ -38,7 +37,6 @@ class Artist extends Model
         return env('APP_URL') . '/storage/' . $this->image;
     }
 
-
     /**
      * Получает все альбомы исполнителя
      *
@@ -47,15 +45,5 @@ class Artist extends Model
     public function albums(): HasMany
     {
         return $this->hasMany(Album::class, 'artist_id', 'id');
-    }
-
-    /**
-     * Получает все теги исполнителя
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function tags(): MorphMany
-    {
-        return $this->morphMany(Tag::class, 'tagable');
     }
 }
