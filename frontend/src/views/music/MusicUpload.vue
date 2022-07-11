@@ -9,7 +9,7 @@
         <music-upload-album></music-upload-album>
       </el-tab-pane>
       <el-tab-pane label="Управление тегами">
-        <music-tag-manage></music-tag-manage>
+        <music-tag-manager></music-tag-manager>
       </el-tab-pane>
     </el-tabs>
   </el-main>
@@ -17,13 +17,13 @@
 <script>
   import MusicUploadArtist from "../../components/music/MusicUploadArtist";
   import MusicUploadAlbum from "../../components/music/MusicUploadAlbum";
-  import MusicTagManage from "../../components/music/upload/MusicTagManage";
+  import MusicTagManager from "../../components/music/upload/MusicTagManager";
 
   export default {
     components: {
       MusicUploadArtist,
       MusicUploadAlbum,
-      MusicTagManage
+      MusicTagManager
     }
   }
 </script>

@@ -1,5 +1,8 @@
 <template>
   <h3>Управление тегами</h3>
+  <el-row class="mb-4">
+    <el-button type="primary" @click="openCreateModal = true">Добавить</el-button>
+  </el-row>
   <el-table
     :data="this.$store.getters.music.tags"
     style="width: 100%"
@@ -10,12 +13,22 @@
     <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
     <el-table-column label="Действия" width="250">
       <template #default>
-        <el-button size="small">Редактировать</el-button>
+        <el-button size="small" @click="openEditModal = true">Редактировать</el-button>
       </template>
     </el-table-column>
   </el-table>
   <app-modal :openModal="openEditModal" @closeModal="openEditModal = false">
     <template v-slot:title>
+      Редактирование тега
+    </template>
+    <template v-slot:content>
+    </template>
+    <template v-slot:footer>
+    </template>
+  </app-modal>
+  <app-modal :openModal="openCreateModal" @closeModal="openCreateModal = false">
+    <template v-slot:title>
+      Добавление тега
     </template>
     <template v-slot:content>
     </template>
@@ -29,6 +42,8 @@
   export default {
     data() {
       return {
+        openEditModal: false,
+        openCreateModal: false,
         tableData: []
       }
     },
@@ -39,7 +54,6 @@
     },
     mounted() {
       this.loadData();
-      console.log(this.$store.getters.music.tags)
     },
     components: {
       AppModal
