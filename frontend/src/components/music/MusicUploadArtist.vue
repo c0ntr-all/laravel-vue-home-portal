@@ -214,11 +214,13 @@
         this.selectedFolder = this.defaultFolder ? this.defaultFolder + this.getFullPath(node) : this.getFullPath(node)
       },
       async handlerUploadFromFolder() {
-        const response = await API.post('music/upload', {
+        const {data} = await API.post('music/upload', {
           'folder': this.selectedFolder
         })
-        if(response) {
-          console.log(response)
+        if(data.success) {
+          this.$message.success(`Исполнитель ${data.artist} успешно загружен!`);
+        }else{
+          this.$message.error(data.error);
         }
       }
     },

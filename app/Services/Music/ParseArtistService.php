@@ -168,7 +168,7 @@ class ParseArtistService
      *
      * @param $folder
      */
-    public function upload($folder): void
+    public function upload($folder)
     {
         $data = $this->collectData($folder);
 
@@ -212,11 +212,15 @@ class ParseArtistService
                         $trackModel = $albumModel->tracks()->create([
                             'user_id' => auth()->user()->id,
                             'number' => $track['number'],
-                            'name' => $track['name']
+                            'name' => $track['name'],
+                            'path_windows' => $track['path'],
+                            'duration' => '00:03:00'
                         ]);
                     }
                 }
             }
         }
+
+        return ['success' => true, 'artist' => $data['artist']];
     }
 }

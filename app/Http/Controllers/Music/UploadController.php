@@ -20,6 +20,6 @@ class UploadController extends Controller
 
     public function upload(UploadRequest $request)
     {
-        dd($this->parseArtistService->upload($request->validated()['folder']));
+        return $this->parseArtistService->upload($request->validated()['folder']);
     }
 }

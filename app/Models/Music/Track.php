@@ -20,7 +20,8 @@ class Track extends Model
         'album_id',
         'number',
         'name',
-        'image',
+        'path_windows',
+        'duration',
         'updated_at',
         'deleted_at'
     ];
