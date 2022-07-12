@@ -20,6 +20,8 @@ class CreateTasksTable extends Migration
             $table->text('content')->nullable()->default(NULL);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('list_id')->references('id')->on('task_lists');
         });
     }
 

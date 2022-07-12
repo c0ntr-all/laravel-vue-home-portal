@@ -15,12 +15,15 @@ class CreateMusicTracksTable extends Migration
     {
         Schema::create('music_tracks', function (Blueprint $table) {
             $table->id();
-            $table->integer('album_id');
+            $table->unsignedBigInteger('album_id');
             $table->integer('number');
             $table->string('name');
             $table->string('path_windows');
             $table->time('duration');
+
             $table->timestamps();
+
+            $table->foreign('album_id')->references('id')->on('music_albums');
         });
     }
 

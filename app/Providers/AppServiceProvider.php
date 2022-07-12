@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
             'artist' => 'App\Models\Music\Artist',
             'album' => 'App\Models\Music\Album',
             'track' => 'App\Models\Music\Track',
+            'task' => 'App\Models\Tasks\Task',
         ]);
     }
 }

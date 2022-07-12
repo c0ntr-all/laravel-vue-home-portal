@@ -14,8 +14,8 @@ class CreateFinancesTable extends Migration
     public function up()
     {
         Schema::create('finances', function (Blueprint $table) {
-            $table->increments('id');
-            $table->bigInteger('user_id')->unsigned();
+            $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->string('type');
             $table->float('summ');
             $table->string('recipient', 50);

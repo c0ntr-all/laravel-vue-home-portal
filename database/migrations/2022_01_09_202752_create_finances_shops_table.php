@@ -15,7 +15,7 @@ class CreateFinancesShopsTable extends Migration
     {
         Schema::create('finances_shops', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned();
+            $table->unsignedBigInteger('user_id');
             $table->text('image');
             $table->string('value', 50);
             $table->timestamp('update_at')->default(date('Y-m-d H:i:s'));
