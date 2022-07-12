@@ -1,9 +1,9 @@
 <template>
   <div class="album">
-    <el-button type="primary" :icon="ArrowLeft" @click="this.$router.push('/music')">Вернуться к исполнителю</el-button>
     <el-skeleton :loading="loading" animated>
       <template #template>
         <div class="album">
+          <el-skeleton-item variant="button" style="width: 220px;" />
           <div class="album-head">
             <div class="album-head__left">
               <div class="album-head__image">
@@ -11,7 +11,7 @@
               </div>
             </div>
             <div class="album-head__right">
-              <el-skeleton-item variant="text" style="width: 500px; height: 50px; margin: 10px 0" />
+              <el-skeleton-item variant="text" style="width: 500px; height: 50px; margin: 0 0 10px 0" />
               <el-skeleton-item variant="text" style="width: 80%; margin: 10px 0" />
               <el-skeleton-item variant="text" style="width: 90%; margin: 10px 0" />
               <el-skeleton-item variant="text" style="width: 100%; margin: 10px 0" />
@@ -21,6 +21,7 @@
         </div>
       </template>
       <template #default>
+        <el-button type="primary" :icon="ArrowLeft" @click="this.$router.push('/music/artists/' + this.album.artist.id)">Вернуться к исполнителю</el-button>
         <div class="album-head">
           <div class="album-head__left">
             <div class="album-head__image">
@@ -30,7 +31,7 @@
           <div class="album-head__right">
             <h2 class="album-head__name">{{ album.name }}</h2>
             <div class="album-head__description">
-              <p class="album-head__description-item album-artist">{{ album.artist }}</p>
+              <p class="album-head__description-item album-artist">{{ artistName }}</p>
               <p class="album-head__description-item album-year">{{ album.year }}</p>
               <div class="album-head__description-item album-content">
                 {{ album.content }}
@@ -89,6 +90,17 @@
           this.loading = false
         }catch(e) {
           this.loading = false
+        }
+      }
+    },
+    computed: {
+      //Эта дичь для решения бага, который возникал, скорее всего, по вине element plus
+      //который не давал делать такое album.artist.name. Выдавал ошибку еще до запроса на бэк
+      artistName() {
+        for(let key in this.album.artist) {
+          if(key === 'name') {
+            return this.album.artist[key]
+          }
         }
       }
     },
