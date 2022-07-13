@@ -46,6 +46,11 @@
         </div>
         <div class="album-tracks" v-if="this.album.tracks">
           <h3>Треки</h3>
+          <div class="album-tracks__header">
+            <div class="album-tracks__header-number">#</div>
+            <div class="album-tracks__header-name">Name</div>
+            <div class="album-tracks__header-duration">Dur.</div>
+          </div>
           <div class="album-tracks__list">
             <music-track-card v-for="track in this.album.tracks" :track="track"></music-track-card>
           </div>
@@ -140,10 +145,23 @@
     }
   }
   .album-tracks {
+    &__header {
+      display: flex;
+      max-width: 760px;
+      padding: 0 0 .75rem 0;
+      border-bottom: 1px solid #d7d7d7;
+
+      &-number {
+        flex: 0 0 40px;
+      }
+      &-name {
+        flex: 1 1 100%;
+      }
+    }
     &__list {
       display: flex;
       flex-direction: column;
-      row-gap: .5rem;
+      max-width: 760px;
     }
   }
   .album-artist {
