@@ -84,7 +84,7 @@
       </app-modal>
     </el-tab-pane>
     <el-tab-pane label="Редактирование">
-      <edit-artists></edit-artists>
+      <music-artist-manager></music-artist-manager>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -97,7 +97,7 @@
   import API from "../../utils/api";
 
   import AppModal from "../default/AppModal";
-  import EditArtists from "./upload/MusicEditArtists"
+  import MusicArtistManager from "./upload/MusicArtistManager"
 
   export default {
     data() {
@@ -226,7 +226,7 @@
     },
     components: {
       AppModal,
-      EditArtists
+      MusicArtistManager
     },
     mounted() {
     }

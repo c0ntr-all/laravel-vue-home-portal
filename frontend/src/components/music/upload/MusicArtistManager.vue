@@ -5,21 +5,21 @@
     highlight-current-row
   >
     <el-table-column prop="id" label="Id" width="70" sortable />
-    <el-table-column prop="image" label="Изображение" width="100">
+    <el-table-column prop="image" label="Изображение" width="150">
       <template #default="scope">
         <div class="artist-row__image">
           <img :src="scope.row.image" alt="">
         </div>
       </template>
     </el-table-column>
-    <el-table-column prop="name" label="Name" width="200" sortable />
-    <el-table-column prop="tags" label="Теги" width="400">
+    <el-table-column prop="name" label="Name" width="400" sortable />
+    <el-table-column prop="tags" label="Теги" width="550">
       <template #default="props">
         <span v-for="tag in props.row.tags" class="artist-row__tag">{{ tag }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
-    <el-table-column label="Действия" width="250">
+    <el-table-column label="Действия" width="350">
       <template #default>
         <el-button size="small">Редактировать</el-button>
         <el-button size="small" type="danger">Удалить</el-button>
