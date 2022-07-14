@@ -1,8 +1,22 @@
 <template>
   <h3>Управление тегами</h3>
-  <el-row class="mb-4">
-    <el-button type="primary" @click="openCreateModal = true">Добавить</el-button>
-  </el-row>
+  <el-form
+    ref="tagFormRef"
+    :model="tagAdd.model"
+    :rules="tagAdd.rules"
+    label-width="120px"
+  >
+    <el-row class="mb-4">
+      <el-col :span="4"><div class="grid-content ep-bg-purple" />
+        <el-form-item label-width="0" prop="tag">
+          <el-input v-model="tagAdd.model.tag" type="text" placeholder="Введите тег!" />
+        </el-form-item>
+      </el-col>
+      <el-col :span="4"><div class="grid-content ep-bg-purple-light" />
+        <el-button type="primary" @click="submitForm(this.$refs.tagFormRef)">Добавить</el-button>
+      </el-col>
+    </el-row>
+  </el-form>
   <el-table
     :data="this.$store.getters.music.tags"
     style="width: 100%"
@@ -13,50 +27,46 @@
     <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
     <el-table-column label="Действия" width="250">
       <template #default>
-        <el-button size="small" @click="openEditModal = true">Редактировать</el-button>
+        <el-button size="small">Редактировать</el-button>
       </template>
     </el-table-column>
   </el-table>
-  <app-modal :openModal="openEditModal" @closeModal="openEditModal = false">
-    <template v-slot:title>
-      Редактирование тега
-    </template>
-    <template v-slot:content>
-    </template>
-    <template v-slot:footer>
-    </template>
-  </app-modal>
-  <app-modal :openModal="openCreateModal" @closeModal="openCreateModal = false">
-    <template v-slot:title>
-      Добавление тега
-    </template>
-    <template v-slot:content>
-    </template>
-    <template v-slot:footer>
-    </template>
-  </app-modal>
 </template>
 <script>
-  import AppModal from "../../default/AppModal";
-
   export default {
     data() {
       return {
-        openEditModal: false,
-        openCreateModal: false,
-        tableData: []
+        tableData: [],
+        tagAdd: {
+          rules: {
+            tag: [{
+              required: true,
+              message: 'Введите тег!',
+              trigger: 'change',
+            }]
+          },
+          model: {
+            tag: ''
+          }
+        }
       }
     },
     methods: {
+      async submitForm(formEl) {
+        if (!formEl) return
+
+        await formEl.validate((valid, fields) => {
+          if (valid) {
+            this.$store.dispatch('addTag', this.tagAdd.model.tag)
+          }
+        })
+      },
       loadData() {
         this.$store.dispatch('loadTags')
       }
     },
     mounted() {
       this.loadData();
-    },
-    components: {
-      AppModal
     },
   }
 </script>

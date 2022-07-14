@@ -15,6 +15,9 @@ export default {
     },
     LOAD_TAGS(state, tags) {
       state.music.tags = tags
+    },
+    ADD_TAG(state, tags) {
+      state.music.tags.push(tags)
     }
   },
   actions: {
@@ -42,6 +45,19 @@ export default {
           throw new Error('Нет данных!')
         }
         context.commit('LOAD_TAGS', data['tags'])
+      }catch(e) {
+
+      }
+    },
+    async addTag(context, tag) {
+      try {
+        const {data} = await API.post('tags/add', {
+          tag: tag
+        })
+        if(!data) {
+          throw new Error('Нет данных!')
+        }
+        context.commit('ADD_TAG', data['tags'])
       }catch(e) {
 
       }
