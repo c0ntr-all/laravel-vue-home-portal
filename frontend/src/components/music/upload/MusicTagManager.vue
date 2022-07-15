@@ -5,6 +5,7 @@
     :model="tagAdd.model"
     :rules="tagAdd.rules"
     label-width="120px"
+    @submit.prevent="submitForm(this.$refs.tagFormRef)"
   >
     <el-row class="mb-4">
       <el-col :span="4"><div class="grid-content ep-bg-purple" />
@@ -59,6 +60,7 @@
           if (valid) {
             this.$store.dispatch('addTag', this.tagAdd.model.tag)
           }
+          this.tagAdd.model.tag = ''
         })
       },
       loadData() {
