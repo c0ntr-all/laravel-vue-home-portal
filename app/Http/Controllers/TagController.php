@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TagCollection;
+use App\Http\Resources\TagResource;
 use App\Http\Requests\Tag\IndexRequest;
+use App\Http\Requests\Tag\StoreRequest;
 use App\Models\Tag;
+use Illuminate\Support\Str;
 
 class TagController extends Controller
 {
@@ -23,11 +26,22 @@ class TagController extends Controller
      */
     public function index(IndexRequest $request): TagCollection
     {
-        return $this->tagResponse($this->tag);
+        return new TagCollection($this->tag->getItems());
     }
 
-    public function tagResponse(Tag $tag): TagCollection
+    public function store(StoreRequest $request, Tag $tag)
     {
-        return new TagCollection($tag);
+        $result = $tag->create([
+            'user_id' => auth()->id(),
+            'name' => $request->validated()['tag'],
+            'slug' => Str::slug($request->validated()['tag'])
+        ]);
+
+        return $this->TagResponse($result);
+    }
+
+    public function tagResponse(Tag $tag): TagResource
+    {
+        return new TagResource($tag);
     }
 }

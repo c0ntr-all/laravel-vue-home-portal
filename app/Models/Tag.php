@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Models\Music\Artist;
 use App\Models\Music\Album;
 use App\Models\Music\Track;
@@ -19,6 +20,7 @@ class Tag extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'slug',
         'updated_at',
     ];
 
@@ -35,6 +37,11 @@ class Tag extends Model
     public function tracks(): MorphToMany
     {
         return $this->morphedByMany(Track::class, 'tagable');
+    }
+
+    public function getItems(): Collection
+    {
+        return Tag::all();
     }
 
     /**

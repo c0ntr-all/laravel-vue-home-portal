@@ -51,7 +51,7 @@ export default {
     },
     async addTag(context, tag) {
       try {
-        const {data} = await API.post('tags/add', {
+        const {data} = await API.post('tags/store', {
           tag: tag
         })
         if(!data) {

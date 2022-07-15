@@ -78,7 +78,10 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::post('albums', [AlbumController::class, 'index']);
         });
 
-        Route::post('tags', [TagController::class, 'index']);
+        Route::prefix('tags')->group(function() {
+            Route::post('/', [TagController::class, 'index']);
+            Route::post('store', [TagController::class, 'store']);
+        });
 
         Route::prefix('folders')->group(function() {
             Route::post('/', [FolderController::class, 'index']);
