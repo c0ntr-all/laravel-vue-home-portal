@@ -19,7 +19,7 @@ class TagController extends Controller
     }
 
     /**
-     * Возвращает все уникальные теги
+     * Возвращает все теги
      *
      * @param IndexRequest $request
      * @return TagCollection
@@ -29,15 +29,20 @@ class TagController extends Controller
         return new TagCollection($this->tag->getItems());
     }
 
-    public function store(StoreRequest $request, Tag $tag)
+    public function store(StoreRequest $request)
     {
-        $result = $tag->create([
-            'user_id' => auth()->id(),
-            'name' => $request->validated()['tag'],
-            'slug' => Str::slug($request->validated()['tag'])
-        ]);
+        $existTag = Tag::where(['name' => $request->validated()['tag']])->get();
+        if ($existTag->isEmpty()) {
+            $result = Tag::create([
+                'user_id' => auth()->id(),
+                'name' => $request->validated()['tag'],
+                'slug' => Str::slug($request->validated()['tag'])
+            ]);
 
-        return $this->TagResponse($result);
+            return $this->TagResponse($result);
+        } else {
+            return ['success' => false, 'errors' => ['Такой тег уже существует!']];
+        }
     }
 
     public function tagResponse(Tag $tag): TagResource
