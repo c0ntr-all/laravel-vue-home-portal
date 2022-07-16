@@ -53,14 +53,19 @@
       }
     },
     methods: {
-      async submitForm(formEl) {
+      submitForm(formEl) {
         if (!formEl) return
 
-        await formEl.validate((valid, fields) => {
+        formEl.validate((valid, fields) => {
           if (valid) {
             this.$store.dispatch('addTag', this.tagAdd.model.tag)
+            .then(result => {
+              this.$message.success(`Тег ${result.label} успешно добавлен!`)
+              this.tagAdd.model.tag = ''
+            }).catch(error => {
+              this.$message.error(error.message)
+            })
           }
-          this.tagAdd.model.tag = ''
         })
       },
       loadData() {

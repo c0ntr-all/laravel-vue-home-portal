@@ -50,16 +50,15 @@ export default {
       }
     },
     async addTag(context, tag) {
-      try {
-        const {data} = await API.post('tags/store', {
-          tag: tag
-        })
-        if(!data) {
-          throw new Error('Нет данных!')
-        }
+      const {data} = await API.post('tags/store', {
+        tag: tag
+      })
+      if (data.success) {
         context.commit('ADD_TAG', data['tags'])
-      }catch(e) {
 
+        return data['tags']
+      } else {
+        throw new Error(data['error'])
       }
     }
   },

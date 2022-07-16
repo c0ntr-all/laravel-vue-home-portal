@@ -41,12 +41,14 @@ class TagController extends Controller
 
             return $this->TagResponse($result);
         } else {
-            return ['success' => false, 'errors' => ['Такой тег уже существует!']];
+            return ['success' => false, 'error' => ['Такой тег уже существует!']];
         }
     }
 
-    public function tagResponse(Tag $tag): TagResource
+    public function tagResponse(Tag $tag): array
     {
-        return new TagResource($tag);
+        $resource = new TagResource($tag);
+
+        return ['success' => true, 'tags' => $resource];
     }
 }
