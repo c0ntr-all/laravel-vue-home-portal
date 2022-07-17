@@ -16,8 +16,15 @@ export default {
     LOAD_TAGS(state, tags) {
       state.music.tags = tags
     },
-    ADD_TAG(state, tags) {
-      state.music.tags.push(tags)
+    ADD_TAG(state, tag) {
+      state.music.tags.push(tag)
+    },
+    UPDATE_TAG(state, tag) {
+      for(let tagKey in state.tags) {
+        // if(state.lists[listKey].items[taskKey].id === task.id) {
+        //   state.lists[listKey].items[taskKey] = task
+        // }
+      }
     }
   },
   actions: {
@@ -49,12 +56,24 @@ export default {
 
       }
     },
-    async addTag(context, tag) {
+    async addTag(context, name) {
       const {data} = await API.post('tags/store', {
-        tag: tag
+        tag: name
       })
       if (data.success) {
         context.commit('ADD_TAG', data['tags'])
+
+        return data['tags']
+      } else {
+        throw new Error(data['error'])
+      }
+    },
+    async editTag(context, tag) {
+      const {data} = await API.post('tags/update', {
+        tag: tag
+      })
+      if (data.success) {
+        context.commit('UPDATE_TAG', data['tags'])
 
         return data['tags']
       } else {

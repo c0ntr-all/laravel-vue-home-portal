@@ -27,13 +27,32 @@
     <el-table-column prop="label" label="Имя" width="200" sortable />
     <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
     <el-table-column label="Действия" width="250">
-      <template #default>
-        <el-button size="small">Редактировать</el-button>
+      <template #default="scope">
+        <el-button size="small" @click="openTagEditModal(scope.row)">Редактировать</el-button>
       </template>
     </el-table-column>
   </el-table>
+  <app-modal :openModal="tagEdit.modal" @closeModal="tagEdit.modal = false">
+    <template #title>
+      <h3>Редактировать тег</h3>
+    </template>
+    <template #content>
+      <el-input
+        v-model="this.tagEdit.model.tag.label"
+        maxlength="20"
+        placeholder="Введите имя тега"
+        show-word-limit
+        type="text"
+      />
+    </template>
+    <template #footer>
+      <el-button type="primary" @click="editTagRequest" round>Создать</el-button>
+    </template>
+  </app-modal>
 </template>
 <script>
+  import AppModal from "../../default/AppModal";
+
   export default {
     data() {
       return {
@@ -49,10 +68,26 @@
           model: {
             tag: ''
           }
-        }
+        },
+        tagEdit: {
+          model: {
+            tag: ''
+          },
+          modal: false
+        },
       }
     },
     methods: {
+      openTagEditModal(item) {
+        this.tagEdit.modal = true
+        this.tagEdit.model.tag = item
+      },
+      editTagRequest() {
+        this.$store.dispatch('editTag', {
+          id: this.tagEdit.model.tag.id,
+          name: this.tagEdit.model.tag.label
+        })
+      },
       submitForm(formEl) {
         if (!formEl) return
 
@@ -75,6 +110,9 @@
     mounted() {
       this.loadData();
     },
+    components: {
+      AppModal
+    }
   }
 </script>
 <style lang="scss">
