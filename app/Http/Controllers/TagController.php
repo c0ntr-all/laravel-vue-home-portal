@@ -47,9 +47,11 @@ class TagController extends Controller
 
     public function update(UpdateRequest $request)
     {
-        $result = Tag::where(['id' => $request->validated()['id']])->update($request->validated());
+        $updated = Tag::where(['id' => $request->validated()['id']])->update($request->validated());
 
-        return $this->tagResponse($result);
+        if ($updated) {
+            return $request->validated();
+        }
     }
 
     public function tagResponse(Tag $tag): array
