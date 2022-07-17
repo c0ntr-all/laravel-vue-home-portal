@@ -69,9 +69,7 @@ export default {
       }
     },
     async editTag(context, tag) {
-      const {data} = await API.post('tags/update', {
-        tag: tag
-      })
+      const {data} = await API.post('tags/update', tag)
       if (data.success) {
         context.commit('UPDATE_TAG', data['tags'])
 

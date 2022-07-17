@@ -6,6 +6,7 @@ use App\Http\Resources\TagCollection;
 use App\Http\Resources\TagResource;
 use App\Http\Requests\Tag\IndexRequest;
 use App\Http\Requests\Tag\StoreRequest;
+use App\Http\Requests\Tag\UpdateRequest;
 use App\Models\Tag;
 use Illuminate\Support\Str;
 
@@ -43,6 +44,13 @@ class TagController extends Controller
         } else {
             return ['success' => false, 'error' => ['Такой тег уже существует!']];
         }
+    }
+
+    public function update(UpdateRequest $request)
+    {
+        $result = Tag::where(['id' => $request->validated()['id']])->update($request->validated());
+
+        return $this->tagResponse($result);
     }
 
     public function tagResponse(Tag $tag): array
