@@ -21,17 +21,70 @@
     <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
     <el-table-column label="Действия" width="350">
       <template #default>
-        <el-button size="small">Редактировать</el-button>
+        <el-button size="small" @click="artistEdit.modal = true">Редактировать</el-button>
         <el-button size="small" type="danger">Удалить</el-button>
       </template>
     </el-table-column>
   </el-table>
-  <app-modal :openModal="openEditModal" @closeModal="openEditModal = false">
+  <app-modal :openModal="artistEdit.modal" @closeModal="artistEdit.modal = false">
     <template v-slot:title>
+      <h3>Редактирование Исполнителя</h3>
     </template>
     <template v-slot:content>
+      <el-form>
+        <el-form-item label="Название банды" prop="name">
+          <el-input
+            v-model="artistEdit.model.name"
+            maxlength="100"
+            placeholder="Введите название"
+            show-word-limit
+            type="text"
+          />
+        </el-form-item>
+        <el-form-item label="Описание банды" prop="content">
+          <el-input
+            type="textarea"
+            placeholder="Описание банды..."
+            v-model="artistEdit.model.content"
+            maxlength="10000" show-word-limit
+          />
+        </el-form-item>
+        <el-form-item label="Постер">
+          <div class="input-poster">
+            <input type="file" id="poster" ref="poster" @change="onChangePoster"/>
+          </div>
+          <div class="poster-preview">
+            <img v-if="artistEdit.posterPreview" :src="artistEdit.posterPreview" alt="">
+          </div>
+        </el-form-item>
+        <el-form-item label="Теги">
+          <el-tag
+            v-for="tag in artistEdit.model.tags"
+            :key="tag"
+            class="mx-1"
+            closable
+            :disable-transitions="false"
+            @close="closeTag(tag)"
+          >
+            {{ tag }}
+          </el-tag>
+          <el-input
+            v-if="artistEdit.tagInputVisible"
+            ref="taginput"
+            v-model="artistEdit.tagInputValue"
+            class="ml-1 tag-input"
+            size="small"
+            @keyup.enter="tagInputConfirm"
+            @blur="tagInputConfirm"
+          />
+          <el-button v-else class="button-new-tag ml-1" size="small" @click="showTagInput">
+            + New Tag
+          </el-button>
+        </el-form-item>
+      </el-form>
     </template>
     <template v-slot:footer>
+      <el-button type="primary" @click="editArtistRequest">Сохранить</el-button>
     </template>
   </app-modal>
 </template>
@@ -41,10 +94,46 @@
   export default {
     data() {
       return {
-        tableData: []
+        tableData: [],
+        artistEdit: {
+          posterPreview: null,
+          tagInputVisible: false,
+          tagInputValue: '',
+          model: {
+            image: '',
+            name: '',
+            description: '',
+            tags: []
+          },
+          modal: false
+        },
       }
     },
     methods: {
+      onChangePoster($event) {
+        const file = event.target.files[0]
+        this.artistEdit.model.image = file
+        this.artistEdit.posterPreview = URL.createObjectURL(file)
+      },
+      closeTag(tag) {
+        this.artistEdit.model.tags.splice(this.artistEdit.model.tags.indexOf(tag), 1)
+      },
+      showTagInput() {
+        this.artistEdit.tagInputVisible = true
+        this.$nextTick(() => {
+          this.$refs.taginput.focus()
+        })
+      },
+      tagInputConfirm() {
+        if (this.artistEdit.tagInputValue) {
+          this.artistEdit.model.tags.push(this.artistEdit.tagInputValue)
+        }
+        this.artistEdit.tagInputVisible = false
+        this.artistEdit.tagInputValue = ''
+      },
+      editArtistRequest() {
+
+      },
       loadData() {
         this.$store.dispatch('loadArtists')
       }
