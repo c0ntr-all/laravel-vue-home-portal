@@ -34,6 +34,12 @@ export default {
         return 'test'
       }
     },
+    async updateArtist(context, artist) {
+      const {data} = await API.post('music/artists/update', artist)
+      if(data) {
+        return 'test'
+      }
+    },
     async loadArtists(context) {
       try {
         const {data} = await API.post('music/artists')

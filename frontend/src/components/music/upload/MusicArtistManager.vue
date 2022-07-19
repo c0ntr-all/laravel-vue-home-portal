@@ -20,13 +20,13 @@
     </el-table-column>
     <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
     <el-table-column label="Действия" width="350">
-      <template #default>
-        <el-button size="small" @click="artistEdit.modal = true">Редактировать</el-button>
+      <template #default="scope">
+        <el-button size="small" @click="openArtistUpdateModal(scope.row)">Редактировать</el-button>
         <el-button size="small" type="danger">Удалить</el-button>
       </template>
     </el-table-column>
   </el-table>
-  <app-modal :openModal="artistEdit.modal" @closeModal="artistEdit.modal = false">
+  <app-modal :openModal="artistUpdate.modal" @closeModal="closeArtistUpdateModal">
     <template v-slot:title>
       <h3>Редактирование Исполнителя</h3>
     </template>
@@ -34,7 +34,7 @@
       <el-form>
         <el-form-item label="Название банды" prop="name">
           <el-input
-            v-model="artistEdit.model.name"
+            v-model="artistUpdate.model.name"
             maxlength="100"
             placeholder="Введите название"
             show-word-limit
@@ -45,7 +45,7 @@
           <el-input
             type="textarea"
             placeholder="Описание банды..."
-            v-model="artistEdit.model.content"
+            v-model="artistUpdate.model.content"
             maxlength="10000" show-word-limit
           />
         </el-form-item>
@@ -54,12 +54,12 @@
             <input type="file" id="poster" ref="poster" @change="onChangePoster"/>
           </div>
           <div class="poster-preview">
-            <img v-if="artistEdit.posterPreview" :src="artistEdit.posterPreview" alt="">
+            <img v-if="artistUpdate.posterPreview" :src="artistUpdate.posterPreview" alt="">
           </div>
         </el-form-item>
         <el-form-item label="Теги">
           <el-tag
-            v-for="tag in artistEdit.model.tags"
+            v-for="tag in artistUpdate.model.tags"
             :key="tag"
             class="mx-1"
             closable
@@ -69,9 +69,9 @@
             {{ tag }}
           </el-tag>
           <el-input
-            v-if="artistEdit.tagInputVisible"
+            v-if="artistUpdate.tagInputVisible"
             ref="taginput"
-            v-model="artistEdit.tagInputValue"
+            v-model="artistUpdate.tagInputValue"
             class="ml-1 tag-input"
             size="small"
             @keyup.enter="tagInputConfirm"
@@ -95,7 +95,7 @@
     data() {
       return {
         tableData: [],
-        artistEdit: {
+        artistUpdate: {
           posterPreview: null,
           tagInputVisible: false,
           tagInputValue: '',
@@ -110,29 +110,61 @@
       }
     },
     methods: {
+      openArtistUpdateModal(item) {
+        this.artistUpdate.modal = true
+        
+        this.artistUpdate.model.image = item.image
+        this.artistUpdate.model.name = item.name
+        this.artistUpdate.model.content = item.content
+        this.artistUpdate.model.tags = item.tags
+      },
+      closeArtistUpdateModal() {
+        this.artistUpdate.modal = false
+        this.artistUpdate.model = {}
+        this.artistUpdate.posterPreview = null
+        this.artistUpdate.tagInputValue = ''
+      },
       onChangePoster($event) {
         const file = event.target.files[0]
-        this.artistEdit.model.image = file
-        this.artistEdit.posterPreview = URL.createObjectURL(file)
+        this.artistUpdate.model.image = file
+        this.artistUpdate.posterPreview = URL.createObjectURL(file)
       },
       closeTag(tag) {
-        this.artistEdit.model.tags.splice(this.artistEdit.model.tags.indexOf(tag), 1)
+        this.artistUpdate.model.tags.splice(this.artistUpdate.model.tags.indexOf(tag), 1)
       },
       showTagInput() {
-        this.artistEdit.tagInputVisible = true
+        this.artistUpdate.tagInputVisible = true
         this.$nextTick(() => {
           this.$refs.taginput.focus()
         })
       },
       tagInputConfirm() {
-        if (this.artistEdit.tagInputValue) {
-          this.artistEdit.model.tags.push(this.artistEdit.tagInputValue)
+        if (this.artistUpdate.tagInputValue) {
+          this.artistUpdate.model.tags.push(this.artistUpdate.tagInputValue)
         }
-        this.artistEdit.tagInputVisible = false
-        this.artistEdit.tagInputValue = ''
+        this.artistUpdate.tagInputVisible = false
+        this.artistUpdate.tagInputValue = ''
       },
       editArtistRequest() {
+        const formData = new FormData();
+        formData.append('name', this.artistUpdate.model.name)
+        formData.append('content', this.artistUpdate.model.content)
+        formData.append('tags', this.artistUpdate.model.tags)
+        formData.append('image', this.artistUpdate.model.image)
 
+        this.$store.dispatch('updateArtist', formData).then(result => {
+          this.$message.success("Артист успешно обновлён!");
+
+          for (let key in this.artistUpdate.model) {
+            this.artistUpdate.model[key] = ''
+            if(key === 'image') {
+              this.$refs.poster.value = ''
+            }
+          }
+          this.artistUpdate.posterPreview = null
+        }).catch(error => {
+          this.$message.error(error);
+        })
       },
       loadData() {
         this.$store.dispatch('loadArtists')
@@ -162,5 +194,47 @@
         content: ', '
       }
     }
+  }
+
+  .poster-uploader {
+    .poster {
+      display: block;
+      width: 178px;
+      height: 178px;
+    }
+    .el-upload {
+      border: 1px dashed #dcdfe6;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: .2s;
+    }
+    .el-upload:hover {
+      border-color: #409eff;
+    }
+  }
+
+  .el-icon.poster-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    text-align: center;
+  }
+  .poster-preview {
+    position: relative;
+
+    img {
+      width: 100%
+    }
+  }
+  .tag-input {
+    width: 100px;
+  }
+  .upload-folder {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 </style>
