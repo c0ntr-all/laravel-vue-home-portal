@@ -47,11 +47,19 @@ class ArtistController extends Controller
 
     public function update(UpdateRequest $request)
     {
-        dd($request->validated());
+        $artist = Artist::find($request->validated()['id']);
+
+        if ($artist->update($request->validated())) {
+            return $this->artistResponse($artist);
+        } else {
+            return ['success' => false, 'error' => 'Ошибка редактирования исполнителя!'];
+        }
     }
 
-    protected function artistResponse(Artist $artist): ArtistResource
+    protected function artistResponse(Artist $artist): array
     {
-        return new ArtistResource($artist);
+        $resource = new ArtistResource($artist);
+
+        return ['success' => true, 'artists' => $resource];
     }
 }
