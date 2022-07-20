@@ -89,6 +89,8 @@
   </app-modal>
 </template>
 <script>
+  import empty from "../../../utils/empty"
+
   import AppModal from "../../default/AppModal";
 
   export default {
@@ -102,7 +104,7 @@
           model: {
             image: '',
             name: '',
-            description: '',
+            content: '',
             tags: []
           },
           modal: false
@@ -112,11 +114,9 @@
     methods: {
       openArtistUpdateModal(item) {
         this.artistUpdate.modal = true
-        
-        this.artistUpdate.model.image = item.image
-        this.artistUpdate.model.name = item.name
-        this.artistUpdate.model.content = item.content
-        this.artistUpdate.model.tags = item.tags
+
+        delete item.albums
+        this.artistUpdate.model = item
       },
       closeArtistUpdateModal() {
         this.artistUpdate.modal = false
@@ -147,10 +147,15 @@
       },
       editArtistRequest() {
         const formData = new FormData();
-        formData.append('name', this.artistUpdate.model.name)
-        formData.append('content', this.artistUpdate.model.content)
-        formData.append('tags', this.artistUpdate.model.tags)
-        formData.append('image', this.artistUpdate.model.image)
+        const model = this.artistUpdate.model;
+
+        for(let key in model) {
+            if (!empty(model[key])) {
+              if(key === 'image' && typeof model[key] === 'string') continue
+
+              formData.append(key, model[key])
+            }
+        }
 
         this.$store.dispatch('updateArtist', formData).then(result => {
           this.$message.success("Артист успешно обновлён!");
