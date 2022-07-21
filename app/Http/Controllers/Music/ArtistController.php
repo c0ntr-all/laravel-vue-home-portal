@@ -22,7 +22,7 @@ class ArtistController extends Controller
         $this->uploadImageService = $uploadImageService;
     }
 
-    public function index(IndexRequest $request): ArtistResource|ArtistCollection
+    public function index(IndexRequest $request): array|ArtistCollection
     {
         if(empty($request->validated())) {
             return new ArtistCollection(Artist::all());

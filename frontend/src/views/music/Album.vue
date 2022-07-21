@@ -148,7 +148,7 @@
     &__header {
       display: flex;
       max-width: 760px;
-      padding: 0 0 .75rem 0;
+      padding: .75rem;
       border-bottom: 1px solid #d7d7d7;
 
       &-number {
