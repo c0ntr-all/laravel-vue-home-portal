@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 
@@ -14,6 +13,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\Music\ArtistController;
 use App\Http\Controllers\Music\AlbumController;
+use App\Http\Controllers\Music\TrackController;
 use App\Http\Controllers\Music\UploadController;
 use App\Http\Controllers\FolderController;
 
@@ -77,6 +77,9 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 Route::post('update', [ArtistController::class, 'update']);
             });
             Route::post('albums', [AlbumController::class, 'index']);
+            Route::prefix('tracks')->group(function() {
+                Route::post('{track}/play', [TrackController::class, 'play']);
+            });
         });
 
         Route::prefix('tags')->group(function() {
