@@ -146,7 +146,7 @@ class ParseArtistService
 
                 $tracks[$trackKey]['number'] = $trackParts[1];
                 $tracks[$trackKey]['name'] = rtrim($trackParts[2], '.mp3');
-                $tracks[$trackKey]['path'] = $folder . '\\' . $track;
+                $tracks[$trackKey]['path'] = $albumFolder . '\\' . $track;
             }
 
             $cover = $rawTracks['cover'] ?: null;
