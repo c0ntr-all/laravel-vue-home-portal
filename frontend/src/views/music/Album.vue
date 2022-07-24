@@ -44,15 +44,20 @@
             </div>
           </div>
         </div>
-        <div class="album-tracks" v-if="this.album.tracks">
-          <h3>Треки</h3>
-          <div class="album-tracks__header">
-            <div class="album-tracks__header-number">#</div>
-            <div class="album-tracks__header-name">Name</div>
-            <div class="album-tracks__header-duration">Dur.</div>
+        <div class="album-body">
+          <div class="album-tracks" v-if="this.album.tracks">
+            <h3>Треки</h3>
+            <div class="album-tracks__header">
+              <div class="album-tracks__header-number">#</div>
+              <div class="album-tracks__header-name">Name</div>
+              <div class="album-tracks__header-duration">Dur.</div>
+            </div>
+            <div class="album-tracks__list">
+              <music-track-card v-for="track in this.album.tracks" :track="track"></music-track-card>
+            </div>
           </div>
-          <div class="album-tracks__list">
-            <music-track-card v-for="track in this.album.tracks" :track="track"></music-track-card>
+          <div class="player">
+            <audio src="F:\Music\Metal\Industrial Metal\Fear Factory\02. Leechmaster.mp3"></audio>
           </div>
         </div>
       </template>
@@ -73,7 +78,8 @@
     data() {
       return {
         loading: false,
-        album: {}
+        album: {},
+        track: ''
       }
     },
     props: {
@@ -144,7 +150,13 @@
       }
     }
   }
+  .album-body {
+    display: flex;
+    flex-direction: row;
+  }
   .album-tracks {
+    flex: 0 0 760px;
+
     &__header {
       display: flex;
       max-width: 760px;

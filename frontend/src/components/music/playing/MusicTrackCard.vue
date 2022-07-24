@@ -1,5 +1,5 @@
 <template>
-  <div class="track-card">
+  <div class="track-card" @click="getTrack(track)">
     <div class="track-card__play-icon">
       <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
            viewBox="0 0 477.867 477.867" style="enable-background:new 0 0 477.867 477.867;" xml:space="preserve">
@@ -19,9 +19,65 @@
   </div>
 </template>
 <script>
+  import API from "../../../utils/api";
+
   export default {
+    data() {
+      return {
+        loading: false,
+        playingTrack: {},
+        context: '',
+        buffer: '',
+        source: ''
+      }
+    },
     props: {
       track: Object
+    },
+    methods: {
+      async getTrack(track) {
+        // let audio = new Audio('http://localhost:8080/storage/music/artists/03.SemtexSaints.mp3')
+        // audio.play()
+        this.loading = true
+        try {
+          const {data} = await API.post(
+            `music/tracks/${track.id}/play`,
+            {},
+            {
+              responseType: 'arraybuffer'
+            })
+          if(!data) {
+            throw new Error('Нет данных!')
+          }
+
+          this.context = new window.AudioContext();
+          this.context.decodeAudioData(data, (decodedArrayBuffer) => {
+            this.buffer = decodedArrayBuffer
+          })
+
+          this.playTrack()
+          this.loading = false
+        }catch(e) {
+          this.loading = false
+        }
+      },
+      playTrack() {
+        // создаем источник
+        this.source = this.context.createBufferSource();
+
+        // подключаем буфер к источнику
+        this.source.buffer = this.buffer;
+        // дефолтный получатель звука
+        let destination = this.context.destination;
+        console.log(destination)
+        // подключаем источник к получателю
+        this.source.connect(destination);
+        // воспроизводим
+        this.source.start(0);
+      },
+      stoptrack() {
+        this.source.stop()
+      }
     }
   }
 </script>

@@ -49,7 +49,7 @@ class Album extends Model
      */
     public function getTracks()
     {
-        return Track::where(['album_id' => $this->id])->get(['number', 'name', 'duration', 'path_windows']);
+        return Track::where(['album_id' => $this->id])->get(['id', 'number', 'name', 'duration', 'path_windows']);
     }
 
     public function getFullImageAttribute(): string
