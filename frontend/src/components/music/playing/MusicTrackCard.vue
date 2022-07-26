@@ -36,48 +36,11 @@
     },
     methods: {
       async getTrack(track) {
-        // let audio = new Audio('http://localhost:8080/storage/music/artists/03.SemtexSaints.mp3')
-        // audio.play()
-        this.loading = true
-        try {
-          const {data} = await API.post(
-            `music/tracks/${track.id}/play`,
-            {},
-            {
-              responseType: 'arraybuffer'
-            })
-          if(!data) {
-            throw new Error('Нет данных!')
-          }
-
-          this.context = new window.AudioContext();
-          this.context.decodeAudioData(data, (decodedArrayBuffer) => {
-            this.buffer = decodedArrayBuffer
-          })
-
-          this.playTrack()
-          this.loading = false
-        }catch(e) {
-          this.loading = false
-        }
+        // let response = await API.post(`music/tracks/${track.id}/play`)
+        // console.log(response)
+        let audio = new Audio(`http://localhost:8080/api/music/tracks/${track.id}/play`)
+        audio.play()
       },
-      playTrack() {
-        // создаем источник
-        this.source = this.context.createBufferSource();
-
-        // подключаем буфер к источнику
-        this.source.buffer = this.buffer;
-        // дефолтный получатель звука
-        let destination = this.context.destination;
-        console.log(destination)
-        // подключаем источник к получателю
-        this.source.connect(destination);
-        // воспроизводим
-        this.source.start(0);
-      },
-      stoptrack() {
-        this.source.stop()
-      }
     }
   }
 </script>

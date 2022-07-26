@@ -93,3 +93,5 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
         });
     });
 });
+
+Route::get('music/tracks/{track}/play', [TrackController::class, 'play']);
