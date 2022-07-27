@@ -1,5 +1,5 @@
 <template>
-  <div class="track-card" @click="getTrack(track)">
+  <div class="track-card" @click="togglePlay(track)">
     <div class="track-card__play-icon">
       <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
            viewBox="0 0 477.867 477.867" style="enable-background:new 0 0 477.867 477.867;" xml:space="preserve">
@@ -29,9 +29,8 @@
       track: Object
     },
     methods: {
-      async getTrack(track) {
-        let audio = new Audio(`http://localhost:8080/api/music/tracks/${track.id}/play`)
-        audio.play()
+      togglePlay(track) {
+        this.$store.dispatch('togglePlay', track)
       },
     }
   }
