@@ -57,7 +57,6 @@
             </div>
           </div>
           <div class="player">
-            <audio src="F:\Music\Metal\Industrial Metal\Fear Factory\02. Leechmaster.mp3"></audio>
           </div>
         </div>
       </template>

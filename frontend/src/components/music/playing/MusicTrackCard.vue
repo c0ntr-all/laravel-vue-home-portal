@@ -1,12 +1,26 @@
 <template>
-  <div class="track-card" @click="togglePlay(track)">
-    <div class="track-card__play-icon">
-      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-           viewBox="0 0 477.867 477.867" style="enable-background:new 0 0 477.867 477.867;" xml:space="preserve">
-        <path d="M238.933,0C106.974,0,0,106.974,0,238.933s106.974,238.933,238.933,238.933s238.933-106.974,238.933-238.933
-          C477.726,107.033,370.834,0.141,238.933,0z M339.557,246.546c-1.654,3.318-4.343,6.008-7.662,7.662v0.085L195.362,322.56
-          c-8.432,4.213-18.682,0.794-22.896-7.638c-1.198-2.397-1.815-5.043-1.8-7.722V170.667c-0.004-9.426,7.633-17.07,17.059-17.075
-          c2.651-0.001,5.266,0.615,7.637,1.8l136.533,68.267C340.331,227.863,343.762,238.11,339.557,246.546z"/>
+  <div class="track-card" @click="play(track)">
+    <div class="track-card__play-icon" v-if="status === 'pause' || (status === 'play' && player.track.id !== track.id)">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 485 485"
+           style="enable-background:new 0 0 485 485;"
+           xml:space="preserve"
+      >
+        <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
+          s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
+          C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
+          S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
+        <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/>
+      </svg>
+    </div>
+    <div class="track-card__play-icon" v-else>
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+           viewBox="0 0 485 485" style="enable-background:new 0 0 485 485;" xml:space="preserve">
+        <path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5
+          s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026
+          C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5
+          S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>
+        <rect x="172.5" y="140" width="55" height="205"/>
+        <rect x="257.5" y="140" width="55" height="205"/>
       </svg>
     </div>
     <div class="track-card__number">{{ track.number }}</div>
@@ -15,23 +29,17 @@
   </div>
 </template>
 <script>
+  import {mapGetters, mapActions} from 'vuex'
+
   export default {
-    data() {
-      return {
-        loading: false,
-        playingTrack: {},
-        context: '',
-        buffer: '',
-        source: ''
-      }
-    },
     props: {
       track: Object
     },
     methods: {
-      togglePlay(track) {
-        this.$store.dispatch('togglePlay', track)
-      },
+      ...mapActions(['play']),
+    },
+    computed: {
+      ...mapGetters(['player','status'])
     }
   }
 </script>

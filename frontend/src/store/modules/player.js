@@ -3,49 +3,43 @@ import empty from "../../utils/empty";
 export default {
   state() {
     return {
-      player: {},
+      audio: new Audio(),
+      status: 'pause',
       track: {},
-      status: 'stop',
       timePassed: 0,
       timeTotal: 0,
       playlist: [],
     }
   },
   mutations: {
-    GET_PLAYER(state, track) {
-      state.player = new Audio(`http://localhost:8080/api/music/tracks/${track.id}/play`)
+    SET_TRACK(state, track) {
       state.track = track
+      state.audio.src = `http://localhost:8080/api/music/tracks/${track.id}/play`
     },
-    TOGGLE_PLAY(state) {
-      if (state.player.paused) {
-        state.player.status = 'play'
-        state.player.play()
-      } else {
-        state.player.status = 'pause'
-        state.player.pause()
-      }
-    },
+    SET_STATUS(state, status) {
+      state.status = status
+    }
   },
   actions: {
-    getPlayer(context, track) {
-      context.commit('GET_PLAYER', track)
-      context.commit('TOGGLE_PLAY')
-    },
-    togglePlay({commit, getters}, track) {
-      if (typeof getters.player.paused === 'undefined' || track.id != getters.track.id) {
-        commit('GET_PLAYER', track)
-        commit('TOGGLE_PLAY')
+    play({commit, getters}, track) {
+      if (empty(getters.player.track) || getters.player.track.id !== track.id) {
+        commit('SET_TRACK', track)
+      }
+      if (getters.player.audio.paused) {
+        getters.player.audio.play()
+        commit('SET_STATUS', 'play')
       } else {
-        commit('TOGGLE_PLAY')
+        getters.player.audio.pause()
+        commit('SET_STATUS', 'pause')
       }
     }
   },
   getters: {
     player(state) {
-      return state.player
+      return state
     },
-    track(state) {
-      return state.track
-    },
+    status(state) {
+      return state.status
+    }
   }
 }
