@@ -1,12 +1,14 @@
 <template>
   <div class="track-card" @click="play(track)">
-    <div class="track-card__play-icon" v-if="status === 'pause' || (status === 'play' && player.track.id !== track.id)">
-      <icon-base icon-name="play"><icon-play /></icon-base>
+    <div class="track-card__start-column">
+      <div class="track-card__play-icon" v-if="status === 'pause' || (status === 'play' && player.track.id !== track.id)">
+        <icon-base icon-name="play"><icon-play /></icon-base>
+      </div>
+      <div class="track-card__play-icon" v-else>
+        <icon-base icon-name="stop"><icon-stop /></icon-base>
+      </div>
+      <div class="track-card__number">{{ track.number }}</div>
     </div>
-    <div class="track-card__play-icon" v-else>
-      <icon-base icon-name="stop"><icon-stop /></icon-base>
-    </div>
-    <div class="track-card__number">{{ track.number }}</div>
     <div class="track-card__name">{{ track.name }}</div>
     <div class="track-card__duration">{{ track.duration }}</div>
   </div>
@@ -34,15 +36,17 @@
 <style lang="scss" scoped>
   .track-card {
     display: flex;
+    align-items: center;
     position: relative;
-    padding: .75rem;
+    height: auto;
+    min-height: 45px;
     border-bottom: 1px solid #d7d7d7;
 
     &__play-icon {
       display: none;
       position: absolute;
-      top: 0.325rem;
-      left: 0.325rem;
+      top: 7.5px;
+      left: 5px;
 
       svg {
         width: 30px;
@@ -55,15 +59,22 @@
       background: rgba(0, 0, 0, .1);
 
       .track-card__play-icon {
-        display: inline-block;
+        display: flex;
       }
       .track-card__number {
-        color: #fff;
+        display: none;
       }
     }
 
-    &__number {
+    &__start-column {
       flex: 0 0 40px;
+      height: 45px;
+    }
+    &__number {
+      position: absolute;
+      top: 12.5px;
+      left: 15px;
+      z-index: -7;
       color: #777;
     }
     &__name {

@@ -158,12 +158,15 @@
 
     &__header {
       display: flex;
-      max-width: 760px;
-      padding: .75rem;
+      align-items: center;
+      position: relative;
+      height: auto;
+      min-height: 45px;
       border-bottom: 1px solid #d7d7d7;
 
       &-number {
         flex: 0 0 40px;
+        text-align: center;
       }
       &-name {
         flex: 1 1 100%;
