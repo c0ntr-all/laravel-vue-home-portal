@@ -2,7 +2,7 @@
   <svg xmlns="http://www.w3.org/2000/svg"
     :width="width"
     :height="height"
-    viewBox="0 0 485 485"
+    :viewBox="viewBox"
     :aria-labelledby="iconName"
     role="presentation"
     style="enable-background:new 0 0 485 485;"
@@ -17,6 +17,10 @@
       iconName: {
         type: String,
         default: 'box'
+      },
+      viewBox: {
+        type: [Number, String],
+        default: '0 0 485 485'
       },
       width: {
         type: [Number, String],
