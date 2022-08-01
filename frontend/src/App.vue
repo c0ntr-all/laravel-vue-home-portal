@@ -11,6 +11,7 @@
         <el-footer v-if="$store.getters.isLoggedIn">Home Portal v.0.0.4</el-footer>
       </div>
     </div>
+    <music-player></music-player>
   </el-config-provider>
 </template>
 
@@ -19,6 +20,7 @@
   import ru from 'element-plus/lib/locale/lang/ru'
 
   import TheSidebar from './components/TheSidebar.vue'
+  import MusicPlayer from './components/music/playing/MusicPlayer'
 
   export default {
     setup() {
@@ -38,7 +40,7 @@
         logout: this.logout
       }
     },
-    components: {ElConfigProvider,TheSidebar}
+    components: {ElConfigProvider,TheSidebar,MusicPlayer}
   }
 </script>
 
