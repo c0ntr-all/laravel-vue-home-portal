@@ -18,7 +18,7 @@
           <icon-base icon-name="prev-track"><icon-music-prev /></icon-base>
         </div>
         <div class="buttons__item buttons_play">
-          <icon-base icon-name="play"><icon-play /></icon-base>
+          <icon-base icon-name="play"><icon-music-play /></icon-base>
         </div>
         <div class="buttons__item">
           <icon-base icon-name="next-track"><icon-music-next /></icon-base>
@@ -49,7 +49,7 @@
   import IconBase from "../../default/icons/IconBase"
   import IconMusicShuffle from "../../default/icons/IconMusicShuffle"
   import IconMusicPrev from "../../default/icons/IconMusicPrev"
-  import IconPlay from "../../default/icons/IconPlay"
+  import IconMusicPlay from "../../default/icons/IconMusicPlay"
   import IconMusicNext from "../../default/icons/IconMusicNext"
   import IconMusicRepeat from "../../default/icons/IconMusicRepeat"
   import IconMusicVolume from "../../default/icons/IconMusicVolume"
@@ -66,7 +66,7 @@
       IconBase,
       IconMusicShuffle,
       IconMusicPrev,
-      IconPlay,
+      IconMusicPlay,
       IconMusicNext,
       IconMusicRepeat,
       IconMusicVolume

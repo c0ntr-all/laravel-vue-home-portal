@@ -2,10 +2,10 @@
   <div class="track-card" @click="play(track)">
     <div class="track-card__start-column">
       <div class="track-card__play-icon" v-if="status === 'pause' || (status === 'play' && player.track.id !== track.id)">
-        <icon-base icon-name="play"><icon-play /></icon-base>
+        <icon-base icon-name="play"><icon-music-play /></icon-base>
       </div>
       <div class="track-card__play-icon" v-else>
-        <icon-base icon-name="stop"><icon-stop /></icon-base>
+        <icon-base icon-name="stop"><icon-music-pause /></icon-base>
       </div>
       <div class="track-card__number">{{ track.number }}</div>
     </div>
@@ -17,8 +17,8 @@
   import {mapGetters, mapActions} from 'vuex'
 
   import IconBase from "../../default/icons/IconBase";
-  import IconPlay from "../../default/icons/IconPlay";
-  import IconStop from "../../default/icons/IconStop";
+  import IconMusicPlay from "../../default/icons/IconMusicPlay";
+  import IconMusicPause from "../../default/icons/IconMusicPause";
 
   export default {
     props: {
@@ -30,7 +30,7 @@
     computed: {
       ...mapGetters(['player','status'])
     },
-    components: {IconBase, IconPlay, IconStop}
+    components: {IconBase, IconMusicPlay, IconMusicPause}
   }
 </script>
 <style lang="scss" scoped>
