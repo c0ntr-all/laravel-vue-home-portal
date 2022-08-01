@@ -17,8 +17,11 @@
         <div class="buttons__item">
           <icon-base icon-name="prev-track"><icon-music-prev /></icon-base>
         </div>
-        <div class="buttons__item buttons_play">
-          <icon-base icon-name="play"><icon-music-play /></icon-base>
+        <div class="buttons__item buttons_play" @click="play(this.track)">
+          <icon-base :icon-name="status === 'play' ? 'play' : 'pause'">
+            <icon-music-play v-if="status === 'pause'" />
+            <icon-music-pause v-else />
+          </icon-base>
         </div>
         <div class="buttons__item">
           <icon-base icon-name="next-track"><icon-music-next /></icon-base>
@@ -46,10 +49,13 @@
   </el-drawer>
 </template>
 <script>
+  import {mapGetters, mapActions} from 'vuex'
+
   import IconBase from "../../default/icons/IconBase"
   import IconMusicShuffle from "../../default/icons/IconMusicShuffle"
   import IconMusicPrev from "../../default/icons/IconMusicPrev"
   import IconMusicPlay from "../../default/icons/IconMusicPlay"
+  import IconMusicPause from "../../default/icons/IconMusicPause"
   import IconMusicNext from "../../default/icons/IconMusicNext"
   import IconMusicRepeat from "../../default/icons/IconMusicRepeat"
   import IconMusicVolume from "../../default/icons/IconMusicVolume"
@@ -60,13 +66,18 @@
         playerOpen: false
       }
     },
+    computed: {
+      ...mapGetters(['player','status','track'])
+    },
     methods: {
+      ...mapActions(['play']),
     },
     components: {
       IconBase,
       IconMusicShuffle,
       IconMusicPrev,
       IconMusicPlay,
+      IconMusicPause,
       IconMusicNext,
       IconMusicRepeat,
       IconMusicVolume

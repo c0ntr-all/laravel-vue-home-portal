@@ -40,6 +40,9 @@ export default {
     },
     status(state) {
       return state.status
-    }
+    },
+    track(state) {
+      return state.track
+    },
   }
 }
