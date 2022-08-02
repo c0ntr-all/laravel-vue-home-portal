@@ -31,11 +31,11 @@
         </div>
       </div>
       <div class="rewind">
-        <time class="rewind__time rewind_begin">{{ rewindTimePassed }}</time>
+        <time class="rewind__time rewind_begin">{{ timePassed }}</time>
         <div class="rewind__progress" @click="rewindNavigate" ref="rewindProgress">
           <el-progress :show-text="false" :percentage="rewindProgressWidth"></el-progress>
         </div>
-        <time class="rewind__time rewind_end">{{ rewindTimeTotal }}</time>
+        <time class="rewind__time rewind_end">{{ timeTotal }}</time>
       </div>
       <div class="volume">
         <div class="volume__icon">
@@ -65,15 +65,14 @@
       return {
         playerOpen: false,
         rewindProgressWidth: 0,
-        rewindTimeTotal: '00:00',
-        rewindTimePassed: '00:00'
       }
     },
     computed: {
-      ...mapGetters(['player','status','track'])
+      ...mapGetters(['player','status','track','timeTotal','timePassed'])
     },
     methods: {
-      ...mapActions(['play']),
+      ...mapActions(['play','setTimeTotal','setTimePassed']),
+
       rewindNavigate(event) {
         const x = event.offsetX;
         const rewindElementWidth = this.$refs.rewindProgress.clientWidth
@@ -85,19 +84,19 @@
     },
     created() {
       this.player.audio.addEventListener('timeupdate', () => {
+        const duration = this.player.audio.duration,
+              currentTime = this.player.audio.currentTime
 
-        const duration = this.player.audio.duration;
-        const currentTime = this.player.audio.currentTime;
-        this.rewindProgressWidth = (currentTime / duration) * 100;
+        this.rewindProgressWidth = (currentTime / duration) * 100
 
-        const minutesPassed = Math.floor(currentTime / 60 || '0');
-        const secondsPassed = Math.floor(currentTime % 60 || '0');
+        const minutesPassed = Math.floor(currentTime / 60 || '0')
+        const secondsPassed = Math.floor(currentTime % 60 || '0')
 
-        const minutesTotal = Math.floor(duration / 60 || '0');
-        const secondsTotal = Math.floor(duration % 60 || '0');
+        const minutesTotal = Math.floor(duration / 60 || '0')
+        const secondsTotal = Math.floor(duration % 60 || '0')
 
-        this.rewindTimePassed = `${this.addZero(minutesPassed)}:${this.addZero(secondsPassed)}`;
-        this.rewindTimeTotal = `${this.addZero(minutesTotal)}:${this.addZero(secondsTotal)}`;
+        this.setTimePassed(`${this.addZero(minutesPassed)}:${this.addZero(secondsPassed)}`)
+        this.setTimeTotal(`${this.addZero(minutesTotal)}:${this.addZero(secondsTotal)}`)
       })
     },
     components: {

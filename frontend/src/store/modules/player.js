@@ -6,8 +6,8 @@ export default {
       audio: new Audio(),
       status: 'pause',
       track: {},
-      timePassed: 0,
-      timeTotal: 0,
+      timePassed: '00:00',
+      timeTotal: '00:00',
       playlist: [],
     }
   },
@@ -18,6 +18,12 @@ export default {
     },
     SET_STATUS(state, status) {
       state.status = status
+    },
+    SET_TIME_TOTAL(state, time) {
+      state.timeTotal = time
+    },
+    SET_TIME_PASSED(state, time) {
+      state.timePassed = time
     }
   },
   actions: {
@@ -32,6 +38,12 @@ export default {
         getters.player.audio.pause()
         commit('SET_STATUS', 'pause')
       }
+    },
+    setTimeTotal({commit}, time) {
+      commit('SET_TIME_TOTAL', time)
+    },
+    setTimePassed({commit}, time) {
+      commit('SET_TIME_PASSED', time)
     }
   },
   getters: {
@@ -44,5 +56,11 @@ export default {
     track(state) {
       return state.track
     },
+    timeTotal(state) {
+      return state.timeTotal
+    },
+    timePassed(state) {
+      return state.timePassed
+    }
   }
 }
