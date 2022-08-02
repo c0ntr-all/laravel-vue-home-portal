@@ -31,11 +31,11 @@
         </div>
       </div>
       <div class="rewind">
-        <time class="rewind__time rewind_begin">00:00</time>
-        <div class="rewind__progress">
-          <el-progress :show-text="false" :percentage="50.93"></el-progress>
+        <time class="rewind__time rewind_begin">{{ rewindTimePassed }}</time>
+        <div class="rewind__progress" @click="rewindNavigate" ref="rewindProgress">
+          <el-progress :show-text="false" :percentage="rewindProgressWidth"></el-progress>
         </div>
-        <time class="rewind__time rewind_end">03:32</time>
+        <time class="rewind__time rewind_end">{{ rewindTimeTotal }}</time>
       </div>
       <div class="volume">
         <div class="volume__icon">
@@ -63,7 +63,10 @@
   export default {
     data() {
       return {
-        playerOpen: false
+        playerOpen: false,
+        rewindProgressWidth: 0,
+        rewindTimeTotal: '00:00',
+        rewindTimePassed: '00:00'
       }
     },
     computed: {
@@ -71,6 +74,31 @@
     },
     methods: {
       ...mapActions(['play']),
+      rewindNavigate(event) {
+        const x = event.offsetX;
+        const rewindElementWidth = this.$refs.rewindProgress.clientWidth
+        this.player.audio.currentTime = (x / rewindElementWidth) * this.player.audio.duration;
+      },
+      addZero(n) {
+        return n < 10 ? '0' + n : n
+      }
+    },
+    created() {
+      this.player.audio.addEventListener('timeupdate', () => {
+
+        const duration = this.player.audio.duration;
+        const currentTime = this.player.audio.currentTime;
+        this.rewindProgressWidth = (currentTime / duration) * 100;
+
+        const minutesPassed = Math.floor(currentTime / 60 || '0');
+        const secondsPassed = Math.floor(currentTime % 60 || '0');
+
+        const minutesTotal = Math.floor(duration / 60 || '0');
+        const secondsTotal = Math.floor(duration % 60 || '0');
+
+        this.rewindTimePassed = `${this.addZero(minutesPassed)}:${this.addZero(secondsPassed)}`;
+        this.rewindTimeTotal = `${this.addZero(minutesTotal)}:${this.addZero(secondsTotal)}`;
+      })
     },
     components: {
       IconBase,
