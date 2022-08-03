@@ -71,33 +71,16 @@
       ...mapGetters(['player','status','track','timeTotal','timePassed'])
     },
     methods: {
-      ...mapActions(['play','setTimeTotal','setTimePassed']),
+      ...mapActions(['init','play','setTimeTotal','setTimePassed']),
 
       rewindNavigate(event) {
         const x = event.offsetX;
         const rewindElementWidth = this.$refs.rewindProgress.clientWidth
         this.player.audio.currentTime = (x / rewindElementWidth) * this.player.audio.duration;
       },
-      addZero(n) {
-        return n < 10 ? '0' + n : n
-      }
     },
     created() {
-      this.player.audio.addEventListener('timeupdate', () => {
-        const duration = this.player.audio.duration,
-              currentTime = this.player.audio.currentTime
-
-        this.rewindProgressWidth = (currentTime / duration) * 100
-
-        const minutesPassed = Math.floor(currentTime / 60 || '0')
-        const secondsPassed = Math.floor(currentTime % 60 || '0')
-
-        const minutesTotal = Math.floor(duration / 60 || '0')
-        const secondsTotal = Math.floor(duration % 60 || '0')
-
-        this.setTimePassed(`${this.addZero(minutesPassed)}:${this.addZero(secondsPassed)}`)
-        this.setTimeTotal(`${this.addZero(minutesTotal)}:${this.addZero(secondsTotal)}`)
-      })
+      this.init()
     },
     components: {
       IconBase,
