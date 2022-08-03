@@ -9,6 +9,7 @@ export default {
       track: {},
       timePassed: '00:00',
       timeTotal: '00:00',
+      rewindProgressWidth: 0,
       playlist: [],
       volume: 0.3,
     }
@@ -27,6 +28,9 @@ export default {
     SET_TIME_PASSED(state, time) {
       state.timePassed = time
     },
+    SET_REWIND_PROGRESS_WIDTH(state, width) {
+      state.rewindProgressWidth = width
+    },
     SET_VOLUME(state, volume) {
       state.volume = volume
     }
@@ -40,7 +44,7 @@ export default {
         const duration = getters.player.audio.duration,
           currentTime = getters.player.audio.currentTime
 
-        this.rewindProgressWidth = (currentTime / duration) * 100
+        commit('SET_REWIND_PROGRESS_WIDTH', (currentTime / duration) * 100)
 
         const minutesPassed = Math.floor(currentTime / 60 || '0')
         const secondsPassed = Math.floor(currentTime % 60 || '0')

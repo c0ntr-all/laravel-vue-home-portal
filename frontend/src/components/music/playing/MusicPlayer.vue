@@ -33,7 +33,7 @@
       <div class="rewind">
         <time class="rewind__time rewind_begin">{{ timePassed }}</time>
         <div class="rewind__progress" @click="rewindNavigate" ref="rewindProgress">
-          <el-progress :show-text="false" :percentage="rewindProgressWidth"></el-progress>
+          <el-progress :show-text="false" :percentage="player.rewindProgressWidth"></el-progress>
         </div>
         <time class="rewind__time rewind_end">{{ timeTotal }}</time>
       </div>
