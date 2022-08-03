@@ -26,10 +26,13 @@ export default {
     },
     SET_TIME_PASSED(state, time) {
       state.timePassed = time
+    },
+    SET_VOLUME(state, volume) {
+      state.volume = volume
     }
   },
   actions: {
-    init({commit, getters}) {
+    init({commit,getters}) {
       //Тут хз, надо подумать как правильнее будет - использовать мутации или напрямую влиять на аудио
       getters.player.audio.volume = getters.player.volume
 
@@ -49,7 +52,7 @@ export default {
         commit('SET_TIME_PASSED', `${addZero(minutesPassed)}:${addZero(secondsPassed)}`)
       })
     },
-    play({commit, getters}, track) {
+    play({commit,getters}, track) {
       if (empty(getters.player.track) || getters.player.track.id !== track.id) {
         commit('SET_TRACK', track)
       }
@@ -61,11 +64,9 @@ export default {
         commit('SET_STATUS', 'pause')
       }
     },
-    setTimeTotal({commit}, time) {
-      commit('SET_TIME_TOTAL', time)
-    },
-    setTimePassed({commit}, time) {
-      commit('SET_TIME_PASSED', time)
+    setVolume({commit,getters}, volume) {
+      commit('SET_VOLUME', volume)
+      getters.player.audio.volume = volume
     }
   },
   getters: {

@@ -42,7 +42,13 @@
           <icon-base icon-name="repeat" view-box="0 0 400.4 400.4"><icon-music-volume /></icon-base>
         </div>
         <div class="volume__line">
-          <el-progress :show-text="false" :percentage="50.93"></el-progress>
+          <el-slider
+            v-model="volumeNavigate"
+            :min="0.00"
+            :max="1.00"
+            :step="0.01"
+            :show-tooltip="true"
+          />
         </div>
       </div>
     </div>
@@ -68,10 +74,19 @@
       }
     },
     computed: {
-      ...mapGetters(['player','status','track','timeTotal','timePassed'])
+      ...mapGetters(['player','status','track','timeTotal','timePassed']),
+
+      volumeNavigate: {
+        get() {
+          return this.player.volume
+        },
+        set(value) {
+          this.setVolume(value)
+        }
+      }
     },
     methods: {
-      ...mapActions(['init','play','setTimeTotal','setTimePassed']),
+      ...mapActions(['init','play','setTimeTotal','setTimePassed','setVolume']),
 
       rewindNavigate(event) {
         const x = event.offsetX;
