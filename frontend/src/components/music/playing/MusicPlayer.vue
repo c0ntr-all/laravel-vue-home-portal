@@ -10,6 +10,9 @@
       <div class="album-image">
         <img src="/storage/no-image.gif" alt="" data-v-4ee1772b="">
       </div>
+      <div class="album-info">
+        <p>{{ trackNumber }}. {{ track.name }}</p>
+      </div>
       <div class="buttons">
         <div class="buttons__item">
           <icon-base icon-name="shuffle" view-box="0 0 22 22"><icon-music-shuffle /></icon-base>
@@ -55,6 +58,8 @@
   </el-drawer>
 </template>
 <script>
+  import addZero from "../../../utils/addzero";
+
   import {mapGetters, mapActions} from 'vuex'
 
   import IconBase from "../../default/icons/IconBase"
@@ -83,6 +88,9 @@
         set(value) {
           this.setVolume(value)
         }
+      },
+      trackNumber() {
+        return addZero(this.track.number)
       }
     },
     methods: {
