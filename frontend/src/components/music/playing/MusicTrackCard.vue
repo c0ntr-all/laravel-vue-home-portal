@@ -1,5 +1,5 @@
 <template>
-  <div class="track-card" @click="play(track)">
+  <div class="track-card" @click="play(track)" :class="{active: track.id === player.track.id}">
     <div class="track-card__start-column">
       <div class="track-card__play-icon" v-if="status === 'pause' || (status === 'play' && player.track.id !== track.id)">
         <icon-base icon-name="play"><icon-music-play /></icon-base>
@@ -56,6 +56,16 @@
 
     &:hover {
       cursor: pointer;
+      background: rgba(0, 0, 0, .1);
+
+      .track-card__play-icon {
+        display: flex;
+      }
+      .track-card__number {
+        display: none;
+      }
+    }
+    &.active {
       background: rgba(0, 0, 0, .1);
 
       .track-card__play-icon {
