@@ -42,16 +42,6 @@ class Album extends Model
         return $this->hasMany(Track::class, 'album_id', 'id');
     }
 
-    /**
-     * Возвращает треки текущего альбома с указанными полями
-     *
-     * @return mixed
-     */
-    public function getTracks()
-    {
-        return Track::where(['album_id' => $this->id])->get(['id', 'number', 'name', 'duration', 'path_windows']);
-    }
-
     public function getFullImageAttribute(): string
     {
         return env('APP_URL') . '/storage/' . $this->image;
