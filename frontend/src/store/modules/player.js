@@ -33,6 +33,11 @@ export default {
     },
     SET_VOLUME(state, volume) {
       state.volume = volume
+    },
+    SET_PLAYLIST(state, tracks) {
+      tracks.forEach(item => {
+        state.playlist.push(item)
+      })
     }
   },
   actions: {
@@ -59,6 +64,7 @@ export default {
     play({commit,getters}, track) {
       if (empty(getters.player.track) || getters.player.track.id !== track.id) {
         commit('SET_TRACK', track)
+        commit('SET_PLAYLIST', getters.album.tracks)
       }
       if (getters.player.audio.paused) {
         getters.player.audio.play()
@@ -67,6 +73,7 @@ export default {
         getters.player.audio.pause()
         commit('SET_STATUS', 'pause')
       }
+      console.log(getters.player.playlist)
     },
     setVolume({commit,getters}, volume) {
       commit('SET_VOLUME', volume)
