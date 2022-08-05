@@ -21,11 +21,11 @@
         </div>
       </template>
       <template #default>
-        <el-button type="primary" :icon="ArrowLeft" @click="this.$router.push('/music/artists/' + this.album.artist.id)">Вернуться к исполнителю</el-button>
+        <el-button type="primary" :icon="ArrowLeft" @click="this.$router.push('/music/artists/' + album.artist.id)">Вернуться к исполнителю</el-button>
         <div class="album-head">
           <div class="album-head__left">
             <div class="album-head__image">
-              <a :href="this.album.image"><img :src="this.album.image" alt=""></a>
+              <a :href="album.image"><img :src="album.image" alt=""></a>
             </div>
           </div>
           <div class="album-head__right">
@@ -45,7 +45,7 @@
           </div>
         </div>
         <div class="album-body">
-          <div class="album-tracks" v-if="this.album.tracks">
+          <div class="album-tracks" v-if="album.tracks">
             <h3>Треки</h3>
             <div class="album-tracks__header">
               <div class="album-tracks__header-number">#</div>
@@ -53,7 +53,7 @@
               <div class="album-tracks__header-duration">Dur.</div>
             </div>
             <div class="album-tracks__list">
-              <music-track-card v-for="track in this.album.tracks" :track="track"></music-track-card>
+              <music-track-card v-for="track in album.tracks" :track="track"></music-track-card>
             </div>
           </div>
           <div class="player">
@@ -69,39 +69,19 @@
   } from '@element-plus/icons-vue'
 </script>
 <script>
-  import API from '../../utils/api'
+  import {mapGetters, mapActions} from 'vuex'
 
   import MusicTrackCard from '../../components/music/playing/MusicTrackCard'
 
   export default {
-    data() {
-      return {
-        loading: false,
-        album: {},
-        track: ''
-      }
-    },
     props: {
       'albumId': String
     },
     methods: {
-      async loadAlbum() {
-        this.loading = true
-        try {
-          const {data} = await API.post('music/albums', {
-            id: this.albumId
-          })
-          if(!data) {
-            throw new Error('Нет данных!')
-          }
-          this.album = data.albums
-          this.loading = false
-        }catch(e) {
-          this.loading = false
-        }
-      }
+      ...mapActions(['loadAlbum'])
     },
     computed: {
+      ...mapGetters(['album','loading']),
       //Эта дичь для решения бага, который возникал, скорее всего, по вине element plus
       //который не давал делать такое album.artist.name. Выдавал ошибку еще до запроса на бэк
       artistName() {
@@ -116,7 +96,7 @@
       MusicTrackCard
     },
     mounted() {
-      this.loadAlbum();
+      this.loadAlbum(this.albumId);
     }
   }
 </script>
