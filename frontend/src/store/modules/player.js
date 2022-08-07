@@ -7,6 +7,7 @@ export default {
       audio: new Audio(),
       status: 'pause',
       track: {},
+      idx: 0,
       timePassed: '00:00',
       timeTotal: '00:00',
       rewindProgressWidth: 0,
@@ -18,6 +19,11 @@ export default {
     SET_TRACK(state, track) {
       state.track = track
       state.audio.src = `${location.origin}/api/music/tracks/${track.id}/play`
+      state.playlist.forEach((item, key) => {
+        if (item.id === track.id) {
+          state.idx = key
+        }
+      })
     },
     SET_STATUS(state, status) {
       state.status = status
@@ -35,48 +41,11 @@ export default {
       state.volume = volume
     },
     SET_PLAYLIST(state, tracks) {
-      tracks.forEach(item => {
-        state.playlist.push(item)
-      })
+      state.playlist = tracks
     },
     CHANGE_TRACK(state, direction) {
-      // let index = state.playlist.indexOf(state.track)
-      // console.log(index)
-      for(key in state.playlist) {
-        console.log(key)
-      }
-      // let test = state.playlist.find(key => state.playlist[key].id === state.track.id)
-      // console.log(test)
-        // let step = direction === 'next' ? 1 : -1;
-        // for (let i = state.track.id + step; i >= 0 && i <= state.playlist.length; i += step) {
-        //   if (state.playlist[id]) {
-        //     return id;
-        //   }
-        // }
-    },
-    PREV_TRACK(state) {
-      state.playlist.forEach((item, key) => {
-        if (item.id === state.track.id) {
-          let track = state.playlist[key - 1]
-          state.audio.src = `${location.origin}/api/music/tracks/${track.id}/play`
-          state.track = track
-        }
-      })
-    },
-    NEXT_TRACK(state) {
-      const track = state.playlist.filter((item,key) => {
-        return item.id === state.track.id
-      })
-      console.log(track)
-      return track
-      // state.playlist.forEach((item, key) => {
-      //   if (item.id === state.track.id) {
-      //     let track = state.playlist[key + 1]
-      //     state.audio.src = `${location.origin}/api/music/tracks/${track.id}/play`
-      //     state.track = track
-      //     return
-      //   }
-      // })
+      let step = direction === 'next' ? 1 : -1;
+      state.playlist[state.idx + step]
     },
   },
   actions: {
@@ -106,9 +75,10 @@ export default {
       });
     },
     play({commit,getters}, track) {
+      //Пока запихиваем плейлист на момент первого запуска
       if (empty(getters.player.track) || getters.player.track.id !== track.id) {
-        commit('SET_TRACK', track)
         commit('SET_PLAYLIST', getters.album.tracks)
+        commit('SET_TRACK', track)
       }
       if (getters.player.audio.paused) {
         getters.player.audio.play()
@@ -117,18 +87,23 @@ export default {
         getters.player.audio.pause()
         commit('SET_STATUS', 'pause')
       }
-      console.log(getters.player.playlist)
     },
     setVolume({commit,getters}, volume) {
       commit('SET_VOLUME', volume)
       getters.player.audio.volume = volume
     },
-    prevTrack({commit}) {
-      commit('PREV_TRACK')
+    changeTrack({commit,getters}, direction) {
+      let step = direction === 'next' ? 1 : -1;
+      console.log(getters.player.idx)
+      commit('SET_TRACK', getters.player.playlist[getters.player.idx + step])
+      if (getters.player.audio.paused) {
+        getters.player.audio.play()
+        commit('SET_STATUS', 'play')
+      } else {
+        getters.player.audio.pause()
+        commit('SET_STATUS', 'pause')
+      }
     },
-    nextTrack({commit}) {
-      commit('NEXT_TRACK')
-    }
   },
   getters: {
     player(state) {

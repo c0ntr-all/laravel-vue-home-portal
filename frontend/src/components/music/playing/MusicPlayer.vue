@@ -17,7 +17,7 @@
         <div class="buttons__item">
           <icon-base icon-name="shuffle" view-box="0 0 22 22"><icon-music-shuffle /></icon-base>
         </div>
-        <div class="buttons__item" @click="prevTrack">
+        <div class="buttons__item" @click="changeTrack">
           <icon-base icon-name="prev-track"><icon-music-prev /></icon-base>
         </div>
         <div class="buttons__item buttons_play" @click="play(this.track)">
@@ -26,7 +26,7 @@
             <icon-music-pause v-else />
           </icon-base>
         </div>
-        <div class="buttons__item" @click="nextTrack">
+        <div class="buttons__item" @click="changeTrack('next')">
           <icon-base icon-name="next-track"><icon-music-next /></icon-base>
         </div>
         <div class="buttons__item">
@@ -100,8 +100,7 @@
         'setTimeTotal',
         'setTimePassed',
         'setVolume',
-        'prevTrack',
-        'nextTrack'
+        'changeTrack'
       ]),
 
       rewindNavigate(event) {
