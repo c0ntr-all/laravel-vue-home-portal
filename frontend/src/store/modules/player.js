@@ -38,7 +38,46 @@ export default {
       tracks.forEach(item => {
         state.playlist.push(item)
       })
-    }
+    },
+    CHANGE_TRACK(state, direction) {
+      // let index = state.playlist.indexOf(state.track)
+      // console.log(index)
+      for(key in state.playlist) {
+        console.log(key)
+      }
+      // let test = state.playlist.find(key => state.playlist[key].id === state.track.id)
+      // console.log(test)
+        // let step = direction === 'next' ? 1 : -1;
+        // for (let i = state.track.id + step; i >= 0 && i <= state.playlist.length; i += step) {
+        //   if (state.playlist[id]) {
+        //     return id;
+        //   }
+        // }
+    },
+    PREV_TRACK(state) {
+      state.playlist.forEach((item, key) => {
+        if (item.id === state.track.id) {
+          let track = state.playlist[key - 1]
+          state.audio.src = `${location.origin}/api/music/tracks/${track.id}/play`
+          state.track = track
+        }
+      })
+    },
+    NEXT_TRACK(state) {
+      const track = state.playlist.filter((item,key) => {
+        return item.id === state.track.id
+      })
+      console.log(track)
+      return track
+      // state.playlist.forEach((item, key) => {
+      //   if (item.id === state.track.id) {
+      //     let track = state.playlist[key + 1]
+      //     state.audio.src = `${location.origin}/api/music/tracks/${track.id}/play`
+      //     state.track = track
+      //     return
+      //   }
+      // })
+    },
   },
   actions: {
     init({commit,getters}) {
@@ -60,6 +99,11 @@ export default {
         commit('SET_TIME_TOTAL', `${addZero(minutesTotal)}:${addZero(secondsTotal)}`)
         commit('SET_TIME_PASSED', `${addZero(minutesPassed)}:${addZero(secondsPassed)}`)
       })
+
+      getters.player.audio.addEventListener('ended', () => {
+        commit('NEXT_TRACK')
+        getters.player.audio.play();
+      });
     },
     play({commit,getters}, track) {
       if (empty(getters.player.track) || getters.player.track.id !== track.id) {
@@ -78,6 +122,12 @@ export default {
     setVolume({commit,getters}, volume) {
       commit('SET_VOLUME', volume)
       getters.player.audio.volume = volume
+    },
+    prevTrack({commit}) {
+      commit('PREV_TRACK')
+    },
+    nextTrack({commit}) {
+      commit('NEXT_TRACK')
     }
   },
   getters: {
