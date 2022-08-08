@@ -94,8 +94,18 @@ export default {
     },
     changeTrack({commit,getters}, direction) {
       let step = direction === 'next' ? 1 : -1;
-      console.log(getters.player.idx)
-      commit('SET_TRACK', getters.player.playlist[getters.player.idx + step])
+      let trackIndex = 0
+
+      if (getters.player.idx === 0 && direction !== 'next') {
+        return
+      }
+
+      if (getters.player.idx !== getters.player.playlist.length - 1) {
+        trackIndex = getters.player.idx + step
+      }
+
+      commit('SET_TRACK', getters.player.playlist[trackIndex])
+
       if (getters.player.audio.paused) {
         getters.player.audio.play()
         commit('SET_STATUS', 'play')
