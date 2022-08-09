@@ -149,7 +149,7 @@ class ParseArtistService
                 $tracks[$trackKey]['path'] = $albumFolder . '\\' . $track;
             }
 
-            $cover = $rawTracks['cover'] ?: null;
+            $cover = array_key_exists('cover', $rawTracks) ? $rawTracks['cover'] : null;
             unset($tracks['cover']);
 
             array_push($result['albums'], [
@@ -174,8 +174,6 @@ class ParseArtistService
 
         if ($data['success']) {
 
-            dd($data['success']);
-
             $artistModel = Artist::where(['name' => $data['artist']])->first();
 
             if(empty($artistModel)) {
@@ -192,11 +190,15 @@ class ParseArtistService
 
                 if(empty($albumModel)) {
 
-                    $posterPath = (new UploadImageService())->uploadFromFolder(
-                        new File($album['cover']),
-                        $album['name'],
-                        'music/albums/posters'
-                    );
+                    $posterPath = null;
+
+                    if (!empty($album['cover'])) {
+                        $posterPath = (new UploadImageService())->uploadFromFolder(
+                            new File($album['cover']),
+                            $album['name'],
+                            'music/albums/posters'
+                        );
+                    }
 
                     $albumModel = $artistModel->albums()->create([
                         'user_id' => auth()->user()->id,
