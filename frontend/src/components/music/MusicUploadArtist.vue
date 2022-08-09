@@ -220,7 +220,7 @@
         if(data.success) {
           this.$message.success(`Исполнитель ${data.artist} успешно загружен!`);
         }else{
-          this.$message.error(data.error);
+          this.$message.error(data.message);
         }
       }
     },

@@ -115,7 +115,7 @@ class ParseArtistService
         try {
             $this->validateAlbums($folders);
         } catch (\Exception $exception) {
-            return ['success' => 'false', 'message' => $exception->getMessage()];
+            return ['success' => false, 'message' => $exception->getMessage()];
         }
 
         $artistName = $this->getFolderName($folder);
@@ -139,7 +139,7 @@ class ParseArtistService
                 try {
                     $match = $this->parseTrack($track);
                 } catch (\Exception $exception) {
-                    return ['success' => 'false', 'message' => $exception->getMessage()];
+                    return ['success' => false, 'message' => $exception->getMessage()];
                 }
 
                 $trackParts = array_column($match, 0);
@@ -173,6 +173,8 @@ class ParseArtistService
         $data = $this->collectData($folder);
 
         if ($data['success']) {
+
+            dd($data['success']);
 
             $artistModel = Artist::where(['name' => $data['artist']])->first();
 
@@ -219,8 +221,10 @@ class ParseArtistService
                     }
                 }
             }
-        }
 
-        return ['success' => true, 'artist' => $data['artist']];
+            return ['success' => true, 'artist' => $data['artist']];
+        } else {
+            return $data;
+        }
     }
 }
