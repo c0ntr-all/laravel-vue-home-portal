@@ -5,6 +5,9 @@
         <el-container>
           <the-sidebar v-if="$store.getters.isLoggedIn"></the-sidebar>
           <el-container class="content">
+            <el-header class="app-header">
+              <the-avatar></the-avatar>
+            </el-header>
             <router-view/>
           </el-container>
         </el-container>
@@ -19,7 +22,8 @@
   import { ElConfigProvider } from 'element-plus'
   import ru from 'element-plus/lib/locale/lang/ru'
 
-  import TheSidebar from './components/TheSidebar.vue'
+  import TheSidebar from './components/TheSidebar'
+  import TheAvatar from './components/TheAvatar'
   import MusicPlayer from './components/music/playing/MusicPlayer'
 
   export default {
@@ -40,7 +44,12 @@
         logout: this.logout
       }
     },
-    components: {ElConfigProvider,TheSidebar,MusicPlayer}
+    components: {
+      ElConfigProvider,
+      TheSidebar,
+      TheAvatar,
+      MusicPlayer
+    }
   }
 </script>
 
@@ -63,6 +72,12 @@
     flex-direction: column;
     height: 100%;
     overflow: hidden;
+
+    .app-header {
+      justify-content: flex-end;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+    }
   }
   .el-container {
     height: 100%;

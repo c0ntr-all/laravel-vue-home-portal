@@ -17,10 +17,6 @@
             <el-icon><user /></el-icon>
             <span>Профиль</span>
           </el-menu-item>
-          <el-menu-item :index="'/musicupload'" @click="profileMenuVisible = false">
-            <el-icon><Upload /></el-icon>
-            <span>Загрузка музыки</span>
-          </el-menu-item>
           <el-menu-item :index="'2'" @click="[hideProfileMenu(), logout()]">
             <el-icon><d-arrow-left /></el-icon>
             <span>Выйти</span>
@@ -61,12 +57,10 @@
   .avatar {
     display: flex;
     justify-content: flex-start;
-    padding: 0 15px;
 
     &__inner {
       display: flex;
       align-items: center;
-      padding: 10px;
       cursor: pointer;
 
       &:hover {
