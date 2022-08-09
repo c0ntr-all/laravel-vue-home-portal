@@ -75,7 +75,9 @@
   }
   .tags-list {
     display: flex;
+    flex-wrap: wrap;
     column-gap: 1rem;
+    row-gap: 1rem;
     margin-bottom: 1rem;
 
     .artist-card & {
