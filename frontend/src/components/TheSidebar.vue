@@ -5,14 +5,14 @@
       <template v-for="item in $router.options.routes">
         <el-menu-item :index="item.path" v-if="item.menu">
           <el-icon><icon-menu /></el-icon>
-          <span>{{ item.title }}</span>
+          <span>{{ item.meta.title }}</span>
         </el-menu-item>
       </template>
       <el-divider />
       <template v-for="item in $router.options.routes">
         <el-menu-item :index="item.path" v-if="item.admin">
           <el-icon><icon-menu /></el-icon>
-          <span>{{ item.title }}</span>
+          <span>{{ item.meta.title }}</span>
         </el-menu-item>
       </template>
     </el-menu>

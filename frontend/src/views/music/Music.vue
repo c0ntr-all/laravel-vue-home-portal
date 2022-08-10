@@ -4,24 +4,3 @@
     <router-view />
   </el-main>
 </template>
-<script>
-  import API from "../../utils/api";
-
-  export default {
-    data() {
-      return {
-      }
-    },
-    methods: {
-      loadData() {
-
-      }
-    },
-    mounted() {
-      this.loadData();
-    }
-  }
-</script>
-
-<style lang="scss" scoped>
-</style>
