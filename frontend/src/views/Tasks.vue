@@ -1,6 +1,6 @@
 <template>
-  <el-header><h2 class="page-header">Задачи</h2></el-header>
   <el-main>
+    <h1 class="page-header">Задачи</h1>
     <el-space alignment="flex-start" v-loading="loading" wrap>
       <app-task-list
         v-for="(list, index) in this.$store.getters.lists"

@@ -1,4 +1,8 @@
 <template>
-  <el-header><h2 class="page-header">Главная</h2></el-header>
-  <el-main>Content</el-main>
+  <el-main>
+    <h1 class="page-header">Главная</h1>
+    <div class="page-content">
+      Home content
+    </div>
+  </el-main>
 </template>

@@ -1,13 +1,15 @@
 <template>
-  <el-header><h2 class="page-header">Финансы</h2></el-header>
   <el-main>
-    <app-finances-list
-      :data="data"
-      @load="loadData"
-      v-loading="loading"
-      style="width: 100%; height: 100%"
-    >
-    </app-finances-list>
+    <h1 class="page-header">Финансы</h1>
+    <div class="page-content">
+      <app-finances-list
+        :data="data"
+        @load="loadData"
+        v-loading="loading"
+        style="width: 100%; height: 100%"
+      >
+      </app-finances-list>
+    </div>
   </el-main>
 </template>
 

@@ -1,7 +1,9 @@
 <template>
-  <el-header><h2 class="page-header">Рестораны</h2></el-header>
   <el-main>
-    Список посещенных ресторанов
+    <h1 class="page-header">Рестораны</h1>
+    <div class="page-content">
+      Список посещенных ресторанов
+    </div>
   </el-main>
 </template>
 <script>

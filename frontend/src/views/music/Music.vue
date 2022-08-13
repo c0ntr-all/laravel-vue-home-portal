@@ -1,6 +1,6 @@
 <template>
-  <el-header><h1 class="page-header">Музыка</h1></el-header>
   <el-main>
+    <h1 class="page-header">Музыка</h1>
     <router-view />
   </el-main>
 </template>

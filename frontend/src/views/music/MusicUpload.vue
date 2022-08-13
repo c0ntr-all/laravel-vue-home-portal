@@ -1,17 +1,19 @@
 <template>
-  <el-header><h1 class="page-header">Загрузка музыки</h1></el-header>
   <el-main>
-    <el-tabs type="border-card">
-      <el-tab-pane label="Загрузка банды">
-        <music-upload-artist></music-upload-artist>
-      </el-tab-pane>
-      <el-tab-pane label="Загрузка альбома">
-        <music-upload-album></music-upload-album>
-      </el-tab-pane>
-      <el-tab-pane label="Управление тегами">
-        <music-tag-manager></music-tag-manager>
-      </el-tab-pane>
-    </el-tabs>
+    <h1 class="page-header">Загрузка музыки</h1>
+    <div class="page-content">
+      <el-tabs type="border-card">
+        <el-tab-pane label="Загрузка банды">
+          <music-upload-artist></music-upload-artist>
+        </el-tab-pane>
+        <el-tab-pane label="Загрузка альбома">
+          <music-upload-album></music-upload-album>
+        </el-tab-pane>
+        <el-tab-pane label="Управление тегами">
+          <music-tag-manager></music-tag-manager>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
   </el-main>
 </template>
 <script>

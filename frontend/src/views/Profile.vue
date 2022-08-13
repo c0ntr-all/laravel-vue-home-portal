@@ -1,12 +1,14 @@
 <template>
-  <el-header><h2 class="page-header">Профиль</h2></el-header>
   <el-main>
-    <p v-if="loading === false">Логин: {{ login }}</p>
-    <el-skeleton v-if="loading !== false" style="width: 240px" animated>
-      <template #template>
-        <el-skeleton-item variant="text" style="margin-right: 16px" />
-      </template>
-    </el-skeleton>
+    <h1 class="page-header">Профиль</h1>
+    <div class="page-content">
+      <p v-if="loading === false">Логин: {{ login }}</p>
+      <el-skeleton v-if="loading !== false" style="width: 240px" animated>
+        <template #template>
+          <el-skeleton-item variant="text" style="margin-right: 16px" />
+        </template>
+      </el-skeleton>
+    </div>
   </el-main>
 </template>
 <script>
