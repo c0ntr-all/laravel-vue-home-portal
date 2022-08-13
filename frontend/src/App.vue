@@ -9,9 +9,9 @@
               <the-avatar></the-avatar>
             </el-header>
             <router-view/>
+            <footer class="app-footer" v-if="$store.getters.isLoggedIn">Home Portal v.0.0.4</footer>
           </el-container>
         </el-container>
-        <el-footer v-if="$store.getters.isLoggedIn">Home Portal v.0.0.4</el-footer>
       </div>
     </div>
     <music-player></music-player>
@@ -101,11 +101,12 @@
     --el-menu-item-height: 44px;
     --el-menu-item-font-size: 16px;
   }
-  .el-footer {
+  .app-footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #b3c0d1;
+    height: 40px;
+    background-color: #fff;
     color: var(--el-text-color-primary);
   }
 </style>
