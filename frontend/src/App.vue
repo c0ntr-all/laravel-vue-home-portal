@@ -75,8 +75,10 @@
 
     .app-header {
       justify-content: flex-end;
+      height: 56px;
       background: #fff;
-      border-bottom: 1px solid #eee;
+      /*border-bottom: 1px solid #eee;*/
+      box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
     }
   }
   .el-container {
