@@ -40,23 +40,23 @@
         <div class="artist-albums" v-if="this.artist.albums">
           <h3>Альбомы</h3>
           <el-space alignment="flex-start" wrap>
-            <el-card class="albums-card" :body-style="{ padding: '0px' }" v-for="album in this.artist.albums" :key="album.id">
-                <div class="albums-card__image" v-if="album.image">
-                  <img :src="'http://home-portal.local/storage/' + album.image" alt="">
-                </div>
-                <div class="albums-card__image" v-else>
-                  <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false">
-                    <title>Placeholder</title>
-                    <rect width="100%" height="100%" fill="#868e96"></rect>
-                    <text x="40%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
-                  </svg>
-                </div>
-                <div class="albums-card__info">
-                  <router-link :to="'/music/albums/' + album.id" class="albums-card__link">
-                    <p class="albums-card__title">{{ album.name }}</p>
-                  </router-link>
-                  <p class="albums-card__year">{{ album.year }}</p>
-                </div>
+            <el-card class="album-card" :body-style="{ padding: '0px' }" v-for="album in this.artist.albums" :key="album.id">
+              <div class="album-card__image" v-if="album.image">
+                <img :src="'http://home-portal.local/storage/' + album.image" alt="">
+              </div>
+              <div class="album-card__image" v-else>
+                <svg class="bd-placeholder-img card-img-top" width="100%" height="150" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false">
+                  <title>Placeholder</title>
+                  <rect width="100%" height="100%" fill="#868e96"></rect>
+                  <text x="32%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text>
+                </svg>
+              </div>
+              <div class="album-card__info">
+                <router-link class="album-card__link" :to="'/music/albums/' + album.id">
+                  <p class="album-card__title" :title="album.name">{{ album.name }}</p>
+                </router-link>
+                <p class="album-card__year">{{ album.year }}</p>
+              </div>
             </el-card>
           </el-space>
         </div>
@@ -129,16 +129,19 @@
       margin: 0 0 1rem 0;
     }
   }
-  .albums-card {
-    padding: 0 5px;
+  .album-card {
+    max-width: 200px;
 
     &__image {
       margin-bottom: 5px;
 
-      img {
+      img, svg {
         width: 200px;
         height: 200px;
       }
+    }
+    &__info {
+      padding: 0 8px;
     }
     &__link {
       color: #222;
@@ -153,9 +156,14 @@
     }
     &__title {
       margin-bottom: 5px;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     &__year {
       margin-bottom: 5px;
+      font-size: 14px;
       color: #777;
     }
   }
