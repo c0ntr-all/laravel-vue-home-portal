@@ -4,6 +4,7 @@ namespace App\Models\Music;
 
 use App\Models\Traits\HasDates;
 use App\Models\Traits\HasTags;
+use App\Models\Traits\HasImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,6 +16,7 @@ class Artist extends Model
     use SoftDeletes;
     use HasDates;
     use HasTags;
+    use HasImage;
 
     protected $table = 'music_artists';
 
@@ -26,16 +28,6 @@ class Artist extends Model
         'updated_at',
         'deleted_at'
     ];
-
-    /**
-     * Аксессор на получение абсолютного пути до изображения
-     *
-     * @return string
-     */
-    public function getFullImageAttribute(): string
-    {
-        return env('APP_URL') . '/storage/' . $this->image;
-    }
 
     /**
      * Получает все альбомы исполнителя

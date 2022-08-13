@@ -5,6 +5,7 @@ namespace App\Models\Music;
 use App\Models\Tag;
 use App\Models\Traits\HasDates;
 use App\Models\Traits\HasTags;
+use App\Models\Traits\HasImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -18,6 +19,7 @@ class Album extends Model
     use SoftDeletes;
     use HasDates;
     use HasTags;
+    use HasImage;
 
     protected $table = 'music_albums';
 
@@ -40,10 +42,5 @@ class Album extends Model
     public function tracks(): HasMany
     {
         return $this->hasMany(Track::class, 'album_id', 'id');
-    }
-
-    public function getFullImageAttribute(): string
-    {
-        return env('APP_URL') . '/storage/' . $this->image;
     }
 }
