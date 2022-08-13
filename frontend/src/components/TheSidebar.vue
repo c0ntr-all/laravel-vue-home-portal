@@ -1,6 +1,5 @@
 <template>
   <el-aside class="sidebar">
-    <div class="sidebar__header">Unreal Portal</div>
     <el-menu class="app-side-menu el-menu-vertical" :router="true" :default-active="$route.path">
       <template v-for="item in $router.options.routes">
         <el-menu-item :index="item.path" v-if="item.menu">
@@ -34,15 +33,6 @@
 <style lang="scss" scoped>
   .sidebar {
     width: 220px;
-
-    &__header {
-      display: flex;
-      align-items: center;
-      height: 56px;
-      padding: 0 20px;
-      background: #374f65;
-      color: #fff;
-    }
   }
   .el-aside {
     height: 100%;

@@ -2,12 +2,15 @@
   <el-config-provider :locale="locale">
     <div class="area">
       <div class="main">
+        <header class="app-header">
+          <div class="app-header__sidebar">Unreal Portal</div>
+          <div class="app-header__content">
+            <the-avatar></the-avatar>
+          </div>
+        </header>
         <el-container>
           <the-sidebar v-if="$store.getters.isLoggedIn"></the-sidebar>
           <el-container class="content">
-            <el-header class="app-header">
-              <the-avatar></the-avatar>
-            </el-header>
             <router-view/>
             <footer class="app-footer" v-if="$store.getters.isLoggedIn">Home Portal v.0.0.4</footer>
           </el-container>
@@ -74,11 +77,26 @@
     overflow: hidden;
 
     .app-header {
-      justify-content: flex-end;
+      position: sticky;
+      display: flex;
       height: 56px;
       background: #fff;
-      /*border-bottom: 1px solid #eee;*/
       box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+
+      &__sidebar {
+        display: flex;
+        align-items: center;
+        width: 220px;
+        height: 56px;
+        padding: 0 20px;
+        background: #374f65;
+        color: #fff;
+      }
+      &__content {
+        display: flex;
+        justify-content: flex-end;
+        flex: 1;
+      }
     }
   }
   .el-container {
@@ -88,18 +106,12 @@
       flex-direction: column;
     }
   }
-  .el-header {
-    display: flex;
-    align-items: center;
-
-    .page-header {
-      font-size: 28px;
-      font-weight: 300;
-    }
-  }
   .el-menu-item {
     --el-menu-item-height: 44px;
     --el-menu-item-font-size: 16px;
+  }
+  .el-main {
+    background-color: #f1f1f1;
   }
   .app-footer {
     display: flex;
