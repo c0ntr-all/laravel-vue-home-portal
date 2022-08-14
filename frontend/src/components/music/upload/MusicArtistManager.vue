@@ -13,13 +13,13 @@
       </template>
     </el-table-column>
     <el-table-column prop="name" label="Name" width="400" sortable />
-    <el-table-column prop="tags" label="Теги" width="550">
+    <el-table-column prop="tags" label="Теги" width="450">
       <template #default="props">
         <span v-for="tag in props.row.tags" class="artist-row__tag">{{ tag }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
-    <el-table-column label="Действия" width="350">
+    <el-table-column label="Действия" width="250">
       <template #default="scope">
         <el-button size="small" @click="openArtistUpdateModal(scope.row)">Редактировать</el-button>
         <el-button size="small" type="danger">Удалить</el-button>
@@ -58,28 +58,41 @@
           </div>
         </el-form-item>
         <el-form-item label="Теги">
-          <el-tag
-            v-for="tag in artistUpdate.model.tags"
-            :key="tag"
-            class="mx-1"
-            closable
-            :disable-transitions="false"
-            @close="closeTag(tag)"
+          <el-select
+            v-model="value1"
+            multiple
+            placeholder="Select"
+            style="width: 240px"
           >
-            {{ tag }}
-          </el-tag>
-          <el-input
-            v-if="artistUpdate.tagInputVisible"
-            ref="taginput"
-            v-model="artistUpdate.tagInputValue"
-            class="ml-1 tag-input"
-            size="small"
-            @keyup.enter="tagInputConfirm"
-            @blur="tagInputConfirm"
-          />
-          <el-button v-else class="button-new-tag ml-1" size="small" @click="showTagInput">
-            + New Tag
-          </el-button>
+            <el-option
+              v-for="item in artistUpdate.model.tags"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+<!--          <el-tag-->
+<!--            v-for="tag in artistUpdate.model.tags"-->
+<!--            :key="tag"-->
+<!--            class="mx-1"-->
+<!--            closable-->
+<!--            :disable-transitions="false"-->
+<!--            @close="closeTag(tag)"-->
+<!--          >-->
+<!--            {{ tag }}-->
+<!--          </el-tag>-->
+<!--          <el-input-->
+<!--            v-if="artistUpdate.tagInputVisible"-->
+<!--            ref="taginput"-->
+<!--            v-model="artistUpdate.tagInputValue"-->
+<!--            class="ml-1 tag-input"-->
+<!--            size="small"-->
+<!--            @keyup.enter="tagInputConfirm"-->
+<!--            @blur="tagInputConfirm"-->
+<!--          />-->
+<!--          <el-button v-else class="button-new-tag ml-1" size="small" @click="showTagInput">-->
+<!--            + New Tag-->
+<!--          </el-button>-->
         </el-form-item>
       </el-form>
     </template>
