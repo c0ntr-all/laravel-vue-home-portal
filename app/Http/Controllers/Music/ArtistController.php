@@ -47,9 +47,28 @@ class ArtistController extends Controller
 
     public function update(UpdateRequest $request)
     {
+        $update = [];
+
+        if (array_key_exists('image', $request->validated())) {
+            $update['image'] = $this->uploadImageService->uploadFromForm(
+                $request->validated()['image'],
+                $request->validated()['name'],
+                'music/artists/posters'
+            );
+        }
+
         $artist = Artist::find($request->validated()['id']);
 
-        if ($artist->update($request->validated())) {
+        if ($artist) {
+            $update = array_merge($update, $request->validated());
+
+            $artist->update($update);
+
+            if ($tags = $request->validated()['tags']) {
+                $arrTags = explode(',', $tags);
+                $artist->tags()->attach($arrTags);
+            }
+
             return $this->artistResponse($artist);
         } else {
             return ['success' => false, 'error' => 'Ошибка редактирования исполнителя!'];
