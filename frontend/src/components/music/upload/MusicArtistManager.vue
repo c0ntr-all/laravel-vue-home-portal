@@ -59,40 +59,19 @@
         </el-form-item>
         <el-form-item label="Теги">
           <el-select
-            v-model="value1"
+            v-model="artistUpdate.model.tags"
             multiple
+            filterable
             placeholder="Select"
             style="width: 240px"
           >
             <el-option
-              v-for="item in artistUpdate.model.tags"
+              v-for="item in artistUpdate.tags"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             />
           </el-select>
-<!--          <el-tag-->
-<!--            v-for="tag in artistUpdate.model.tags"-->
-<!--            :key="tag"-->
-<!--            class="mx-1"-->
-<!--            closable-->
-<!--            :disable-transitions="false"-->
-<!--            @close="closeTag(tag)"-->
-<!--          >-->
-<!--            {{ tag }}-->
-<!--          </el-tag>-->
-<!--          <el-input-->
-<!--            v-if="artistUpdate.tagInputVisible"-->
-<!--            ref="taginput"-->
-<!--            v-model="artistUpdate.tagInputValue"-->
-<!--            class="ml-1 tag-input"-->
-<!--            size="small"-->
-<!--            @keyup.enter="tagInputConfirm"-->
-<!--            @blur="tagInputConfirm"-->
-<!--          />-->
-<!--          <el-button v-else class="button-new-tag ml-1" size="small" @click="showTagInput">-->
-<!--            + New Tag-->
-<!--          </el-button>-->
         </el-form-item>
       </el-form>
     </template>
@@ -118,8 +97,12 @@
             image: '',
             name: '',
             content: '',
-            tags: []
+            tags: ''
           },
+          tags: [
+            {label: 'test', value: 'test'},
+            {label: 'test2', value: 'test2'},
+          ],
           modal: false
         },
       }
