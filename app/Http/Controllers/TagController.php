@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TagCollection;
+use App\Http\Resources\TagSelectCollection;
 use App\Http\Resources\TagResource;
 use App\Http\Requests\Tag\IndexRequest;
 use App\Http\Requests\Tag\StoreRequest;
@@ -28,6 +29,14 @@ class TagController extends Controller
     public function index(IndexRequest $request): TagCollection
     {
         return new TagCollection($this->tag->getItems());
+    }
+
+    /**
+     * @return TagSelectCollection
+     */
+    public function tagsSelect(): TagSelectCollection
+    {
+        return new TagSelectCollection($this->tag->getItems());
     }
 
     public function store(StoreRequest $request)
