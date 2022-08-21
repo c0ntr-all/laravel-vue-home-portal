@@ -60,13 +60,15 @@
         <el-form-item label="Теги">
           <el-select
             v-model="artistUpdate.model.tags"
+            :loading="this.tagsLoading"
             multiple
             filterable
-            placeholder="Select"
+            placeholder="Tags"
             style="width: 240px"
+            @focus="loadTagsSelect"
           >
             <el-option
-              v-for="item in artistUpdate.tags"
+              v-for="item in tags"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -82,6 +84,8 @@
 </template>
 <script>
   import empty from "../../../utils/empty"
+
+  import {mapActions, mapGetters} from 'vuex'
 
   import AppModal from "../../default/AppModal";
 
@@ -99,15 +103,14 @@
             content: '',
             tags: ''
           },
-          tags: [
-            {label: 'test', value: 'test'},
-            {label: 'test2', value: 'test2'},
-          ],
           modal: false
         },
       }
     },
     methods: {
+      ...mapActions(['loadTagsSelect']),
+      ...mapGetters(['tags','tagsLoading']),
+
       openArtistUpdateModal(item) {
         this.artistUpdate.modal = true
 
@@ -146,11 +149,11 @@
         const model = this.artistUpdate.model;
 
         for(let key in model) {
-            if (!empty(model[key])) {
-              if(key === 'image' && typeof model[key] === 'string') continue
+          if (!empty(model[key])) {
+            if(key === 'image' && typeof model[key] === 'string') continue
 
-              formData.append(key, model[key])
-            }
+            formData.append(key, model[key])
+          }
         }
 
         this.$store.dispatch('updateArtist', formData).then(result => {
