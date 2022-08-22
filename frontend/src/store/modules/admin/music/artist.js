@@ -6,7 +6,8 @@ export default {
       artist: {
         tagsSelect: [],
         tagsLoading: true
-      }
+      },
+      artists: []
     }
   },
   mutations: {
@@ -15,6 +16,19 @@ export default {
     },
     SWITCH_TAGS_LOADING(state, value) {
       state.artist.tagsLoading = value
+    },
+    LOAD_ARTISTS(state, artists) {
+      state.artists = artists
+    },
+    UPDATE_ARTIST(state, artist) {
+      console.log(state.artist)
+      for(let key in state.artist) {
+        // for(let taskKey in state.lists[listKey].items) {
+        //   if(state.lists[listKey].items[taskKey].id === task.id) {
+        //     state.lists[listKey].items[taskKey] = task
+        //   }
+        // }
+      }
     }
   },
   actions: {
@@ -37,6 +51,17 @@ export default {
       commit('SWITCH_TAGS_LOADING', value !== value)
     },
 
+    async loadArtists(context) {
+      try {
+        const {data} = await API.post('music/artists')
+        if(!data) {
+          throw new Error('Нет данных!')
+        }
+        context.commit('LOAD_ARTISTS', data['artists'])
+      }catch(e) {
+      }
+    },
+
     async updateArtist(context, artist) {
       const {data} = await API.post('music/artists/update', artist)
       if(data['success']) {
@@ -51,6 +76,9 @@ export default {
   getters: {
     artist(state) {
       return state.artist
+    },
+    artists(state) {
+      return state.artists
     },
     tags(state) {
       return state.artist.tagsSelect

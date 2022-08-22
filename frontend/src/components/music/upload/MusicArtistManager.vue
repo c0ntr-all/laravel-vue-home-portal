@@ -1,6 +1,6 @@
 <template>
   <el-table
-    :data="this.$store.getters.music.artists"
+    :data="artists()"
     style="width: 100%"
     highlight-current-row
   >
@@ -108,8 +108,8 @@
       }
     },
     methods: {
-      ...mapActions(['loadTagsSelect','switchTagsLoading']),
-      ...mapGetters(['tags','tagsLoading']),
+      ...mapActions(['loadTagsSelect','switchTagsLoading','loadArtists']),
+      ...mapGetters(['tags','tagsLoading','artists']),
 
       openArtistUpdateModal(item) {
         this.artistUpdate.modal = true
