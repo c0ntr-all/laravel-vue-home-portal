@@ -60,15 +60,15 @@
         <el-form-item label="Теги">
           <el-select
             v-model="artistUpdate.model.tags"
-            :loading="this.tagsLoading"
+            :loading="this.tagsLoading()"
             multiple
             filterable
             placeholder="Tags"
             style="width: 240px"
-            @focus="loadTagsSelect"
+            @focus="loadTagsSelect()"
           >
             <el-option
-              v-for="item in tags"
+              v-for="item in this.tags()"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -108,7 +108,7 @@
       }
     },
     methods: {
-      ...mapActions(['loadTagsSelect']),
+      ...mapActions(['loadTagsSelect','switchTagsLoading']),
       ...mapGetters(['tags','tagsLoading']),
 
       openArtistUpdateModal(item) {

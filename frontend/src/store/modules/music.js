@@ -34,16 +34,6 @@ export default {
         return 'test'
       }
     },
-    async updateArtist(context, artist) {
-      const {data} = await API.post('music/artists/update', artist)
-      if(data['success']) {
-        context.commit('UPDATE_ARTIST', data['artists'])
-
-        return data['artists']
-      } else {
-        throw new Error(data['error'])
-      }
-    },
     async loadArtists(context) {
       try {
         const {data} = await API.post('music/artists')
