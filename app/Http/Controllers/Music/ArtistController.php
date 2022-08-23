@@ -49,7 +49,7 @@ class ArtistController extends Controller
     {
         $update = [];
 
-        if (array_key_exists('image', $request->validated())) {
+        if (isset($request->validated()['image'])) {
             $update['image'] = $this->uploadImageService->uploadFromForm(
                 $request->validated()['image'],
                 $request->validated()['name'],
@@ -64,7 +64,8 @@ class ArtistController extends Controller
 
             $artist->update($update);
 
-            if ($tags = $request->validated()['tags']) {
+            if (isset($request->validated()['tags'])) {
+                $tags = $request->validated()['tags'];
                 $arrTags = explode(',', $tags);
                 $artist->tags()->attach($arrTags);
             }
