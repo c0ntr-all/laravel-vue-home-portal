@@ -15,7 +15,7 @@
     <el-table-column prop="name" label="Name" width="400" sortable />
     <el-table-column prop="tags" label="Теги" width="450">
       <template #default="props">
-        <span v-for="tag in props.row.tags" class="artist-row__tag">{{ tag }}</span>
+        <span v-for="tag in props.row.tagsNames" class="artist-row__tag">{{ tag }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
@@ -65,7 +65,6 @@
             filterable
             placeholder="Tags"
             style="width: 240px"
-            @focus="loadTagsSelect()"
           >
             <el-option
               v-for="item in this.tags()"
@@ -112,6 +111,8 @@
       ...mapGetters(['tags','tagsLoading','artists']),
 
       openArtistUpdateModal(item) {
+        //Подгрузка при открытии модального окна, чтобы select успел соотнести id'шники c name'ами тегов
+        this.loadTagsSelect()
         this.artistUpdate.modal = true
 
         delete item.albums

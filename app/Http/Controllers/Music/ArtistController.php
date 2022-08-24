@@ -67,7 +67,8 @@ class ArtistController extends Controller
             if (isset($request->validated()['tags'])) {
                 $tags = $request->validated()['tags'];
                 $arrTags = explode(',', $tags);
-                $artist->tags()->attach($arrTags);
+
+                $artist->tags()->sync($arrTags);
             }
 
             return $this->artistResponse($artist);
