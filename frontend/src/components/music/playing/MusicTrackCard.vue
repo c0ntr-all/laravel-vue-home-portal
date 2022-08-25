@@ -84,7 +84,6 @@
       position: absolute;
       top: 12.5px;
       left: 15px;
-      z-index: -7;
       color: #777;
     }
     &__name {
