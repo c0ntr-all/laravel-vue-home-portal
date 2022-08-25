@@ -28,7 +28,7 @@
           <router-link :to="'/music/artists/' + artist.id"><span>{{ artist.name }}</span></router-link>
           <div class="artist-card__footer">
             <div class="tags-list">
-              <el-tag v-for="tag in artist.tags" class="mx-1">{{ tag }}</el-tag>
+              <el-tag v-for="tag in artist.tagsNames" class="mx-1">{{ tag }}</el-tag>
             </div>
           </div>
         </div>
@@ -58,7 +58,7 @@
           if(this.activeTag === '') {
             return true
           }else{
-            return elem.tags.indexOf(this.activeTag) > -1
+            return elem.tagsNames.indexOf(this.activeTag) > -1
           }
         })
       }
