@@ -159,14 +159,6 @@
 
         this.$store.dispatch('updateArtist', formData).then(result => {
           this.$message.success("Артист успешно обновлён!");
-
-          for (let key in this.artistUpdate.model) {
-            this.artistUpdate.model[key] = ''
-            if(key === 'image') {
-              this.$refs.poster.value = ''
-            }
-          }
-          this.artistUpdate.posterPreview = null
         }).catch(error => {
           this.$message.error(error);
         })

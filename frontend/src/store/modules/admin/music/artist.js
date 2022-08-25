@@ -21,13 +21,11 @@ export default {
       state.artists = artists
     },
     UPDATE_ARTIST(state, artist) {
-      console.log(state.artist)
-      for(let key in state.artist) {
-        // for(let taskKey in state.lists[listKey].items) {
-        //   if(state.lists[listKey].items[taskKey].id === task.id) {
-        //     state.lists[listKey].items[taskKey] = task
-        //   }
-        // }
+      console.log(state.artists)
+      for(let key in state.artists) {
+        if(state.artists[key].id === artist.id) {
+          state.artists[key] = artist
+        }
       }
     }
   },
