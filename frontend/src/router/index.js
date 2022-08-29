@@ -93,7 +93,7 @@ const router = createRouter({
     path: '/musicupload',
     component: () => import('../views/music/MusicUpload'),
     meta: {
-      title: 'Загрузка музыки'
+      title: 'Управление музыкой'
     },
     name: 'musicupload',
     alias: '/musicupload',

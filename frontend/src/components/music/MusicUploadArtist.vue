@@ -1,11 +1,11 @@
 <template>
-  <h3>Загрузка Банды</h3>
+  <h3>Управление исполнителями</h3>
   <el-tabs tab-position="top">
-    <el-tab-pane label="Вручную">
+    <el-tab-pane label="Добавить">
       <el-row :gutter="10">
         <el-col :xs="24" :sm="12" :md="10" :lg="8" :xl="5">
           <el-form :label-position="'right'">
-            <el-form-item label="Название банды" prop="name">
+            <el-form-item label="Название" prop="name">
               <el-input
                 v-model="this.model.artist.name"
                 maxlength="100"
@@ -14,8 +14,8 @@
                 type="text"
               />
             </el-form-item>
-            <el-form-item label="Описание банды" prop="content">
-              <el-input type="textarea" placeholder="Описание банды..." v-model="this.model.artist.content" maxlength="10000" show-word-limit />
+            <el-form-item label="Описание" prop="content">
+              <el-input type="textarea" placeholder="Введите писание..." v-model="this.model.artist.content" maxlength="10000" show-word-limit />
             </el-form-item>
             <el-form-item label="Постер">
               <div class="input-poster">
@@ -56,7 +56,7 @@
         </el-col>
       </el-row>
     </el-tab-pane>
-    <el-tab-pane label="Автоматически">
+    <el-tab-pane label="Добавить с сервера">
       <el-button @click="handlerFolderModal">Выбрать папку</el-button>
       <div class="upload-zone">
         <el-divider border-style="dashed" />
@@ -133,7 +133,7 @@
         formData.append('image', this.model.artist.image)
 
         this.$store.dispatch('createMusicArtist', formData).then(result => {
-          this.$message.success("Артист успешно добавлен!");
+          this.$message.success("Исполнитель успешно добавлен!");
 
           for (let key in this.model.artist) {
             this.model.artist[key] = ''

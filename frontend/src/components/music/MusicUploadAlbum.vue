@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="10">
     <el-col :xs="24" :sm="12" :md="10" :lg="8" :xl="5">
-      <h3>Загрузка Альбома</h3>
+      <h3>Альбомы</h3>
       <blockquote class="tip danger">
         <p class="tip__title">Внимание!</p>
         <p>Временно не работает!</p>

@@ -32,7 +32,7 @@
     </template>
     <template v-slot:content>
       <el-form>
-        <el-form-item label="Название банды" prop="name">
+        <el-form-item label="Название исполнителя" prop="name">
           <el-input
             v-model="artistUpdate.model.name"
             maxlength="100"
@@ -41,10 +41,10 @@
             type="text"
           />
         </el-form-item>
-        <el-form-item label="Описание банды" prop="content">
+        <el-form-item label="Описание исполнителя" prop="content">
           <el-input
             type="textarea"
-            placeholder="Описание банды..."
+            placeholder="Описание исполнителя..."
             v-model="artistUpdate.model.content"
             maxlength="10000" show-word-limit
           />
@@ -158,7 +158,7 @@
         }
 
         this.$store.dispatch('updateArtist', formData).then(result => {
-          this.$message.success("Артист успешно обновлён!");
+          this.$message.success("Исполнитель успешно обновлён!");
         }).catch(error => {
           this.$message.error(error);
         })

@@ -1,15 +1,15 @@
 <template>
   <el-main>
-    <h1 class="page-header">Загрузка музыки</h1>
+    <h1 class="page-header">Управление музыкой</h1>
     <div class="page-content">
       <el-tabs type="border-card">
-        <el-tab-pane label="Загрузка банды">
+        <el-tab-pane label="Исполнители">
           <music-upload-artist></music-upload-artist>
         </el-tab-pane>
-        <el-tab-pane label="Загрузка альбома">
+        <el-tab-pane label="Альбомы">
           <music-upload-album></music-upload-album>
         </el-tab-pane>
-        <el-tab-pane label="Управление тегами">
+        <el-tab-pane label="Теги">
           <music-tag-manager></music-tag-manager>
         </el-tab-pane>
       </el-tabs>
