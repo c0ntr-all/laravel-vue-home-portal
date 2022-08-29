@@ -17,8 +17,8 @@
   </el-main>
 </template>
 <script>
-  import MusicUploadArtist from "../../components/music/MusicUploadArtist";
-  import MusicUploadAlbum from "../../components/music/MusicUploadAlbum";
+  import MusicUploadArtist from "../../components/music/upload/MusicUploadArtist";
+  import MusicUploadAlbum from "../../components/music/upload/MusicUploadAlbum";
   import MusicTagManager from "../../components/music/upload/MusicTagManager";
 
   export default {

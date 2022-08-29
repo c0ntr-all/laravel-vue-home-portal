@@ -94,10 +94,10 @@
   } from '@element-plus/icons-vue'
 </script>
 <script>
-  import API from "../../utils/api";
+  import API from "../../../utils/api";
 
-  import AppModal from "../default/AppModal";
-  import MusicArtistManager from "./upload/MusicArtistManager"
+  import AppModal from "../../default/AppModal";
+  import MusicArtistManager from "../upload/MusicArtistManager"
 
   export default {
     data() {
