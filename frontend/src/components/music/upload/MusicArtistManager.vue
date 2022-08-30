@@ -1,6 +1,6 @@
 <template>
   <el-table
-    :data="artists()"
+    :data="artists"
     style="width: 100%"
     highlight-current-row
   >
@@ -60,14 +60,14 @@
         <el-form-item label="Теги">
           <el-select
             v-model="artistUpdate.model.tags"
-            :loading="this.tagsLoading()"
+            :loading="this.tagsLoading"
             multiple
             filterable
             placeholder="Tags"
             style="width: 240px"
           >
             <el-option
-              v-for="item in this.tags()"
+              v-for="item in this.tags"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -106,9 +106,11 @@
         },
       }
     },
+    computed: {
+      ...mapGetters(['tags','tagsLoading','artists']),
+    },
     methods: {
       ...mapActions(['loadTagsSelect','switchTagsLoading','loadArtists']),
-      ...mapGetters(['tags','tagsLoading','artists']),
 
       openArtistUpdateModal(item) {
         //Подгрузка при открытии модального окна, чтобы select успел соотнести id'шники c name'ами тегов
