@@ -11,7 +11,6 @@ export default {
       timePassed: '00:00',
       timeTotal: '00:00',
       rewindProgressWidth: 0,
-      playlist: [],
       volume: 0.3,
     }
   },
@@ -41,12 +40,26 @@ export default {
       state.volume = volume
     },
     SET_PLAYLIST(state, tracks) {
-      state.playlist = tracks
+      // Делаем плейлист нереактивным, чтобы при shuffle не мешался список на странице
+      state.playlist = [...tracks]
     },
     CHANGE_TRACK(state, direction) {
       let step = direction === 'next' ? 1 : -1;
       state.playlist[state.idx + step]
     },
+    SHUFFLE(state) {
+      let currentIndex = state.playlist.length,
+          randomIndex;
+
+      while (currentIndex !== 0) {
+
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [state.playlist[currentIndex], state.playlist[randomIndex]] = [
+          state.playlist[randomIndex], state.playlist[currentIndex]];
+      }
+    }
   },
   actions: {
     init({commit,getters}) {

@@ -14,7 +14,7 @@
         <p>{{ trackNumber }}. {{ track.name }}</p>
       </div>
       <div class="buttons">
-        <div class="buttons__item">
+        <div class="buttons__item" @click="SHUFFLE">
           <icon-base icon-name="shuffle" view-box="0 0 22 22"><icon-music-shuffle /></icon-base>
         </div>
         <div class="buttons__item" @click="changeTrack">
@@ -60,7 +60,7 @@
 <script>
   import addZero from "../../../utils/addzero";
 
-  import {mapGetters, mapActions} from 'vuex'
+  import {mapGetters, mapActions, mapMutations} from 'vuex'
 
   import IconBase from "../../default/icons/IconBase"
   import IconMusicShuffle from "../../default/icons/IconMusicShuffle"
@@ -101,6 +101,9 @@
         'setTimePassed',
         'setVolume',
         'changeTrack'
+      ]),
+      ...mapMutations([
+        'SHUFFLE'
       ]),
 
       rewindNavigate(event) {
