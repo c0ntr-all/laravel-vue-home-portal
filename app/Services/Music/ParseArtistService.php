@@ -185,6 +185,8 @@ class ParseArtistService
                 ]);
             }
 
+            $lastAlbumPoster = $this->noImage;
+
             foreach ($data['albums'] as $album) {
 
                 $albumModel = $artistModel->albums()->where(['name' => $album['name']])->first();
@@ -199,6 +201,7 @@ class ParseArtistService
                             $album['name'],
                             'music/albums/posters'
                         );
+                        $lastAlbumPoster = $posterPath;
                     } else {
                         $posterPath = $this->noImage;
                     }
@@ -226,6 +229,9 @@ class ParseArtistService
                     }
                 }
             }
+
+            $artistModel->image = $lastAlbumPoster;
+            $artistModel->save();
 
             return ['success' => true, 'artist' => $data['artist']];
         } else {
