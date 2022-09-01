@@ -49,18 +49,18 @@ class ArtistController extends Controller
     {
         $update = [];
 
-        if (isset($request->validated()['image'])) {
-            $update['image'] = $this->uploadImageService->uploadFromForm(
-                $request->validated()['image'],
-                $request->validated()['name'],
-                'music/artists/posters'
-            );
-        }
-
         $artist = Artist::find($request->validated()['id']);
 
         if ($artist) {
             $update = array_merge($update, $request->validated());
+
+            if (isset($request->validated()['image'])) {
+                $update['image'] = $this->uploadImageService->uploadFromForm(
+                    $request->validated()['image'],
+                    $request->validated()['name'],
+                    'music/artists/posters'
+                );
+            }
 
             $artist->update($update);
 

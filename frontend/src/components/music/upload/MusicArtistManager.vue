@@ -152,11 +152,7 @@
         const model = this.artistUpdate.model;
 
         for(let key in model) {
-          if (!empty(model[key])) {
-            if(key === 'image' && typeof model[key] === 'string') continue
-
-            formData.append(key, model[key])
-          }
+          formData.append(key, model[key])
         }
 
         this.$store.dispatch('updateArtist', formData).then(result => {
