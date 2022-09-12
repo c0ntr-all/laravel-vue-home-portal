@@ -9,20 +9,19 @@ use App\Http\Controllers\Controller;
 use App\Models\Music\Artist;
 use App\Http\Resources\Music\ArtistResource;
 use App\Http\Resources\Music\ArtistCollection;
-use App\Services\UploadImageService;
+use App\Helpers\ImageUpload;
 
 class ArtistController extends Controller
 {
     protected $artists;
     protected $uploadImageService;
 
-    public function __construct(Artist $artists, UploadImageService $uploadImageService)
+    public function __construct(Artist $artists)
     {
         $this->artists = $artists;
-        $this->uploadImageService = $uploadImageService;
     }
 
-    public function index(IndexRequest $request): array|ArtistCollection
+    public function index(IndexRequest $request)
     {
         if(empty($request->validated())) {
             return new ArtistCollection(Artist::all());
@@ -33,7 +32,11 @@ class ArtistController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $imagePath = $this->uploadImageService->uploadFromForm($request->image, $request->name, 'music/artists/posters');
+        $imagePath = ImageUpload::make()
+                                ->setDiskName('public')
+                                ->setFolder('music/artists/posters')
+                                ->setSourceName($request->name)
+                                ->upload($request->image);
 
         $artist = Artist::create([
             'user_id' => auth()->id(),
@@ -55,11 +58,11 @@ class ArtistController extends Controller
             $update = array_merge($update, $request->validated());
 
             if (isset($request->validated()['image'])) {
-                $update['image'] = $this->uploadImageService->uploadFromForm(
-                    $request->validated()['image'],
-                    $request->validated()['name'],
-                    'music/artists/posters'
-                );
+                $update['image'] = ImageUpload::make()
+                                              ->setDiskName('public')
+                                              ->setFolder('music/artists/posters')
+                                              ->setSourceName($request->validated()['name'])
+                                              ->upload($request->validated()['image']);
             }
 
             $artist->update($update);

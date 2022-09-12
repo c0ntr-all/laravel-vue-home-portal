@@ -5,7 +5,7 @@ namespace App\Services\Music;
 use App\Models\Music\Artist;
 use App\Models\Music\Album;
 use App\Models\Music\Track;
-use App\Services\UploadImageService;
+use App\Helpers\ImageUpload;
 use Illuminate\Http\File;
 
 class ParseArtistService
@@ -196,11 +196,12 @@ class ParseArtistService
                     $posterPath = null;
 
                     if (!empty($album['cover'])) {
-                        $posterPath = (new UploadImageService())->uploadFromFolder(
-                            new File($album['cover']),
-                            $album['name'],
-                            'music/albums/posters'
-                        );
+                        $image = new File($album['cover']);
+                        $posterPath = ImageUpload::make()
+                                                 ->setDiskName('public')
+                                                 ->setFolder('music/albums/posters')
+                                                 ->setSourceName($album['name'])
+                                                 ->upload($image);
                         $lastAlbumPoster = $posterPath;
                     } else {
                         $posterPath = $this->noImage;
