@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RatingController;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\AuthController;
@@ -87,6 +88,10 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::post('store', [TagController::class, 'store']);
             Route::post('update', [TagController::class, 'update']);
             Route::post('/select', [TagController::class, 'tagsSelect']);
+        });
+
+        Route::prefix('rates')->group(function() {
+            Route::post('store', [RatingController::class, 'store']);
         });
 
         Route::prefix('folders')->group(function() {
