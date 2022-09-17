@@ -10,6 +10,13 @@
       <div class="track-card__number">{{ track.number }}</div>
     </div>
     <div class="track-card__name">{{ track.name }}</div>
+    <div class="track-card__rate">
+      <el-rate
+        v-model="track.rate"
+        :texts="['bad', 'lyric', 'normal', 'good', 'hit']"
+        show-text
+      />
+    </div>
     <div class="track-card__duration">{{ track.duration }}</div>
   </div>
 </template>
@@ -88,6 +95,9 @@
     }
     &__name {
       flex: 1 1 100%;
+    }
+    &__rate {
+      flex: 1 0 200px;
     }
     &__duration {
       color: #777;

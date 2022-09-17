@@ -25,6 +25,9 @@ export default {
         //   state.lists[listKey].items[taskKey] = task
         // }
       }
+    },
+    SET_RATING(state, rating) {
+      
     }
   },
   actions: {
@@ -73,6 +76,16 @@ export default {
         context.commit('UPDATE_TAG', data['tags'])
 
         return data['tags']
+      } else {
+        throw new Error(data['error'])
+      }
+    },
+    async setTrackRating(context, value) {
+      const {data} = await API.post('ratings/store', value)
+      if (data.success) {
+        context.commit('SET_RATING', data['rating'])
+
+        return data['rating']
       } else {
         throw new Error(data['error'])
       }

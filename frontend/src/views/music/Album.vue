@@ -50,6 +50,7 @@
             <div class="album-tracks__header">
               <div class="album-tracks__header-number">#</div>
               <div class="album-tracks__header-name">Name</div>
+              <div class="album-tracks__header-rate">Rate</div>
               <div class="album-tracks__header-duration">Dur.</div>
             </div>
             <div class="album-tracks__list">
@@ -150,6 +151,9 @@
       }
       &-name {
         flex: 1 1 100%;
+      }
+      &-rate {
+        flex: 1 0 232px;
       }
     }
     &__list {

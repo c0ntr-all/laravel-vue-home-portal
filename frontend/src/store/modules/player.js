@@ -83,7 +83,7 @@ export default {
       })
 
       getters.player.audio.addEventListener('ended', () => {
-        commit('NEXT_TRACK')
+        commit('CHANGE_TRACK', 'next')
         getters.player.audio.play();
       });
     },
