@@ -1,0 +1,120 @@
+<template>
+  <h3>Filter</h3>
+  <el-select
+    v-model="styles.value"
+    multiple
+    placeholder="Select Styles"
+    style="width: 240px"
+  >
+    <el-option
+      v-for="item in styles.options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+    />
+  </el-select>
+  <el-select v-model="genre.value" class="m-2" placeholder="Select Genre">
+    <el-option
+      v-for="item in genre.options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+    />
+  </el-select>
+</template>
+<script>
+  export default {
+    data() {
+      return {
+        styles: {
+          options: [
+            {
+              label: 'Progressive',
+              value: 'Progressive'
+            },
+            {
+              label: 'Technical',
+              value: 'Technical'
+            },
+            {
+              label: 'Modern',
+              value: 'Modern'
+            },
+            {
+              label: 'Folk',
+              value: 'Folk'
+            },
+            {
+              label: 'Melodic',
+              value: 'Melodic'
+            },
+            {
+              label: 'Industrial',
+              value: 'Industrial'
+            },
+            {
+              label: 'Blackened',
+              value: 'Blackened'
+            },
+          ],
+          value: ''
+        },
+        genre: {
+          options: [
+            {
+              label: 'Death Metal',
+              value: 'Death Metal'
+            },
+            {
+              label: 'Groove Metal',
+              value: 'Groove Metal'
+            },
+            {
+              label: 'Black Metal',
+              value: 'Black Metal'
+            },
+            {
+              label: 'Nu Metal',
+              value: 'Nu Metal'
+            },
+            {
+              label: 'Metalcore',
+              value: 'Metalcore'
+            },
+            {
+              label: 'Deathcore',
+              value: 'Deathcore'
+            },
+            {
+              label: 'Metal',
+              value: 'Metal'
+            },
+            {
+              label: 'Hardcore',
+              value: 'Hardcore'
+            },
+            {
+              label: 'Math Metal',
+              value: 'Math Metal'
+            },
+            {
+              label: 'Power Metal',
+              value: 'Power Metal'
+            },
+            {
+              label: 'Heavy Metal',
+              value: 'Heavy Metal'
+            },
+          ],
+          value: ''
+        },
+      }
+    }
+  }
+</script>
+<style lang="scss">
+
+  .music__filter {
+    margin-bottom: 1rem;
+  }
+</style>
