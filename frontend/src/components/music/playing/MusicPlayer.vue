@@ -21,8 +21,8 @@
           <icon-base icon-name="prev-track"><icon-music-prev /></icon-base>
         </div>
         <div class="buttons__item buttons_play" @click="play(this.track)">
-          <icon-base :icon-name="status === 'play' ? 'play' : 'pause'">
-            <icon-music-play v-if="status === 'pause'" />
+          <icon-base :icon-name="status === 'playing' ? 'playing' : 'paused'">
+            <icon-music-play v-if="status === 'paused'" />
             <icon-music-pause v-else />
           </icon-base>
         </div>

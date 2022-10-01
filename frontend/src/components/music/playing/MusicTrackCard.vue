@@ -1,7 +1,7 @@
 <template>
   <div class="track-card" @click="play(track)" :class="{active: track.id === player.track.id}">
     <div class="track-card__start-column">
-      <div class="track-card__play-icon" v-if="status === 'pause' || (status === 'play' && player.track.id !== track.id)">
+      <div class="track-card__play-icon" v-if="status === 'paused' || (status === 'playing' && player.track.id !== track.id)">
         <icon-base icon-name="play"><icon-music-play /></icon-base>
       </div>
       <div class="track-card__play-icon" v-else>

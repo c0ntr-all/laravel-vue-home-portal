@@ -5,12 +5,13 @@ export default {
   state() {
     return {
       audio: new Audio(),
-      status: 'pause',
+      status: 'paused',
       track: {},
       idx: 0,
       timePassed: '00:00',
       timeTotal: '00:00',
       rewindProgressWidth: 0,
+      playlist: [],
       volume: 0.3,
     }
   },
@@ -42,10 +43,6 @@ export default {
     SET_PLAYLIST(state, tracks) {
       // Делаем плейлист нереактивным, чтобы при shuffle не мешался список на странице
       state.playlist = [...tracks]
-    },
-    CHANGE_TRACK(state, direction) {
-      let step = direction === 'next' ? 1 : -1;
-      state.playlist[state.idx + step]
     },
     SHUFFLE(state) {
       let currentIndex = state.playlist.length,
@@ -83,23 +80,29 @@ export default {
       })
 
       getters.player.audio.addEventListener('ended', () => {
-        commit('CHANGE_TRACK', 'next')
-        getters.player.audio.play();
+        this.dispatch('changeTrack', 'next')
+        this.dispatch('runPlay')
       });
     },
-    play({commit,getters}, track) {
-      //Пока запихиваем плейлист на момент первого запуска
-      if (empty(getters.player.track) || getters.player.track.id !== track.id) {
-        commit('SET_PLAYLIST', getters.album.tracks)
-        commit('SET_TRACK', track)
-      }
+    runPlay({commit,getters}) {
       if (getters.player.audio.paused) {
         getters.player.audio.play()
-        commit('SET_STATUS', 'play')
+        commit('SET_STATUS', 'playing')
       } else {
         getters.player.audio.pause()
-        commit('SET_STATUS', 'pause')
+        commit('SET_STATUS', 'paused')
       }
+    },
+    play({commit,getters}, track) {
+      if (empty(getters.player.playlist)) {
+        commit('SET_PLAYLIST', getters.album.tracks)
+      }
+
+      if (empty(getters.player.track) || getters.player.track.id !== track.id) {
+        commit('SET_TRACK', track)
+      }
+
+      this.dispatch('runPlay')
     },
     setVolume({commit,getters}, volume) {
       commit('SET_VOLUME', volume)
@@ -113,18 +116,17 @@ export default {
         return
       }
 
-      if (getters.player.idx !== getters.player.playlist.length - 1) {
+      if (
+        (getters.player.idx !== getters.player.playlist.length - 1) ||
+        (getters.player.idx === getters.player.playlist.length - 1 && direction !== 'next')
+      ) {
         trackIndex = getters.player.idx + step
       }
 
       commit('SET_TRACK', getters.player.playlist[trackIndex])
 
-      if (getters.player.audio.paused) {
-        getters.player.audio.play()
-        commit('SET_STATUS', 'play')
-      } else {
-        getters.player.audio.pause()
-        commit('SET_STATUS', 'pause')
+      if (getters.status === 'playing') {
+        this.dispatch('runPlay')
       }
     },
   },
