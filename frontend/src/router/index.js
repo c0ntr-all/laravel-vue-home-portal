@@ -80,6 +80,10 @@ const router = createRouter({
         path: '/music',
         component: () => import('../views/music/Main')
       },{
+        path: '/music/genre/:genreId',
+        component: () => import('../views/music/Genre'),
+        props: true
+      },{
         path: '/music/artists/:artistId',
         component: () => import('../views/music/Artist'),
         props: true
