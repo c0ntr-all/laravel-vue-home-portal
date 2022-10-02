@@ -4,10 +4,10 @@
       <div class="tags">
         <h3>Genres</h3>
         <div class="tags-list">
-          <a href="" class="tag-link" @click.prevent="this.activeTag = ''">
-            <el-tag class="mx-1" effect="light">All</el-tag>
-          </a>
-          <a href="" class="tag-link" @click.prevent="this.activeTag = tag.label" v-for="tag in this.$store.getters.music.tags">
+          <router-link v-for="tag in this.$store.getters.music.tags"
+                       :to="'/music/genre/' + tag.id"
+                       class="tag-link"
+          >
             <el-tag
               :key="tag.label"
               :type="tag.type"
@@ -16,7 +16,7 @@
             >
               {{ tag.label }}
             </el-tag>
-          </a>
+          </router-link>
         </div>
       </div>
       <div class="music__filter">
@@ -25,7 +25,7 @@
       <div class="artists">
         <h3>Artists</h3>
         <el-space alignment="flex-start" wrap>
-          <el-card class="artist-card" :body-style="{ padding: '0px' }" v-for="artist in filteredBands" :key="artist.id">
+          <el-card class="artist-card" :body-style="{ padding: '0px' }" v-for="artist in this.$store.getters.music.artists" :key="artist.id">
             <div class="artist-card__image">
               <img :src="artist.image" class="image"/>
             </div>
@@ -50,7 +50,6 @@
     data() {
       return {
         loading: false,
-        activeTag: '',
         model: {
         }
       }
@@ -61,17 +60,6 @@
         this.$store.dispatch('loadArtists')
       }
     },
-    computed: {
-      filteredBands() {
-        return this.$store.getters.music.artists.filter(elem => {
-          if(this.activeTag === '') {
-            return true
-          }else{
-            return elem.tagsNames.indexOf(this.activeTag) > -1
-          }
-        })
-      }
-    },
     components: {
       MusicArtistsFilter
     },
@@ -80,6 +68,7 @@
     }
   }
 </script>
+
 
 <style lang="scss" scoped>
   h3 {
