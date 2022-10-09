@@ -21,14 +21,16 @@ class TagController extends Controller
     }
 
     /**
-     * Возвращает все теги
-     *
      * @param IndexRequest $request
-     * @return TagCollection
+     * @return TagCollection|TagResource
      */
-    public function index(IndexRequest $request): TagCollection
+    public function index(IndexRequest $request)
     {
-        return new TagCollection($this->tag->getItems());
+        if (array_key_exists('slug', $request->validated())) {
+            return new TagResource(Tag::where('slug', $request->validated()['slug'])->first());
+        } else {
+            return new TagCollection($this->tag->getItems());
+        }
     }
 
     /**

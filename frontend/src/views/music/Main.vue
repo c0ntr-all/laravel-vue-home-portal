@@ -5,7 +5,7 @@
         <h3>Genres</h3>
         <div class="tags-list">
           <router-link v-for="tag in this.$store.getters.music.tags"
-                       :to="'/music/genre/' + tag.id"
+                       :to="'/music/tags/' + tag.slug"
                        class="tag-link"
           >
             <el-tag

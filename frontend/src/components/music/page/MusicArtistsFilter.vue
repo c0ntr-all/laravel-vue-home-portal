@@ -1,5 +1,9 @@
 <template>
   <h3>Filter</h3>
+  <blockquote class="tip danger">
+    <p class="tip__title">Внимание!</p>
+    <p>Временно не работает!</p>
+  </blockquote>
   <el-select
     v-model="styles.value"
     multiple
