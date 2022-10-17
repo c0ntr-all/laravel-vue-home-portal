@@ -1,6 +1,8 @@
 import API from "../../../../utils/api";
 
 export default {
+  namespaced: true,
+
   state() {
     return {
       artist: {

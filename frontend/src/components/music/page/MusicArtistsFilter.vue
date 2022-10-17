@@ -2,7 +2,7 @@
   <h3>Filter</h3>
   <blockquote class="tip danger">
     <p class="tip__title">Внимание!</p>
-    <p>Временно не работает!</p>
+    <p>Дополнительный стиль временно не работает!</p>
   </blockquote>
   <el-select
     v-model="styles.value"
@@ -120,7 +120,7 @@
         let filters = {
           tag: this.genre.value
         }
-        this.$store.dispatch('getArtists', filters)
+        this.$store.dispatch('music/getArtists', filters)
       }
     }
   }

@@ -3,8 +3,8 @@
     <div class="music__page">
       <div class="tags">
         <h3>Genres</h3>
-        <div class="tags-list">
-          <router-link v-for="tag in this.$store.getters.music.tags"
+        <div class="tags-list" v-loading="tags.loading">
+          <router-link v-for="tag in tags.items"
                        :to="'/music/tags/' + tag.slug"
                        class="tag-link"
           >
@@ -24,8 +24,8 @@
       </div>
       <div class="artists">
         <h3>Artists</h3>
-        <el-space alignment="flex-start" wrap>
-          <el-card class="artist-card" :body-style="{ padding: '0px' }" v-for="artist in this.$store.getters.music.artists" :key="artist.id">
+        <el-space alignment="flex-start" v-loading="artists.loading" wrap>
+          <el-card class="artist-card" :body-style="{ padding: '0px' }" v-for="artist in artists.items" :key="artist.id">
             <div class="artist-card__image">
               <img :src="artist.image" class="image"/>
             </div>
@@ -45,26 +45,21 @@
 </template>
 <script>
   import MusicArtistsFilter from '../../components/music/page/MusicArtistsFilter'
+  import {mapGetters, mapActions} from "vuex";
 
   export default {
-    data() {
-      return {
-        loading: false,
-        model: {
-        }
-      }
-    },
     methods: {
-      loadData() {
-        this.$store.dispatch('loadTags')
-        this.$store.dispatch('getArtists')
-      }
+      ...mapActions('music', ['loadTags', 'getArtists'])
+    },
+    computed: {
+      ...mapGetters('music', ['tags', 'artists']),
     },
     components: {
       MusicArtistsFilter
     },
     mounted() {
-      this.loadData();
+      this.loadTags();
+      this.getArtists();
     }
   }
 </script>

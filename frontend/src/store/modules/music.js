@@ -1,20 +1,28 @@
 import API from "../../utils/api";
 
 export default {
+  namespaced: true,
+
   state() {
     return {
       music: {
-        artists: [],
-        tags: []
+        artists: {
+          items: [],
+          loading: true
+        },
+        tags: {
+          items: [],
+          loading: false
+        }
       }
     }
   },
   mutations: {
     LOAD_ARTISTS(state, artists) {
-      state.music.artists = artists
+      state.music.artists.items = artists
     },
     LOAD_TAGS(state, tags) {
-      state.music.tags = tags
+      state.music.tags.items = tags
     },
     ADD_TAG(state, tag) {
       state.music.tags.push(tag)
@@ -28,6 +36,9 @@ export default {
     },
     SET_RATING(state, rating) {
 
+    },
+    SET_LOADING(state, payload) {
+      state.music[payload['entity']].loading = payload['value']
     }
   },
   actions: {
@@ -37,24 +48,32 @@ export default {
         return 'test'
       }
     },
-    async loadArtist(context) {
+    async loadArtist(commit) {
       try {
         const {data} = await API.post('music/artists')
         if(!data) {
           throw new Error('Нет данных!')
         }
-        context.commit('LOAD_ARTISTS', data['artists'])
+        commit('LOAD_ARTISTS', data['artists'])
       }catch(e) {
       }
     },
-    async getArtists(context, filters) {
+    async getArtists(context, filters = []) {
       try {
+        context.commit('SET_LOADING', {
+          entity: 'artists',
+          value: true
+        })
         const {data} = await API.post('music/artists/get', {
           filters: filters
         })
         if(!data) {
           throw new Error('Нет данных!')
         }
+        context.commit('SET_LOADING', {
+          entity: 'artists',
+          value: false
+        })
         context.commit('LOAD_ARTISTS', data['artists'])
       }catch(e) {
       }
@@ -106,6 +125,12 @@ export default {
   getters: {
     music(state) {
       return state.music
+    },
+    artists(state) {
+      return state.music.artists
+    },
+    tags(state) {
+      return state.music.tags
     }
   }
 }
