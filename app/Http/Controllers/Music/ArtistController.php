@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Music;
 
 use App\Http\Requests\Music\Artist\IndexRequest;
+use App\Http\Requests\Music\Artist\FilterRequest;
 use App\Http\Requests\Music\Artist\StoreRequest;
 use App\Http\Requests\Music\Artist\UpdateRequest;
 use App\Http\Controllers\Controller;
@@ -23,11 +24,13 @@ class ArtistController extends Controller
 
     public function index(IndexRequest $request)
     {
-        if(empty($request->validated())) {
-            return new ArtistCollection(Artist::all());
-        } else {
-            return $this->artistResponse(Artist::find($request->validated()['id']));
-        }
+        return $this->artistResponse(Artist::find($request->validated()['id']));
+    }
+
+    public function getArtists(FilterRequest $request) {
+        $filters = $request->validated()['filters'] ?? [];
+
+        return new ArtistCollection(Artist::getFiltered($filters));
     }
 
     public function store(StoreRequest $request)

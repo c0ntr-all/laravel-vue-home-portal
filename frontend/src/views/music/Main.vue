@@ -57,7 +57,7 @@
     methods: {
       loadData() {
         this.$store.dispatch('loadTags')
-        this.$store.dispatch('loadArtists')
+        this.$store.dispatch('getArtists')
       }
     },
     components: {

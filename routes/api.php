@@ -74,6 +74,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::post('upload', [UploadController::class, 'upload']);
             Route::prefix('artists')->group(function() {
                 Route::post('/', [ArtistController::class, 'index']);
+                Route::post('get', [ArtistController::class, 'getArtists']);
                 Route::post('store', [ArtistController::class, 'store']);
                 Route::post('update', [ArtistController::class, 'update']);
             });

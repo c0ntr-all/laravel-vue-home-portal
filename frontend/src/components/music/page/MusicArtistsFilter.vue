@@ -25,6 +25,7 @@
       :value="item.value"
     />
   </el-select>
+  <el-button type="primary" @click="submitFilter">Filter</el-button>
 </template>
 <script>
   export default {
@@ -112,6 +113,14 @@
           ],
           value: ''
         },
+      }
+    },
+    methods: {
+      submitFilter() {
+        let filters = {
+          tag: this.genre.value
+        }
+        this.$store.dispatch('getArtists', filters)
       }
     }
   }

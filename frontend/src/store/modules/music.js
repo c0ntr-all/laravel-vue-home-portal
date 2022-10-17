@@ -27,7 +27,7 @@ export default {
       }
     },
     SET_RATING(state, rating) {
-      
+
     }
   },
   actions: {
@@ -37,9 +37,21 @@ export default {
         return 'test'
       }
     },
-    async loadArtists(context) {
+    async loadArtist(context) {
       try {
         const {data} = await API.post('music/artists')
+        if(!data) {
+          throw new Error('Нет данных!')
+        }
+        context.commit('LOAD_ARTISTS', data['artists'])
+      }catch(e) {
+      }
+    },
+    async getArtists(context, filters) {
+      try {
+        const {data} = await API.post('music/artists/get', {
+          filters: filters
+        })
         if(!data) {
           throw new Error('Нет данных!')
         }

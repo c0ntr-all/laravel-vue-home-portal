@@ -40,9 +40,9 @@ class Artist extends Model
         return $this->hasMany(Album::class, 'artist_id', 'id');
     }
 
-    public function getFiltered(array $filters): Collection
+    public static function getFiltered(array $filters = []): Collection
     {
-        return $this->filter($filters, 'tag', 'tags', 'name')
+        return static::filter($filters, 'tag', 'tags', 'name')
                     ->when(array_key_exists('offset', $filters), function ($q) use ($filters) {
                         $q->offset($filters['offset'])->limit($filters['limit']);
                     })
