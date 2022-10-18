@@ -9,14 +9,10 @@
       </div>
       <div class="track-card__number">{{ track.number }}</div>
     </div>
-    <div class="track-card__name">{{ track.name }}</div>
-    <div class="track-card__rate">
-      <el-rate
-        v-model="track.rate"
-        :texts="['bad', 'lyric', 'normal', 'good', 'hit']"
-        show-text
-      />
+    <div class="track-card__favorite">
+      <icon-base icon-name="favorite"><icon-music-favorite /></icon-base>
     </div>
+    <div class="track-card__name">{{ track.name }}</div>
     <div class="track-card__duration">{{ track.duration }}</div>
   </div>
 </template>
@@ -26,6 +22,8 @@
   import IconBase from "../../default/icons/IconBase";
   import IconMusicPlay from "../../default/icons/IconMusicPlay";
   import IconMusicPause from "../../default/icons/IconMusicPause";
+  import IconMusicFavorite from "../../default/icons/IconMusicFavorite";
+  import IconMusicFavoriteFilled from "../../default/icons/IconMusicFavoriteFilled";
 
   export default {
     props: {
@@ -37,7 +35,13 @@
     computed: {
       ...mapGetters(['player','status'])
     },
-    components: {IconBase, IconMusicPlay, IconMusicPause}
+    components: {
+      IconBase,
+      IconMusicPlay,
+      IconMusicPause,
+      IconMusicFavorite,
+      IconMusicFavoriteFilled
+    }
   }
 </script>
 <style lang="scss" scoped>
@@ -96,8 +100,17 @@
     &__name {
       flex: 1 1 100%;
     }
-    &__rate {
-      flex: 1 0 200px;
+    &__favorite {
+      display: flex;
+      flex: 1 0 45px;
+      justify-content: center;
+      margin-right: 15px;
+
+      svg {
+        &:hover {
+
+        }
+      }
     }
     &__duration {
       color: #777;

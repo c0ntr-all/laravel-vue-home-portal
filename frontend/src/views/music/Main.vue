@@ -24,21 +24,23 @@
       </div>
       <div class="artists">
         <h3>Artists</h3>
-        <el-space alignment="flex-start" v-loading="artists.loading" wrap>
-          <el-card class="artist-card" :body-style="{ padding: '0px' }" v-for="artist in artists.items" :key="artist.id">
-            <div class="artist-card__image">
-              <img :src="artist.image" class="image"/>
-            </div>
-            <div style="padding: 14px">
-              <router-link :to="'/music/artists/' + artist.id"><span>{{ artist.name }}</span></router-link>
-              <div class="artist-card__footer">
-                <div class="tags-list">
-                  <el-tag v-for="tag in artist.tagsNames" class="mx-1">{{ tag }}</el-tag>
+        <div class="artists-wrap" v-loading="artists.loading">
+          <el-space alignment="flex-start" wrap>
+            <el-card class="artist-card" :body-style="{ padding: '0px' }" v-for="artist in artists.items" :key="artist.id">
+              <div class="artist-card__image">
+                <img :src="artist.image" class="image"/>
+              </div>
+              <div style="padding: 14px">
+                <router-link :to="'/music/artists/' + artist.id"><span>{{ artist.name }}</span></router-link>
+                <div class="artist-card__footer">
+                  <div class="tags-list">
+                    <el-tag v-for="tag in artist.tagsNames" class="mx-1">{{ tag }}</el-tag>
+                  </div>
                 </div>
               </div>
-            </div>
-          </el-card>
-        </el-space>
+            </el-card>
+          </el-space>
+        </div>
       </div>
     </div>
   </div>
@@ -49,16 +51,17 @@
 
   export default {
     methods: {
-      ...mapActions('music', ['loadTags', 'getArtists'])
+      ...mapActions('music', ['loadTags','loadFilter','getArtists'])
     },
     computed: {
-      ...mapGetters('music', ['tags', 'artists']),
+      ...mapGetters('music', ['tags','artists']),
     },
     components: {
       MusicArtistsFilter
     },
     mounted() {
       this.loadTags();
+      this.loadFilter();
       this.getArtists();
     }
   }
@@ -72,6 +75,7 @@
   .music {
     display: flex;
     flex-direction: row;
+    height: 100%;
 
     &__page {
 
@@ -93,7 +97,14 @@
     display: block;
     text-decoration: none;
   }
+  .artists {
+    height: 100%;
 
+    &-wrap {
+      width: 100%;
+      height: 100%;
+    }
+  }
   .artist-card {
     background-color: #ebecf0;
     border-radius: 3px;
