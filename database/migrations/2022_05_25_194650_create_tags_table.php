@@ -15,13 +15,13 @@ class CreateTagsTable extends Migration
     {
         Schema::create('tags', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('parent_id')->default(0);
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->text('content')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('parent_id')->references('id')->on('tags');
         });
     }
 

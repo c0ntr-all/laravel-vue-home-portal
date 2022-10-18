@@ -17,6 +17,9 @@ class CreateTagablesTable extends Migration
             $table->unsignedBigInteger('tag_id');
             $table->unsignedBigInteger('tagable_id');
             $table->string('tagable_type');
+            $table->tinyInteger('priority')
+                  ->default(1)
+                  ->comment('Добавлен тег как основной или нет');;
 
             $table->primary(['tag_id', 'tagable_id', 'tagable_type']);
 
