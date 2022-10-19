@@ -78,6 +78,16 @@ export default {
       }catch(e) {
       }
     },
+    async loadFilter(commit) {
+      try {
+        const {data} = await API.post('music/artists')
+        if(!data) {
+          throw new Error('Нет данных!')
+        }
+        commit('LOAD_ARTISTS', data['artists'])
+      }catch(e) {
+      }
+    },
     async loadTags(context) {
       try {
         const {data} = await API.post('tags')

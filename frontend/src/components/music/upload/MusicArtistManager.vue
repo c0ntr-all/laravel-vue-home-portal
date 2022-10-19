@@ -82,8 +82,6 @@
   </app-modal>
 </template>
 <script>
-  import empty from "../../../utils/empty"
-
   import {mapActions, mapGetters} from 'vuex'
 
   import AppModal from "../../default/AppModal";
@@ -107,10 +105,19 @@
       }
     },
     computed: {
-      ...mapGetters(['tags','tagsLoading','artists']),
+      ...mapGetters('adminMusicArtist', [
+        'tags',
+        'tagsLoading',
+        'artists'
+      ]),
     },
     methods: {
-      ...mapActions(['loadTagsSelect','switchTagsLoading','loadArtists']),
+      ...mapActions('adminMusicArtist', [
+        'loadTagsSelect',
+        'switchTagsLoading',
+        'loadArtists',
+        'updateArtist'
+      ]),
 
       openArtistUpdateModal(item) {
         //Подгрузка при открытии модального окна, чтобы select успел соотнести id'шники c name'ами тегов
@@ -155,18 +162,15 @@
           formData.append(key, model[key])
         }
 
-        this.$store.dispatch('updateArtist', formData).then(result => {
+        this.updateArtist(formData).then(result => {
           this.$message.success("Исполнитель успешно обновлён!");
         }).catch(error => {
           this.$message.error(error);
         })
       },
-      loadData() {
-        this.$store.dispatch('loadArtists')
-      }
     },
     mounted() {
-      this.loadData();
+      this.loadArtists();
     },
     components: {
       AppModal

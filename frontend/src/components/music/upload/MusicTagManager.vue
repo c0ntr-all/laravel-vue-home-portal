@@ -19,7 +19,7 @@
     </el-row>
   </el-form>
   <el-table
-    :data="this.$store.getters.music.tags"
+    :data="tags.items"
     style="width: 100%"
     highlight-current-row
   >
@@ -52,6 +52,7 @@
 </template>
 <script>
   import AppModal from "../../default/AppModal";
+  import { mapGetters, mapActions } from "vuex";
 
   export default {
     data() {
@@ -78,12 +79,14 @@
       }
     },
     methods: {
+      ...mapActions('music', ['loadTags','editTag','addTag']),
+
       openTagEditModal(item) {
         this.tagEdit.modal = true
         this.tagEdit.model.tag = item
       },
       editTagRequest() {
-        this.$store.dispatch('editTag', {
+        this.editTag( {
           id: this.tagEdit.model.tag.id,
           name: this.tagEdit.model.tag.label
         })
@@ -93,7 +96,7 @@
 
         formEl.validate((valid, fields) => {
           if (valid) {
-            this.$store.dispatch('addTag', this.tagAdd.model.tag)
+            this.addTag(this.tagAdd.model.tag)
             .then(result => {
               this.$message.success(`Тег ${result.label} успешно добавлен!`)
               this.tagAdd.model.tag = ''
@@ -103,12 +106,12 @@
           }
         })
       },
-      loadData() {
-        this.$store.dispatch('loadTags')
-      }
+    },
+    computed: {
+      ...mapGetters('music', ['tags'])
     },
     mounted() {
-      this.loadData();
+      this.loadTags();
     },
     components: {
       AppModal

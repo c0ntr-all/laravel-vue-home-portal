@@ -12,7 +12,7 @@ export default {
       timeTotal: '00:00',
       rewindProgressWidth: 0,
       playlist: [],
-      volume: 0.3,
+      volume: 0.01,
     }
   },
   mutations: {
