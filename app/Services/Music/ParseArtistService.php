@@ -12,6 +12,8 @@ class ParseArtistService
 {
     private string $noImage = 'no-image.gif';
 
+    private const EXTENSIONS = ['mp3'];
+
     /**
      * Проверяет являются ли переданные каталоги музыкальными альбомами формата 2019 - AlbumName
      *
@@ -74,7 +76,7 @@ class ParseArtistService
                         case 'tracks':
                             if (!is_dir($folder . '\\' . $dirItem)) {
                                 $info = pathinfo($folder . '\\' . $dirItem);
-                                if ($info['extension'] === 'mp3') {
+                                if (in_array($info['extension'], self::EXTENSIONS)) {
                                     $items[] = $info['basename'];
                                 } elseif ($info['extension'] === 'jpg' || $info['extension'] === 'jpeg' || $info['extension'] === 'png') {
                                     $items['cover'] = $folder . '\\' . $info['basename'];
@@ -146,7 +148,7 @@ class ParseArtistService
                 $trackParts = array_column($match, 0);
 
                 $tracks[$trackKey]['number'] = $trackParts[1];
-                $tracks[$trackKey]['name'] = rtrim($trackParts[2], '.mp3');
+                $tracks[$trackKey]['name'] = pathinfo($trackParts[2], PATHINFO_FILENAME);
                 $tracks[$trackKey]['path'] = $albumFolder . '\\' . $track;
             }
 

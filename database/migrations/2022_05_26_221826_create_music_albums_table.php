@@ -26,7 +26,11 @@ class CreateMusicAlbumsTable extends Migration
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('artist_id')->references('id')->on('music_artists');
+            $table->foreign('artist_id')
+                  ->references('id')
+                  ->on('music_artists')
+                  ->cascadeOnDelete()
+                  ->cascadeOnUpdate();
         });
     }
 

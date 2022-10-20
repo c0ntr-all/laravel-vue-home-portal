@@ -23,7 +23,11 @@ class CreateMusicTracksTable extends Migration
 
             $table->timestamps();
 
-            $table->foreign('album_id')->references('id')->on('music_albums');
+            $table->foreign('album_id')
+                  ->references('id')
+                  ->on('music_albums')
+                  ->cascadeOnDelete()
+                  ->cascadeOnUpdate();
         });
     }
 
