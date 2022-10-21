@@ -2,11 +2,14 @@
 
 namespace App\Helpers;
 
+use App\Traits\Makeable;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class ImageUpload
 {
+    use Makeable;
+
     private string $folder;
     private string $diskName;
     private string $sourceName;
@@ -16,14 +19,6 @@ class ImageUpload
         $this->setDiskName($diskName)
              ->setFolder($folder)
              ->setSourceName($sourceName);
-    }
-
-    /**
-     * @return ImageUpload
-     */
-    public static function make()
-    {
-        return new self(...func_get_args());
     }
 
     /**

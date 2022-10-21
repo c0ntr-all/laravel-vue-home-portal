@@ -14,6 +14,10 @@ class ParseArtistService
 
     private const EXTENSIONS = ['mp3'];
 
+    private const TYPES = ['lp', 'ep', 'single', 'demo', 'split', 'tribute', 'bootleg'];
+
+    private const VERSIONS = ['standart', 'instrumental', 'remaster', 'remix', 'live'];
+
     /**
      * Проверяет являются ли переданные каталоги музыкальными альбомами формата 2019 - AlbumName
      *
@@ -95,7 +99,7 @@ class ParseArtistService
      * Возвращает имя выбранного каталога из пути
      *
      * @param $folder
-     * @return mixed|string
+     * @return string
      */
     private function getFolderName($folder): string
     {
@@ -129,11 +133,11 @@ class ParseArtistService
         ];
         $result['albums'] = [];
 
-        foreach ($folders as $albumKey => $item) {
-            preg_match_all('/([0-9]{4}) - (.*)/i', $item, $match);
+        foreach ($folders as $albumKey => $albumName) {
+            preg_match_all('/([0-9]{4}) - (.*)/i', $albumName, $match);
             $albumParts = array_column($match, 0);
 
-            $albumFolder = $folder . $item;
+            $albumFolder = $folder . $albumName;
             $rawTracks = $this->parseFolder($albumFolder, 'tracks');
 
             $tracks = [];
@@ -158,6 +162,7 @@ class ParseArtistService
             array_push($result['albums'], [
                 'year' => $albumParts[1],
                 'name' => $albumParts[2],
+                'type' => $this->parseAlbumType($albumName),
                 'cover' => $cover,
                 'tracks' => $tracks
             ]);
@@ -176,60 +181,47 @@ class ParseArtistService
         $data = $this->collectData($folder);
 
         if ($data['success']) {
-
-            $artistModel = Artist::where(['name' => $data['artist']])->first();
-
-            if(empty($artistModel)) {
-                $artistModel = Artist::create([
-                    'user_id' => auth()->user()->id,
-                    'name' => $data['artist'],
-                    'image' => $this->noImage
-                ]);
-            }
+            $artistModel = Artist::updateOrCreate([
+                'name' => $data['artist']
+            ], [
+                'user_id' => auth()->user()->id,
+                'name' => $data['artist'],
+                'image' => $this->noImage
+            ]);
 
             $lastAlbumPoster = $this->noImage;
 
             foreach ($data['albums'] as $album) {
-
-                $albumModel = $artistModel->albums()->where(['name' => $album['name']])->first();
-
-                if(empty($albumModel)) {
-
-                    $posterPath = null;
-
-                    if (!empty($album['cover'])) {
-                        $image = new File($album['cover']);
-                        $posterPath = ImageUpload::make()
-                                                 ->setDiskName('public')
-                                                 ->setFolder('music/albums/posters')
-                                                 ->setSourceName($album['name'])
-                                                 ->upload($image);
-                        $lastAlbumPoster = $posterPath;
-                    } else {
-                        $posterPath = $this->noImage;
-                    }
-
-                    $albumModel = $artistModel->albums()->create([
-                        'user_id' => auth()->user()->id,
-                        'name' => $album['name'],
-                        'year' => $album['year'],
-                        'image' => $posterPath
-                    ]);
+                if (!empty($album['cover'])) {
+                    $image = new File($album['cover']);
+                    $posterPath = ImageUpload::make()
+                                             ->setDiskName('public')
+                                             ->setFolder('music/albums/posters')
+                                             ->setSourceName($album['name'])
+                                             ->upload($image);
+                    $lastAlbumPoster = $posterPath;
+                } else {
+                    $posterPath = $this->noImage;
                 }
 
+                $albumModel = $artistModel->albums()->updateOrCreate([
+                    'name' => $album['name']
+                ], [
+                    'user_id' => auth()->user()->id,
+                    'type' => $album['type'],
+                    'year' => $album['year'],
+                    'image' => $posterPath
+                ]);
+
                 foreach ($album['tracks'] as $track) {
-
-                    $trackModel = $albumModel->tracks()->where(['name' => $track['name']])->first();
-
-                    if(empty($trackModel)) {
-                        $trackModel = $albumModel->tracks()->create([
-                            'user_id' => auth()->user()->id,
-                            'number' => $track['number'],
-                            'name' => $track['name'],
-                            'path_windows' => $track['path'],
-                            'duration' => '00:03:00'
-                        ]);
-                    }
+                    $albumModel->tracks()->updateOrCreate([
+                        'name' => $track['name']
+                    ], [
+                        'user_id' => auth()->user()->id,
+                        'number' => $track['number'],
+                        'path_windows' => $track['path'],
+                        'duration' => '00:03:00'
+                    ]);
                 }
             }
 
@@ -240,5 +232,59 @@ class ParseArtistService
         } else {
             return $data;
         }
+    }
+
+    private function parseAlbumType($albumName)
+    {
+        if (!$this->checkAlbumName($albumName)) {
+            if (!$this->checkAlbumCircleBrackets($albumName)) {
+                return static::TYPES[0];
+            } else {
+                return $this->checkAlbumCircleBrackets($albumName);
+            }
+        } else {
+            return $this->checkAlbumName($albumName);
+        }
+    }
+
+    /**
+     * Проверяет непосредственно имя альбома, является ли оно типом, например Demo или Split
+     *
+     * @param $albumName
+     * @return mixed
+     */
+    private function checkAlbumName($string)
+    {
+        $nameWords = explode(' ', $string);
+
+        foreach (static::TYPES as $type) {
+            if (in_array($type, array_map('strtolower', $nameWords))) {
+                return $type;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Проверяет круглые скобки в имени альбома, есть ли там тип альбома, например, Single или EP
+     *
+     * @param $string
+     * @return mixed
+     */
+    private function checkAlbumCircleBrackets($string)
+    {
+        preg_match_all('/\((.+?)\)/', $string, $matches);
+
+        if (!empty($matches[1])) {
+            foreach ($matches[1] as $item) {
+                $lower = strtolower($item);
+                if (in_array($lower, static::TYPES)) {
+                    return $lower;
+                }
+            }
+        }
+
+        return null;
     }
 }

@@ -18,6 +18,7 @@ class CreateMusicTracksTable extends Migration
             $table->unsignedBigInteger('album_id');
             $table->integer('number');
             $table->string('name');
+            $table->integer('cd')->nullable();;
             $table->string('path_windows');
             $table->time('duration');
 

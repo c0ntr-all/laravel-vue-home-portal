@@ -17,10 +17,13 @@ class CreateMusicAlbumsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('artist_id');
-            $table->string('name');
             $table->integer('year');
+            $table->string('name');
+            $table->enum('type', ['lp', 'ep', 'single', 'demo', 'split', 'tribute', 'bootleg'])->default('lp');
+            $table->enum('version', ['instrumental', 'remaster', 'remix', 'live'])->nullable()->default(NULL);
+            $table->string('edition')->nullable();
             $table->text('content')->nullable();
-            $table->string('image')->nullable()->default(NULL);
+            $table->string('image')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
