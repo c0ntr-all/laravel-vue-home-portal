@@ -25,7 +25,7 @@ export default {
       state.music.tags.items = tags
     },
     ADD_TAG(state, tag) {
-      state.music.tags.push(tag)
+      state.music.tags.items.push(tag)
     },
     UPDATE_TAG(state, tag) {
       for(let tagKey in state.tags) {
@@ -99,10 +99,8 @@ export default {
 
       }
     },
-    async addTag(context, name) {
-      const {data} = await API.post('tags/store', {
-        tag: name
-      })
+    async addTag(context, tag) {
+      const {data} = await API.post('tags/store', tag)
       if (data.success) {
         context.commit('ADD_TAG', data['tags'])
 

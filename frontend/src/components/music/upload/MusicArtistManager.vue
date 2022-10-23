@@ -82,9 +82,11 @@
   </app-modal>
 </template>
 <script>
+  import empty from "../../../utils/empty"
+
   import {mapActions, mapGetters} from 'vuex'
 
-  import AppModal from "../../default/AppModal";
+  import AppModal from "../../default/AppModal"
 
   export default {
     data() {
@@ -124,8 +126,10 @@
         this.loadTagsSelect()
         this.artistUpdate.modal = true
 
-        delete item.albums
-        this.artistUpdate.model = item
+        this.artistUpdate.model.id = item.id
+        this.artistUpdate.model.name = item.name
+        this.artistUpdate.model.content = item.content
+        this.artistUpdate.model.tags = item.tags
       },
       closeArtistUpdateModal() {
         this.artistUpdate.modal = false
@@ -159,7 +163,9 @@
         const model = this.artistUpdate.model;
 
         for(let key in model) {
-          formData.append(key, model[key])
+          if (!empty(model[key])) {
+            formData.append(key, model[key])
+          }
         }
 
         this.updateArtist(formData).then(result => {

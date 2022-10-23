@@ -18,7 +18,7 @@ class Tag extends Model
     use HasDates;
 
     protected $fillable = [
-        'user_id',
+        'parent_id',
         'name',
         'slug',
         'updated_at',

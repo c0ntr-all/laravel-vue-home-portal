@@ -23,7 +23,6 @@ export default {
       state.artists = artists
     },
     UPDATE_ARTIST(state, artist) {
-      console.log(state.artists)
       for(let key in state.artists) {
         if(state.artists[key].id === artist.id) {
           state.artists[key] = artist

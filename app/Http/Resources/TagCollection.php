@@ -22,6 +22,7 @@ class TagCollection extends ResourceCollection
         return $this->collection->map(function($item){
             return [
                 'id' => $item->id,
+                'parent_id' => $item->parent_id,
                 'label' => $item->name,
                 'slug' => $item->slug,
                 'type' => '',

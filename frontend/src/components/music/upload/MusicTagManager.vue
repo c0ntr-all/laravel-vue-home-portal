@@ -5,16 +5,16 @@
     :model="tagAdd.model"
     :rules="tagAdd.rules"
     label-width="120px"
-    @submit.prevent="submitForm(this.$refs.tagFormRef)"
+    @submit.prevent="tagAddRequest(this.$refs.tagFormRef)"
   >
     <el-row class="mb-4">
       <el-col :span="4"><div class="grid-content ep-bg-purple" />
         <el-form-item label-width="0" prop="tag">
-          <el-input v-model="tagAdd.model.tag" type="text" placeholder="Введите тег!" />
+          <el-input v-model="tagAdd.model.tagNew" type="text" placeholder="Введите тег!" />
         </el-form-item>
       </el-col>
       <el-col :span="4"><div class="grid-content ep-bg-purple-light" />
-        <el-button type="primary" @click="submitForm(this.$refs.tagFormRef)">Добавить</el-button>
+        <el-button type="primary" @click="tagAddRequest(this.$refs.tagFormRef)">Добавить</el-button>
       </el-col>
     </el-row>
   </el-form>
@@ -26,9 +26,10 @@
     <el-table-column prop="id" label="Id" width="70" sortable />
     <el-table-column prop="label" label="Имя" width="200" sortable />
     <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
-    <el-table-column label="Действия" width="250">
+    <el-table-column label="Действия" width="350">
       <template #default="scope">
         <el-button size="small" @click="openTagEditModal(scope.row)">Редактировать</el-button>
+        <el-button size="small" @click="openTagAddModal(scope.row)">Добавить</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -46,7 +47,34 @@
       />
     </template>
     <template #footer>
-      <el-button type="primary" @click="editTagRequest" round>Создать</el-button>
+      <el-button type="primary" @click="tagEditRequest" round>Сохранить</el-button>
+    </template>
+  </app-modal>
+  <app-modal :openModal="tagAdd.modal" @closeModal="tagAdd.modal = false">
+    <template #title>
+      <h3>Добавить дочерний тег для "{{ tagAdd.model.tag.label }}"</h3>
+    </template>
+    <template #content>
+      <el-form
+        ref="tagNewFormRef"
+        :model="tagAdd.model"
+        :rules="tagAdd.rules"
+        label-width="120px"
+        @submit.prevent="tagAddRequest(this.$refs.tagNewFormRef, true)"
+      >
+        <el-form-item label-width="0" prop="tag">
+          <el-input
+            v-model="this.tagAdd.model.tagNewChild"
+            maxlength="20"
+            placeholder="Введите имя тега"
+            show-word-limit
+            type="text"
+          />
+        </el-form-item>
+      </el-form>
+    </template>
+    <template #footer>
+      <el-button type="primary" @click="tagAddRequest(this.$refs.tagNewFormRef, true)" round>Отправить</el-button>
     </template>
   </app-modal>
 </template>
@@ -67,8 +95,11 @@
             }]
           },
           model: {
-            tag: ''
-          }
+            tag: {},
+            tagNew: '',
+            tagNewChild: ''
+          },
+          modal: false
         },
         tagEdit: {
           model: {
@@ -85,25 +116,34 @@
         this.tagEdit.modal = true
         this.tagEdit.model.tag = item
       },
-      editTagRequest() {
-        this.editTag( {
-          id: this.tagEdit.model.tag.id,
-          name: this.tagEdit.model.tag.label
-        })
+      openTagAddModal(item) {
+        this.tagAdd.modal = true
+        this.tagAdd.model.tag = item
       },
-      submitForm(formEl) {
+      tagAddRequest(formEl, isChild) {
         if (!formEl) return
+
+        let tag = {
+          tag: isChild ? this.tagAdd.model.tagNewChild : this.tagAdd.model.tagNew,
+          parent_id: isChild ? this.tagAdd.model.tag.id : 0
+        }
 
         formEl.validate((valid, fields) => {
           if (valid) {
-            this.addTag(this.tagAdd.model.tag)
-            .then(result => {
-              this.$message.success(`Тег ${result.label} успешно добавлен!`)
-              this.tagAdd.model.tag = ''
-            }).catch(error => {
+            this.addTag(tag)
+              .then(result => {
+                this.$message.success(`Тег ${result.label} успешно добавлен!`)
+                this.tagAdd.model.tagNew = ''
+              }).catch(error => {
               this.$message.error(error.message)
             })
           }
+        })
+      },
+      tagEditRequest() {
+        this.editTag( {
+          id: this.tagEdit.model.tag.id,
+          name: this.tagEdit.model.tag.label
         })
       },
     },
