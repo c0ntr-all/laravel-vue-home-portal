@@ -9,7 +9,7 @@ use App\Models\Music\Track;
 use App\Models\Traits\HasDates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Tag extends Model
@@ -45,12 +45,17 @@ class Tag extends Model
     }
 
     /**
-     * Получить пользователя, создавшего тег
+     * Получение дочерних тегов
      *
-     * @return BelongsTo
+     * @return HasMany
      */
-    public function user(): BelongsTo
+    public function children(): HasMany
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(__CLASS__, 'parent_id', 'id') ;
+    }
+
+    public function childrenCategories(): HasMany
+    {
+        return $this->hasMany(__CLASS__, 'parent_id', 'id')->with('children');
     }
 }

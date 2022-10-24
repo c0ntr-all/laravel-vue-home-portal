@@ -65,6 +65,33 @@ class TagController extends Controller
         }
     }
 
+    public function tree(Tag $tag): array
+    {
+        if ($tag->childrenCategories) {
+            $item = [
+                'id' => $tag->id,
+                'name' => $tag->name,
+                'slug' => $tag->slug,
+                'content' => $tag->content,
+                'parent_id' => $tag->parent_id,
+            ];
+
+            foreach ($tag->childrenCategories as $value) {
+                $item['children'][] = $this->tree($value);
+            }
+
+            return $item;
+        }
+
+        return [
+            'id' => $tag->id,
+            'name' => $tag->name,
+            'slug' => $tag->slug,
+            'content' => $tag->content,
+            'parent_id' => $tag->parent_id,
+        ];
+    }
+
     public function tagResponse(Tag $tag): array
     {
         $resource = new TagResource($tag);

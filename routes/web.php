@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Music\Artist;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Route;
 use App\Models\Tasks\Task;
 use App\Models\Tasks\TaskList;
@@ -23,10 +24,12 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 /*Для тестирования*/
-Route::get('/tasks/test', function() {
-    $tasks = Task::find(5);
-    $taskResource = new \App\Http\Resources\TaskResource($tasks);
-    dd($taskResource->toArray([]));
+Route::get('/test', function() {
+    $resources = Tag::where('parent_id', 0)
+       ->with('childrenCategories')
+       ->get();
+
+    dd($resources);
 
 })->name('test');
 
