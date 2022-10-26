@@ -92,6 +92,12 @@ class TagController extends Controller
         ];
     }
 
+    public function test($id): array
+    {
+        $tag = Tag::where('id', $id)->first();
+        dd($this->tree($tag));
+    }
+
     public function tagResponse(Tag $tag): array
     {
         $resource = new TagResource($tag);

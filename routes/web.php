@@ -24,14 +24,7 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 /*Для тестирования*/
-Route::get('/test', function() {
-    $resources = Tag::where('parent_id', 0)
-       ->with('childrenCategories')
-       ->get();
-
-    dd($resources);
-
-})->name('test');
+Route::get('/test/{id}', [App\Http\Controllers\TagController::class, 'test'])->name('test');
 
 Route::get('/tasks/test2', function() {
     $tasks = TaskList::find(1);
