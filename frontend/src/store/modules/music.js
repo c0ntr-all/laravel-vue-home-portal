@@ -90,7 +90,7 @@ export default {
     },
     async loadTags(context) {
       try {
-        const {data} = await API.post('tags')
+        const {data} = await API.post('tags/tree')
         if(!data) {
           throw new Error('Нет данных!')
         }

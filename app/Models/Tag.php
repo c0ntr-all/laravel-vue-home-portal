@@ -54,6 +54,11 @@ class Tag extends Model
         return $this->hasMany(__CLASS__, 'parent_id', 'id') ;
     }
 
+    /**
+     * Получение неограниченной вложенности дочерних тегов
+     *
+     * @return HasMany
+     */
     public function childrenCategories(): HasMany
     {
         return $this->hasMany(__CLASS__, 'parent_id', 'id')->with('children');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Music\Tag\TagTreeCollection;
 use App\Http\Resources\TagCollection;
 use App\Http\Resources\TagSelectCollection;
 use App\Http\Resources\TagResource;
@@ -41,6 +42,15 @@ class TagController extends Controller
         return new TagSelectCollection($this->tag->getItems());
     }
 
+    /**
+     * @return TagTreeCollection
+     */
+    public function tagsTree(): TagTreeCollection
+    {
+        //todo возможно, тут надо сделать отдельный метод на получение сразу всех тегов с parent_id = 0 вместо getItems
+        return new TagTreeCollection($this->tag->getItems());
+    }
+
     public function store(StoreRequest $request)
     {
         $existTag = Tag::where(['name' => $request->validated()['tag']])->get();
@@ -63,39 +73,6 @@ class TagController extends Controller
         if ($updated) {
             return $request->validated();
         }
-    }
-
-    public function tree(Tag $tag): array
-    {
-        if ($tag->childrenCategories) {
-            $item = [
-                'id' => $tag->id,
-                'name' => $tag->name,
-                'slug' => $tag->slug,
-                'content' => $tag->content,
-                'parent_id' => $tag->parent_id,
-            ];
-
-            foreach ($tag->childrenCategories as $value) {
-                $item['children'][] = $this->tree($value);
-            }
-
-            return $item;
-        }
-
-        return [
-            'id' => $tag->id,
-            'name' => $tag->name,
-            'slug' => $tag->slug,
-            'content' => $tag->content,
-            'parent_id' => $tag->parent_id,
-        ];
-    }
-
-    public function test($id): array
-    {
-        $tag = Tag::where('id', $id)->first();
-        dd($this->tree($tag));
     }
 
     public function tagResponse(Tag $tag): array
