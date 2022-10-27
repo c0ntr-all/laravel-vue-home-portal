@@ -20,11 +20,17 @@
   </el-form>
   <el-table
     :data="tags.items"
+    row-key="id"
+    :tree-props="{ children: 'children'}"
     style="width: 100%"
     highlight-current-row
   >
-    <el-table-column prop="id" label="Id" width="70" sortable />
-    <el-table-column prop="label" label="Имя" width="200" sortable />
+    <el-table-column prop="label" label="Имя" width="500" sortable>
+      <template #default="scope">
+        <span class="el-table__placeholder" v-if="!scope.row.children && scope.row.parent_id === 0"></span>
+        {{ scope.row.label }}
+      </template>
+    </el-table-column>
     <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
     <el-table-column label="Действия" width="350">
       <template #default="scope">
