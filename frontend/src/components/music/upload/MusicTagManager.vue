@@ -46,7 +46,7 @@
     <template #content>
       <el-input
         v-model="this.tagEdit.model.tag.label"
-        maxlength="20"
+        maxlength="30"
         placeholder="Введите имя тега"
         show-word-limit
         type="text"
@@ -71,7 +71,7 @@
         <el-form-item label-width="0" prop="tag">
           <el-input
             v-model="this.tagAdd.model.tagNewChild"
-            maxlength="20"
+            maxlength="30"
             placeholder="Введите имя тега"
             show-word-limit
             type="text"
