@@ -29,7 +29,6 @@
             <music-artist-card-row v-if="mode === 'row'" v-for="artist in artists.items" :key="artist.id" :artist="artist" />
             <music-artist-card v-else v-for="artist in artists.items" :key="artist.id" :artist="artist" />
           </el-space>
-          div.
         </div>
       </div>
     </div>
@@ -45,7 +44,7 @@
   export default {
     data() {
       return {
-        mode: 'row'
+        mode: 'card'
       }
     },
     methods: {

@@ -30,7 +30,7 @@
     max-height: 100%;
     position: relative;
     white-space: normal;
-    width: 237px;
+    width: 250px;
 
     .tags-list {
       column-gap: .250rem;
@@ -47,7 +47,7 @@
     &__image {
 
       img {
-        max-height: 150px;
+        max-height: 250px;
         width: 100%;
         object-fit: cover;
       }
