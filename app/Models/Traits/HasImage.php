@@ -13,10 +13,6 @@ trait HasImage
     {
         $rootPath = env('APP_URL') . '/storage/';
 
-        if (!empty($this->image)) {
-            return $rootPath . $this->image;
-        } else {
-            return $rootPath . 'no-image.gif';
-        }
+        return !empty($this->image) ? $rootPath . $this->image : $rootPath . 'no-image.gif';
     }
 }

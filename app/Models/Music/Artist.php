@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
+/**
+ * @mixin \Eloquent
+ */
 class Artist extends Model
 {
     use HasFactory;
@@ -40,13 +43,13 @@ class Artist extends Model
         return $this->hasMany(Album::class, 'artist_id', 'id');
     }
 
-    public static function getFiltered(array $filters = []): Collection
+    public static function getFiltered(array $filters = [])
     {
         return static::filter($filters, 'tag', 'tags', 'name')
                     ->when(array_key_exists('offset', $filters), function ($q) use ($filters) {
                         $q->offset($filters['offset'])->limit($filters['limit']);
                     })
-                    ->get();
+                    ->cursorPaginate(5);
     }
 
     public function scopeFilter($query, array $filters, string $key, string $relation, string $column)

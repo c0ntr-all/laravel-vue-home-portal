@@ -29,6 +29,7 @@
             <music-artist-card-row v-if="mode === 'row'" v-for="artist in artists.items" :key="artist.id" :artist="artist" />
             <music-artist-card v-else v-for="artist in artists.items" :key="artist.id" :artist="artist" />
           </el-space>
+          <el-button type="primary" @click="getArtists()">Загрузить еще</el-button>
         </div>
       </div>
     </div>
@@ -60,7 +61,7 @@
     },
     mounted() {
       this.loadTags();
-      this.loadFilter();
+      // this.loadFilter();
       this.getArtists();
     }
   }
