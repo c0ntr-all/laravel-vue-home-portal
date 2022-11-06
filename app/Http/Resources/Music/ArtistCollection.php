@@ -23,9 +23,10 @@ class ArtistCollection extends ResourceCollection
             'artists' => $this->collection,
             'count' => $this->count(),
             'pagination' => [
-                'per_page' => $this->perPage(),
-                'next_page_url' => $this->nextPageUrl(),
-                'prev_page_url' => $this->previousPageUrl(),
+                'perPage' => $this->perPage(),
+                'nextPageUrl' => $this->nextPageUrl(),
+                'prevPageUrl' => $this->previousPageUrl(),
+                'hasPages' => $this->hasMorePages()
             ]
         ];
     }

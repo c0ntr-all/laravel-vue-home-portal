@@ -8,7 +8,13 @@ export default {
       music: {
         artists: {
           items: [],
-          loading: true
+          loading: true,
+          pagination: {
+            perPage: 0,
+            hasPages: false,
+            nextPageUrl: '',
+            prevPageUrl: ''
+          }
         },
         tags: {
           items: [],
@@ -18,8 +24,8 @@ export default {
     }
   },
   mutations: {
-    LOAD_ARTISTS(state, artists) {
-      state.music.artists.items = artists
+    SET_ARTISTS(state, artists) {
+      state.music.artists.items.push(...artists)
     },
     LOAD_TAGS(state, tags) {
       state.music.tags.items = tags
@@ -37,36 +43,32 @@ export default {
     SET_RATING(state, rating) {
 
     },
+    SET_PAGINATION(state, pagination) {
+      state.music.artists.pagination = pagination
+    },
     SET_LOADING(state, payload) {
       state.music[payload['entity']].loading = payload['value']
     }
   },
   actions: {
-    async createMusicArtist(context, newArtist) {
-      const {data} = await API.post('music/artists/store', newArtist)
-      if(data) {
-        return 'test'
-      }
-    },
-    async loadArtist(commit) {
-      try {
-        const {data} = await API.post('music/artists')
-        if(!data) {
-          throw new Error('Нет данных!')
-        }
-        commit('LOAD_ARTISTS', data['artists'])
-      }catch(e) {
-      }
-    },
     async getArtists(context, filters = []) {
       try {
         context.commit('SET_LOADING', {
           entity: 'artists',
           value: true
         })
-        const {data} = await API.post('music/artists/get', {
+        let requestData = {
           filters: filters
-        })
+        }
+
+        let url = context.state.music.artists.pagination.nextPageUrl;
+        let hasPages = context.state.music.artists.pagination.hasPages;
+        if (url && hasPages) {
+          let obUrl = new URL(url)
+          requestData.cursor = obUrl.searchParams.get("cursor")
+        }
+
+        const {data} = await API.post('music/artists/get', requestData)
         if(!data) {
           throw new Error('Нет данных!')
         }
@@ -74,7 +76,8 @@ export default {
           entity: 'artists',
           value: false
         })
-        context.commit('LOAD_ARTISTS', data['artists'])
+        context.commit('SET_ARTISTS', data['artists'])
+        context.commit('SET_PAGINATION', data['pagination'])
       }catch(e) {
       }
     },

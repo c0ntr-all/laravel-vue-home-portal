@@ -49,7 +49,7 @@ class Artist extends Model
                     ->when(array_key_exists('offset', $filters), function ($q) use ($filters) {
                         $q->offset($filters['offset'])->limit($filters['limit']);
                     })
-                    ->cursorPaginate(5);
+                    ->cursorPaginate(12);
     }
 
     public function scopeFilter($query, array $filters, string $key, string $relation, string $column)
