@@ -25,6 +25,9 @@ export default {
   },
   mutations: {
     SET_ARTISTS(state, artists) {
+      state.music.artists.items = artists
+    },
+    PUSH_ARTISTS(state, artists) {
       state.music.artists.items.push(...artists)
     },
     LOAD_TAGS(state, tags) {
@@ -52,11 +55,14 @@ export default {
   },
   actions: {
     async getArtists(context, filters = []) {
+      //todo Переделать этот метод по-человечески. И чтобы после подгрузки не ломалась фильтрация
       try {
         context.commit('SET_LOADING', {
           entity: 'artists',
           value: true
         })
+
+        let push = false
         let requestData = {
           filters: filters
         }
@@ -66,6 +72,7 @@ export default {
         if (url && hasPages) {
           let obUrl = new URL(url)
           requestData.cursor = obUrl.searchParams.get("cursor")
+          push = true
         }
 
         const {data} = await API.post('music/artists/get', requestData)
@@ -76,7 +83,10 @@ export default {
           entity: 'artists',
           value: false
         })
-        context.commit('SET_ARTISTS', data['artists'])
+
+        const mutation = push ? 'PUSH_ARTISTS' : 'SET_ARTISTS'
+
+        context.commit(mutation, data['artists'])
         context.commit('SET_PAGINATION', data['pagination'])
       }catch(e) {
       }

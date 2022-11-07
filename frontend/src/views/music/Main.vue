@@ -29,9 +29,10 @@
             <music-artist-card-row v-if="mode === 'row'" v-for="artist in artists.items" :key="artist.id" :artist="artist" />
             <music-artist-card v-else v-for="artist in artists.items" :key="artist.id" :artist="artist" />
           </el-space>
-          <div>
-            <el-button type="primary" @click="getArtists()" v-if="artists.pagination.hasPages">Загрузить еще</el-button>
+          <div v-if="artists.pagination.hasPages">
+            <el-button type="primary" @click="getArtists()">Загрузить еще</el-button>
           </div>
+          <p v-if="!artists.loading && !artists.items.length">Не найдено подходящих исполнителей!</p>
         </div>
       </div>
     </div>
