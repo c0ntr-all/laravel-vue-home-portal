@@ -120,7 +120,9 @@
         let filters = {
           tag: this.genre.value
         }
-        this.$store.dispatch('music/getArtists', filters)
+        this.$store.dispatch('music/getArtists', {
+          filters: filters
+        })
       }
     }
   }

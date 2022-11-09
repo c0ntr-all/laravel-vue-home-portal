@@ -54,42 +54,36 @@ export default {
     }
   },
   actions: {
-    async getArtists(context, filters = []) {
-      //todo Переделать этот метод по-человечески. И чтобы после подгрузки не ломалась фильтрация
-      try {
-        context.commit('SET_LOADING', {
-          entity: 'artists',
-          value: true
-        })
+    async getArtists(context, payload = {}) {
+      context.commit('SET_LOADING', {
+        entity: 'artists',
+        value: true
+      })
 
-        let push = false
-        let requestData = {
-          filters: filters
-        }
+      const loadMore = payload.loadMore
+      delete payload.loadMore
 
+      let hasPages = context.state.music.artists.pagination.hasPages;
+
+      if (loadMore && hasPages) {
         let url = context.state.music.artists.pagination.nextPageUrl;
-        let hasPages = context.state.music.artists.pagination.hasPages;
-        if (url && hasPages) {
-          let obUrl = new URL(url)
-          requestData.cursor = obUrl.searchParams.get("cursor")
-          push = true
-        }
-
-        const {data} = await API.post('music/artists/get', requestData)
-        if(!data) {
-          throw new Error('Нет данных!')
-        }
-        context.commit('SET_LOADING', {
-          entity: 'artists',
-          value: false
-        })
-
-        const mutation = push ? 'PUSH_ARTISTS' : 'SET_ARTISTS'
-
-        context.commit(mutation, data['artists'])
-        context.commit('SET_PAGINATION', data['pagination'])
-      }catch(e) {
+        let obUrl = new URL(url)
+        payload.cursor = obUrl.searchParams.get("cursor")
       }
+
+      const {data} = await API.post('music/artists/get', payload)
+      if(!data) {
+        throw new Error('Нет данных!')
+      }
+      context.commit('SET_LOADING', {
+        entity: 'artists',
+        value: false
+      })
+
+      const mutation = loadMore ? 'PUSH_ARTISTS' : 'SET_ARTISTS'
+
+      context.commit(mutation, data['artists'])
+      context.commit('SET_PAGINATION', data['pagination'])
     },
     async loadFilter(commit) {
       try {
