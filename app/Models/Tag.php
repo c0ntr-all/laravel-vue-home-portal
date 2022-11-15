@@ -41,7 +41,7 @@ class Tag extends Model
 
     public function getItems(): Collection
     {
-        return Tag::all();
+        return $this->orderBy('name')->get();
     }
 
     /**

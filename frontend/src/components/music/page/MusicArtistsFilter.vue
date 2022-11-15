@@ -17,7 +17,14 @@
       :value="item.value"
     />
   </el-select>
-  <el-select v-model="genre.value" class="m-2" placeholder="Select Genre">
+  <el-select
+    v-model="genre.value"
+    :loading="this.tagsLoading"
+    multiple
+    filterable
+    placeholder="Select Genre"
+    style="width: 340px"
+  >
     <el-option
       v-for="item in genre.options"
       :key="item.value"
@@ -118,7 +125,7 @@
     methods: {
       submitFilter() {
         let filters = {
-          tag: this.genre.value
+          tags: this.genre.value
         }
         this.$store.dispatch('music/getArtists', {
           filters: filters

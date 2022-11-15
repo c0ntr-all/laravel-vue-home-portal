@@ -45,17 +45,16 @@ class Artist extends Model
 
     public static function getFiltered(array $filters = [])
     {
-        return static::filter($filters, 'tag', 'tags', 'name')
-                    ->when(array_key_exists('offset', $filters), function ($q) use ($filters) {
-                        $q->offset($filters['offset'])->limit($filters['limit']);
-                    })
-                    ->cursorPaginate(12);
+        return static::filter($filters, 'tags', 'tags', 'name')
+                      ->cursorPaginate(12);
     }
 
     public function scopeFilter($query, array $filters, string $key, string $relation, string $column)
     {
         return $query->when(array_key_exists($key, $filters), function ($q) use ($filters, $relation, $column, $key) {
-            $q->whereRelation($relation, $column, $filters[$key]);
+            foreach ($filters[$key] as $filter) {
+                $q->whereRelation($relation, $column, $filter);
+            }
         });
     }
 }

@@ -87,7 +87,7 @@ export default {
     },
     async loadFilter(commit) {
       try {
-        const {data} = await API.post('music/artists')
+        const {data} = await API.post('music/filters')
         if(!data) {
           throw new Error('Нет данных!')
         }
