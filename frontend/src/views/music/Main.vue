@@ -19,9 +19,7 @@
           </router-link>
         </div>
       </div>
-      <div class="music__filter">
-        <music-artists-filter></music-artists-filter>
-      </div>
+      <music-artists-filter></music-artists-filter>
       <div class="artists">
         <h3>Artists</h3>
         <div class="artists-wrap" v-loading="artists.loading">
