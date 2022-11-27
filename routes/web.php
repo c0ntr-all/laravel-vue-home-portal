@@ -27,23 +27,22 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/test/{id}', [App\Http\Controllers\TagController::class, 'test'])->name('test');
 
 Route::get('/test2', function() {
-
     $path = 'F:\Music\Metal\Cyber metal\Sybreed\2004 - Slave Design\01. Bioactive.mp3';
 
-    $mp3 = new Acekyd\LaravelMP3\LaravelMP3();
-    $artist = $mp3->getArtist($path); // Получить Исполнителя
-    $album = $mp3->getAlbum($path); // Получить Альбом
-    $year = $mp3->getYear($path); // Получить год
-    $genre = $mp3->getGenre($path); // Получить жанр
-    $title = $mp3->getTitle($path); // Получить название трека
-    $trackNo = $mp3->getTrackNo($path); // Получить номер трека
-    $bitrate = $mp3->getBitrate($path); // Получить битрейт
-    $duration = $mp3->getDuration($path); // Получить длительность трека
-    $format = $mp3->getFormat($path); // Получить формат трека
-    $mime = $mp3->getMime($path); // Получить MIME тип файла
-    $isLossless = $mp3->isLossless($path); // Ялвяется ли lossless
+    $getID3 = new getID3();
+    $file = $getID3->analyze($path);
 
-    dd($artist, $album, $year, $genre, $title, $trackNo, $bitrate, $duration, $format, $mime, $isLossless);
+    $artist = $file['id3v2']['comments']['artist']; // Получить Исполнителя
+    $album = $file['id3v2']['comments']['album']; // Получить Альбом
+    $year = $file['id3v2']['comments']['year']; // Получить год
+    $genre = $file['id3v2']['comments']['genre']; // Получить жанр
+    $title = $file['id3v2']['comments']['title']; // Получить название трека
+    $trackNo = $file['id3v2']['comments']['track_number']; // Получить номер трека
+    $bitrate = $file['audio']['bitrate']; // Получить битрейт
+    $duration = $file['playtime_string']; // Получить длительность трека
+    $format = $file['audio']['dataformat']; // Получить формат трека
+
+    dd($artist, $album, $year, $genre, $title, $trackNo, $bitrate, $duration, $format);
 
 })->name('test2');
 
