@@ -49,11 +49,33 @@ class Artist extends Model
                       ->cursorPaginate(12);
     }
 
+    /**
+     * Формирует запрос фиьтрации по параметрам в рамках конкретного отношения
+     * Фильтры:
+     * array tags - Массив тегов.
+     * string type - Strict/Hierarchical. Поиск конкретного тега или также всех его производных.
+     * bool union - Искать все теги в рамках одного исполнителя или важно присутствие хотя бы одного тега.
+     *
+     * @param $query
+     * @param array $filters
+     * @param string $key
+     * @param string $relation
+     * @param string $column
+     * @return mixed
+     */
     public function scopeFilter($query, array $filters, string $key, string $relation, string $column)
     {
         return $query->when(array_key_exists($key, $filters), function ($q) use ($filters, $relation, $column, $key) {
-            foreach ($filters[$key] as $filter) {
-                $q->whereRelation($relation, $column, $filter);
+            $union = $filters['union'];
+
+            if ($union) {
+                foreach ($filters[$key] as $filter) {
+                    $q->whereRelation($relation, $column, $filter);
+                }
+            } else {
+                $q->whereHas('tags', function ($q) use ($column, $filters, $key) {
+                    $q->whereIn($column, $filters[$key]);
+                });
             }
         });
     }
