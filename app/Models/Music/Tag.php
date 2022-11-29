@@ -23,6 +23,10 @@ class Tag extends Model
         'updated_at',
     ];
 
+    protected $casts = [
+        'common' => 'boolean'
+    ];
+
     public function artists(): MorphToMany
     {
         return $this->morphedByMany(Artist::class, 'tagable');

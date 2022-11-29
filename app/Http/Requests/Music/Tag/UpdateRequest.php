@@ -15,7 +15,8 @@ class UpdateRequest extends FormRequest
     {
         return [
             'id' => 'required|int',
-            'name' => 'required|max:20'
+            'name' => 'required|max:20',
+            'common' => 'required|boolean',
         ];
     }
 }

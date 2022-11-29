@@ -36,6 +36,7 @@ class TagTreeCollection extends ResourceCollection
                 'type' => '',
                 'slug' => $tag->slug,
                 'content' => $tag->content,
+                'common' => $tag->common,
                 'parent_id' => $tag->parent_id,
                 'createdAt' => $tag->created_at
             ];
@@ -53,6 +54,7 @@ class TagTreeCollection extends ResourceCollection
             'type' => '',
             'slug' => $tag->slug,
             'content' => $tag->content,
+            'common' => $tag->common,
             'parent_id' => $tag->parent_id,
             'createdAt' => $tag->created_at
         ];

@@ -15,7 +15,8 @@ class StoreRequest extends FormRequest
     {
         return [
             'tag' => 'required|string|max:30',
-            'parent_id' => 'sometimes|int'
+            'parent_id' => 'sometimes|int',
+            'common' => 'required|int',
         ];
     }
 }

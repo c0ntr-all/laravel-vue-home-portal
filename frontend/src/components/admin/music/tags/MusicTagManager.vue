@@ -7,13 +7,18 @@
     label-width="120px"
     @submit.prevent="tagAddRequest(this.$refs.tagFormRef)"
   >
-    <el-row class="mb-4">
-      <el-col :span="4"><div class="grid-content ep-bg-purple" />
+    <el-row class="mb-4" :gutter="10">
+      <el-col :span="4">
         <el-form-item label-width="0" prop="tag">
           <el-input v-model="tagAdd.model.tagNew" type="text" placeholder="Введите тег!" />
         </el-form-item>
       </el-col>
-      <el-col :span="4"><div class="grid-content ep-bg-purple-light" />
+      <el-col :span="3">
+        <el-form-item label-width="0" prop="common">
+          <el-checkbox v-model="tagAdd.model.common" label="Основной" border />
+        </el-form-item>
+      </el-col>
+      <el-col :span="2">
         <el-button type="primary" @click="tagAddRequest(this.$refs.tagFormRef)">Добавить</el-button>
       </el-col>
     </el-row>
@@ -44,6 +49,7 @@
       <h3>Редактировать тег</h3>
     </template>
     <template #content>
+      <el-form-item label-width="0" prop="tag">
       <el-input
         v-model="this.tagEdit.model.tag.label"
         maxlength="40"
@@ -51,6 +57,10 @@
         show-word-limit
         type="text"
       />
+      </el-form-item>
+      <el-form-item label-width="0" prop="tag">
+        <el-checkbox v-model="tagEdit.model.tag.common" label="Основной" border />
+      </el-form-item>
     </template>
     <template #footer>
       <el-button type="primary" @click="tagEditRequest" round>Сохранить</el-button>
@@ -77,6 +87,9 @@
             type="text"
           />
         </el-form-item>
+        <el-form-item label-width="0" prop="tag">
+          <el-checkbox v-model="tagAdd.model.common" label="Основной" border />
+        </el-form-item>
       </el-form>
     </template>
     <template #footer>
@@ -102,6 +115,7 @@
           },
           model: {
             tag: {},
+            common: true,
             tagNew: '',
             tagNewChild: ''
           },
@@ -109,7 +123,8 @@
         },
         tagEdit: {
           model: {
-            tag: ''
+            tag: '',
+            common: true
           },
           modal: false
         },
@@ -131,7 +146,8 @@
 
         let tag = {
           tag: isChild ? this.tagAdd.model.tagNewChild : this.tagAdd.model.tagNew,
-          parent_id: isChild ? this.tagAdd.model.tag.id : 0
+          parent_id: isChild ? this.tagAdd.model.tag.id : 0,
+          common: this.tagAdd.model.common,
         }
 
         formEl.validate((valid, fields) => {
@@ -149,7 +165,8 @@
       tagEditRequest() {
         this.editTag( {
           id: this.tagEdit.model.tag.id,
-          name: this.tagEdit.model.tag.label
+          name: this.tagEdit.model.tag.label,
+          common: this.tagEdit.model.tag.common,
         })
       },
     },

@@ -19,6 +19,7 @@ class CreateMusicTagsTable extends Migration
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->text('content')->nullable();
+            $table->boolean('common')->default(1);
             $table->timestamps();
 
             $table->foreign('parent_id')->references('id')->on('music_tags');
