@@ -97,7 +97,7 @@ export default {
     },
     async loadTags(context) {
       try {
-        const {data} = await API.post('tags/tree')
+        const {data} = await API.post('music/tags/tree')
         if(!data) {
           throw new Error('Нет данных!')
         }
@@ -107,7 +107,7 @@ export default {
       }
     },
     async addTag(context, tag) {
-      const {data} = await API.post('tags/store', tag)
+      const {data} = await API.post('music/tags/store', tag)
       if (data.success) {
         context.commit('ADD_TAG', data['tags'])
 
@@ -117,7 +117,7 @@ export default {
       }
     },
     async editTag(context, tag) {
-      const {data} = await API.post('tags/update', tag)
+      const {data} = await API.post('music/tags/update', tag)
       if (data.success) {
         context.commit('UPDATE_TAG', data['tags'])
 

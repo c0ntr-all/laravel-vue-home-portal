@@ -3,13 +3,12 @@
 namespace App\Models\Music;
 
 use App\Models\Traits\HasDates;
-use App\Models\Traits\HasTags;
+use App\Models\Traits\HasMusicTags;
 use App\Models\Traits\HasImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Collection;
 
 /**
  * @mixin \Eloquent
@@ -19,7 +18,7 @@ class Artist extends Model
     use HasFactory;
     use SoftDeletes;
     use HasDates;
-    use HasTags;
+    use HasMusicTags;
     use HasImage;
 
     protected $table = 'music_artists';

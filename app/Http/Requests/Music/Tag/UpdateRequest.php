@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Tag;
+namespace App\Http\Requests\Music\Tag;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,8 +14,8 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tag' => 'required|string|max:30',
-            'parent_id' => 'sometimes|int'
+            'id' => 'required|int',
+            'name' => 'required|max:20'
         ];
     }
 }

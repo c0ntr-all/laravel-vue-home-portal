@@ -1,22 +1,20 @@
 <?php
 
-use App\Http\Controllers\RatingController;
-use Illuminate\Http\Request;
-
 use App\Http\Controllers\AuthController;
-
-use App\Http\Controllers\Finances\FinancesController;
-use App\Http\Controllers\Tasks\TaskListController;
-use App\Http\Controllers\Tasks\TaskController;
-use App\Http\Controllers\Reminds\RemindController;
-use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\TagController;
-use App\Http\Controllers\Music\ArtistController;
+use App\Http\Controllers\Finances\FinancesController;
+use App\Http\Controllers\FolderController;
 use App\Http\Controllers\Music\AlbumController;
+use App\Http\Controllers\Music\ArtistController;
+use App\Http\Controllers\Music\TagController;
 use App\Http\Controllers\Music\TrackController;
 use App\Http\Controllers\Music\UploadController;
-use App\Http\Controllers\FolderController;
+use App\Http\Controllers\RatingController;
+use App\Http\Controllers\Reminds\RemindController;
+use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\Tasks\TaskController;
+use App\Http\Controllers\Tasks\TaskListController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,14 +80,13 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::prefix('tracks')->group(function() {
                 Route::post('{track}/play', [TrackController::class, 'play']);
             });
-        });
-
-        Route::prefix('tags')->group(function() {
-            Route::post('/', [TagController::class, 'index']);
-            Route::post('store', [TagController::class, 'store']);
-            Route::post('update', [TagController::class, 'update']);
-            Route::post('select', [TagController::class, 'tagsSelect']);
-            Route::post('tree', [TagController::class, 'tagsTree']);
+            Route::prefix('tags')->group(function() {
+                Route::post('/', [TagController::class, 'index']);
+                Route::post('store', [TagController::class, 'store']);
+                Route::post('update', [TagController::class, 'update']);
+                Route::post('select', [TagController::class, 'tagsSelect']);
+                Route::post('tree', [TagController::class, 'tagsTree']);
+            });
         });
 
         Route::prefix('rates')->group(function() {

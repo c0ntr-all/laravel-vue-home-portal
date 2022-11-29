@@ -1,12 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Music;
 
-use Illuminate\Database\Eloquent\Collection;
-use App\Models\Music\Artist;
-use App\Models\Music\Album;
-use App\Models\Music\Track;
 use App\Models\Traits\HasDates;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,6 +13,8 @@ class Tag extends Model
 {
     use HasFactory;
     use HasDates;
+
+    protected $table ='music_tags';
 
     protected $fillable = [
         'parent_id',

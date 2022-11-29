@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTagablesTable extends Migration
+class CreateMusicTagablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTagablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tagables', function (Blueprint $table) {
+        Schema::create('music_tagables', function (Blueprint $table) {
             $table->unsignedBigInteger('tag_id');
             $table->unsignedBigInteger('tagable_id');
             $table->string('tagable_type');
@@ -25,7 +25,7 @@ class CreateTagablesTable extends Migration
 
             $table->foreign('tag_id')
                 ->references('id')
-                ->on('tags')
+                ->on('music_tags')
                 ->onDelete('cascade');
         });
     }
@@ -37,6 +37,6 @@ class CreateTagablesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tagables');
+        Schema::dropIfExists('music_tagables');
     }
 }

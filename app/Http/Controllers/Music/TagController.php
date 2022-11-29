@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Music;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Music\Tag\IndexRequest;
+use App\Http\Requests\Music\Tag\StoreRequest;
+use App\Http\Requests\Music\Tag\UpdateRequest;
 use App\Http\Resources\Music\Tag\TagTreeCollection;
 use App\Http\Resources\TagCollection;
-use App\Http\Resources\TagSelectCollection;
 use App\Http\Resources\TagResource;
-use App\Http\Requests\Tag\IndexRequest;
-use App\Http\Requests\Tag\StoreRequest;
-use App\Http\Requests\Tag\UpdateRequest;
-use App\Models\Tag;
-use Illuminate\Support\Str;
+use App\Http\Resources\TagSelectCollection;
+use App\Models\Music\Tag;
 
 class TagController extends Controller
 {

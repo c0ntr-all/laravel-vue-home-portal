@@ -46,7 +46,7 @@
     <template #content>
       <el-input
         v-model="this.tagEdit.model.tag.label"
-        maxlength="30"
+        maxlength="40"
         placeholder="Введите имя тега"
         show-word-limit
         type="text"
@@ -71,7 +71,7 @@
         <el-form-item label-width="0" prop="tag">
           <el-input
             v-model="this.tagAdd.model.tagNewChild"
-            maxlength="30"
+            maxlength="40"
             placeholder="Введите имя тега"
             show-word-limit
             type="text"
@@ -85,7 +85,7 @@
   </app-modal>
 </template>
 <script>
-  import AppModal from "../../default/AppModal";
+  import AppModal from "../../../default/AppModal";
   import { mapGetters, mapActions } from "vuex";
 
   export default {

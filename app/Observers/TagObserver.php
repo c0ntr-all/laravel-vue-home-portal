@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\Tag;
+use App\Models\Music\Tag;
 
 class TagObserver
 {

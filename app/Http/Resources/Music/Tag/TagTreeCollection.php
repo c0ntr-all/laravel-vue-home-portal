@@ -2,9 +2,8 @@
 
 namespace App\Http\Resources\Music\Tag;
 
-use App\Models\Tag;
+use App\Models\Music\Tag;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Support\Collection;
 
 class TagTreeCollection extends ResourceCollection
 {

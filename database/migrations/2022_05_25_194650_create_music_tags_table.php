@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTagsTable extends Migration
+class CreateMusicTagsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tags', function (Blueprint $table) {
+        Schema::create('music_tags', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('parent_id')->default(0);
             $table->string('name')->unique();
@@ -21,7 +21,7 @@ class CreateTagsTable extends Migration
             $table->text('content')->nullable();
             $table->timestamps();
 
-            $table->foreign('parent_id')->references('id')->on('tags');
+            $table->foreign('parent_id')->references('id')->on('music_tags');
         });
     }
 
@@ -32,6 +32,6 @@ class CreateTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tags');
+        Schema::dropIfExists('music_tags');
     }
 }

@@ -2,23 +2,21 @@
 
 namespace App\Models\Music;
 
-use App\Models\Tag;
 use App\Models\Traits\HasDates;
-use App\Models\Traits\HasTags;
 use App\Models\Traits\HasImage;
+use App\Models\Traits\HasMusicTags;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Album extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use HasDates;
-    use HasTags;
+    use HasMusicTags;
     use HasImage;
 
     protected $table = 'music_albums';
