@@ -1,5 +1,5 @@
 <template>
-  <h3>Управление тегами</h3>
+  <h2>Управление тегами</h2>
   <el-form
     ref="tagFormRef"
     :model="tagAdd.model"
@@ -23,6 +23,8 @@
       </el-col>
     </el-row>
   </el-form>
+
+  <h3>Основные теги</h3>
   <el-table
     :data="tags.common"
     row-key="id"
@@ -96,6 +98,27 @@
       <el-button type="primary" @click="tagAddRequest(this.$refs.tagNewFormRef, true)" round>Отправить</el-button>
     </template>
   </app-modal>
+
+  <h3>Второстепенные теги</h3>
+  <el-table
+    :data="tags.secondary"
+    row-key="id"
+    style="width: 100%"
+    highlight-current-row
+  >
+    <el-table-column prop="label" label="Имя" width="500" sortable>
+      <template #default="scope">
+        <span class="el-table__placeholder" v-if="!scope.row.children && scope.row.parent_id === 0"></span>
+        {{ scope.row.label }}
+      </template>
+    </el-table-column>
+    <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
+    <el-table-column label="Действия" width="350">
+      <template #default="scope">
+        <el-button size="small" @click="openTagEditModal(scope.row)">Редактировать</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
 </template>
 <script>
   import AppModal from "../../../default/AppModal";
