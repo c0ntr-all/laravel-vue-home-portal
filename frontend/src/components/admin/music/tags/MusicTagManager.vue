@@ -24,9 +24,9 @@
     </el-row>
   </el-form>
   <el-table
-    :data="tags.items"
+    :data="tags.common"
     row-key="id"
-    :tree-props="{ children: 'children'}"
+    :tree-props="{children: 'children'}"
     style="width: 100%"
     highlight-current-row
   >

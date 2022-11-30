@@ -17,7 +17,8 @@ export default {
           }
         },
         tags: {
-          items: [],
+          common: [],
+          secondary: [],
           loading: false
         }
       }
@@ -30,8 +31,9 @@ export default {
     PUSH_ARTISTS(state, artists) {
       state.music.artists.items.push(...artists)
     },
-    LOAD_TAGS(state, tags) {
-      state.music.tags.items = tags
+    SET_TAGS(state, tags) {
+      state.music.tags.common = tags['common']
+      state.music.tags.secondary = tags['secondary']
     },
     ADD_TAG(state, tag) {
       state.music.tags.items.push(tag)
@@ -101,7 +103,7 @@ export default {
         if(!data) {
           throw new Error('Нет данных!')
         }
-        context.commit('LOAD_TAGS', data['tags'])
+        context.commit('SET_TAGS', data['tags'])
       }catch(e) {
 
       }

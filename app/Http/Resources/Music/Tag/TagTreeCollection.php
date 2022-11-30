@@ -13,18 +13,24 @@ class TagTreeCollection extends ResourceCollection
     public function toArray($request): array
     {
         return [
-            'tags' => $this->prepareTags(),
+            'tags' => [
+                'common' => $this->prepareTags(),
+                'secondary' => $this->prepareTags(false)
+            ],
             'tagsCount' => $this->count()
         ];
     }
 
-    private function prepareTags(): array
+    private function prepareTags($common = true): array
     {
-        $this->collection->where('parent_id', 0)->each(function($item) {
-            $this->tags[] = $this->tree($item);
-        });
+        $out = [];
+        $this->collection->where('parent_id', 0)
+                         ->where('common', $common)
+                         ->each(function ($item) use (&$out) {
+                             $out[] = $this->tree($item);
+                         });
 
-        return $this->tags;
+        return $out;
     }
 
     public function tree(Tag $tag): array
