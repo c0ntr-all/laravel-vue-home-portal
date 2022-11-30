@@ -20,6 +20,8 @@ class Tag extends Model
         'parent_id',
         'name',
         'slug',
+        'content',
+        'common',
         'updated_at',
     ];
 

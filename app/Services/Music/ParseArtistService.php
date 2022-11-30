@@ -14,9 +14,7 @@ class ParseArtistService
 
     private const EXTENSIONS = ['mp3'];
 
-    private const TYPES = ['lp', 'ep', 'single', 'demo', 'split', 'tribute', 'bootleg'];
-
-    private const VERSIONS = ['standart', 'instrumental', 'remaster', 'remix', 'live'];
+    private const TYPES = ['lp', 'ep', 'single', 'demo', 'split', 'tribute', 'bootleg', 'live', 'instrumental', 'remaster'];
 
     /**
      * Проверяет являются ли переданные каталоги музыкальными альбомами формата 2019 - AlbumName

@@ -57,7 +57,8 @@ class TagController extends Controller
         if ($existTag->isEmpty()) {
             $result = Tag::create([
                 'name' => $request->validated()['tag'],
-                'parent_id' => $request->validated()['parent_id'] ?? 0
+                'parent_id' => $request->validated()['parent_id'] ?? 0,
+                'common' => $request->validated()['common']
             ]);
 
             return $this->TagResponse($result);
