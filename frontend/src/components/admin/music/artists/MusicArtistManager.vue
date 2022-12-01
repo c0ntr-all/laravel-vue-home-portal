@@ -57,17 +57,34 @@
             <img v-if="artistUpdate.posterPreview" :src="artistUpdate.posterPreview" alt="">
           </div>
         </el-form-item>
-        <el-form-item label="Теги">
+        <el-form-item label="Основные теги">
           <el-select
-            v-model="artistUpdate.model.tags"
+            v-model="artistUpdate.model.commonTags"
             :loading="this.tagsLoading"
             multiple
             filterable
             placeholder="Tags"
-            style="width: 240px"
+            style="width: 100%"
           >
             <el-option
-              v-for="item in this.tags"
+              v-for="item in this.commonTags"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Доп. теги">
+          <el-select
+            v-model="artistUpdate.model.secondaryTags"
+            :loading="this.tagsLoading"
+            multiple
+            filterable
+            placeholder="Tags"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="item in this.secondaryTags"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -100,7 +117,8 @@
             image: '',
             name: '',
             content: '',
-            tags: ''
+            commonTags: '',
+            secondaryTags: '',
           },
           modal: false
         },
@@ -108,7 +126,8 @@
     },
     computed: {
       ...mapGetters('adminMusicArtist', [
-        'tags',
+        'commonTags',
+        'secondaryTags',
         'tagsLoading',
         'artists'
       ]),

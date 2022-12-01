@@ -6,7 +6,10 @@ export default {
   state() {
     return {
       artist: {
-        tagsSelect: [],
+        tags: {
+          common: [],
+          secondary: []
+        },
         tagsLoading: true
       },
       artists: []
@@ -14,7 +17,8 @@ export default {
   },
   mutations: {
     LOAD_TAGS_SELECT(state, tags) {
-      state.artist.tagsSelect = tags
+      state.artist.tags.common = tags['common']
+      state.artist.tags.secondary = tags['secondary']
     },
     SWITCH_TAGS_LOADING(state, value) {
       state.artist.tagsLoading = value
@@ -35,7 +39,7 @@ export default {
       commit('SWITCH_TAGS_LOADING', true)
 
       try {
-        const {data} = await API.post('tags/select')
+        const {data} = await API.post('music/tags/select')
         if(!data) {
           throw new Error('Нет данных!')
         }
@@ -79,8 +83,11 @@ export default {
     artists(state) {
       return state.artists
     },
-    tags(state) {
-      return state.artist.tagsSelect
+    commonTags(state) {
+      return state.artist.tags.common
+    },
+    secondaryTags(state) {
+      return state.artist.tags.secondary
     },
     tagsLoading(state) {
       return state.artist.tagsLoading

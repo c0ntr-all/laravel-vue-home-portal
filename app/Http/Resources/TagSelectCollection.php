@@ -12,18 +12,22 @@ class TagSelectCollection extends ResourceCollection
     public function toArray($request): array
     {
         return [
-            'tags' => $this->prepareTags(),
+            'tags' => [
+                'common' => $this->prepareTags(),
+                'secondary' => $this->prepareTags(false)
+            ],
             'tagsCount' => $this->count()
         ];
     }
 
-    private function prepareTags(): Collection
+    private function prepareTags($common = true): Collection
     {
-        return $this->collection->map(function($item){
-            return [
-                'label' => $item->name,
-                'value' => $item->id
-            ];
-        });
+        return $this->collection->where('common', $common)
+                                ->map(function ($item) {
+                                    return [
+                                        'label' => $item->name,
+                                        'value' => $item->id
+                                    ];
+                                });
     }
 }
