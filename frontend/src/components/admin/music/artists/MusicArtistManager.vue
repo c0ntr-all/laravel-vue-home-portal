@@ -15,7 +15,8 @@
     <el-table-column prop="name" label="Name" width="400" sortable />
     <el-table-column prop="tags" label="Теги" width="450">
       <template #default="props">
-        <span v-for="tag in props.row.tagsNames" class="artist-row__tag">{{ tag }}</span>
+        <div class="artist__tags"><span v-for="tag in props.row.tagsNames.common" class="artist-row__tag">{{ tag }}</span></div>
+        <div class="artist__tags"><span v-for="tag in props.row.tagsNames.secondary" class="artist-row__tag">{{ tag }}</span></div>
       </template>
     </el-table-column>
     <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
@@ -148,7 +149,8 @@
         this.artistUpdate.model.id = item.id
         this.artistUpdate.model.name = item.name
         this.artistUpdate.model.content = item.content
-        this.artistUpdate.model.tags = item.tags
+        this.artistUpdate.model.commonTags = item.tags['common']
+        this.artistUpdate.model.secondaryTags = item.tags['secondary']
       },
       closeArtistUpdateModal() {
         this.artistUpdate.modal = false
@@ -202,7 +204,7 @@
     },
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   .artist-row {
     &__image {
       width: 50px;

@@ -10,6 +10,9 @@ class ArtistResource extends JsonResource
 
     public function toArray($request): array
     {
+        $commonTags = $this->tags->where('common', true);
+        $secondaryTags = $this->tags->where('common', false);
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -17,8 +20,14 @@ class ArtistResource extends JsonResource
             'image' => $this->full_image,
             'createdAt' => $this->created_at,
             'albums' => $this->albums,
-            'tags' => $this->tags->pluck('id'),
-            'tagsNames' => $this->tags->pluck('name')
+            'tags' => [
+                'common' => $commonTags->pluck('id'),
+                'secondary' => $secondaryTags->pluck('id')
+            ],
+            'tagsNames' => [
+                'common' => $commonTags->pluck('name'),
+                'secondary' => $secondaryTags->pluck('name')
+            ]
         ];
     }
 }
