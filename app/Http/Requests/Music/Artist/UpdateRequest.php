@@ -27,7 +27,8 @@ class UpdateRequest extends FormRequest
             'id' => 'required|integer',
             'name' => 'required|string',
             'content' => 'sometimes|string',
-            'tags' => 'sometimes|string',
+            'commonTags' => 'sometimes|string',
+            'secondaryTags' => 'sometimes|string',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:8192',
         ];
     }

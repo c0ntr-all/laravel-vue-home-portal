@@ -70,11 +70,14 @@ class ArtistController extends Controller
 
             $artist->update($update);
 
-            if (isset($request->validated()['tags'])) {
-                $tags = $request->validated()['tags'];
-                $arrTags = explode(',', $tags);
+            if (!empty($request->validated()['commonTags'])) {
+                $tags = explode(',', $request->validated()['commonTags']);
 
-                $artist->tags()->sync($arrTags);
+                if (!empty($request->validated()['secondaryTags'])) {
+                    $tags = array_merge($tags, explode(',', $request->validated()['secondaryTags']));
+                }
+                
+                $artist->tags()->sync($tags);
             }
 
             return $this->artistResponse($artist);
