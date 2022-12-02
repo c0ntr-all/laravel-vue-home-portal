@@ -76,7 +76,7 @@ class ArtistController extends Controller
                 if (!empty($request->validated()['secondaryTags'])) {
                     $tags = array_merge($tags, explode(',', $request->validated()['secondaryTags']));
                 }
-                
+
                 $artist->tags()->sync($tags);
             }
 

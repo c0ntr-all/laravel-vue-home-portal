@@ -82,4 +82,34 @@ class TagController extends Controller
 
         return ['success' => true, 'tags' => $resource];
     }
+
+    /**
+     * Из рекурсивно вложенного массива делает обычный массив
+     * todo перенести метод в отдельный сервис или хелпер
+     *
+     * @param array $array
+     * @return array
+     */
+    public function normalizeArray(array $array = []): array
+    {
+        static $out = [];
+
+        foreach ($array as $subArray) {
+            if (!empty($subArray['children'])) {
+                $arrayToAdd = $subArray;
+                unset($arrayToAdd['children']);
+
+                $out[] = $arrayToAdd;
+                $this->normalizeArray($subArray['children']);
+            } else {
+                if (isset($subArray['children'])) {
+                    unset($subArray['children']);
+                }
+
+                $out[] = $subArray;
+            }
+        }
+
+        return $out;
+    }
 }

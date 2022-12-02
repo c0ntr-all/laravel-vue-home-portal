@@ -7,7 +7,7 @@
       <router-link :to="'/music/artists/' + artist.id"><span>{{ artist.name }}</span></router-link>
       <div class="artist-card__footer">
         <div class="tags-list">
-          <el-tag v-for="tag in artist.tagsNames" class="mx-1">{{ tag }}</el-tag>
+          <el-tag v-for="tag in artist.tagsNames.common" class="mx-1">{{ tag }}</el-tag>
         </div>
       </div>
     </div>
