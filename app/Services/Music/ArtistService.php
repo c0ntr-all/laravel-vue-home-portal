@@ -2,6 +2,8 @@
 
 namespace App\Services\Music;
 
+use App\Models\Music\Artist;
+
 class ArtistService {
 
     protected $artist;

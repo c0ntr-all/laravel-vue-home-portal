@@ -5,6 +5,7 @@ namespace App\Models\Music;
 use App\Models\Traits\HasDates;
 use App\Models\Traits\HasMusicTags;
 use App\Models\Traits\HasImage;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -64,6 +65,15 @@ class Artist extends Model
      */
     public function scopeFilter($query, array $filters, string $key, string $relation, string $column)
     {
+        if (!empty($filters['tags'])) {
+            $result = Tag::whereIn('name', $filters['tags'])->get()->map(function($item) {
+                $tagsList = $this->normalizeArray($item->childrenCategories->toArray());
+                return array_column($tagsList, 'name');
+            });
+
+            dd($result);
+        }
+
         return $query->when(array_key_exists($key, $filters), function ($q) use ($filters, $relation, $column, $key) {
             $union = $filters['union'];
 
