@@ -11,14 +11,17 @@ use App\Http\Resources\TagCollection;
 use App\Http\Resources\TagResource;
 use App\Http\Resources\TagSelectCollection;
 use App\Models\Music\Tag;
+use App\Services\Music\TagService;
 
 class TagController extends Controller
 {
     public Tag $tag;
+    public TagService $tagService;
 
-    public function __construct(Tag $tag)
+    public function __construct(Tag $tag, TagService $service)
     {
         $this->tag = $tag;
+        $this->tagService = $service;
     }
 
     /**
@@ -81,35 +84,5 @@ class TagController extends Controller
         $resource = new TagResource($tag);
 
         return ['success' => true, 'tags' => $resource];
-    }
-
-    /**
-     * Из рекурсивно вложенного массива делает обычный массив
-     * todo перенести метод в отдельный сервис или хелпер
-     *
-     * @param array $array
-     * @return array
-     */
-    public function normalizeArray(array $array = []): array
-    {
-        static $out = [];
-
-        foreach ($array as $subArray) {
-            if (!empty($subArray['children'])) {
-                $arrayToAdd = $subArray;
-                unset($arrayToAdd['children']);
-
-                $out[] = $arrayToAdd;
-                $this->normalizeArray($subArray['children']);
-            } else {
-                if (isset($subArray['children'])) {
-                    unset($subArray['children']);
-                }
-
-                $out[] = $subArray;
-            }
-        }
-
-        return $out;
     }
 }
