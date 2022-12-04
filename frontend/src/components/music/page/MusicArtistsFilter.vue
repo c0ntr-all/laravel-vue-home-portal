@@ -6,11 +6,11 @@
       <p>Дополнительный стиль временно не работает!</p>
     </blockquote>
     <div class="music-filter__params">
-      <el-radio-group class="mb-2 mr-2" v-model="type" size="default">
+      <el-radio-group class="mb-2 mr-2" v-model="type" size="default" @change="checkRules()">
         <el-radio-button label="strict">Точное совпадение</el-radio-button>
         <el-radio-button label="hierarchical">Иерархический поиск</el-radio-button>
       </el-radio-group>
-      <el-checkbox v-model="union" label="Совместный" border />
+      <el-checkbox v-model="union" :disabled="type !== 'strict'" border>Совместный</el-checkbox>
     </div>
     <el-select
       v-model="styles.value"
@@ -136,6 +136,9 @@
       }
     },
     methods: {
+      checkRules() {
+        this.union = this.type === 'strict';
+      },
       submitFilter() {
         let filters = {
           tags: this.genre.value,

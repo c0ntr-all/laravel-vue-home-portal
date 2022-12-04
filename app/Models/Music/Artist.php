@@ -65,13 +65,13 @@ class Artist extends Model
      */
     public function scopeFilter($query, array $filters, string $key, string $relation, string $column)
     {
-        if (!empty($filters['tags'])) {
+        if (!empty($filters['tags']) && $filters['type'] == 'hierarchical') {
             $result = Tag::whereIn('name', $filters['tags'])->get()->map(function($item) {
                 $tagsList = $this->normalizeArray($item->childrenCategories->toArray());
                 return array_column($tagsList, 'name');
             });
 
-            dd($result);
+            $filters['tags'] = array_merge(...$result->toArray());
         }
 
         return $query->when(array_key_exists($key, $filters), function ($q) use ($filters, $relation, $column, $key) {

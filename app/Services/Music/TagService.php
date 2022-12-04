@@ -2,7 +2,7 @@
 
 namespace App\Services\Music;
 
-use App\Models\Tag;
+use App\Models\Music\Tag;
 
 class TagService
 {
