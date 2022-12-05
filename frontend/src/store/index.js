@@ -3,9 +3,9 @@ import authModule from './modules/auth'
 import tasksModule from './modules/tasks'
 import remindsModule from './modules/reminds'
 import musicModule from './modules/music'
-import albumModule from './modules/album'
+import albumModule from './modules/music/album'
 import playerModule from './modules/player'
-import adminMusicArtistModule from './modules/admin/music/artist'
+import artistsModule from './modules/music/artists'
 import mutations from "./mutations"
 import actions from "./actions"
 
@@ -17,7 +17,7 @@ export default createStore({
     music: musicModule,
     album: albumModule,
     player: playerModule,
-    adminMusicArtist: adminMusicArtistModule,
+    artists: artistsModule,
   },
   state() {
     return {

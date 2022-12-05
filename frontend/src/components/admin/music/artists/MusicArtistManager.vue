@@ -126,7 +126,7 @@
       }
     },
     computed: {
-      ...mapGetters('adminMusicArtist', [
+      ...mapGetters('artists', [
         'commonTags',
         'secondaryTags',
         'tagsLoading',
@@ -134,7 +134,7 @@
       ]),
     },
     methods: {
-      ...mapActions('adminMusicArtist', [
+      ...mapActions('artists', [
         'loadTagsSelect',
         'switchTagsLoading',
         'loadArtists',
