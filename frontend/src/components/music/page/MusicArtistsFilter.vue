@@ -20,7 +20,7 @@
       style="width: 240px"
     >
       <el-option
-        v-for="item in styles.options"
+        v-for="item in this.secondaryTags"
         :key="item.value"
         :label="item.label"
         :value="item.value"
@@ -36,7 +36,7 @@
       style="width: 240px"
     >
       <el-option
-        v-for="item in genre.options"
+        v-for="item in this.commonTags"
         :key="item.value"
         :label="item.label"
         :value="item.value"
@@ -46,109 +46,51 @@
   </div>
 </template>
 <script>
+  import {mapActions, mapGetters} from 'vuex'
+
   export default {
     data() {
       return {
         type: 'strict',
         union: true,
         styles: {
-          options: [
-            {
-              label: 'Progressive',
-              value: 'Progressive'
-            },
-            {
-              label: 'Technical',
-              value: 'Technical'
-            },
-            {
-              label: 'Modern',
-              value: 'Modern'
-            },
-            {
-              label: 'Folk',
-              value: 'Folk'
-            },
-            {
-              label: 'Melodic',
-              value: 'Melodic'
-            },
-            {
-              label: 'Industrial',
-              value: 'Industrial'
-            },
-            {
-              label: 'Blackened',
-              value: 'Blackened'
-            },
-          ],
           value: ''
         },
         genre: {
-          options: [
-            {
-              label: 'Death Metal',
-              value: 'Death Metal'
-            },
-            {
-              label: 'Groove Metal',
-              value: 'Groove Metal'
-            },
-            {
-              label: 'Black Metal',
-              value: 'Black Metal'
-            },
-            {
-              label: 'Nu Metal',
-              value: 'Nu Metal'
-            },
-            {
-              label: 'Metalcore',
-              value: 'Metalcore'
-            },
-            {
-              label: 'Deathcore',
-              value: 'Deathcore'
-            },
-            {
-              label: 'Metal',
-              value: 'Metal'
-            },
-            {
-              label: 'Hardcore',
-              value: 'Hardcore'
-            },
-            {
-              label: 'Math Metal',
-              value: 'Math Metal'
-            },
-            {
-              label: 'Power Metal',
-              value: 'Power Metal'
-            },
-            {
-              label: 'Heavy Metal',
-              value: 'Heavy Metal'
-            },
-          ],
           value: ''
         },
       }
     },
+    computed: {
+      ...mapGetters('adminMusicArtist', [
+        'commonTags',
+        'secondaryTags',
+        'tagsLoading',
+      ]),
+    },
     methods: {
+      ...mapActions('adminMusicArtist', [
+        'loadTagsSelect',
+        'switchTagsLoading',
+      ]),
+      ...mapActions('music', [
+        'getArtists',
+      ]),
       checkRules() {
         this.union = this.type === 'strict';
       },
       submitFilter() {
-        let filters = {
-          tags: this.genre.value,
-          type: this.type,
-          union: this.union
-        }
-        this.$store.dispatch('music/getArtists', {
-          filters: filters
+        this.getArtists({
+          filters: {
+            tags: this.genre.value,
+            type: this.type,
+            union: this.union
+          }
         })
       }
+    },
+    mounted() {
+      this.loadTagsSelect()
     }
   }
 </script>
