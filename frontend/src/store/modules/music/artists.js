@@ -65,6 +65,16 @@ export default {
       }
     },
 
+    async loadArtist(id) {
+      const {data} = await API.post('music/artists', {
+        id: id
+      })
+      if(!data) {
+        throw new Error('Нет данных!')
+      }
+      this.artist = data.artists
+    },
+
     async updateArtist(context, artist) {
       const {data} = await API.post('music/artists/update', artist)
       if(data['success']) {

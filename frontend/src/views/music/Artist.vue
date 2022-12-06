@@ -71,7 +71,7 @@
   } from '@element-plus/icons-vue'
 </script>
 <script>
-  import API from '../../utils/api'
+  import {mapActions} from "vuex"
 
   export default {
     data() {
@@ -84,24 +84,10 @@
       'artistId': String
     },
     methods: {
-      async loadArtist() {
-        this.loading = true
-        try {
-          const {data} = await API.post('music/artists', {
-            id: this.artistId
-          })
-          if(!data) {
-            throw new Error('Нет данных!')
-          }
-          this.artist = data.artists
-          this.loading = false
-        }catch(e) {
-          this.loading = false
-        }
-      }
+      ...mapActions('artists', ['loadArtist']),
     },
     mounted() {
-      this.loadArtist();
+      this.loadArtist(this.artistId);
     }
   }
 </script>
