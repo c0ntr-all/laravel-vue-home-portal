@@ -32,7 +32,8 @@
             </div>
             <div class="artist-head__tags">
               <div class="tags-list">
-                <el-tag v-for="tag in artist.tagsNames" class="mx-1">{{ tag }}</el-tag>
+                <el-tag v-for="tag in artist.tagsNames.common" class="mx-1">{{ tag }}</el-tag>
+                <el-tag v-for="tag in artist.tagsNames.secondary" class="mx-1">{{ tag }}</el-tag>
               </div>
             </div>
           </div>
