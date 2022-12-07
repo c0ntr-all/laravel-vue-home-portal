@@ -89,6 +89,10 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             });
         });
 
+        Route::prefix('video')->group(function() {
+            Route::post('index', [VideoController::class, 'index']);
+        });
+
         Route::prefix('rates')->group(function() {
             Route::post('store', [RatingController::class, 'store']);
         });
