@@ -19,8 +19,17 @@ class VideoController extends Controller
     {
         $path = $request->validated()['path'];
 
+        $items = $this->getItems($path);
+
+        return new VideoCollection($items);
+    }
+
+    public function getItems(string $path): array
+    {
         $dirElements = scandir($path);
+
         $items = [];
+
         foreach ($dirElements as $dir) {
             if ($dir != '..' && $dir != '.') {
                 if (!is_dir($path . '\\' . $dir)) {
@@ -31,12 +40,14 @@ class VideoController extends Controller
             }
         }
 
-        return new VideoCollection($items);
+        return $items;
     }
 
     public function play(PlayRequest $request): BinaryFileResponse
     {
-        return new BinaryFileResponse($request->validated()['path']);
+        $path = $request->validated()['path'];
+
+        return new BinaryFileResponse($path);
     }
 
     /**

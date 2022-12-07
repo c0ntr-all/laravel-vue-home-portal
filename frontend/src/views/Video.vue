@@ -22,6 +22,7 @@ export default {
   data() {
     return {
       data: [],
+      path: 'F:\\Video\\Сериалы\\Российские\\Молодежка',
       loading: false,
       modal: false,
       modalData: {
@@ -33,19 +34,15 @@ export default {
     async loadVideoItems() {
       this.loading = true
 
-      const {data} = await API.post('video')
+      const {data} = await API.post('video', {path: this.path})
 
       this.data = data
     },
     openModal(item) {
       this.modal = true
       this.modalData.path = item.path
-      this.$refs.videoTag.src = item.path
+      this.$refs.videoTag.src = `${location.origin}/api/video/play?&path=${item.path}`
       this.$refs.videoTag.load()
-      console.log(`${location.origin}/api/video/${item.key}/play`)
-    },
-    loadVideo() {
-
     },
     makeVideo() {
       let video = document.createElement('video')
