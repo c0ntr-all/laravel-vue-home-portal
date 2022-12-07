@@ -94,6 +94,15 @@ const router = createRouter({
       }
     ]
   },{
+    path: '/video',
+    component: () => import('../views/Video'),
+    meta: {
+      title: 'Видео'
+    },
+    name: 'video',
+    alias: '/video',
+    menu: 1
+  },{
     path: '/musicupload',
     component: () => import('../views/music/MusicUpload'),
     meta: {
