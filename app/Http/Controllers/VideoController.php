@@ -21,13 +21,12 @@ class VideoController extends Controller
 
         $dirElements = scandir($path);
         $items = [];
-
         foreach ($dirElements as $dir) {
             if ($dir != '..' && $dir != '.') {
                 if (!is_dir($path . '\\' . $dir)) {
                     $info = pathinfo($path . '\\' . $dir);
 
-                    $items[] = $info['basename'];
+                    $items[] = $path . '\\' . $info['basename'];
                 }
             }
         }

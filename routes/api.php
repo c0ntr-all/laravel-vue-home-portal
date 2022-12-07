@@ -14,6 +14,7 @@ use App\Http\Controllers\Reminds\RemindController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Tasks\TaskListController;
+use App\Http\Controllers\VideoController;
 use Illuminate\Http\Request;
 
 /*
@@ -90,7 +91,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
         });
 
         Route::prefix('video')->group(function() {
-            Route::post('index', [VideoController::class, 'index']);
+            Route::post('/', [VideoController::class, 'index']);
         });
 
         Route::prefix('rates')->group(function() {

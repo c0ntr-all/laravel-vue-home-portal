@@ -14,6 +14,9 @@ class VideoCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'count' => $this->collection->count(),
+            'items' => $this->collection
+        ];
     }
 }
