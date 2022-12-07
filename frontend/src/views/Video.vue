@@ -3,8 +3,12 @@
     <h1 class="page-header">Видео</h1>
     <div class="page-content">
       <div class="video-list">
-        <video-card v-for="item in data.items" :key="item" :path="item"></video-card>
+        <video-card v-for="item in data.items" :key="item.key" :item="item" @openModal="openModal"></video-card>
       </div>
+      <el-dialog v-model="modal" ref="modalTag">
+        {{ modalData.path }}
+        <video src="" width="300" height="200" preload="none" controls ref="videoTag"></video>
+      </el-dialog>
     </div>
   </el-main>
 </template>
@@ -18,23 +22,48 @@ export default {
   data() {
     return {
       data: [],
-      loading: false
+      loading: false,
+      modal: false,
+      modalData: {
+        path: '',
+      }
     }
   },
   methods: {
-    async loadData() {
+    async loadVideoItems() {
       this.loading = true
 
       const {data} = await API.post('video')
 
       this.data = data
+    },
+    openModal(item) {
+      this.modal = true
+      this.modalData.path = item.path
+      this.$refs.videoTag.src = item.path
+      this.$refs.videoTag.load()
+      console.log(`${location.origin}/api/video/${item.key}/play`)
+    },
+    loadVideo() {
+
+    },
+    makeVideo() {
+      let video = document.createElement('video')
+      video.setAttribute('controls', 'controls')
+
+      let source = document.createElement('source');
+      // source.src = 'test'
+
+      video.appendChild(source)
+
+      return video
     }
   },
   components: {
     VideoCard
   },
   mounted() {
-    this.loadData()
+    this.loadVideoItems()
   }
 }
 </script>

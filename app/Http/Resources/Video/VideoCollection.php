@@ -17,7 +17,12 @@ class VideoCollection extends ResourceCollection
     {
         return [
             'count' => $this->collection->count(),
-            'items' => $this->collection
+            'items' => $this->collection->map(function($item, $key) {
+                return [
+                    'key' => $key + 1,
+                    'path' => $item
+                ];
+            })
         ];
     }
 }
