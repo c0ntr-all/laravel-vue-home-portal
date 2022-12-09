@@ -6,7 +6,9 @@ use App\Http\Requests\Video\IndexRequest;
 use App\Http\Requests\Video\PlayRequest;
 use App\Http\Resources\Video\VideoCollection;
 use Illuminate\Http\Request;
+use Iman\Streamer\VideoStreamer;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class VideoController extends Controller
 {
@@ -43,11 +45,15 @@ class VideoController extends Controller
         return $items;
     }
 
-    public function play(PlayRequest $request): BinaryFileResponse
+    public function play(PlayRequest $request)
     {
         $path = $request->validated()['path'];
 
-        return new BinaryFileResponse($path);
+//        return new BinaryFileResponse($path);
+
+//        return response()->download($path, basename($path));
+
+        VideoStreamer::streamFile($path);
     }
 
     /**
