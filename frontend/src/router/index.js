@@ -126,7 +126,7 @@ const router = createRouter({
 router.beforeEach((to, from, next ) => {
   document.title = `${to.meta.title}`
   if(to.name !== 'login') {
-    if(!store.getters.isLoggedIn) {
+    if(!store.getters.isLoggedIn && to.name !== 'video') {
       return next({
         name: 'login'
       })

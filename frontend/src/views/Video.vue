@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import API from '../utils/api'
+import axios from 'axios'
 
 import VideoCard from '../components/client/video/VideoCard'
 
@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       data: [],
-      path: 'F:\\Video\\Сериалы\\Российские\\Молодежка',
+      path: 'F:\\Video\\Сериалы\\Российские\\Молодежка\\converted',
       loading: false,
       modal: false,
       modalData: {
@@ -34,7 +34,7 @@ export default {
     async loadVideoItems() {
       this.loading = true
 
-      const {data} = await API.post('video', {path: this.path})
+      const {data} = await axios.post('/api/video', {path: this.path})
 
       this.data = data
     },

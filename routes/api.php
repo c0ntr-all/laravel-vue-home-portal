@@ -90,10 +90,6 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             });
         });
 
-        Route::prefix('video')->group(function() {
-            Route::post('/', [VideoController::class, 'index']);
-        });
-
         Route::prefix('rates')->group(function() {
             Route::post('store', [RatingController::class, 'store']);
         });
@@ -104,5 +100,6 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
     });
 });
 
+Route::post('/video', [VideoController::class, 'index']);
 Route::get('music/tracks/{track}/play', [TrackController::class, 'play']);
 Route::get('video/play', [VideoController::class, 'play']);
