@@ -2,7 +2,7 @@
   <el-config-provider :locale="locale">
     <div class="area">
       <div class="main">
-        <header class="app-header">
+        <header class="app-header" v-if="$store.getters.isLoggedIn">
           <div class="app-header__sidebar">Unreal Portal</div>
           <div class="app-header__content">
             <the-avatar></the-avatar>
@@ -17,7 +17,7 @@
         </el-container>
       </div>
     </div>
-    <music-player></music-player>
+    <music-player v-if="$store.getters.isLoggedIn"></music-player>
   </el-config-provider>
 </template>
 
