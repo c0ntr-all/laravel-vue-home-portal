@@ -2,7 +2,7 @@
   <el-row>
     <el-col>
       <el-card class="video-card" shadow="always" @click.prevent="$emit('openModal', this.item)">
-        {{ item.path }}
+        {{ item.name }}
       </el-card>
     </el-col>
   </el-row>

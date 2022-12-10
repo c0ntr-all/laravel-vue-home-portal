@@ -20,6 +20,7 @@ class VideoCollection extends ResourceCollection
             'items' => $this->collection->map(function($item, $key) {
                 return [
                     'key' => $key,
+                    'name' => basename($item),
                     'path' => $item
                 ];
             })

@@ -49,10 +49,6 @@ class VideoController extends Controller
     {
         $path = $request->validated()['path'];
 
-//        return new BinaryFileResponse($path);
-
-//        return response()->download($path, basename($path));
-
         VideoStreamer::streamFile($path);
     }
 

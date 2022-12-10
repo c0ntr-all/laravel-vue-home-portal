@@ -5,9 +5,11 @@
       <div class="video-list">
         <video-card v-for="item in data.items" :key="item.key" :item="item" @openModal="openModal"></video-card>
       </div>
-      <el-dialog v-model="modal" ref="modalTag">
-        {{ modalData.path }}
-        <video src="" width="300" height="200" preload="none" controls ref="videoTag"></video>
+      <el-dialog v-model="modal" ref="modalTag" :width="'100%'">
+        {{ modalData.name }}
+        <video src="" preload="none" ref="videoTag" class="video" controls>
+          <source :src="video" type="video/mp4">
+        </video>
       </el-dialog>
     </div>
   </el-main>
@@ -40,7 +42,7 @@ export default {
     },
     openModal(item) {
       this.modal = true
-      this.modalData.path = item.path
+      this.modalData = item
       this.$refs.videoTag.src = `${location.origin}/api/video/play?&path=${item.path}`
       this.$refs.videoTag.load()
     },
@@ -70,5 +72,8 @@ export default {
   display: flex;
   flex-direction: column;
   row-gap: 1rem;
+}
+.video {
+  width: 100%;
 }
 </style>
