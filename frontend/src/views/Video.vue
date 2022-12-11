@@ -5,10 +5,10 @@
       <div class="video-list">
         <video-card v-for="item in data.items" :key="item.key" :item="item" @openModal="openModal"></video-card>
       </div>
-      <el-dialog v-model="modal" ref="modalTag" :width="'100%'">
-        {{ modalData.name }}
-        <video src="" preload="none" ref="videoTag" class="video" controls>
-          <source :src="video" type="video/mp4">
+      <el-dialog v-model="modal.open" ref="modalTag" :width="'100%'" @close="closeModal()">
+        {{ modal.data.name }}
+        <video preload="none" ref="videoTag" class="video" controls>
+          <source :src="modal.videoSrc" type="video/mp4">
         </video>
       </el-dialog>
     </div>
@@ -26,9 +26,10 @@ export default {
       data: [],
       path: 'F:\\Video\\Сериалы\\Российские\\Молодежка\\converted',
       loading: false,
-      modal: false,
-      modalData: {
-        path: '',
+      modal: {
+        open: false,
+        data: {},
+        videoSrc: ''
       }
     }
   },
@@ -41,10 +42,13 @@ export default {
       this.data = data
     },
     openModal(item) {
-      this.modal = true
-      this.modalData = item
-      this.$refs.videoTag.src = `${location.origin}/api/video/play?&path=${item.path}`
+      this.modal.open = true
+      this.modal.data = item
+      this.modal.videoSrc = `${location.origin}/api/video/play?&path=${item.path}`
       this.$refs.videoTag.load()
+    },
+    closeModal() {
+      // this.$refs.videoTag.stop()
     },
     makeVideo() {
       let video = document.createElement('video')

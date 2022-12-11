@@ -65,7 +65,7 @@ export default {
       }
     },
 
-    async loadArtist(id) {
+    async loadArtist(context, id) {
       const {data} = await API.post('music/artists', {
         id: id
       })

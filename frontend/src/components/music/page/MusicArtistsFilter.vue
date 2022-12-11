@@ -13,7 +13,7 @@
       <el-checkbox v-model="union" :disabled="type !== 'strict'" border>Совместный</el-checkbox>
     </div>
     <el-select
-      v-model="styles.value"
+      v-model="model.secondary"
       multiple
       placeholder="Select Styles"
       class="mr-2"
@@ -27,7 +27,7 @@
       />
     </el-select>
     <el-select
-      v-model="genre.value"
+      v-model="model.common"
       :loading="this.tagsLoading"
       multiple
       filterable
@@ -53,12 +53,10 @@
       return {
         type: 'strict',
         union: true,
-        styles: {
-          value: ''
-        },
-        genre: {
-          value: ''
-        },
+        model: {
+          common: '',
+          secondary: ''
+        }
       }
     },
     computed: {
@@ -82,7 +80,7 @@
       submitFilter() {
         this.getArtists({
           filters: {
-            tags: this.genre.value,
+            tags: this.model.common,
             type: this.type,
             union: this.union
           }

@@ -8,6 +8,14 @@ export default {
   mutations: {
   },
   actions: {
+    async loadTagsSelect({commit}) {
+      const {data} = await API.post('music/tags/select')
+      if(!data) {
+        throw new Error('Нет данных!')
+      }
+
+      return data
+    },
   },
   getters: {
   }
