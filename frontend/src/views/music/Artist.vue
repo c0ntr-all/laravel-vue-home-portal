@@ -76,7 +76,7 @@
   export default {
     data() {
       return {
-        loading: false,
+        loading: true,
         artist: {}
       }
     },
@@ -84,10 +84,20 @@
       'artistId': String
     },
     methods: {
-      ...mapActions('artists', ['loadArtist']),
+      ...mapActions('artists', ['getArtist']),
+      //todo Сделать универсальные метод т.к. такие методы будут повторяться на каждой странице
+      loadArtist() {
+        this.getArtist(this.artistId).then(result => {
+          this.artist = result
+          this.loading = false
+        }).catch(error => {
+          this.$message.error(error)
+          this.loading = false
+        })
+      }
     },
     mounted() {
-      this.loadArtist(this.artistId);
+      this.loadArtist()
     }
   }
 </script>
