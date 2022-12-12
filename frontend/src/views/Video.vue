@@ -7,9 +7,7 @@
       </div>
       <el-dialog v-model="modal.open" ref="modalTag" :width="'100%'" @close="closeModal()">
         {{ modal.data.name }}
-        <video preload="none" ref="videoTag" class="video" controls>
-          <source :src="modal.videoSrc" type="video/mp4">
-        </video>
+        <video :src="modal.videoSrc" preload="none" class="video" ref="videoTag" controls></video>
       </el-dialog>
     </div>
   </el-main>
@@ -45,10 +43,12 @@ export default {
       this.modal.open = true
       this.modal.data = item
       this.modal.videoSrc = `${location.origin}/api/video/play?&path=${item.path}`
-      this.$refs.videoTag.load()
+      this.$nextTick(() => {
+        this.$refs.videoTag.load()
+      })
     },
     closeModal() {
-      // this.$refs.videoTag.stop()
+      this.$refs.videoTag.pause()
     },
     makeVideo() {
       let video = document.createElement('video')
