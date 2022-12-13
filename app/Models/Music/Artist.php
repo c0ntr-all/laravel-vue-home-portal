@@ -45,7 +45,7 @@ class Artist extends Model
 
     public static function getFiltered(array $filters = [])
     {
-        return static::filter($filters, 'tags', 'tags', 'name')
+        return static::filter($filters, 'tags', 'tags', 'id')
                       ->cursorPaginate(12);
     }
 
@@ -66,11 +66,10 @@ class Artist extends Model
     public function scopeFilter($query, array $filters, string $key, string $relation, string $column)
     {
         if (!empty($filters['tags']) && $filters['type'] == 'hierarchical') {
-            $result = Tag::whereIn('name', $filters['tags'])->get()->map(function($item) {
+            $result = Tag::whereIn('id', $filters['tags'])->get()->map(function($item) {
                 $tagsList = $this->normalizeArray($item->childrenCategories->toArray());
-                return array_column($tagsList, 'name');
+                return array_column($tagsList, 'id');
             });
-
             $filters['tags'] = array_merge(...$result->toArray());
         }
 

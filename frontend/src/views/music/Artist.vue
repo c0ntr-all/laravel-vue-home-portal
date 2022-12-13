@@ -85,7 +85,6 @@
     },
     methods: {
       ...mapActions('artists', ['getArtist']),
-      //todo Сделать универсальные метод т.к. такие методы будут повторяться на каждой странице
       loadArtist() {
         this.getArtist(this.artistId).then(result => {
           this.artist = result
