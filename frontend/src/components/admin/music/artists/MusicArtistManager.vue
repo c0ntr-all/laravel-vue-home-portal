@@ -1,4 +1,15 @@
 <template>
+  <div class="mt-4">
+    <el-input
+      v-model="search"
+      placeholder="Введите имя исполнителя"
+      class="search-input"
+    >
+      <template #append>
+        <el-button :icon="Search" @click="searchRequest()" />
+      </template>
+    </el-input>
+  </div>
   <el-table
     :data="artists"
     style="width: 100%"
@@ -99,6 +110,11 @@
     </template>
   </app-modal>
 </template>
+<script setup>
+  import {
+    Search
+  } from '@element-plus/icons-vue'
+</script>
 <script>
   import empty from "../../../../utils/empty"
 
@@ -123,6 +139,7 @@
           },
           modal: false
         },
+        search: ''
       }
     },
     computed: {
@@ -140,6 +157,10 @@
         'loadArtists',
         'updateArtist'
       ]),
+
+      searchRequest() {
+
+      },
 
       openArtistUpdateModal(item) {
         //Подгрузка при открытии модального окна, чтобы select успел соотнести id'шники c name'ами тегов
@@ -262,5 +283,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .search-input {
+    width: 379px;
+    margin: 0 0 15px;
   }
 </style>
