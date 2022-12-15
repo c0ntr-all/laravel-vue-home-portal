@@ -86,7 +86,7 @@
     methods: {
       ...mapActions('artists', ['getArtist']),
       loadArtist() {
-        this.getArtist(this.artistId).then(result => {
+        this.getArtist({id: this.artistId}).then(result => {
           this.artist = result
           this.loading = false
         }).catch(error => {

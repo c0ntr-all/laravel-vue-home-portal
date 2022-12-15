@@ -126,6 +126,7 @@
     data() {
       return {
         tableData: [],
+        artists: [],
         artistUpdate: {
           posterPreview: null,
           tagInputVisible: false,
@@ -146,15 +147,14 @@
       ...mapGetters('artists', [
         'commonTags',
         'secondaryTags',
-        'tagsLoading',
-        'artists'
+        'tagsLoading'
       ]),
     },
     methods: {
       ...mapActions('artists', [
         'loadTagsSelect',
         'switchTagsLoading',
-        'loadArtists',
+        'getArtists',
         'updateArtist'
       ]),
 
@@ -216,6 +216,12 @@
           this.$message.error(error);
         })
       },
+      loadArtists() {
+        this.getArtists().then(response => {
+          this.artists = response
+          this.loading = false
+        })
+      }
     },
     mounted() {
       this.loadArtists();

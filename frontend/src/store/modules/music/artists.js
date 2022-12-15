@@ -54,23 +54,19 @@ export default {
       commit('SWITCH_TAGS_LOADING', value !== value)
     },
 
-    async loadArtists(context) {
-      try {
-        const {data} = await API.post('music/artists/get')
-        if(!data) {
-          throw new Error('Нет данных!')
-        }
-        context.commit('LOAD_ARTISTS', data['artists'])
-      }catch(e) {
+    async getArtists() {
+      const {data} = await API.post('music/artists/get')
+      if(!data.success) {
+        throw new Error(data.error)
       }
+
+      return data.artists
     },
 
-    async getArtist(context, id) {
-      const {data} = await API.post('music/artists', {
-        id: id
-      })
+    async getArtist(context, payload) {
+      const {data} = await API.post('music/artists', payload)
       if(!data.success) {
-        throw new Error('Нет данных!')
+        throw new Error(data.error)
       }
 
       return data.artists

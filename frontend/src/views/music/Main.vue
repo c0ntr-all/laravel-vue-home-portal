@@ -50,10 +50,17 @@
       }
     },
     methods: {
-      ...mapActions('music', ['loadTags','loadFilter','getArtists'])
+      ...mapActions('music', [
+        'loadTags',
+        'loadFilter',
+        'getArtists'
+      ])
     },
     computed: {
-      ...mapGetters('music', ['tags','artists']),
+      ...mapGetters('music', [
+        'tags',
+        'artists'
+      ]),
     },
     components: {
       MusicArtistsFilter,
@@ -62,7 +69,6 @@
     },
     mounted() {
       this.loadTags();
-      // this.loadFilter();
       this.getArtists();
     }
   }

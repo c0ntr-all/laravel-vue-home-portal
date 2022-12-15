@@ -20,6 +20,7 @@ class ArtistCollection extends ResourceCollection
     public function toArray($request): array
     {
         return [
+            'success' => true,
             'artists' => $this->collection,
             'count' => $this->count(),
             'pagination' => [
