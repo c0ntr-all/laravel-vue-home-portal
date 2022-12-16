@@ -5,13 +5,6 @@ export default {
 
   state() {
     return {
-      artist: {
-        tags: {
-          common: [],
-          secondary: []
-        },
-        tagsLoading: true
-      },
       artists: []
     }
   },
@@ -56,15 +49,6 @@ export default {
 
     async getArtists() {
       const {data} = await API.post('music/artists/get')
-      if(!data.success) {
-        throw new Error(data.error)
-      }
-
-      return data.artists
-    },
-
-    async getArtist(context, payload) {
-      const {data} = await API.post('music/artists', payload)
       if(!data.success) {
         throw new Error(data.error)
       }

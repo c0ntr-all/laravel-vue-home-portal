@@ -72,6 +72,7 @@
 </script>
 <script>
   import {mapActions} from "vuex"
+  import API from "@/utils/api";
 
   export default {
     data() {
@@ -84,7 +85,6 @@
       'artistId': String
     },
     methods: {
-      ...mapActions('artists', ['getArtist']),
       loadArtist() {
         this.getArtist({id: this.artistId}).then(result => {
           this.artist = result
@@ -93,7 +93,16 @@
           this.$message.error(error)
           this.loading = false
         })
-      }
+      },
+
+      async getArtist(context, payload) {
+        const {data} = await API.post('music/artists', payload)
+        if(!data.success) {
+          throw new Error(data.error)
+        }
+
+        return data.artists
+      },
     },
     mounted() {
       this.loadArtist()
