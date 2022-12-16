@@ -1,6 +1,8 @@
 import API from "../../../utils/api";
 
 export default {
+  namespaced: true,
+
   state() {
     return {
     }
@@ -8,9 +10,10 @@ export default {
   mutations: {
   },
   actions: {
-    async loadTagsSelect({commit}) {
+    async getTagsSelect() {
       const {data} = await API.post('music/tags/select')
-      if(!data) {
+
+      if(!data.success) {
         throw new Error('Нет данных!')
       }
 

@@ -71,7 +71,6 @@
   } from '@element-plus/icons-vue'
 </script>
 <script>
-  import {mapActions} from "vuex"
   import API from "@/utils/api";
 
   export default {
@@ -95,7 +94,7 @@
         })
       },
 
-      async getArtist(context, payload) {
+      async getArtist(payload) {
         const {data} = await API.post('music/artists', payload)
         if(!data.success) {
           throw new Error(data.error)

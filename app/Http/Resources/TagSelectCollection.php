@@ -12,6 +12,7 @@ class TagSelectCollection extends ResourceCollection
     public function toArray($request): array
     {
         return [
+            'success' => true,
             'tags' => [
                 'common' => $this->prepareTags(),
                 'secondary' => $this->prepareTags(false)

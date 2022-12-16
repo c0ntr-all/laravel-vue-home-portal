@@ -72,14 +72,13 @@
         <el-form-item label="Основные теги">
           <el-select
             v-model="artistUpdate.model.commonTags"
-            :loading="this.tagsLoading"
             multiple
             filterable
             placeholder="Tags"
             style="width: 100%"
           >
             <el-option
-              v-for="item in this.commonTags"
+              v-for="item in tags.common"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -89,14 +88,13 @@
         <el-form-item label="Доп. теги">
           <el-select
             v-model="artistUpdate.model.secondaryTags"
-            :loading="this.tagsLoading"
             multiple
             filterable
             placeholder="Tags"
             style="width: 100%"
           >
             <el-option
-              v-for="item in this.secondaryTags"
+              v-for="item in tags.secondary"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -127,6 +125,10 @@
       return {
         tableData: [],
         artists: [],
+        tags: {
+          common: {},
+          secondary: {}
+        },
         artistUpdate: {
           posterPreview: null,
           tagInputVisible: false,
@@ -146,16 +148,16 @@
     computed: {
       ...mapGetters('artists', [
         'commonTags',
-        'secondaryTags',
-        'tagsLoading'
+        'secondaryTags'
       ]),
     },
     methods: {
       ...mapActions('artists', [
-        'loadTagsSelect',
-        'switchTagsLoading',
         'getArtists',
         'updateArtist'
+      ]),
+      ...mapActions('tags', [
+        'getTagsSelect',
       ]),
 
       searchRequest() {
@@ -165,6 +167,7 @@
       openArtistUpdateModal(item) {
         //Подгрузка при открытии модального окна, чтобы select успел соотнести id'шники c name'ами тегов
         this.loadTagsSelect()
+        console.log(this.tags)
         this.artistUpdate.modal = true
 
         this.artistUpdate.model.id = item.id
@@ -221,7 +224,15 @@
           this.artists = response
           this.loading = false
         })
-      }
+      },
+      loadTagsSelect() {
+        this.getTagsSelect().then(response => {
+          this.tags.common = response.tags.common
+          this.tags.secondary = response.tags.secondary
+        }).catch(error => {
+          this.$message.error(error)
+        })
+      },
     },
     mounted() {
       this.loadArtists();

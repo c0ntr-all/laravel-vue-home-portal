@@ -12,68 +12,51 @@
       </el-radio-group>
       <el-checkbox v-model="union" :disabled="type !== 'strict'" border>Совместный</el-checkbox>
     </div>
-    <el-select
-      v-model="model.secondary"
-      multiple
-      placeholder="Select Styles"
-      class="mr-2"
-      style="width: 240px"
-    >
-      <el-option
-        v-for="item in this.secondaryTags"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      />
+
+    <el-select v-model="model.secondary" placeholder="Select Styles" class="mr-2" style="width: 240px" multiple>
+      <el-option v-for="item in tags.secondary" :key="item.value" :label="item.label" :value="item.value"/>
     </el-select>
-    <el-select
-      v-model="model.common"
-      :loading="this.tagsLoading"
-      multiple
-      filterable
-      placeholder="Select Genre"
-      class="mr-2"
-      style="width: 240px"
-    >
-      <el-option
-        v-for="item in this.commonTags"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-      />
+
+    <el-select v-model="model.common" placeholder="Select Genre" class="mr-2" style="width: 240px" multiple filterable>
+      <el-option v-for="item in tags.common" :key="item.value" :label="item.label" :value="item.value"/>
     </el-select>
+
     <el-button type="primary" @click="submitFilter">Filter</el-button>
   </div>
 </template>
 <script>
-  import {mapActions, mapGetters} from 'vuex'
+  import {mapActions} from 'vuex'
 
   export default {
     data() {
       return {
         type: 'strict',
         union: true,
+        tags: {
+          common: {},
+          secondary: {}
+        },
         model: {
           common: '',
           secondary: ''
         }
       }
     },
-    computed: {
-      ...mapGetters('artists', [
-        'commonTags',
-        'secondaryTags',
-        'tagsLoading',
-      ]),
-    },
     methods: {
-      ...mapActions('artists', [
-        'loadTagsSelect',
-        'switchTagsLoading',
+      ...mapActions('tags', [
+        'getTagsSelect',
       ]),
       ...mapActions('music', [
         'getArtists',
       ]),
+      loadTagsSelect() {
+        this.getTagsSelect().then(response => {
+          this.tags.common = response.tags.common
+          this.tags.secondary = response.tags.secondary
+        }).catch(error => {
+          this.$message.error(error)
+        })
+      },
       checkRules() {
         this.union = this.type === 'strict';
       },
@@ -85,7 +68,7 @@
             union: this.union
           }
         })
-      }
+      },
     },
     mounted() {
       this.loadTagsSelect()
