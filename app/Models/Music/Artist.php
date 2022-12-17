@@ -5,7 +5,6 @@ namespace App\Models\Music;
 use App\Models\Traits\HasDates;
 use App\Models\Traits\HasMusicTags;
 use App\Models\Traits\HasImage;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -43,10 +42,16 @@ class Artist extends Model
         return $this->hasMany(Album::class, 'artist_id', 'id');
     }
 
-    public static function getFiltered(array $filters = [])
+    public static function getWithCursor(array $filters = [])
     {
         return static::filter($filters, 'tags', 'tags', 'id')
                       ->cursorPaginate(12);
+    }
+
+    public static function getWithPaginate(array $filters = [])
+    {
+        return static::filter($filters, 'tags', 'tags', 'id')
+                     ->paginate(12);
     }
 
     /**

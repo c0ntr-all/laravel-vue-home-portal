@@ -6,6 +6,7 @@ use App\Http\Controllers\Finances\FinancesController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\Music\AlbumController;
 use App\Http\Controllers\Music\ArtistController;
+use App\Http\Controllers\Music\Admin\ArtistController as AdminArtistController;
 use App\Http\Controllers\Music\TagController;
 use App\Http\Controllers\Music\TrackController;
 use App\Http\Controllers\Music\UploadController;
@@ -70,6 +71,15 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
         });
 
         Route::prefix('music')->group(function() {
+            Route::prefix('admin')->group(function() {
+                Route::prefix('artists')->group(function() {
+                    Route::post('get', [AdminArtistController::class, 'getArtists']);
+                    Route::post('store', [AdminArtistController::class, 'store']);
+                    Route::post('update', [AdminArtistController::class, 'update']);
+                });
+                Route::post('/', [ArtistController::class, 'index']);
+                Route::post('get', [ArtistController::class, 'getArtists']);
+            });
             Route::post('upload', [UploadController::class, 'upload']);
             Route::prefix('artists')->group(function() {
                 Route::post('/', [ArtistController::class, 'index']);

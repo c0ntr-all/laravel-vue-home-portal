@@ -22,12 +22,13 @@ export default {
   },
   actions: {
     async getArtists() {
-      const {data} = await API.post('music/artists/get')
+      const {data} = await API.post('music/admin/artists/get')
+
       if(!data.success) {
         throw new Error(data.error)
       }
 
-      return data.artists
+      return data.data.artists
     },
 
     async updateArtist(context, artist) {
