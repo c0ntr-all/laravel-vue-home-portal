@@ -21,24 +21,26 @@ export default {
     }
   },
   actions: {
-    async getArtists() {
-      const {data} = await API.post('music/admin/artists/get')
+    async getArtists(context, page = 1) {
+      const {data} = await API.post('music/admin/artists/get', {
+        page: page
+      })
 
       if(!data.success) {
         throw new Error(data.error)
       }
 
-      return data.data.artists
+      return data.data
     },
 
     async updateArtist(context, artist) {
-      const {data} = await API.post('music/artists/update', artist)
-      if(data['success']) {
-        context.commit('UPDATE_ARTIST', data['artists'])
+      const {data} = await API.post('music/admin/artists/update', artist)
+      if(data.success) {
+        context.commit('UPDATE_ARTIST', data.artists)
 
-        return data['artists']
+        return data.artists
       } else {
-        throw new Error(data['error'])
+        throw new Error(data.error)
       }
     },
   },

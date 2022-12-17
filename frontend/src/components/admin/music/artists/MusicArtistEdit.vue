@@ -10,11 +10,7 @@
       </template>
     </el-input>
   </div>
-  <el-table
-    :data="artists"
-    style="width: 100%"
-    highlight-current-row
-  >
+  <el-table class="artists-list" :data="artists" style="width: 100%" highlight-current-row>
     <el-table-column prop="id" label="Id" width="70" sortable />
     <el-table-column prop="image" label="Изображение" width="150">
       <template #default="scope">
@@ -38,6 +34,15 @@
       </template>
     </el-table-column>
   </el-table>
+
+  <el-pagination
+    class="artists-pagination"
+    :total="total"
+    layout="prev, pager, next"
+    @current-change="loadArtists"
+    background
+  />
+
   <app-modal :openModal="artistUpdate.modal" @closeModal="closeArtistUpdateModal">
     <template v-slot:title>
       <h3>Редактирование Исполнителя</h3>
@@ -123,8 +128,11 @@
   export default {
     data() {
       return {
+        loading: false,
         tableData: [],
         artists: [],
+        pagination: {},
+        total: 0,
         tags: {
           common: {},
           secondary: {}
@@ -167,7 +175,6 @@
       openArtistUpdateModal(item) {
         //Подгрузка при открытии модального окна, чтобы select успел соотнести id'шники c name'ами тегов
         this.loadTagsSelect()
-        console.log(this.tags)
         this.artistUpdate.modal = true
 
         this.artistUpdate.model.id = item.id
@@ -219,11 +226,18 @@
           this.$message.error(error);
         })
       },
-      loadArtists() {
-        this.getArtists().then(response => {
-          this.artists = response
-          this.loading = false
+      loadArtists(page) {
+        this.loading = true
+
+        this.getArtists(page).then(data => {
+          this.artists = data.artists
+          this.pagination = data.pagination
+          this.total = data.total
+        }).catch(error => {
+          this.$message.error(error)
         })
+
+        this.loading = false
       },
       loadTagsSelect() {
         this.getTagsSelect().then(response => {
@@ -243,6 +257,13 @@
   }
 </script>
 <style lang="scss" scoped>
+  .artists-list {
+    margin-bottom: 1rem;
+  }
+  .artists-pagination {
+    display: flex;
+    justify-content: center;
+  }
   .artist-row {
     &__image {
       width: 50px;
