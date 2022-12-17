@@ -35,13 +35,12 @@ export default {
 
     async updateArtist(context, artist) {
       const {data} = await API.post('music/admin/artists/update', artist)
-      if(data.success) {
-        context.commit('UPDATE_ARTIST', data.artists)
 
-        return data.artists
-      } else {
+      if(!data.success) {
         throw new Error(data.error)
       }
+
+      return data.data
     },
   },
   getters: {

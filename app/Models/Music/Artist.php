@@ -51,7 +51,8 @@ class Artist extends Model
     public static function getWithPaginate(array $filters = [])
     {
         return static::filter($filters, 'tags', 'tags', 'id')
-                     ->paginate(12);
+                     ->orderBy('name')
+                     ->paginate(100);
     }
 
     /**

@@ -1,5 +1,8 @@
 <template>
   <div class="mb-3">
+    Всего исполнителей: <b>{{ total }}</b>
+  </div>
+  <div class="mb-3">
     <el-input
       v-model="search"
       placeholder="Введите имя исполнителя"
@@ -39,7 +42,9 @@
 
   <el-pagination
     class="artists-pagination"
+    :hide-on-single-page="true"
     :total="total"
+    :page-size="pagination.per_page"
     layout="prev, pager, next"
     @current-change="loadArtists"
     background
@@ -111,7 +116,7 @@
       </el-form>
     </template>
     <template v-slot:footer>
-      <el-button type="primary" @click="editArtistRequest">Сохранить</el-button>
+      <el-button type="primary" @click="loadUpdateArtist">Сохранить</el-button>
     </template>
   </app-modal>
 </template>
@@ -212,7 +217,7 @@
         this.artistUpdate.tagInputVisible = false
         this.artistUpdate.tagInputValue = ''
       },
-      editArtistRequest() {
+      loadUpdateArtist() {
         const formData = new FormData();
         const model = this.artistUpdate.model;
 
@@ -222,7 +227,12 @@
           }
         }
 
-        this.updateArtist(formData).then(result => {
+        this.updateArtist(formData).then(data => {
+          for(let key in this.artists) {
+            if(this.artists[key].id === data.id) {
+              this.artists[key] = data
+            }
+          }
           this.$message.success("Исполнитель успешно обновлён!");
         }).catch(error => {
           this.$message.error(error);
@@ -235,6 +245,8 @@
           this.artists = data.artists
           this.pagination = data.pagination
           this.total = data.total
+
+          console.log(this.pagination)
 
           this.loading = false
         }).catch(error => {
