@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-4">
+  <div class="mb-3">
     <el-input
       v-model="search"
       placeholder="Введите имя исполнителя"
@@ -10,30 +10,32 @@
       </template>
     </el-input>
   </div>
-  <el-table class="artists-list" :data="artists" style="width: 100%" highlight-current-row>
-    <el-table-column prop="id" label="Id" width="70" sortable />
-    <el-table-column prop="image" label="Изображение" width="150">
-      <template #default="scope">
-        <div class="artist-row__image">
-          <img :src="scope.row.image" alt="">
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column prop="name" label="Name" width="400" sortable />
-    <el-table-column prop="tags" label="Теги" width="450">
-      <template #default="props">
-        <div class="artist__tags"><span v-for="tag in props.row.tagsNames.common" class="artist-row__tag">{{ tag }}</span></div>
-        <div class="artist__tags"><span v-for="tag in props.row.tagsNames.secondary" class="artist-row__tag">{{ tag }}</span></div>
-      </template>
-    </el-table-column>
-    <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
-    <el-table-column label="Действия" width="250">
-      <template #default="scope">
-        <el-button size="small" @click="openArtistUpdateModal(scope.row)">Редактировать</el-button>
-        <el-button size="small" type="danger">Удалить</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
+  <div class="mb-3" v-loading="loading">
+    <el-table class="artists-list" :data="artists" style="width: 100%" highlight-current-row>
+      <el-table-column prop="id" label="Id" width="70" sortable />
+      <el-table-column prop="image" label="Изображение" width="150">
+        <template #default="scope">
+          <div class="artist-row__image">
+            <img :src="scope.row.image" alt="">
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="name" label="Name" width="400" sortable />
+      <el-table-column prop="tags" label="Теги" width="450">
+        <template #default="props">
+          <div class="artist__tags"><span v-for="tag in props.row.tagsNames.common" class="artist-row__tag">{{ tag }}</span></div>
+          <div class="artist__tags"><span v-for="tag in props.row.tagsNames.secondary" class="artist-row__tag">{{ tag }}</span></div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />
+      <el-table-column label="Действия" width="250">
+        <template #default="scope">
+          <el-button size="small" @click="openArtistUpdateModal(scope.row)">Редактировать</el-button>
+          <el-button size="small" type="danger">Удалить</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 
   <el-pagination
     class="artists-pagination"
@@ -233,11 +235,12 @@
           this.artists = data.artists
           this.pagination = data.pagination
           this.total = data.total
+
+          this.loading = false
         }).catch(error => {
           this.$message.error(error)
+          this.loading = false
         })
-
-        this.loading = false
       },
       loadTagsSelect() {
         this.getTagsSelect().then(response => {
@@ -257,9 +260,6 @@
   }
 </script>
 <style lang="scss" scoped>
-  .artists-list {
-    margin-bottom: 1rem;
-  }
   .artists-pagination {
     display: flex;
     justify-content: center;
@@ -321,6 +321,5 @@
   }
   .search-input {
     width: 379px;
-    margin: 0 0 15px;
   }
 </style>
