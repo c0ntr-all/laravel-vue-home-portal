@@ -1,10 +1,6 @@
 <template>
   <div class="music-filter mb-3">
     <h3>Filter</h3>
-    <blockquote class="tip danger">
-      <p class="tip__title">Внимание!</p>
-      <p>Дополнительный стиль временно не работает!</p>
-    </blockquote>
     <div class="music-filter__params">
       <el-radio-group class="mb-2 mr-2" v-model="type" size="default" @change="checkRules()">
         <el-radio-button label="strict">Точное совпадение</el-radio-button>
@@ -13,7 +9,7 @@
       <el-checkbox v-model="union" :disabled="type !== 'strict'" border>Совместный</el-checkbox>
     </div>
 
-    <el-select v-model="model.secondary" placeholder="Select Styles" class="mr-2" style="width: 240px" multiple>
+    <el-select v-model="model.secondary" placeholder="Select Styles" class="mr-2" style="width: 240px">
       <el-option v-for="item in tags.secondary" :key="item.value" :label="item.label" :value="item.value"/>
     </el-select>
 
@@ -63,7 +59,7 @@
       submitFilter() {
         this.getArtists({
           filters: {
-            tags: this.model.common,
+            tags: this.model.secondary ? this.model.common.concat(this.model.secondary) : this.model.common,
             type: this.type,
             union: this.union
           }
