@@ -50,17 +50,6 @@ export default {
     closeModal() {
       this.$refs.videoTag.pause()
     },
-    makeVideo() {
-      let video = document.createElement('video')
-      video.setAttribute('controls', 'controls')
-
-      let source = document.createElement('source');
-      // source.src = 'test'
-
-      video.appendChild(source)
-
-      return video
-    }
   },
   components: {
     VideoCard

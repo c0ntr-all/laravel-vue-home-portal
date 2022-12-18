@@ -169,14 +169,19 @@
     methods: {
       ...mapActions('artists', [
         'getArtists',
-        'updateArtist'
+        'updateArtist',
+        'searchArtists'
       ]),
       ...mapActions('tags', [
         'getTagsSelect',
       ]),
 
       searchRequest() {
-
+        this.searchArtists(this.search).then(artists => {
+          this.artists = artists
+        }).catch(error => {
+          this.$message.error(error);
+        })
       },
 
       openArtistUpdateModal(item) {
@@ -245,8 +250,6 @@
           this.artists = data.artists
           this.pagination = data.pagination
           this.total = data.total
-
-          console.log(this.pagination)
 
           this.loading = false
         }).catch(error => {

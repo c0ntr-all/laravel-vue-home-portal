@@ -13,6 +13,7 @@ use App\Http\Controllers\Music\UploadController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\Reminds\RemindController;
 use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Tasks\TaskListController;
 use App\Http\Controllers\VideoController;
@@ -76,6 +77,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                     Route::post('get', [AdminArtistController::class, 'getArtists']);
                     Route::post('store', [AdminArtistController::class, 'store']);
                     Route::post('update', [AdminArtistController::class, 'update']);
+                    Route::post('search', [SearchController::class, 'search']);
                 });
                 Route::post('/', [ArtistController::class, 'index']);
                 Route::post('get', [ArtistController::class, 'getArtists']);

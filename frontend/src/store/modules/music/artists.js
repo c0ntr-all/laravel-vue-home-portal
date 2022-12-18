@@ -33,6 +33,18 @@ export default {
       return data.data
     },
 
+    async searchArtists(context, name) {
+      const {data} = await API.post('music/admin/artists/search', {
+        name: name
+      })
+
+      if(!data.success) {
+        throw new Error(data.error)
+      }
+
+      return data.data.artists
+    },
+
     async updateArtist(context, artist) {
       const {data} = await API.post('music/admin/artists/update', artist)
 

@@ -24,6 +24,7 @@ class Track extends Model
         'name',
         'path_windows',
         'duration',
+        'bitrate',
         'updated_at',
         'deleted_at'
     ];

@@ -218,7 +218,8 @@ class ParseArtistService
                         'user_id' => auth()->user()->id,
                         'number' => $track['number'],
                         'path_windows' => $track['path'],
-                        'duration' => '00:03:00'
+                        'duration' => '00:03:00',
+                        'bitrate' => 0
                     ]);
                 }
             }
