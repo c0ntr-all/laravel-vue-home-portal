@@ -2,16 +2,18 @@
   <div class="mb-3">
     Всего исполнителей: <b>{{ total }}</b>
   </div>
-  <div class="mb-3">
+  <div class="artists-search mb-3">
     <el-input
       v-model="search"
       placeholder="Введите имя исполнителя"
       class="search-input"
+      @keyup.enter="searchRequest()"
     >
       <template #append>
         <el-button :icon="Search" @click="searchRequest()" />
       </template>
     </el-input>
+    <el-button type="danger" @click="loadArtists">Сбросить</el-button>
   </div>
   <div class="mb-3" v-loading="loading">
     <el-table class="artists-list" :data="artists" style="width: 100%" highlight-current-row>
@@ -177,10 +179,14 @@
       ]),
 
       searchRequest() {
+        this.loading = true
+
         this.searchArtists(this.search).then(artists => {
           this.artists = artists
+          this.loading = false
         }).catch(error => {
           this.$message.error(error);
+          this.loading = false
         })
       },
 
@@ -278,6 +284,10 @@
   .artists-pagination {
     display: flex;
     justify-content: center;
+  }
+  .artists-search {
+    display: flex;
+    column-gap: .5rem;
   }
   .artist-row {
     &__image {
