@@ -4,7 +4,7 @@
       <div class="tags">
         <h3>Genres</h3>
         <div class="tags-list" v-loading="tags.loading">
-          <router-link v-for="tag in tags.items"
+          <router-link v-for="tag in tags.common"
                        :to="'/music/tags/' + tag.slug"
                        class="tag-link"
           >
