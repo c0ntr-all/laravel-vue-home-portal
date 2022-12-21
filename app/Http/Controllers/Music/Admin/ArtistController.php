@@ -21,23 +21,27 @@ class ArtistController extends Controller
     }
 
     public function getArtists(FilterRequest $request) {
-        $filters = $request->validated()['filters'] ?? [];
+        $requestData = $request->validated();
+
+        $filters = $requestData['filters'] ?? [];
 
         return $this->artistsResponse(Artist::getWithPaginate($filters));
     }
 
     public function store(StoreRequest $request)
     {
+        $requestData = $request->validated();
+
         $imagePath = ImageUpload::make()
                                 ->setDiskName('public')
                                 ->setFolder('music/artists/posters')
-                                ->setSourceName($request->name)
-                                ->upload($request->image);
+                                ->setSourceName($requestData['name'])
+                                ->upload($requestData['image']);
 
         $artist = Artist::create([
             'user_id' => auth()->id(),
-            'name' => $request->name,
-            'content' => $request->content,
+            'name' => $requestData['name'],
+            'content' => $requestData['content'],
             'image' => $imagePath
         ]);
 
@@ -46,28 +50,30 @@ class ArtistController extends Controller
 
     public function update(UpdateRequest $request)
     {
+        $requestData = $request->validated();
+
         $update = [];
 
-        $artist = Artist::find($request->validated()['id']);
+        $artist = Artist::find($requestData['id']);
 
         if ($artist) {
-            $update = array_merge($update, $request->validated());
+            $update = array_merge($update, $requestData);
 
             if (isset($request->validated()['image'])) {
                 $update['image'] = ImageUpload::make()
                                               ->setDiskName('public')
                                               ->setFolder('music/artists/posters')
-                                              ->setSourceName($request->validated()['name'])
-                                              ->upload($request->validated()['image']);
+                                              ->setSourceName($requestData['name'])
+                                              ->upload($requestData['image']);
             }
 
             $artist->update($update);
 
-            if (!empty($request->validated()['commonTags'])) {
-                $tags = explode(',', $request->validated()['commonTags']);
+            if (!empty($requestData['commonTags'])) {
+                $tags = explode(',', $requestData['commonTags']);
 
-                if (!empty($request->validated()['secondaryTags'])) {
-                    $tags = array_merge($tags, explode(',', $request->validated()['secondaryTags']));
+                if (!empty($requestData['secondaryTags'])) {
+                    $tags = array_merge($tags, explode(',', $requestData['secondaryTags']));
                 }
 
                 $artist->tags()->sync($tags);
