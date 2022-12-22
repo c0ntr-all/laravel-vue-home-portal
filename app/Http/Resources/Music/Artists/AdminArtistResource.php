@@ -10,6 +10,10 @@ class AdminArtistResource extends JsonResource
 
     public function toArray($request): array
     {
+        /**
+         * Нужны отдельно id и имена т.к. Element Plus принимает только массив id для преобразования id в имя в селекте.
+         * Преобразование во что-то типа ключ(id), значение(имя) и использование Object.keys() не дает результата.
+         */
         $commonTags = $this->tags->where('common', true);
         $secondaryTags = $this->tags->where('common', false);
 
