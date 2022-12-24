@@ -57,12 +57,11 @@
               <music-track-card v-for="track in album.tracks" :track="track"></music-track-card>
             </div>
           </div>
-          <div class="player">
-          </div>
         </div>
       </template>
     </el-skeleton>
   </div>
+  <music-related-albums :albumId="albumId" />
 </template>
 <script setup>
   import {
@@ -73,6 +72,7 @@
   import {mapGetters, mapActions} from 'vuex'
 
   import MusicTrackCard from '../../components/music/playing/MusicTrackCard'
+  import MusicRelatedAlbums from '../../components/client/music/album/MusicRelatedAlbums'
 
   export default {
     props: {
@@ -94,7 +94,8 @@
       }
     },
     components: {
-      MusicTrackCard
+      MusicTrackCard,
+      MusicRelatedAlbums
     },
     mounted() {
       this.loadAlbum(this.albumId);
