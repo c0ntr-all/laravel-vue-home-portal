@@ -8,25 +8,52 @@
         </div>
       </template>
       <template #default>
-        {{ albumId }}
+        <el-space alignment="flex-start" wrap>
+          <music-album-card v-for="album in this.albums" :key="album.id" :album="album" />
+        </el-space>
       </template>
     </el-skeleton>
   </div>
 </template>
 <script>
+import {mapActions} from "vuex";
+
 import MusicSkeletonAlbumCard from './MusicSkeletonAlbumCard'
+import MusicAlbumCard from "@/components/client/music/album/MusicAlbumCard";
 
 export default {
   props: {
-    albumId: Number
+    artistId: Number,
+    albumId: String
   },
   data() {
     return {
-      loading: true
+      loading: true,
+      albums: []
     }
   },
+  methods: {
+    ...mapActions('music', [
+      'getArtist'
+    ]),
+
+    //todo:Возможно, надо не подгружать всего Исполнителя, а сделать отдельные методы на получение альбомов
+    loadArtist() {
+      this.getArtist(this.artistId).then(data => {
+        this.albums = data.albums.filter(album => album.id != this.albumId)
+        this.loading = false
+      }).catch(error => {
+        this.$message.error(error)
+        this.loading = false
+      })
+    },
+  },
   components: {
-    MusicSkeletonAlbumCard
+    MusicSkeletonAlbumCard,
+    MusicAlbumCard
+  },
+  mounted() {
+    this.loadArtist()
   }
 }
 </script>

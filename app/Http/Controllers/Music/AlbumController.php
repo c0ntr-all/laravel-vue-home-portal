@@ -10,13 +10,15 @@ use App\Http\Resources\Music\AlbumResource;
 class AlbumController extends Controller
 {
 
-    public function index(IndexRequest $request): AlbumResource
+    public function index(IndexRequest $request): array
     {
         return $this->albumResponse(Album::find($request->validated()['id']));
     }
 
-    public function albumResponse(Album $album): AlbumResource
+    public function albumResponse(Album $album): array
     {
-        return new AlbumResource($album);
+        $resource = new AlbumResource($album);
+
+        return ['success' => true, 'data' => $resource];
     }
 }

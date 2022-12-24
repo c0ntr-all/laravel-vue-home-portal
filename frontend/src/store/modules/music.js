@@ -128,16 +128,24 @@ export default {
         throw new Error(data['error'])
       }
     },
-    async setTrackRating(context, value) {
-      const {data} = await API.post('ratings/store', value)
-      if (data.success) {
-        context.commit('SET_RATING', data['rating'])
 
-        return data['rating']
-      } else {
-        throw new Error(data['error'])
+    /**
+     * Получить одного исполнителя с альбомами и тегами по id
+     *
+     * @param context
+     * @param artistId
+     * @returns {Promise<*>}
+     */
+    async getArtist(context, artistId) {
+      const {data} = await API.post('music/artists', {
+        id: artistId
+      })
+      if (!data.success) {
+        throw new Error(data.error)
       }
-    }
+
+      return data.artists
+    },
   },
   getters: {
     music(state) {

@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class AlbumResource extends JsonResource
 {
-    public static $wrap = 'albums';
+    public static $wrap = '';
 
     public function toArray($request): array
     {

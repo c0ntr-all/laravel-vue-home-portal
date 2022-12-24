@@ -61,7 +61,7 @@
       </template>
     </el-skeleton>
   </div>
-  <music-related-albums :albumId="albumId" />
+  <music-related-albums v-if="loading === false" :artistId="album.artist.id" :albumId="albumId" />
 </template>
 <script setup>
   import {
@@ -69,7 +69,7 @@
   } from '@element-plus/icons-vue'
 </script>
 <script>
-  import {mapGetters, mapActions} from 'vuex'
+  import {mapActions} from 'vuex'
 
   import MusicTrackCard from '../../components/music/playing/MusicTrackCard'
   import MusicRelatedAlbums from '../../components/client/music/album/MusicRelatedAlbums'
@@ -78,11 +78,25 @@
     props: {
       'albumId': String
     },
+    data() {
+      return {
+        loading: true,
+        album: {}
+      }
+    },
     methods: {
-      ...mapActions(['loadAlbum'])
+      ...mapActions(['getAlbum']),
+      loadAlbum(albumId) {
+        this.getAlbum(albumId).then(album => {
+          this.album = album
+          this.loading = false
+        }).catch(error => {
+          this.$message.error(error)
+          this.loading = false
+        })
+      },
     },
     computed: {
-      ...mapGetters(['album','loading']),
       //Эта дичь для решения бага, который возникал, скорее всего, по вине element plus
       //который не давал делать такое album.artist.name. Выдавал ошибку еще до запроса на бэк
       artistName() {
