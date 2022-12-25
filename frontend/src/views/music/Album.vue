@@ -31,7 +31,7 @@
           <div class="album-head__right">
             <h2 class="album-head__name">{{ album.name }}</h2>
             <div class="album-head__description">
-              <p class="album-head__description-item album-artist">{{ artistName }}</p>
+              <p class="album-head__description-item album-artist">{{ album.artist.name }}</p>
               <p class="album-head__description-item album-year">{{ album.year }}</p>
               <div class="album-head__description-item album-content">
                 {{ album.content }}
@@ -54,14 +54,15 @@
               <div class="album-tracks__header-duration">Dur.</div>
             </div>
             <div class="album-tracks__list">
-              <music-track-card v-for="track in album.tracks" :track="track"></music-track-card>
+              <music-track-card v-for="track in album.tracks" :track="track" :key="track.id"></music-track-card>
             </div>
           </div>
         </div>
       </template>
     </el-skeleton>
   </div>
-  <music-related-albums v-if="loading === false" :artistId="album.artist.id" :albumId="albumId" />
+  <!-- v-if="loading === false" чтобы компонент дождался загрузки основного альбома -->
+  <music-related-albums v-if="loading === false" :artistId="album.artist.id" :albumId="parseInt(albumId)" />
 </template>
 <script setup>
   import {
@@ -96,20 +97,17 @@
         })
       },
     },
-    computed: {
-      //Эта дичь для решения бага, который возникал, скорее всего, по вине element plus
-      //который не давал делать такое album.artist.name. Выдавал ошибку еще до запроса на бэк
-      artistName() {
-        for(let key in this.album.artist) {
-          if(key === 'name') {
-            return this.album.artist[key]
-          }
-        }
-      }
-    },
     components: {
       MusicTrackCard,
       MusicRelatedAlbums
+    },
+    created() {
+      this.$watch(() => this.$route.params, (toParams, previousParams) => {
+          // Так можно имитировать полную перезагрузку с выполнением всех запросов, в том числе related
+          // this.loading = true
+          this.loadAlbum(toParams.albumId)
+        }
+      )
     },
     mounted() {
       this.loadAlbum(this.albumId);

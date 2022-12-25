@@ -9,7 +9,12 @@
       </template>
       <template #default>
         <el-space alignment="flex-start" wrap>
-          <music-album-card v-for="album in this.albums" :key="album.id" :album="album" />
+          <music-album-card
+            v-for="album in this.albums"
+            :key="album.id"
+            :album="album"
+            :class="{'album-card--current': album.id === this.albumId}"
+          />
         </el-space>
       </template>
     </el-skeleton>
@@ -24,7 +29,7 @@ import MusicAlbumCard from "@/components/client/music/album/MusicAlbumCard";
 export default {
   props: {
     artistId: Number,
-    albumId: String
+    albumId: Number
   },
   data() {
     return {
@@ -40,7 +45,7 @@ export default {
     //todo:Возможно, надо не подгружать всего Исполнителя, а сделать отдельные методы на получение альбомов
     loadArtist() {
       this.getArtist(this.artistId).then(data => {
-        this.albums = data.albums.filter(album => album.id != this.albumId)
+        this.albums = data.albums
         this.loading = false
       }).catch(error => {
         this.$message.error(error)
@@ -64,5 +69,8 @@ export default {
       justify-content: flex-start;
       column-gap: 1rem;
     }
+  }
+  .album-card--current {
+    opacity: .2;
   }
 </style>
