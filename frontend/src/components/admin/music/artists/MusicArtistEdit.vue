@@ -128,11 +128,11 @@
   } from '@element-plus/icons-vue'
 </script>
 <script>
-  import empty from "../../../../utils/empty"
+  import empty from "@/utils/empty"
 
   import {mapActions, mapGetters} from 'vuex'
 
-  import AppModal from "../../../default/AppModal"
+  import AppModal from "@/components/default/AppModal"
 
   export default {
     data() {

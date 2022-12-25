@@ -16,10 +16,10 @@
   </el-main>
 </template>
 <script>
-  import AppTaskList from "../components/tasks/AppTaskList";
-  import AppListCreateButton from "../components/tasks/AppListCreateButton";
+  import AppTaskList from "@/components/client/tasks/AppTaskList";
+  import AppListCreateButton from "@/components/client/tasks/AppListCreateButton";
 
-  import API from '../utils/api'
+  import API from '@/utils/api'
 
   export default {
     data() {

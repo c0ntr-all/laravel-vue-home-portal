@@ -43,8 +43,6 @@
   } from '@element-plus/icons-vue'
 </script>
 <script>
-  import API from "../../../../utils/api";
-
   export default {
     data() {
       return {

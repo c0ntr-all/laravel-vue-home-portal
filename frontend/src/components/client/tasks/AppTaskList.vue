@@ -45,8 +45,6 @@
 </script>
 
 <script>
-  import API from '../../utils/api'
-
   import AppTask from './AppTask'
   import {ref} from "vue";
 

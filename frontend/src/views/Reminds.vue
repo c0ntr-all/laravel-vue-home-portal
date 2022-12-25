@@ -61,9 +61,9 @@
 </template>
 <script>
   import { ref } from 'vue'
-  import API from "../utils/api";
+  import API from "@/utils/api";
 
-  import AppModal from '../components/default/AppModal'
+  import AppModal from '@/components/default/AppModal'
 
   export default {
     data() {

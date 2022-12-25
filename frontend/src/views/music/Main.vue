@@ -37,9 +37,9 @@
   </div>
 </template>
 <script>
-  import MusicArtistsFilter from '../../components/music/page/MusicArtistsFilter'
-  import MusicArtistCard from '../../components/music/artist/MusicArtistCard'
-  import MusicArtistCardRow from '../../components/music/artist/MusicArtistCardRow'
+  import MusicArtistsFilter from '@/components/client/music/artist/MusicArtistsFilter'
+  import MusicArtistCard from '@/components/client/music/artist/MusicArtistCard'
+  import MusicArtistCardRow from '@/components/client/music/artist/MusicArtistCardRow'
 
   import {mapGetters, mapActions} from "vuex";
 

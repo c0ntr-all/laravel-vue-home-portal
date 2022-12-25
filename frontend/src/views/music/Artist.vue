@@ -56,7 +56,7 @@
 <script>
   import {mapActions} from 'vuex'
 
-  import MusicAlbumCard from '../../components/client/music/album/MusicAlbumCard'
+  import MusicAlbumCard from '@/components/client/music/album/MusicAlbumCard'
 
   export default {
     data() {

@@ -58,18 +58,18 @@
   </el-drawer>
 </template>
 <script>
-  import addZero from "../../../utils/addzero";
+  import addZero from "@/utils/addzero";
 
   import {mapGetters, mapActions, mapMutations} from 'vuex'
 
-  import IconBase from "../../default/icons/IconBase"
-  import IconMusicShuffle from "../../default/icons/IconMusicShuffle"
-  import IconMusicPrev from "../../default/icons/IconMusicPrev"
-  import IconMusicPlay from "../../default/icons/IconMusicPlay"
-  import IconMusicPause from "../../default/icons/IconMusicPause"
-  import IconMusicNext from "../../default/icons/IconMusicNext"
-  import IconMusicRepeat from "../../default/icons/IconMusicRepeat"
-  import IconMusicVolume from "../../default/icons/IconMusicVolume"
+  import IconBase from "../default/icons/IconBase"
+  import IconMusicShuffle from "../default/icons/IconMusicShuffle"
+  import IconMusicPrev from "../default/icons/IconMusicPrev"
+  import IconMusicPlay from "../default/icons/IconMusicPlay"
+  import IconMusicPause from "../default/icons/IconMusicPause"
+  import IconMusicNext from "../default/icons/IconMusicNext"
+  import IconMusicRepeat from "../default/icons/IconMusicRepeat"
+  import IconMusicVolume from "../default/icons/IconMusicVolume"
 
   export default {
     data() {

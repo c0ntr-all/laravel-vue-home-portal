@@ -28,7 +28,7 @@
 <script>
 import API from "@/utils/api";
 
-import AppModal from "../../../default/AppModal";
+import AppModal from "@/components/default/AppModal";
 
 export default {
   data() {

@@ -17,9 +17,9 @@
   </el-main>
 </template>
 <script>
-  import MusicArtistManager from "../../components/admin/music/artists/MusicArtistManager";
-  import MusicAlbumManager from "../../components/admin/music/albums/MusicAlbumManager";
-  import MusicTagManager from "../../components/admin/music/tags/MusicTagManager";
+  import MusicArtistManager from "@/components/admin/music/artists/MusicArtistManager";
+  import MusicAlbumManager from "@/components/admin/music/albums/MusicAlbumManager";
+  import MusicTagManager from "@/components/admin/music/tags/MusicTagManager";
 
   export default {
     components: {

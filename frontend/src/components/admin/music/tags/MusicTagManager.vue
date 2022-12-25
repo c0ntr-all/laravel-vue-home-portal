@@ -121,7 +121,7 @@
   </el-table>
 </template>
 <script>
-  import AppModal from "../../../default/AppModal";
+  import AppModal from "@/components/default/AppModal";
   import { mapGetters, mapActions } from "vuex";
 
   export default {

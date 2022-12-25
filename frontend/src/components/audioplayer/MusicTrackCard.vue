@@ -19,11 +19,11 @@
 <script>
   import {mapGetters, mapActions} from 'vuex'
 
-  import IconBase from "../../default/icons/IconBase";
-  import IconMusicPlay from "../../default/icons/IconMusicPlay";
-  import IconMusicPause from "../../default/icons/IconMusicPause";
-  import IconMusicFavorite from "../../default/icons/IconMusicFavorite";
-  import IconMusicFavoriteFilled from "../../default/icons/IconMusicFavoriteFilled";
+  import IconBase from "../default/icons/IconBase";
+  import IconMusicPlay from "../default/icons/IconMusicPlay";
+  import IconMusicPause from "../default/icons/IconMusicPause";
+  import IconMusicFavorite from "../default/icons/IconMusicFavorite";
+  import IconMusicFavoriteFilled from "../default/icons/IconMusicFavoriteFilled";
 
   export default {
     props: {

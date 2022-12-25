@@ -27,7 +27,7 @@
 
   import TheSidebar from './components/TheSidebar'
   import TheAvatar from './components/TheAvatar'
-  import MusicPlayer from './components/music/playing/MusicPlayer'
+  import MusicPlayer from './components/audioplayer/MusicPlayer'
 
   export default {
     setup() {

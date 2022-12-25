@@ -72,8 +72,8 @@
 <script>
   import {mapActions} from 'vuex'
 
-  import MusicTrackCard from '../../components/music/playing/MusicTrackCard'
-  import MusicRelatedAlbums from '../../components/client/music/album/MusicRelatedAlbums'
+  import MusicTrackCard from '@/components/audioplayer/MusicTrackCard'
+  import MusicRelatedAlbums from '@/components/client/music/album/MusicRelatedAlbums'
 
   export default {
     props: {

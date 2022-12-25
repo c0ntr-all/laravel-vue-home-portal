@@ -14,8 +14,8 @@
 </template>
 
 <script>
-  import AppFinancesList from "../components/finances/AppFinancesList"
-  import API from '../utils/api'
+  import AppFinancesList from "@/components/client/finances/AppFinancesList"
+  import API from '@/utils/api'
 
   export default {
     data() {

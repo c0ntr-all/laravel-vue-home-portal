@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import API from '../../utils/api'
+  import API from '@/utils/api'
 
   export default {
     data() {

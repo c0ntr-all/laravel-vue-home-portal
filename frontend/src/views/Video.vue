@@ -16,7 +16,7 @@
 <script>
 import axios from 'axios'
 
-import VideoCard from '../components/client/video/VideoCard'
+import VideoCard from '@/components/client/video/VideoCard'
 
 export default {
   data() {
