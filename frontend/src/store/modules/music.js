@@ -32,8 +32,8 @@ export default {
       state.music.artists.items.push(...artists)
     },
     SET_TAGS(state, tags) {
-      state.music.tags.common = tags['common']
-      state.music.tags.secondary = tags['secondary']
+      state.music.tags.common = tags.common
+      state.music.tags.secondary = tags.secondary
     },
     ADD_TAG(state, tag) {
       state.music.tags.items.push(tag)
@@ -45,14 +45,11 @@ export default {
         // }
       }
     },
-    SET_RATING(state, rating) {
-
-    },
     SET_PAGINATION(state, pagination) {
       state.music.artists.pagination = pagination
     },
     SET_LOADING(state, payload) {
-      state.music[payload['entity']].loading = payload['value']
+      state.music[payload.entity].loading = payload.value
     }
   },
   actions: {
@@ -84,49 +81,39 @@ export default {
 
       const mutation = loadMore ? 'PUSH_ARTISTS' : 'SET_ARTISTS'
 
-      context.commit(mutation, data['artists'])
-      context.commit('SET_PAGINATION', data['pagination'])
+      context.commit(mutation, data.artists)
+      context.commit('SET_PAGINATION', data.pagination)
     },
     async loadFilter(commit) {
-      try {
-        const {data} = await API.post('music/filters')
-        if(!data) {
-          throw new Error('Нет данных!')
-        }
-        commit('LOAD_ARTISTS', data['artists'])
-      }catch(e) {
+      const {data} = await API.post('music/filters')
+      if(!data) {
+        throw new Error('Нет данных!')
       }
+      commit('LOAD_ARTISTS', data.artists)
     },
     async loadTags(context) {
-      try {
-        const {data} = await API.post('music/tags/tree')
-        if(!data) {
-          throw new Error('Нет данных!')
-        }
-        context.commit('SET_TAGS', data['tags'])
-      }catch(e) {
-
+      const {data} = await API.post('music/tags/tree')
+      if(!data) {
+        throw new Error('Нет данных!')
       }
+      context.commit('SET_TAGS', data.tags)
     },
     async addTag(context, tag) {
       const {data} = await API.post('music/tags/store', tag)
-      if (data.success) {
-        context.commit('ADD_TAG', data['tags'])
-
-        return data['tags']
-      } else {
-        throw new Error(data['error'])
+      if (!data.success) {
+        throw new Error(data.error)
       }
+      context.commit('ADD_TAG', data.tags)
+
+      return data.tags
     },
     async editTag(context, tag) {
       const {data} = await API.post('music/tags/update', tag)
-      if (data.success) {
-        context.commit('UPDATE_TAG', data['tags'])
-
-        return data['tags']
-      } else {
-        throw new Error(data['error'])
+      if (!data.success) {
+        throw new Error(data.error)
       }
+
+      context.commit('UPDATE_TAG', data.tags)
     },
 
     /**
