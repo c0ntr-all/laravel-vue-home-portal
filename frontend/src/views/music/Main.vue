@@ -68,8 +68,12 @@
       MusicArtistCardRow
     },
     mounted() {
-      this.loadTags();
-      this.getArtists();
+      if (!this.tags.common.length) {
+        this.loadTags();
+      }
+      if (!this.artists.items.length) {
+        this.getArtists();
+      }
     }
   }
 </script>
