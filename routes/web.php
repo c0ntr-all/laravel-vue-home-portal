@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Resources\Music\ArtistCollection;
+use App\Http\Resources\Music\Artists\ArtistCollection;
 use App\Models\Music\Artist;
+use App\Models\Music\Tag;
 use Illuminate\Support\Facades\Route;
-use App\Models\Tasks\TaskList;
-use Illuminate\Contracts\Support\Jsonable;
+use Iman\Streamer\VideoStreamer;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,35 +24,46 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 /*Для тестирования*/
-Route::get('/test/{id}', [App\Http\Controllers\TagController::class, 'test'])->name('test');
+Route::get('/test/{id}', [\App\Http\Controllers\Music\TagController::class, 'test'])->name('test');
 
 Route::get('/test2', function() {
-    $path = 'F:\Music\Metal\Cyber metal\Sybreed\2004 - Slave Design\01. Bioactive.mp3';
+    $path = 'F:\Music\Разборка\Crystal Castles-Plague-kissvk.com.mp3';
 
     $getID3 = new getID3();
     $file = $getID3->analyze($path);
 
-    $artist = $file['id3v2']['comments']['artist']; // Получить Исполнителя
-    $album = $file['id3v2']['comments']['album']; // Получить Альбом
-    $year = $file['id3v2']['comments']['year']; // Получить год
-    $genre = $file['id3v2']['comments']['genre']; // Получить жанр
-    $title = $file['id3v2']['comments']['title']; // Получить название трека
-    $trackNo = $file['id3v2']['comments']['track_number']; // Получить номер трека
-    $bitrate = $file['audio']['bitrate']; // Получить битрейт
-    $duration = $file['playtime_string']; // Получить длительность трека
-    $format = $file['audio']['dataformat']; // Получить формат трека
+    $artist = $file['id3v2']['comments']['artist'] ?? 'none'; // Получить Исполнителя
+    $album = $file['id3v2']['comments']['album'] ?? 'none'; // Получить Альбом
+    $year = $file['id3v2']['comments']['year'] ?? 'none'; // Получить год
+    $genre = $file['id3v2']['comments']['genre'] ?? 'none'; // Получить жанр
+    $title = $file['id3v2']['comments']['title'] ?? 'none'; // Получить название трека
+    $trackNo = $file['id3v2']['comments']['track_number'] ?? 'none'; // Получить номер трека
+    $bitrate = $file['audio']['bitrate'] ?? 'none'; // Получить битрейт
+    $duration = $file['playtime_string'] ?? 'none'; // Получить длительность трека
+    $format = $file['audio']['dataformat'] ?? 'none'; // Получить формат трека
 
     dd($artist, $album, $year, $genre, $title, $trackNo, $bitrate, $duration, $format);
 
 })->name('test2');
 
 Route::get('/test3', function() {
-    $filters = [];
-//    $resource = Artist::filter($filters, 'tag', 'tags', 'name')
-//                      ->when(array_key_exists('offset', $filters), function ($q) use ($filters) {
-//                          $q->offset($filters['offset'])->limit($filters['limit']);
-//                      })
-//                      ->cursorPaginate(5)->links();
-//    dd($resource);
-    return new ArtistCollection(Artist::cursorPaginate(5));
+    $client = new Predis\Client();
+    $client->set('foo', 'bar');
+    $value = $client->get('foo');
+
+    dd($value);
 })->name('test3');
+
+Route::get('/test4', function() {
+
+    $tags = Tag::find(12)->childrenCategories->toArray();
+    dd($tags);
+
+})->name('test5');
+
+Route::get('/test5', function() {
+    $path = 'F:\Video\Сериалы\Российские\Молодежка\Molodezhka.(01.seriya).2013.HQWEB-DLRip.Alexey724.avi';
+
+    VideoStreamer::streamFile($path);
+
+})->name('test5');
