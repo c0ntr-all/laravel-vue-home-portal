@@ -14,8 +14,7 @@
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
       <div class="q-px-lg q-pt-xl q-mb-md">
-        <div class="text-h3">Pagetitle</div>
-        <div class="text-subtitle">{{ todaysDate }}</div>
+        <div class="text-h3">{{ this.$route.meta.title }}</div>
       </div>
       <q-img
         src="images/mountains.jpeg"
@@ -29,17 +28,17 @@
       :width="250"
       :breakpoint="600"
     >
-      <q-scroll-area style="height: calc(100% - 185px); margin-top: 185px; border-right: 1px solid #ddd">
+      <q-scroll-area style="height: calc(100% - 164px); margin-top: 164px; border-right: 1px solid #ddd">
         <q-list padding>
-          <template v-for="item in $router.options.routes.filter(item => item.menu === true)">
+          <template v-for="item in $router.options.routes[0].children.filter(item => item.menu === true)">
             <q-item
               :index="item.path"
-              to="/"
+              :to="item.path"
               exact
               clickable
               v-ripple
             >
-              <q-item-section avatar><q-icon name="list" /></q-item-section>
+              <q-item-section avatar><q-icon :name="item.meta.icon ?? 'label'" /></q-item-section>
               <q-item-section>{{ item.meta.title }}</q-item-section>
             </q-item>
           </template>
@@ -47,19 +46,19 @@
           <template v-for="item in $router.options.routes.filter(item => item.admin === true)">
             <q-item
               :index="item.path"
-              to="/"
+              :to="item.path"
               exact
               clickable
               v-ripple
             >
-              <q-item-section avatar><q-icon name="list" /></q-item-section>
+              <q-item-section avatar><q-icon :name="item.meta.icon ?? 'label'" /></q-item-section>
               <q-item-section>{{ item.meta.title }}</q-item-section>
             </q-item>
           </template>
         </q-list>
       </q-scroll-area>
 
-      <q-img class="absolute-top" src="images/mountains.jpeg" style="height: 185px">
+      <q-img class="absolute-top" src="images/mountains.jpeg" style="height: 164px">
         <div class="absolute-bottom bg-transparent">
           <q-avatar size="56px" class="q-mb-sm">
             <img src="https://cdn.quasar.dev/img/boy-avatar.png">
@@ -100,21 +99,14 @@ export default defineComponent({
         leftDrawerOpen.value = !leftDrawerOpen.value
       }
     }
-  },
-  computed: {
-    todaysDate() {
-      let timestamp = Date.now()
-      return date.formatDate(timestamp, 'YYYY-MM-DD HH:mm')
-    }
   }
 })
 </script>
 <style lang="scss">
-.header-image {
-  height: 100%;
-  z-index: -1;
-  opacity: .2;
-  filter: grayscale(100%);
-}
-
+  .header-image {
+    height: 100%;
+    z-index: -1;
+    opacity: .2;
+    filter: grayscale(100%);
+  }
 </style>
