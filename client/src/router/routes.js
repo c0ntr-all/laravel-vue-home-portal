@@ -5,7 +5,8 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') }
-    ]
+    ],
+    menu: false
   },{
     path: '/profile',
     component: () => import('layouts/MainLayout.vue'),
@@ -14,7 +15,7 @@ const routes = [
     },
     name: 'profile',
     alias: '/profile',
-    menu: 0
+    menu: false
   },{
     path: '/login',
     component: () => import('layouts/MainLayout.vue'),
@@ -23,7 +24,7 @@ const routes = [
     },
     name: 'login',
     alias: '/login',
-    menu: 0
+    menu: false
   },{
     path: '/home',
     component: () => import('layouts/MainLayout.vue'),
@@ -32,7 +33,7 @@ const routes = [
     },
     name: 'home',
     alias: '/',
-    menu: 1
+    menu: true
   },{
     path: '/finances',
     component: () => import('layouts/MainLayout.vue'),
@@ -41,7 +42,7 @@ const routes = [
     },
     name: 'finances',
     alias: '/finances',
-    menu: 1
+    menu: true
   },{
     path: '/tasks',
     component: () => import('layouts/MainLayout.vue'),
@@ -50,7 +51,7 @@ const routes = [
     },
     name: 'tasks',
     alias: '/tasks',
-    menu: 1
+    menu: true
   },{
     path: '/reminds',
     component: () => import('layouts/MainLayout.vue'),
@@ -59,7 +60,7 @@ const routes = [
     },
     name: 'reminds',
     alias: '/reminder',
-    menu: 1
+    menu: true
   },{
     path: '/restaurants',
     component: () => import('layouts/MainLayout.vue'),
@@ -68,7 +69,7 @@ const routes = [
     },
     name: 'restaurants',
     alias: '/restaurants',
-    menu: 1
+    menu: true
   },{
     path: '/music',
     component: () => import('layouts/MainLayout.vue'),
@@ -77,7 +78,7 @@ const routes = [
     },
     name: 'music',
     alias: '/music',
-    menu: 1,
+    menu: true,
     // children: [{
     //   path: '/music',
     //   component: () => import('../views/music/Main')
@@ -102,7 +103,7 @@ const routes = [
     },
     name: 'video',
     alias: '/video',
-    menu: 1
+    menu: true
   },{
     path: '/musicupload',
     component: () => import('layouts/MainLayout.vue'),
@@ -111,7 +112,7 @@ const routes = [
     },
     name: 'musicupload',
     alias: '/musicupload',
-    admin: 1
+    admin: true
   },{
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')

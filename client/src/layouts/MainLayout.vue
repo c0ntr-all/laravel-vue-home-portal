@@ -31,24 +31,31 @@
     >
       <q-scroll-area style="height: calc(100% - 185px); margin-top: 185px; border-right: 1px solid #ddd">
         <q-list padding>
-          <q-item
-            to="/"
-            exact
-            clickable
-            v-ripple
-          >
-            <q-item-section avatar><q-icon name="list" /></q-item-section>
-            <q-item-section>Todo</q-item-section>
-          </q-item>
-          <q-item
-            to="/help"
-            exact
-            clickable
-            v-ripple
-          >
-            <q-item-section avatar><q-icon name="help" /></q-item-section>
-            <q-item-section>Help</q-item-section>
-          </q-item>
+          <template v-for="item in $router.options.routes.filter(item => item.menu === true)">
+            <q-item
+              :index="item.path"
+              to="/"
+              exact
+              clickable
+              v-ripple
+            >
+              <q-item-section avatar><q-icon name="list" /></q-item-section>
+              <q-item-section>{{ item.meta.title }}</q-item-section>
+            </q-item>
+          </template>
+          <hr>
+          <template v-for="item in $router.options.routes.filter(item => item.admin === true)">
+            <q-item
+              :index="item.path"
+              to="/"
+              exact
+              clickable
+              v-ripple
+            >
+              <q-item-section avatar><q-icon name="list" /></q-item-section>
+              <q-item-section>{{ item.meta.title }}</q-item-section>
+            </q-item>
+          </template>
         </q-list>
       </q-scroll-area>
 
