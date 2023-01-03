@@ -17,7 +17,7 @@ const routes = [
         menu: true
       },{
         path: '/finances',
-        component: () => import('layouts/MainLayout.vue'),
+        component: () => import('pages/Finances.vue'),
         meta: {
           title: 'Финансы',
           icon: 'account_balance_wallet'
