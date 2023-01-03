@@ -6,6 +6,15 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
+        path: '/profile',
+        component: () => import('pages/Profile.vue'),
+        meta: {
+          title: 'Профиль'
+        },
+        name: 'profile',
+        alias: '/profile',
+        menu: false
+      },{
         path: '/home',
         component: () => import('pages/Main.vue'),
         meta: {
@@ -93,15 +102,6 @@ const routes = [
         menu: true
       }
     ],
-    menu: false
-  },{
-    path: '/profile',
-    component: () => import('layouts/MainLayout.vue'),
-    meta: {
-      title: 'Профиль'
-    },
-    name: 'profile',
-    alias: '/profile',
     menu: false
   },{
     path: '/login',

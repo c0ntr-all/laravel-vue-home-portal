@@ -60,9 +60,11 @@
 
       <q-img class="absolute-top" src="images/mountains.jpeg" style="height: 164px">
         <div class="absolute-bottom bg-transparent">
-          <q-avatar size="56px" class="q-mb-sm">
-            <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-          </q-avatar>
+          <q-btn class="q-mb-sm" :to="'/profile'" round flat>
+            <q-avatar size="56px">
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+            </q-avatar>
+          </q-btn>
           <div class="text-weight-bold">User name</div>
           <div>@user-name</div>
         </div>
