@@ -16,7 +16,24 @@
 </template>
 
 <script>
+import { ref } from 'vue'
+
+import API from '../utils/api'
+
 export default {
-  // name: 'PageName',
+  setup() {
+    const finances = ref([])
+    const getFinances = async () => {
+      finances.value = await API.get('finances')
+    }
+
+    return {
+      finances,
+      getFinances
+    }
+  },
+  mounted() {
+    this.getFinances()
+  }
 }
 </script>
