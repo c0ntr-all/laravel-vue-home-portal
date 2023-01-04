@@ -105,7 +105,7 @@ const routes = [
     menu: false
   },{
     path: '/login',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/Login.vue'),
     meta: {
       title: 'Авторизация'
     },
