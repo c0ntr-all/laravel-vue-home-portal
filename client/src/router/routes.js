@@ -66,7 +66,7 @@ const routes = [
         menu: true
       },{
         path: '/music',
-        component: () => import('layouts/MainLayout.vue'),
+        component: () => import('pages/Music.vue'),
         meta: {
           title: 'Музыка',
           icon: 'music_note'
