@@ -45,6 +45,10 @@
       />
       <q-btn color="primary" label="Filter" @click="submitFilter" />
     </div>
+
+    <q-inner-loading :showing="filterLoading">
+      <q-spinner-gears size="50px" color="primary" />
+    </q-inner-loading>
   </div>
 </template>
 <script>
@@ -59,6 +63,7 @@ export default {
     const secondaryTags = ref([])
     const commonModel = ref()
     const secondaryModel = ref()
+    const filterLoading = ref(true)
 
     const checkRules = async () => {
       this.union = this.type === 'strict'
@@ -68,6 +73,8 @@ export default {
       const {data} = await API.post('music/tags/select')
       commonTags.value = Object.keys(data.tags.common).map(key => data.tags.common[key])
       secondaryTags.value = Object.keys(data.tags.secondary).map(key => data.tags.secondary[key])
+
+      filterLoading.value = false
     }
 
     const submitFilter = () => {
@@ -87,6 +94,7 @@ export default {
       secondaryTags,
       commonModel,
       secondaryModel,
+      filterLoading,
       checkRules,
       getTagsSelect,
       submitFilter
@@ -98,7 +106,10 @@ export default {
 }
 </script>
 <style lang="scss">
-.tags-toggle {
-  border: 1px solid #027be3;
-}
+  .music-filter {
+    position: relative;
+  }
+  .tags-toggle {
+    border: 1px solid #027be3;
+  }
 </style>
