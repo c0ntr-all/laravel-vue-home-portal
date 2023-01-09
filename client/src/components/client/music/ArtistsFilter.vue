@@ -30,7 +30,7 @@
         :size="'xs'"
         label="Select Style"
         style="width: 250px"
-        filled
+        outlined
       />
       <q-select
         label="Select Genre"
@@ -41,15 +41,13 @@
         use-input
         use-chips
         multiple
-        filled
+        outlined
       />
       <q-btn color="primary" label="Filter" @click="submitFilter" />
     </div>
   </div>
 </template>
 <script>
-// import {mapActions} from 'vuex'
-
 import {ref} from "vue";
 import API from "src/utils/api";
 
@@ -64,38 +62,6 @@ export default {
 
     const checkRules = async () => {
       this.union = this.type === 'strict'
-    }
-
-    const getArtists = async () => {
-      context.commit('SET_LOADING', {
-        entity: 'artists',
-        value: true
-      })
-
-      const loadMore = payload.loadMore
-      delete payload.loadMore
-
-      let hasPages = context.state.music.artists.pagination.hasPages;
-
-      if (loadMore && hasPages) {
-        let url = context.state.music.artists.pagination.nextPageUrl;
-        let obUrl = new URL(url)
-        payload.cursor = obUrl.searchParams.get("cursor")
-      }
-
-      const {data} = await API.post('music/artists/get', payload)
-      if(!data) {
-        throw new Error('Нет данных!')
-      }
-      context.commit('SET_LOADING', {
-        entity: 'artists',
-        value: false
-      })
-
-      const mutation = loadMore ? 'PUSH_ARTISTS' : 'SET_ARTISTS'
-
-      context.commit(mutation, data.artists)
-      context.commit('SET_PAGINATION', data.pagination)
     }
 
     const getTagsSelect = async () => {
@@ -122,7 +88,6 @@ export default {
       commonModel,
       secondaryModel,
       checkRules,
-      getArtists,
       getTagsSelect,
       submitFilter
     }

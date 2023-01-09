@@ -15,7 +15,25 @@
         />
       </div>
     </div>
+
     <artists-filter></artists-filter>
+
+    <div class="artists-list q-pa-md row items-start q-gutter-md">
+      <q-card class="artist-card" v-for="artist in artists" :key="artist.id">
+        <img :src="artist.image">
+
+        <q-card-section>
+          <div class="text-h6">
+            <router-link :to="'/music/artists/' + artist.id">{{ artist.name }}</router-link>
+          </div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <q-btn v-for="tag in artist.tagsNames.common" color="primary" :label="tag" outline />
+<!--          <el-tag v-for="tag in artist.tagsNames.common" class="mx-1">{{ tag }}</el-tag>-->
+        </q-card-section>
+      </q-card>
+    </div>
 <!--    <div class="artists">-->
 <!--      <h3>Artists</h3>-->
 <!--      <div class="artists-wrap" v-loading="artists.loading">-->
@@ -33,10 +51,6 @@
 </template>
 <script>
 import ArtistsFilter from "components/client/music/ArtistsFilter.vue"
-// import MusicArtistCard from '@/components/client/music/artist/MusicArtistCard'
-// import MusicArtistCardRow from '@/components/client/music/artist/MusicArtistCardRow'
-
-// import {mapGetters, mapActions} from "vuex";
 
 import {ref} from "vue";
 import API from "src/utils/api";
@@ -45,14 +59,48 @@ export default {
   components: {ArtistsFilter},
   setup() {
     const tags = ref([])
+    const artists = ref([])
+
     const getTags = async () => {
       const {data} = await API.post('music/tags/tree')
       tags.value = data.tags
     }
 
+    const getArtists = async () => {
+      // context.commit('SET_LOADING', {
+      //   entity: 'artists',
+      //   value: true
+      // })
+
+      // const loadMore = payload.loadMore
+      // delete payload.loadMore
+
+      // let hasPages = context.state.music.artists.pagination.hasPages;
+
+      // if (loadMore && hasPages) {
+      //   let url = context.state.music.artists.pagination.nextPageUrl;
+      //   let obUrl = new URL(url)
+      //   payload.cursor = obUrl.searchParams.get("cursor")
+      // }
+
+      const {data} = await API.post('music/artists/get')
+      artists.value = data.artists
+      // context.commit('SET_LOADING', {
+      //   entity: 'artists',
+      //   value: false
+      // })
+
+      // const mutation = loadMore ? 'PUSH_ARTISTS' : 'SET_ARTISTS'
+
+      // context.commit(mutation, data.artists)
+      // context.commit('SET_PAGINATION', data.pagination)
+    }
+
     return {
       tags,
-      getTags
+      artists,
+      getTags,
+      getArtists
     }
   },
   data() {
@@ -75,6 +123,7 @@ export default {
   // },
   mounted() {
     this.getTags()
+    this.getArtists()
     // if (!this.artists.items.length) {
     //   this.getArtists();
     // }
@@ -85,5 +134,9 @@ export default {
 <style lang="scss" scoped>
 .tags-toggle {
   border: 1px solid #027be3;
+}
+.artist-card {
+  width: 100%;
+  max-width: 250px;
 }
 </style>
