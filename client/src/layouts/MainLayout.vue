@@ -14,7 +14,7 @@
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
       <div class="q-px-lg q-pt-xl q-mb-md">
-        <div class="text-h3">{{ this.$route.meta.title }}</div>
+        <div class="text-h3">{{ this.$route.meta.title || 'No Title' }}</div>
       </div>
       <q-img
         src="images/mountains.jpeg"

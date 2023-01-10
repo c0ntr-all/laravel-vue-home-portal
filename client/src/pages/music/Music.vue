@@ -78,11 +78,6 @@ export default {
       getArtists
     }
   },
-  data() {
-    return {
-      mode: 'card'
-    }
-  },
   mounted() {
     this.getTags()
     this.getArtists()
