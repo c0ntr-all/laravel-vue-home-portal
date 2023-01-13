@@ -3,7 +3,7 @@
     <q-btn type="primary" :to="'/music'">Вернуться назад</q-btn>
       <div class="tag-head">
         <div class="tag-head__info">
-          <h3>{{ tag.name }}</h3>
+          <div class="text-h5">{{ tag.label }}</div>
         </div>
       </div>
       <div class="tag-content">
@@ -19,9 +19,9 @@ export default {
   setup() {
     const loading = ref(true)
     const tag = ref([])
-    const getTag = async () => {
-      const {data} = await API.post('tags', {slug: this.slug})
-      tag.value = data
+    const getTag = async (slug) => {
+      const {data} = await API.post('music/tags', {slug: slug})
+      tag.value = data.tags
     }
 
     return {
@@ -34,7 +34,7 @@ export default {
     'slug': String
   },
   mounted() {
-    this.getTag();
+    this.getTag(this.slug);
   }
 }
 </script>
