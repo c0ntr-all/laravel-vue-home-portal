@@ -88,7 +88,7 @@ const routes = [{
       title: 'Музыка'
     }
   }, {
-    path: '/music/albums/:albumId',
+    path: '/music/albums/:id',
     component: () => import('pages/music/Album.vue'),
     name: 'album',
     props: true,

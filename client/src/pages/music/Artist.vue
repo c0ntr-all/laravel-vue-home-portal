@@ -22,10 +22,8 @@
       </div>
     </div>
     <div class="artist-albums" v-if="this.artist.albums">
-      <div class="text-h5">Альбомы</div>
-
-
-      <div class="artists-list q-pa-md row items-start q-gutter-md">
+      <div class="text-h5 q-mb-sm">Альбомы</div>
+      <div class="artists-list row items-start q-gutter-md">
         <q-card v-for="album in this.artist.albums" :key="album.id" :album="album" class="album-card">
           <!--todo Поправить формирование полного урла в будущем (с бека)          -->
           <img :src="'http://home-portal.local/storage/' + album.image">

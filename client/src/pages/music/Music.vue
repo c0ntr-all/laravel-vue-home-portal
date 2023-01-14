@@ -21,7 +21,7 @@
 
     <artists-filter></artists-filter>
 
-    <div class="artists-list q-pa-md row items-start q-gutter-md">
+    <div class="artists-list row items-start q-gutter-md">
       <q-card class="artist-card" v-for="artist in artists" :key="artist.id">
         <img :src="artist.image">
 
