@@ -19,23 +19,22 @@
       </div>
     </div>
 
-    <artists-filter></artists-filter>
+    <div class="q-mb-lg">
+      <artists-filter></artists-filter>
+    </div>
 
     <div class="artists-list row items-start q-gutter-md">
       <q-card class="artist-card" v-for="artist in artists" :key="artist.id">
-        <img :src="artist.image">
-
+        <img :src="artist.image" :alt="artist.name + ' image'">
         <q-card-section>
           <div class="text-h6">
             <router-link :to="'/music/artists/' + artist.id">{{ artist.name }}</router-link>
           </div>
         </q-card-section>
-
         <q-card-section class="q-pt-none">
           <q-btn v-for="tag in artist.tagsNames.common" color="primary" :label="tag" outline />
         </q-card-section>
       </q-card>
-
       <q-inner-loading :showing="artistsLoading">
         <q-spinner-gears size="50px" color="primary" />
       </q-inner-loading>
