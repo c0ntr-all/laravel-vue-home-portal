@@ -105,6 +105,16 @@ const routes = [{
     name: 'video',
     alias: '/video',
     menu: true
+  }, {
+    path: '/admin/music',
+    component: () => import('pages/admin/Music.vue'),
+    meta: {
+      title: 'Управление музыкой',
+      icon: 'settings'
+    },
+    name: 'musicmanage',
+    alias: '/admin/music',
+    admin: true
   }]
 }, {
   path: '/login',
@@ -115,16 +125,6 @@ const routes = [{
   name: 'login',
   alias: '/login',
   menu: false
-}, {
-  path: '/musicupload',
-  component: () => import('layouts/MainLayout.vue'),
-  meta: {
-    title: 'Управление музыкой',
-    icon: 'settings'
-  },
-  name: 'musicupload',
-  alias: '/musicupload',
-  admin: true
 }, {
   path: '/:catchAll(.*)*',
   component: () => import('pages/404.vue')
