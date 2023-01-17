@@ -41,8 +41,7 @@
             >
               <q-tab-panel name="edit">
                 <div class="text-h6 q-mb-md">Редактирование исполнителей</div>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
+                <artists-edit></artists-edit>
               </q-tab-panel>
 
               <q-tab-panel name="upload">
@@ -65,8 +64,11 @@
 </template>
 <script>
 import {ref} from 'vue'
+import ArtistsEdit from 'src/components/admin/music/artists/ArtistsEdit.vue'
 
 export default {
+  components: {ArtistsEdit},
+
   setup() {
     const mainTabs = ref('artists')
     const artistsTabs = ref('edit')

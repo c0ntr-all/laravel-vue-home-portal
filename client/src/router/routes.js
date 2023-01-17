@@ -107,7 +107,7 @@ const routes = [{
     menu: true
   }, {
     path: '/admin/music',
-    component: () => import('pages/admin/Music.vue'),
+    component: () => import('pages/admin/music/Music.vue'),
     meta: {
       title: 'Управление музыкой',
       icon: 'settings'

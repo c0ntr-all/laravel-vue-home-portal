@@ -43,7 +43,7 @@
             </q-item>
           </template>
           <hr>
-          <template v-for="item in $router.options.routes.filter(item => item.admin === true)">
+          <template v-for="item in $router.options.routes[0].children.filter(item => item.admin === true)">
             <q-item
               :index="item.path"
               :to="item.path"
