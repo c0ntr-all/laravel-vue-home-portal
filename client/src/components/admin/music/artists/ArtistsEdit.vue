@@ -3,7 +3,7 @@
     Всего исполнителей: <b>{{ total }}</b>
   </div>
   <div class="artists-search q-mb-md">
-    <q-input outlined bottom-slots v-model="search" label="Поиск" counter maxlength="12" dense>
+    <q-input v-model="search" @keyup.enter="searchArtists(search)" label="Поиск" maxlength="12" dense outlined bottom-slots counter>
       <template v-slot:append>
         <q-icon v-if="search !== ''" name="close" @click="search = ''" class="cursor-pointer" />
       </template>
@@ -21,6 +21,35 @@
       :rows-per-page-options="[0]"
       :pagination.sync="{page: 1, rowsPerPage: 0}"
     >
+      <template v-slot:header="props">
+        <q-tr :props="props">
+          <q-th
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+          >
+            {{ col.label }}
+          </q-th>
+          <q-th auto-width />
+        </q-tr>
+      </template>
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+          >
+            <div v-if="col.name === 'image'" class="artist-row__image">
+              <img :src="col.value" :alt="col.value">
+            </div>
+            <span v-else>{{ col.value }}</span>
+          </q-td>
+          <q-td auto-width>
+            <q-btn size="sm" color="accent" round dense @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'" />
+          </q-td>
+        </q-tr>
+      </template>
       <template v-slot:body-cell-image="props">
         <q-td :props="props">
           <div class="artist-row__image">
