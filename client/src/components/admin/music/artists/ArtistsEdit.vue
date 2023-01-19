@@ -34,7 +34,7 @@
         </q-tr>
       </template>
       <template v-slot:body="props">
-        <q-tr :props="props">
+        <q-tr :props="props" class="artist-row">
           <q-td
             v-for="col in props.cols"
             :key="col.name"
@@ -46,55 +46,59 @@
             <span v-else>{{ col.value }}</span>
           </q-td>
           <q-td auto-width>
-            <q-btn size="sm" color="accent" round dense @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'" />
+            <q-btn size="sm" @click="editArtist(props.row)" :icon="'add'" round dense />
           </q-td>
         </q-tr>
       </template>
-      <template v-slot:body-cell-image="props">
-        <q-td :props="props">
-          <div class="artist-row__image">
-            <img :src="props.value" :alt="props.value">
-          </div>
-        </q-td>
-      </template>
     </q-table>
-  </div>
-<!--  <div class="mb-3" v-loading="loading">-->
-<!--    <el-table class="artists-list" :data="artists" style="width: 100%" highlight-current-row>-->
-<!--      <el-table-column prop="id" label="Id" width="70" sortable />-->
-<!--      <el-table-column prop="image" label="Изображение" width="150">-->
-<!--        <template #default="scope">-->
-<!--          <div class="artist-row__image">-->
-<!--            <img :src="scope.row.image" alt="">-->
-<!--          </div>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column prop="name" label="Name" width="400" sortable />-->
-<!--      <el-table-column prop="tags" label="Теги" width="450">-->
-<!--        <template #default="props">-->
-<!--          <div class="artist__tags"><span v-for="tag in props.row.tagsNames.common" class="artist-row__tag">{{ tag }}</span></div>-->
-<!--          <div class="artist__tags"><span v-for="tag in props.row.tagsNames.secondary" class="artist-row__tag">{{ tag }}</span></div>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column prop="createdAt" label="Дата добавления" width="250" sortable />-->
-<!--      <el-table-column label="Действия" width="250">-->
-<!--        <template #default="scope">-->
-<!--          <el-button size="small" @click="openArtistUpdateModal(scope.row)">Редактировать</el-button>-->
-<!--          <el-button size="small" type="danger">Удалить</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--    </el-table>-->
-<!--  </div>-->
+    <q-dialog v-model="showModal">
+      <q-card style="width: 700px; max-width: 80vw;">
+        <q-card-section>
+          <div class="text-h6">Редактирование исполнителя</div>
+        </q-card-section>
 
-<!--  <el-pagination-->
-<!--    class="artists-pagination"-->
-<!--    :hide-on-single-page="true"-->
-<!--    :total="total"-->
-<!--    :page-size="pagination.per_page"-->
-<!--    layout="prev, pager, next"-->
-<!--    @current-change="loadArtists"-->
-<!--    background-->
-<!--  />-->
+        <q-card-section class="q-pt-none">
+          <q-form @submit="onSubmit" class=" q-gutter-y-md column">
+            <q-input v-model="model.name" label="Название исполнителя" outlined />
+            <q-input v-model="model.description" label="Описание исполнителя" type="textarea" outlined />
+            <q-file v-model="model.image" label="Постер" name="poster" filled>
+              <template v-if="model.image" v-slot:append>
+                <q-icon name="cancel" @click.stop.prevent="model.image = null" class="cursor-pointer" />
+              </template>
+            </q-file>
+            <div class="artist-edit__image">
+              <img v-if="model.image" :src="model.image" alt="">
+            </div>
+            <q-select
+              label="Основные жанры"
+              v-model="model.tags.common"
+              input-debounce="0"
+              :options="commonTags"
+              use-input
+              use-chips
+              multiple
+              outlined
+            />
+            <q-select
+              label="Дополнительные жанры"
+              v-model="model.tags.secondary"
+              input-debounce="0"
+              :options="secondaryTags"
+              use-input
+              use-chips
+              multiple
+              outlined
+            />
+          </q-form>
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn flat label="Сохранить" />
+          <q-btn flat label="Отмена" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+  </div>
 </template>
 <script>
 import {ref} from 'vue'
@@ -143,14 +147,42 @@ export default {
       sortable: true
     }])
     const artists = ref([])
-    const searchArtists = async (search) => {
-      const {data} = await API.post('music/admin/artists/search', {name: search})
-      artists.value = data.data.artists
-    }
+    let showModal = ref(false)
+    const commonTags = ref([])
+    const secondaryTags = ref([])
+    let model = ref({
+      name: null,
+      description: null,
+      image: null,
+      tags: {
+        common: null,
+        secondary: null
+      }
+    })
     const getArtists = async (page) => {
       const {data} = await API.post('music/admin/artists/get', {page: page})
       artists.value = data.data.artists
       total.value = data.data.total
+    }
+    const getTagsSelect = async () => {
+      const {data} = await API.post('music/tags/select')
+      commonTags.value = Object.keys(data.tags.common).map(key => data.tags.common[key])
+      secondaryTags.value = Object.keys(data.tags.secondary).map(key => data.tags.secondary[key])
+    }
+    const searchArtists = async (search) => {
+      const {data} = await API.post('music/admin/artists/search', {name: search})
+      artists.value = data.data.artists
+    }
+    const editArtist = async (artist) => {
+      model.value.name = artist.name
+      model.value.description = artist.description
+      model.value.image = artist.image
+      model.value.tags.common = artist.tagsNames.common
+      model.value.tags.secondary = artist.tagsNames.secondary
+
+      showModal.value = true
+      // const {data} = await API.post('music/admin/artists/search', {name: search})
+      // artists.value = data.data.artists
     }
 
     return {
@@ -158,33 +190,53 @@ export default {
       search,
       columns,
       artists,
+      showModal,
+      model,
+      commonTags,
+      secondaryTags,
       getArtists,
-      searchArtists
+      getTagsSelect,
+      searchArtists,
+      editArtist
     }
   },
   mounted() {
     this.getArtists()
+    this.getTagsSelect()
   }
 }
 </script>
 <style lang="scss" scoped>
-.artists-search {
-  max-width: 400px;
-}
-.artist-row {
-  &__image {
-    width: 50px;
-    height: 50px;
+.artist {
+  &-edit {
+    &__image {
+      width: 250px;
+      height: 250px;
 
-    img {
-      width: 100%;
-      object-fit: cover;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
-  &__tag:not(:last-child) {
-    &::after {
-      content: ', '
+  &-row {
+    &__image {
+      width: 50px;
+      height: 50px;
+
+      img {
+        width: 100%;
+        object-fit: cover;
+      }
     }
+    &__tag:not(:last-child) {
+      &::after {
+        content: ', '
+      }
+    }
+  }
+  &-search {
+    max-width: 400px;
   }
 }
 </style>
