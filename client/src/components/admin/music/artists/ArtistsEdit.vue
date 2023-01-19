@@ -8,7 +8,7 @@
         <q-icon v-if="search !== ''" name="close" @click="search = ''" class="cursor-pointer" />
       </template>
       <template v-slot:after>
-        <q-icon name="search" @click="searchArtists(search)" />
+        <q-icon name="search" @click="searchArtists(search)" class="cursor-pointer" />
       </template>
     </q-input>
   </div>
@@ -43,10 +43,15 @@
             <div v-if="col.name === 'image'" class="artist-row__image">
               <img :src="col.value" :alt="col.value">
             </div>
+            <div v-else-if="col.name === 'tags'" class="artist-row__tags">
+              <div class="artist-row__tag"><span v-for="tag in col.value.common">{{ tag.label }}</span></div>
+              <div class="artist-row__tag"><span v-for="tag in col.value.secondary">{{ tag.label }}</span></div>
+            </div>
             <span v-else>{{ col.value }}</span>
           </q-td>
-          <q-td auto-width>
-            <q-btn size="sm" @click="editArtist(props.row)" :icon="'add'" round dense />
+          <q-td class="q-gutter-x-sm" auto-width>
+            <q-btn size="sm" @click="editArtist(props.row)" label="Редактировать" />
+            <q-btn size="sm" @click="deleteArtist(props.row)" label="Удалить" color="red" />
           </q-td>
         </q-tr>
       </template>
@@ -93,8 +98,8 @@
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="Сохранить" />
-          <q-btn flat label="Отмена" v-close-popup />
+          <q-btn label="Сохранить" @click="saveArtist" flat />
+          <q-btn label="Отмена" flat v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -103,9 +108,11 @@
 <script>
 import {ref} from 'vue'
 import API from "src/utils/api";
+import { useQuasar } from 'quasar'
 
 export default {
   setup() {
+    const $q = useQuasar()
     const total = ref(0)
     const search = ref('')
     const columns = ref([{
@@ -120,7 +127,7 @@ export default {
       name: "image",
       required: true,
       label: 'Изображение',
-      align: 'left',
+      align: 'center',
       field: row => row.image,
       sortable: false,
       style: 'width: 60px'
@@ -177,12 +184,21 @@ export default {
       model.value.name = artist.name
       model.value.description = artist.description
       model.value.image = artist.image
-      model.value.tags.common = artist.tagsNames.common
-      model.value.tags.secondary = artist.tagsNames.secondary
+      model.value.tags.common = artist.tags.common
+      model.value.tags.secondary = artist.tags.secondary
 
       showModal.value = true
       // const {data} = await API.post('music/admin/artists/search', {name: search})
       // artists.value = data.data.artists
+    }
+    const deleteArtist = (artist) => {
+      $q.notify({
+        type: 'positive',
+        message: 'Вы успешно вошли в систему!'
+      });
+    }
+    const saveArtist = async () => {
+      console.log(model.value.tags.common)
     }
 
     return {
@@ -197,7 +213,8 @@ export default {
       getArtists,
       getTagsSelect,
       searchArtists,
-      editArtist
+      editArtist,
+      saveArtist
     }
   },
   mounted() {
@@ -229,9 +246,11 @@ export default {
         object-fit: cover;
       }
     }
-    &__tag:not(:last-child) {
-      &::after {
-        content: ', '
+    &__tag {
+      & span:not(:last-child) {
+        &::after {
+          content: ', '
+        }
       }
     }
   }
