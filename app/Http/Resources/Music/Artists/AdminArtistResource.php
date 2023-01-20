@@ -10,6 +10,8 @@ class AdminArtistResource extends JsonResource
 
     public function toArray($request): array
     {
+        // С помощью collect($collection->values()) сбрасываем ключи коллекции т.к. для secondary ключи идут не с 0.
+        // Это приводит к формированию объекта, а не массива, для фронта.
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -18,12 +20,12 @@ class AdminArtistResource extends JsonResource
             'createdAt' => $this->created_at,
             'albums' => $this->albums,
             'tags' => [
-                'common' => $this->tags->where('common', true)->map(function($item) {
+                'common' => collect($this->tags->where('common', true)->map(function($item) {
                     return ['label' => $item->name, 'value' => $item->id];
-                }),
-                'secondary' => $this->tags->where('common', false)->map(function($item) {
+                })->values()),
+                'secondary' => collect($this->tags->where('common', false)->map(function($item) {
                     return ['label' => $item->name, 'value' => $item->id];
-                }),
+                })->values()),
             ]
         ];
     }

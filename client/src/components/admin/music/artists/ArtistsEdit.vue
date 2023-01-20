@@ -50,7 +50,7 @@
             <span v-else>{{ col.value }}</span>
           </q-td>
           <q-td class="q-gutter-x-sm" auto-width>
-            <q-btn size="sm" @click="editArtist(props.row)" label="Редактировать" />
+            <q-btn size="sm" @click="initArtistEdit(props.row)" label="Редактировать" />
             <q-btn size="sm" @click="deleteArtist(props.row)" label="Удалить" color="red" />
           </q-td>
         </q-tr>
@@ -63,16 +63,21 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-form @submit="onSubmit" class=" q-gutter-y-md column">
-            <q-input v-model="model.name" label="Название исполнителя" outlined />
-            <q-input v-model="model.description" label="Описание исполнителя" type="textarea" outlined />
+          <q-form class="q-gutter-y-md column">
+            <q-input
+              v-model="model.name"
+              label="Название исполнителя"
+              :rules="[ val => val && val.length > 0 || 'Поле name должно быть заполнено!']"
+              outlined
+            />
+            <q-input v-model="model.content" label="Описание исполнителя" type="textarea" outlined />
             <q-file v-model="model.image" label="Постер" name="poster" filled>
               <template v-if="model.image" v-slot:append>
                 <q-icon name="cancel" @click.stop.prevent="model.image = null" class="cursor-pointer" />
               </template>
             </q-file>
-            <div class="artist-edit__image">
-              <img v-if="model.image" :src="model.image" alt="">
+            <div v-if="model.image" class="artist-edit__image">
+              <img :src="model.image" alt="">
             </div>
             <q-select
               label="Основные жанры"
@@ -97,9 +102,9 @@
           </q-form>
         </q-card-section>
 
-        <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn label="Сохранить" @click="saveArtist" flat />
-          <q-btn label="Отмена" flat v-close-popup />
+        <q-card-actions align="right" class="bg-white">
+          <q-btn label="Сохранить" color="primary" @click="updateArtist" :loading="updateButtonLoading" />
+          <q-btn label="Отмена" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -123,7 +128,7 @@ export default {
       field: row => row.id,
       sortable: true,
       style: 'width: 40px'
-    },{
+    }, {
       name: "image",
       required: true,
       label: 'Изображение',
@@ -131,14 +136,14 @@ export default {
       field: row => row.image,
       sortable: false,
       style: 'width: 60px'
-    },{
+    }, {
       name: "name",
       required: true,
       label: 'Имя',
       align: 'left',
       field: row => row.name,
       sortable: true
-    },{
+    }, {
       name: "tags",
       required: true,
       label: 'Теги',
@@ -158,14 +163,16 @@ export default {
     const commonTags = ref([])
     const secondaryTags = ref([])
     let model = ref({
+      id: 0,
       name: null,
-      description: null,
+      content: null,
       image: null,
       tags: {
-        common: null,
-        secondary: null
+        common: [],
+        secondary: []
       }
     })
+    let updateButtonLoading = ref(false)
     const getArtists = async (page) => {
       const {data} = await API.post('music/admin/artists/get', {page: page})
       artists.value = data.data.artists
@@ -180,25 +187,63 @@ export default {
       const {data} = await API.post('music/admin/artists/search', {name: search})
       artists.value = data.data.artists
     }
-    const editArtist = async (artist) => {
-      model.value.name = artist.name
-      model.value.description = artist.description
-      model.value.image = artist.image
-      model.value.tags.common = artist.tags.common
-      model.value.tags.secondary = artist.tags.secondary
+    const initArtistEdit = async (artist) => {
+      model.value = artist
 
       showModal.value = true
-      // const {data} = await API.post('music/admin/artists/search', {name: search})
-      // artists.value = data.data.artists
     }
     const deleteArtist = (artist) => {
-      $q.notify({
-        type: 'positive',
-        message: 'Вы успешно вошли в систему!'
-      });
+      $q.dialog({
+        title: 'Confirm',
+        message: `Удалить исполнителя ${artist.name} и все его альбомы?`,
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+
+      })
     }
-    const saveArtist = async () => {
-      console.log(model.value.tags.common)
+    const updateArtist = async () => {
+      updateButtonLoading.value = true
+
+      // Делаем через formData для удобства отправки бинарного файла на бэк
+      const formData = new FormData();
+      formData.append('id', model.value.id)
+      formData.append('name', model.value.name)
+      formData.append('content', model.value.content)
+
+      if (typeof model.value.image !== 'string') {
+        formData.append('image', model.value.image)
+      }
+
+      let commonValues = model.value.tags.common.map(item => item.value)
+      let secondaryValues = model.value.tags.secondary.map(item => item.value)
+      commonValues.concat(secondaryValues).forEach(val => {
+        formData.append('tags[]', val);
+      });
+
+      const {data} = await API.post('music/admin/artists/update', formData)
+
+      if (data.success) {
+        for(let key in artists.value) {
+          if(artists.value[key].id === data.data.id) {
+            artists.value[key] = data.data
+          }
+        }
+
+        $q.notify({
+          type: 'positive',
+          message: data.message
+        });
+      } else {
+        data.errors.forEach(item => {
+          $q.notify({
+            type: 'negative',
+            message: item
+          });
+        })
+      }
+
+      updateButtonLoading.value = false
     }
 
     return {
@@ -210,11 +255,13 @@ export default {
       model,
       commonTags,
       secondaryTags,
+      updateButtonLoading,
       getArtists,
       getTagsSelect,
       searchArtists,
-      editArtist,
-      saveArtist
+      initArtistEdit,
+      updateArtist,
+      deleteArtist
     }
   },
   mounted() {
@@ -240,6 +287,7 @@ export default {
     &__image {
       width: 50px;
       height: 50px;
+      overflow: hidden;
 
       img {
         width: 100%;
