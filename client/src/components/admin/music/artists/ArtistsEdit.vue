@@ -221,29 +221,45 @@ export default {
         formData.append('tags[]', val);
       });
 
-      const {data} = await API.post('music/admin/artists/update', formData)
+      await API.post('music/admin/artists/update', formData)
+        .then(response => {
+          const {data} = response.data
 
-      if (data.success) {
-        for(let key in artists.value) {
-          if(artists.value[key].id === data.data.id) {
-            artists.value[key] = data.data
+          if (data.success) {
+            for(let key in artists.value) {
+              if(artists.value[key].id === data.data.id) {
+                artists.value[key] = data.data
+              }
+            }
+
+            $q.notify({
+              type: 'positive',
+              message: data.message
+            });
+          } else {
+            data.errors.forEach(item => {
+              $q.notify({
+                type: 'negative',
+                message: item
+              });
+            })
           }
-        }
 
-        $q.notify({
-          type: 'positive',
-          message: data.message
-        });
-      } else {
-        data.errors.forEach(item => {
-          $q.notify({
-            type: 'negative',
-            message: item
-          });
+          updateButtonLoading.value = false
+        }).catch(error => {
+          const {data} = error.response
+          if (data.errors) {
+            for (let key in data.errors) {
+              data.errors[key].forEach((item) => {
+                $q.notify({
+                  type: 'negative',
+                  message: `${key}: ${item}`
+                });
+              })
+            }
+            updateButtonLoading.value = false
+          }
         })
-      }
-
-      updateButtonLoading.value = false
     }
 
     return {
