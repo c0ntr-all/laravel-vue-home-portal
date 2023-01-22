@@ -11,12 +11,12 @@ api.interceptors.request.use(config => {
 
   return config
 },error => {
-  //Этот блок кода срабатывает только тогда, когда ошибка отправки запроса с фронта
-  console.log(error)
+  return Promise.reject(error);
 })
 
-api.interceptors.response.use({}, error => {
-  //Этот блок кода срабатывает когда прилетает ошибка с бэка
+api.interceptors.response.use(response => {
+  return response
+}, error => {
   if(error.response.data.message === 'Token has expired') {
     axios.post('http://localhost/api/auth/refresh', {}, {
       headers: {

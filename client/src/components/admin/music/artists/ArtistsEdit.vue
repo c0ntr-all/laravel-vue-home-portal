@@ -71,12 +71,15 @@
               outlined
             />
             <q-input v-model="model.content" label="Описание исполнителя" type="textarea" outlined />
-            <q-file v-model="model.image" label="Постер" name="poster" filled>
+            <q-file v-model="newImage" label="Постер" name="poster" filled>
               <template v-if="model.image" v-slot:append>
                 <q-icon name="cancel" @click.stop.prevent="model.image = null" class="cursor-pointer" />
               </template>
             </q-file>
-            <div v-if="model.image" class="artist-edit__image">
+            <div v-if="newImage" class="artist-edit__image">
+              <img :src="newImagePreview" alt="">
+            </div>
+            <div v-else-if="!newImage && typeof model.image === 'string'" class="artist-edit__image">
               <img :src="model.image" alt="">
             </div>
             <q-select
@@ -104,6 +107,7 @@
 
         <q-card-actions align="right" class="bg-white">
           <q-btn label="Сохранить" color="primary" @click="updateArtist" :loading="updateButtonLoading" />
+          <!--Todo: Need to write cancel update handler for returning previous values to model-->
           <q-btn label="Отмена" v-close-popup />
         </q-card-actions>
       </q-card>
@@ -111,7 +115,7 @@
   </div>
 </template>
 <script>
-import {ref} from 'vue'
+import {computed, ref} from 'vue'
 import API from "src/utils/api";
 import { useQuasar } from 'quasar'
 
@@ -172,6 +176,11 @@ export default {
         secondary: []
       }
     })
+    const newImage = ref(null)
+    const newImagePreview = computed(() => {
+      model.value.image = newImage.value
+      return URL.createObjectURL(newImage.value)
+    })
     let updateButtonLoading = ref(false)
     const getArtists = async (page) => {
       const {data} = await API.post('music/admin/artists/get', {page: page})
@@ -211,54 +220,41 @@ export default {
       formData.append('name', model.value.name)
       formData.append('content', model.value.content)
 
-      if (typeof model.value.image !== 'string') {
+      if (typeof model.value.image === 'object') {
         formData.append('image', model.value.image)
       }
 
-      let commonValues = model.value.tags.common.map(item => item.value)
-      let secondaryValues = model.value.tags.secondary.map(item => item.value)
-      commonValues.concat(secondaryValues).forEach(val => {
+      let commonTagsValues = model.value.tags.common.map(item => item.value)
+      let secondaryTagsValues = model.value.tags.secondary.map(item => item.value)
+      commonTagsValues.concat(secondaryTagsValues).forEach(val => {
         formData.append('tags[]', val);
       });
 
       await API.post('music/admin/artists/update', formData)
         .then(response => {
-          const {data} = response.data
-
-          if (data.success) {
-            for(let key in artists.value) {
-              if(artists.value[key].id === data.data.id) {
-                artists.value[key] = data.data
-              }
+          for(let key in artists.value) {
+            if(artists.value[key].id === response.data.data.id) {
+              artists.value[key] = response.data.data
             }
-
-            $q.notify({
-              type: 'positive',
-              message: data.message
-            });
-          } else {
-            data.errors.forEach(item => {
-              $q.notify({
-                type: 'negative',
-                message: item
-              });
-            })
           }
+
+          $q.notify({
+            type: 'positive',
+            message: response.data.message
+          });
 
           updateButtonLoading.value = false
         }).catch(error => {
           const {data} = error.response
-          if (data.errors) {
             for (let key in data.errors) {
               data.errors[key].forEach((item) => {
                 $q.notify({
                   type: 'negative',
                   message: `${key}: ${item}`
-                });
+                })
               })
             }
             updateButtonLoading.value = false
-          }
         })
     }
 
@@ -269,9 +265,11 @@ export default {
       artists,
       showModal,
       model,
+      newImage,
       commonTags,
       secondaryTags,
       updateButtonLoading,
+      newImagePreview,
       getArtists,
       getTagsSelect,
       searchArtists,

@@ -72,7 +72,7 @@ export default {
   setup() {
     const mainTabs = ref('artists')
     const artistsTabs = ref('edit')
-    const artistsSplitter = ref()
+    const artistsSplitter = ref(6)
 
     return {
       mainTabs,
