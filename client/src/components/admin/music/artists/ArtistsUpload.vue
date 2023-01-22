@@ -3,7 +3,7 @@
   <q-tree
     :nodes="data"
     default-expand-all
-    node-key="label"
+    node-key="key"
     v-model:selected="selectedNode"
     @lazy-load="onLazyLoad"
   />
@@ -14,23 +14,27 @@ import API from "src/utils/api";
 
 export default {
   setup() {
-    const defaultFolder = 'F:\\Music\\'
+    let startFolder = 'F:\\Music\\'
 
     const data = ref([])
     const selectedNode = ref('')
 
     const getFolder = async (folder) => {
-      const path = folder || defaultFolder
+      const path = folder || startFolder
       await API.post('folders', {'folder': path})
         .then(response => {
           const nodes = Object.values(response.data).map(value => {
             return {
               label: value,
-              lazy: true
+              lazy: true,
+              level: 1,
+              key: `${value}-1`
             }
           })
           if (folder) {
-            return nodes
+            return new Promise((resolve, reject) => {
+              resolve(nodes)
+            })
           } else {
             data.value = nodes
           }
@@ -38,41 +42,33 @@ export default {
           return false
         })
     }
-
     const getFullPath = (node, path = '') => {
       if(node.level > 1) {
         let nextPath = node.label + '\\' + path
-        if(defaultFolder.value && node.level === 2) {
+        if(startFolder && node.level === 2) {
           nextPath = '\\' + nextPath
         }
-        return this.getFullPath(node.parent, nextPath)
+        return getFullPath(node.parent, nextPath)
       }else{
         return node.label + path
       }
     }
 
     const onLazyLoad = async ({ node, key, done, fail }) => {
-      // if (key.indexOf('Lazy load empty') > -1) {
-      //   done([])
-      //   return
-      // }
-
-      const label = `${defaultFolder}${node.label}`
-      await getFolder(label).then(response => {
-        console.log(response)
-        done(response)
-      })
-      // done([
-      //   { label: `${label}.1` },
-      //   { label: `${label}.2`, lazy: true },
-      //   {
-      //     label: `${label}.3`,
-      //     children: [
-      //       { label: `${label}.3.1`, lazy: true },
-      //       { label: `${label}.3.2`, lazy: true }
-      //     ]
-      //   }
-      // ])
+      const path = startFolder + getFullPath(node)
+      await API.post('folders', {'folder': path})
+        .then(response => {
+          const nodes = Object.values(response.data).map(value => {
+            return {
+              label: value,
+              lazy: true,
+              parent: node,
+              level: node.level + 1,
+              key: `${value}-${node.level}`
+            }
+          })
+          done(nodes)
+        })
     }
 
     return {
