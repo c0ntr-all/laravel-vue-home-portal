@@ -41,13 +41,12 @@
             >
               <q-tab-panel name="edit">
                 <div class="text-h6 q-mb-md">Редактирование исполнителей</div>
-                <artists-edit></artists-edit>
+                <artists-edit />
               </q-tab-panel>
 
               <q-tab-panel name="upload">
                 <div class="text-h6 q-mb-md">Загрузить исполнителей</div>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-                <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
+                <artists-upload />
               </q-tab-panel>
             </q-tab-panels>
           </template>
@@ -65,9 +64,10 @@
 <script>
 import {ref} from 'vue'
 import ArtistsEdit from 'src/components/admin/music/artists/ArtistsEdit.vue'
+import ArtistsUpload from 'src/components/admin/music/artists/ArtistsUpload.vue'
 
 export default {
-  components: {ArtistsEdit},
+  components: {ArtistsEdit, ArtistsUpload},
 
   setup() {
     const mainTabs = ref('artists')
