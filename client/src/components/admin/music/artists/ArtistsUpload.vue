@@ -1,23 +1,29 @@
 <template>
-  <q-input v-model="path" label="Path to artist folder" outlined dense />
+  <q-btn @click="uploadArtist" label="Загрузить" color="primary" class="q-mb-lg"/>
+  <p  class="q-mb-lg">Выбранная папка - "{{ fullPath || 'Не выбрано' }}"</p>
   <q-tree
     :nodes="data"
     default-expand-all
     node-key="key"
     v-model:selected="selectedNode"
     @lazy-load="onLazyLoad"
+    class="q-mb-lg"
   />
 </template>
 <script>
 import {ref} from "vue";
+import {useQuasar} from "quasar";
 import API from "src/utils/api";
 
 export default {
   setup() {
+    const $q = useQuasar()
+
     let startFolder = 'F:\\Music\\'
 
     const data = ref([])
     const selectedNode = ref('')
+    const fullPath = ref('')
 
     const getFolder = async (folder) => {
       const path = folder || startFolder
@@ -56,6 +62,7 @@ export default {
 
     const onLazyLoad = async ({ node, key, done, fail }) => {
       const path = startFolder + getFullPath(node)
+
       await API.post('folders', {'folder': path})
         .then(response => {
           const nodes = Object.values(response.data).map(value => {
@@ -69,14 +76,33 @@ export default {
           })
           done(nodes)
         })
+
+      fullPath.value = getNodeByKey(selectedNode.value)
+    }
+
+    const uploadArtist = async () => {
+      await API.post('music/upload', {'folder': path}).then(response => {
+        if(response.data.success) {
+          $q.notify({
+            type: 'positive',
+            message: `Исполнитель ${data.artist} успешно загружен!`
+          })
+        }else{
+          $q.notify({
+            type: 'negative',
+            message: response.data.message
+          })
+        }
+      })
     }
 
     return {
-      path: ref(''),
       data,
       selectedNode,
+      fullPath,
+      getFolder,
       onLazyLoad,
-      getFolder
+      uploadArtist
     }
   },
   mounted() {

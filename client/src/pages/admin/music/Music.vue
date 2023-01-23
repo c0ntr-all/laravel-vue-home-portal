@@ -45,7 +45,7 @@
               </q-tab-panel>
 
               <q-tab-panel name="upload">
-                <div class="text-h6 q-mb-md">Загрузить исполнителей</div>
+                <div class="text-h6 q-mb-md">Загрузка исполнителей</div>
                 <artists-upload />
               </q-tab-panel>
             </q-tab-panels>
