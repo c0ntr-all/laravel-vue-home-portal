@@ -72,6 +72,7 @@
     </q-drawer>
 
     <q-page-container>
+      <music-player></music-player>
       <keep-alive>
         <router-view />
       </keep-alive>
@@ -81,16 +82,12 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
-import { date } from 'quasar'
-
-import EssentialLink from 'components/EssentialLink.vue'
+import MusicPlayer from 'src/components/default/MusicPlayer.vue'
 
 export default defineComponent({
   name: 'MainLayout',
 
-  components: {
-    EssentialLink
-  },
+  components: {MusicPlayer},
 
   setup () {
     const leftDrawerOpen = ref(false)
