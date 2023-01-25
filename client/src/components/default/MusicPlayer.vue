@@ -15,9 +15,18 @@
       </q-card-section>
 
       <q-card-section class="row justify-center no-wrap q-pa-sm">
+        {{ status }}
+      </q-card-section>
+
+      <q-card-section class="row justify-center no-wrap q-pa-sm">
         <q-btn flat round icon="shuffle" />
         <q-btn flat round icon="skip_previous" />
-        <q-btn flat round icon="play_arrow" />
+        <q-btn
+          @click="musicPlayer.toggleStatus()"
+          :icon="status === 'playing' ? 'pause' : 'play_arrow'"
+          flat
+          round
+        />
         <q-btn flat round icon="skip_next" />
         <q-btn flat round icon="repeat" />
       </q-card-section>
@@ -33,6 +42,7 @@
 <script>
 import { ref } from 'vue'
 import { useMusicPlayer } from 'src/stores/modules/musicPlayer'
+import { mapState } from "pinia/dist/pinia";
 
 export default {
   setup() {
@@ -40,6 +50,9 @@ export default {
       dialog: ref(false),
       musicPlayer: useMusicPlayer()
     }
+  },
+  computed: {
+    ...mapState(useMusicPlayer, ['status']),
   }
 }
 </script>

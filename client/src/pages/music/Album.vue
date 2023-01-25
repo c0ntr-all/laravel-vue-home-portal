@@ -42,7 +42,19 @@
               :flat="true"
               :rows-per-page-options="[0]"
               :pagination.sync="{page: 1, rowsPerPage: 0}"
-            />
+            >
+              <template v-slot:body="props">
+                <q-tr :props="props" class="album-tracks__item" @click="musicPlayer.playTrack(props.row)">
+                  <q-td
+                    v-for="col in props.cols"
+                    :key="col.name"
+                    :props="props"
+                  >
+                    {{ col.value }}
+                  </q-td>
+                </q-tr>
+              </template>
+            </q-table>
           </div>
         </div>
       </div>
@@ -60,6 +72,7 @@ import {ref} from 'vue'
 import API from "src/utils/api";
 import AlbumCard from 'components/client/music/AlbumCard.vue'
 import RelatedAlbums from "components/client/music/RelatedAlbums.vue";
+import { useMusicPlayer } from 'src/stores/modules/musicPlayer'
 
 export default {
   props: {
@@ -105,6 +118,7 @@ export default {
       showImage,
       album,
       columns,
+      musicPlayer: useMusicPlayer(),
       getAlbum,
     }
   },
@@ -182,6 +196,11 @@ export default {
     display: flex;
     flex-direction: column;
     max-width: 760px;
+  }
+  &__item {
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 .album-artist {
