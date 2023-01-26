@@ -20,7 +20,10 @@ class AlbumResource extends JsonResource
             'image' => $this->full_image,
             'createdAt' => $this->created_at,
             'artist' => ['id' => $this->artist->id, 'name' => $this->artist->name],
-            'tracks' => $this->tracks()->get(['id', 'number', 'name', 'duration']),
+            'tracks' => $this->tracks()->get(['id', 'number', 'name', 'duration'])->map(function($item) {
+                $item['image'] = $this->full_image;
+                return $item;
+            }),
             'tags' => $this->tags->pluck('tag')
         ];
     }

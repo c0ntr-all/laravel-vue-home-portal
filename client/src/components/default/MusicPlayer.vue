@@ -4,7 +4,7 @@
     <q-card style="width: 352px">
       <q-card-section class="row items-center no-wrap">
         <q-img
-          :src="'https://placeimg.com/500/300/nature?t=' + Math.random()"
+          :src="musicPlayer.track.image || 'no-image.jpg'"
           spinner-color="white"
           style="width:320px; height: 320px"
         />
@@ -15,15 +15,11 @@
       </q-card-section>
 
       <q-card-section class="row justify-center no-wrap q-pa-sm">
-        {{ musicPlayer.status }}
-      </q-card-section>
-
-      <q-card-section class="row justify-center no-wrap q-pa-sm">
         <q-btn flat round icon="shuffle" />
         <q-btn flat round icon="skip_previous" />
         <q-btn
-          @click="musicPlayer.toggleStatus()"
-          :icon="status === 'playing' ? 'pause' : 'play_arrow'"
+          @click="musicPlayer.run()"
+          :icon="musicPlayer.status === 'playing' ? 'pause' : 'play_arrow'"
           flat
           round
         />

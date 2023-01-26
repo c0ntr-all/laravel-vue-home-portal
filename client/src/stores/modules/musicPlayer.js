@@ -45,6 +45,9 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       //     this.idx = key
       //   }
       // })
+    },
+    setPlaylist() {
+
     }
   },
 })
