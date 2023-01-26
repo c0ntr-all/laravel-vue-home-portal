@@ -44,13 +44,42 @@
               :pagination.sync="{page: 1, rowsPerPage: 0}"
             >
               <template v-slot:body="props">
-                <q-tr :props="props" class="album-tracks__item" @click="musicPlayer.playTrack(props.row)">
+                <q-tr
+                  class="table-track"
+                  :class="{'table-track--active': props.row.id === musicPlayer.track.id}"
+                  :props="props"
+                  @click="musicPlayer.playTrack(props.row)"
+                  @mouseover="hovered = true"
+                  @mouseout="hovered = false"
+                >
                   <q-td
                     v-for="col in props.cols"
                     :key="col.name"
                     :props="props"
                   >
-                    {{ col.value }}
+                    <template v-if="col.name === 'number'">
+                      {{ col.id }}
+                      <q-btn
+                        class="table-track__play-icon"
+                        icon="play_arrow"
+                        flat
+                        round
+                        dense
+                        v-if="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== props.row.id)"
+                      />
+                      <q-btn
+                        class="table-track__play-icon"
+                        icon="pause"
+                        flat
+                        round
+                        dense
+                        v-else
+                      />
+                      <div class="table-track__number">{{ col.value }}</div>
+                    </template>
+                    <template v-else>
+                      {{ col.value }}
+                    </template>
                   </q-td>
                 </q-tr>
               </template>
@@ -87,10 +116,10 @@ export default {
       name: "number",
       required: true,
       label: '#',
-      align: 'left',
+      align: 'center',
       field: row => row.number,
       sortable: true,
-      style: 'width: 40px'
+      style: 'width: 70px'
     },{
       name: "name",
       required: true,
@@ -118,6 +147,7 @@ export default {
       showImage,
       album,
       columns,
+      hovered: ref(false),
       musicPlayer: useMusicPlayer(),
       getAlbum,
     }
@@ -197,10 +227,36 @@ export default {
     flex-direction: column;
     max-width: 760px;
   }
-  &__item {
-    &:hover {
-      cursor: pointer;
+}
+.table-track {
+  &:hover {
+    cursor: pointer;
+
+    .table-track__play-icon {
+      display: flex;
     }
+    .table-track__number {
+      display: none;
+    }
+  }
+  &--active {
+    background-color: rgba(0, 0, 0, 0.03);
+    .table-track__play-icon {
+      display: flex;
+    }
+    .table-track__number {
+      display: none;
+    }
+  }
+  &__play-icon {
+    display: none;
+  }
+  &__number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 2.4em;
+    min-width: 2.4em;
   }
 }
 .album-artist {

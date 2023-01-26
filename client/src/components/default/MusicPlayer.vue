@@ -15,7 +15,7 @@
       </q-card-section>
 
       <q-card-section class="row justify-center no-wrap q-pa-sm">
-        {{ status }}
+        {{ musicPlayer.status }}
       </q-card-section>
 
       <q-card-section class="row justify-center no-wrap q-pa-sm">
@@ -51,9 +51,9 @@ export default {
       musicPlayer: useMusicPlayer()
     }
   },
-  computed: {
-    ...mapState(useMusicPlayer, ['status']),
-  }
+  // computed: {
+  //   ...mapState(useMusicPlayer, ['status']),
+  // }
 }
 </script>
 <style lang="scss" scoped>

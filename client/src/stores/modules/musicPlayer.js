@@ -5,6 +5,7 @@ export const useMusicPlayer = defineStore('musicPlayer', {
     return {
       audio: new Audio(),
       track: {},
+      status: 'paused',
       idx: 0,
       timePassed: '00:00',
       timeTotal: '00:00',
@@ -14,25 +15,31 @@ export const useMusicPlayer = defineStore('musicPlayer', {
     }
   },
   actions: {
-    play() {
-      if (this.audio.paused) {
-        this.audio.play()
+    run() {
+      if (this.status === 'playing') {
+        this.pause()
       } else {
-        this.audio.pause()
+        this.play()
       }
     },
-    toggleStatus() {
-      this.status = this.status === 'paused' ? 'playing' : 'paused'
+    play() {
+      this.status = 'playing'
+      this.audio.play()
+    },
+    pause() {
+      this.status = 'paused'
+      this.audio.pause()
     },
     playTrack(track) {
       this.setTrack(track)
-      this.play()
+      this.run()
     },
     setTrack(track) {
       if (this.track?.id !== track.id) {
+        this.pause()
         this.track = track
+        this.audio.src = `http://home-portal.local/api/music/tracks/${track.id}/play`
       }
-      this.audio.src = `http://home-portal.local/api/music/tracks/${track.id}/play`
       // this.playlist.forEach((item, key) => {
       //   if (item.id === track.id) {
       //     this.idx = key
@@ -40,7 +47,4 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       // })
     }
   },
-  getters: {
-    status: (state) => state.audio.paused ? 'paused' : 'playing'
-  }
 })
