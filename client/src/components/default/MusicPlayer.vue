@@ -38,7 +38,6 @@
 <script>
 import { ref } from 'vue'
 import { useMusicPlayer } from 'src/stores/modules/musicPlayer'
-import { mapState } from "pinia/dist/pinia";
 
 export default {
   setup() {
@@ -47,9 +46,9 @@ export default {
       musicPlayer: useMusicPlayer()
     }
   },
-  // computed: {
-  //   ...mapState(useMusicPlayer, ['status']),
-  // }
+  created() {
+    this.musicPlayer.init()
+  },
 }
 </script>
 <style lang="scss" scoped>

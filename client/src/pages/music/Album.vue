@@ -4,16 +4,23 @@
       <q-btn type="primary" @click="this.$router.push('/music/artists/' + album.artist.id)">Вернуться к исполнителю</q-btn>
     </div>
     <div class="album">
-      <div class="q-mb-lg album-head">
+      <div class="album-head q-mb-lg">
         <div class="album-head__left">
-          <div class="album-head__image">
+          <div class="album-head__image q-mb-md">
             <a :href="album.image" @click.prevent="showImage = true">
               <img :src="album.image" alt="">
             </a>
+            <q-dialog v-model="showImage">
+              <img :src="album.image" alt="">
+            </q-dialog>
           </div>
-          <q-dialog v-model="showImage">
-            <img :src="album.image" alt="">
-          </q-dialog>
+          <div class="album-head__actions">
+            <q-btn icon="playlist_add" dense>
+              <q-tooltip anchor="top middle" self="bottom middle" :offset="[5, 5]">
+                <span style="font-size: .75rem">Add to playlist</span>
+              </q-tooltip>
+            </q-btn>
+          </div>
         </div>
         <div class="album-head__right">
           <h2 class="album-head__name">{{ album.name }}</h2>
