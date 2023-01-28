@@ -15,16 +15,26 @@
       </q-card-section>
 
       <q-card-section class="row justify-center no-wrap q-pa-sm">
-        <q-btn flat round icon="shuffle" />
-        <q-btn flat round icon="skip_previous" />
+        <q-btn icon="shuffle" flat round />
+        <q-btn
+          @click="musicPlayer.prevTrack()"
+          icon="skip_previous"
+          flat
+          round
+        />
         <q-btn
           @click="musicPlayer.run()"
           :icon="musicPlayer.status === 'playing' ? 'pause' : 'play_arrow'"
           flat
           round
         />
-        <q-btn flat round icon="skip_next" />
-        <q-btn flat round icon="repeat" />
+        <q-btn
+          @click="musicPlayer.nextTrack()"
+          icon="skip_next"
+          flat
+          round
+        />
+        <q-btn icon="repeat" flat round />
       </q-card-section>
 
       <q-card-section class="music-player__rewind row items-center no-wrap q-px-md q-pb-sm">

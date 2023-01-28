@@ -72,12 +72,13 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         this.track = track
         this.audio.src = `http://home-portal.local/api/music/tracks/${track.id}/play`
       }
-      // это для перемотки
-      // this.playlist.forEach((item, key) => {
-      //   if (item.id === track.id) {
-      //     this.idx = key
-      //   }
-      // })
+
+      // Initialization of current track index in playlist
+      this.playlist.forEach((item, key) => {
+        if (item.id === track.id) {
+          this.idx = key
+        }
+      })
     },
     setPlaylist(playlist) {
       this.playlist = [...playlist]
@@ -88,11 +89,24 @@ export const useMusicPlayer = defineStore('musicPlayer', {
     clearPlaylist() {
       this.playlist = []
     },
-    nextTrack() {
-
-    },
     prevTrack() {
+      if (this.playlist.length) {
+        if (this.idx === 0) {
+          return
+        }
 
+        this.setTrack(this.playlist[this.idx - 1])
+      }
+    },
+    nextTrack() {
+      if (this.playlist.length) {
+        if (this.idx === this.playlist.length - 1) {
+          this.setTrack(this.playlist[0])
+          return
+        }
+
+        this.setTrack(this.playlist[this.idx + 1])
+      }
     }
   }
 })

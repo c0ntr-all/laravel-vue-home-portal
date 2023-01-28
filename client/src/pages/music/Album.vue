@@ -55,7 +55,7 @@
                   class="table-track"
                   :class="{'table-track--active': props.row.id === musicPlayer.track.id}"
                   :props="props"
-                  @click="musicPlayer.playTrack(props.row)"
+                  @click="initPlay(props.row)"
                   @mouseover="hovered = true"
                   @mouseout="hovered = false"
                 >
@@ -149,14 +149,21 @@ export default {
       album.value = data.data
       loadingAlbum.value = false
     }
+    const musicPlayer = useMusicPlayer()
     return {
       loadingAlbum,
       showImage,
       album,
       columns,
       hovered: ref(false),
-      musicPlayer: useMusicPlayer(),
+      musicPlayer,
       getAlbum,
+      initPlay: track => {
+        if (!musicPlayer.playlist.length) {
+          musicPlayer.setPlaylist(album.value.tracks)
+        }
+        musicPlayer.playTrack(track)
+      }
     }
   },
   created() {
