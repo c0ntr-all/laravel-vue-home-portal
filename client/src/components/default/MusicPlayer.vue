@@ -27,9 +27,9 @@
         <q-btn flat round icon="repeat" />
       </q-card-section>
 
-      <q-card-section class="row items-center no-wrap q-px-md q-pt-sm">
+      <q-card-section class="rewind row items-center no-wrap q-px-md q-pt-sm">
         <span class="q-pr-xs">{{ musicPlayer.timePassed }}</span>
-        <q-linear-progress :value="0.6" color="pink" />
+        <q-slider @change="rewindNavigate" class="rewind__progress" v-model="musicPlayer.rewindProgressWidth" :min="0" :max="100"/>
         <span class="q-pl-xs">{{ musicPlayer.timeTotal }}</span>
       </q-card-section>
     </q-card>
@@ -41,9 +41,14 @@ import { useMusicPlayer } from 'src/stores/modules/musicPlayer'
 
 export default {
   setup() {
+    const musicPlayer = useMusicPlayer()
+
     return {
       dialog: ref(false),
-      musicPlayer: useMusicPlayer()
+      musicPlayer,
+      rewindNavigate: value => {
+        musicPlayer.audio.currentTime = (value / 100) * musicPlayer.audio.duration;
+      },
     }
   },
   created() {
