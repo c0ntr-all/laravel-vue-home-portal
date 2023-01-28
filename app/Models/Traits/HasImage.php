@@ -11,7 +11,7 @@ trait HasImage
      */
     public function getFullImageAttribute(): string
     {
-        $rootPath = env('APP_URL') . '/storage/';
+        $rootPath = url('') . '/storage/';
 
         return !empty($this->image) ? $rootPath . $this->image : $rootPath . 'no-image.gif';
     }

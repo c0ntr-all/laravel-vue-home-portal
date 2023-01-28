@@ -3,27 +3,22 @@ import router from "../router/index"
 
 const api = axios.create()
 
-//start request
 api.interceptors.request.use(config => {
   if(localStorage.access_token) {
     config.headers.authorization = `Bearer ${localStorage.access_token}`
   }
-  config.baseURL = 'http://home-portal.local/api/auth/'
+  config.baseURL = 'http://localhost/api/auth/'
 
-  //Надо возвращать конфиг после его модификации
   return config
 },error => {
-  //Этот блок кода срабатывает только тогда, когда ошибка отправки запроса с фронта
-  console.log(error)
+  return Promise.reject(error);
 })
-//end request
 
-//start response
-api.interceptors.response.use({}, error => {
-  //Этот блок кода срабатывает когда прилетает ошибка с бэка
-
+api.interceptors.response.use(response => {
+  return response
+}, error => {
   if(error.response.data.message === 'Token has expired') {
-    axios.post('http://home-portal.local/api/auth/refresh', {}, {
+    axios.post('http://localhost/api/auth/refresh', {}, {
       headers: {
         'authorization': `Bearer ${localStorage.access_token}`
       }
@@ -39,7 +34,8 @@ api.interceptors.response.use({}, error => {
   if(error.response.status === 401) {
     router.push('/login')
   }
+
+  return Promise.reject(error);
 })
-//end response
 
 export default api

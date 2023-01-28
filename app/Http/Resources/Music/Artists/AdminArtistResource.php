@@ -10,13 +10,8 @@ class AdminArtistResource extends JsonResource
 
     public function toArray($request): array
     {
-        /**
-         * Нужны отдельно id и имена т.к. Element Plus принимает только массив id для преобразования id в имя в селекте.
-         * Преобразование во что-то типа ключ(id), значение(имя) и использование Object.keys() не дает результата.
-         */
-        $commonTags = $this->tags->where('common', true);
-        $secondaryTags = $this->tags->where('common', false);
-
+        // С помощью collect($collection->values()) сбрасываем ключи коллекции т.к. для secondary ключи идут не с 0.
+        // Это приводит к формированию объекта, а не массива, для фронта.
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -25,12 +20,12 @@ class AdminArtistResource extends JsonResource
             'createdAt' => $this->created_at,
             'albums' => $this->albums,
             'tags' => [
-                'common' => $commonTags->pluck('id'),
-                'secondary' => $secondaryTags->pluck('id')
-            ],
-            'tagsNames' => [
-                'common' => $commonTags->pluck('name'),
-                'secondary' => $secondaryTags->pluck('name')
+                'common' => collect($this->tags->where('common', true)->map(function($item) {
+                    return ['label' => $item->name, 'value' => $item->id];
+                })->values()),
+                'secondary' => collect($this->tags->where('common', false)->map(function($item) {
+                    return ['label' => $item->name, 'value' => $item->id];
+                })->values()),
             ]
         ];
     }

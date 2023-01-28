@@ -8,8 +8,9 @@ use App\Http\Requests\Music\Artist\FilterRequest;
 use App\Http\Requests\Music\Artist\StoreRequest;
 use App\Http\Requests\Music\Artist\UpdateRequest;
 use App\Http\Resources\Music\Artists\AdminArtistCollection;
-use App\Http\Resources\Music\Artists\ArtistResource;
+use App\Http\Resources\Music\Artists\AdminArtistResource;
 use App\Models\Music\Artist;
+use http\Message;
 
 class ArtistController extends Controller
 {
@@ -45,7 +46,9 @@ class ArtistController extends Controller
             'image' => $imagePath
         ]);
 
-        return $this->artistResponse($artist);
+        $message = 'Исполнитель ' . $artist->name . ' успешно добавлен!';
+
+        return $this->artistResponse($artist, $message);
     }
 
     public function update(UpdateRequest $request)
@@ -69,27 +72,32 @@ class ArtistController extends Controller
 
             $artist->update($update);
 
-            if (!empty($requestData['commonTags'])) {
-                $tags = explode(',', $requestData['commonTags']);
-
-                if (!empty($requestData['secondaryTags'])) {
-                    $tags = array_merge($tags, explode(',', $requestData['secondaryTags']));
-                }
-
-                $artist->tags()->sync($tags);
+            if (is_array($requestData['tags'])) {
+                $artist->tags()->sync($requestData['tags']);
             }
 
-            return $this->artistResponse($artist);
+            $message = 'Исполнитель ' . $artist->name . ' успешно обновлён!';
+
+            return $this->artistResponse($artist, $message);
         } else {
-            return ['success' => false, 'error' => 'Ошибка редактирования исполнителя!'];
+            return [
+                'success' => false,
+                'errors' => [
+                    'Ошибка редактирования исполнителя!'
+                ]
+            ];
         }
     }
 
-    protected function artistResponse(Artist $artist): array
+    protected function artistResponse(Artist $artist, string $message = ''): array
     {
-        $resource = new ArtistResource($artist);
+        $resource = new AdminArtistResource($artist);
 
-        return ['success' => true, 'data' => $resource];
+        return [
+            'success' => true,
+            'message' => $message,
+            'data' => $resource
+        ];
     }
 
     protected function artistsResponse($artists): array

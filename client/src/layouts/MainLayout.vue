@@ -14,7 +14,7 @@
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
       <div class="q-px-lg q-pt-xl q-mb-md">
-        <div class="text-h3">{{ this.$route.meta.title }}</div>
+        <div class="text-h3">{{ this.$route.meta.title || 'No Title' }}</div>
       </div>
       <q-img
         src="images/mountains.jpeg"
@@ -43,7 +43,7 @@
             </q-item>
           </template>
           <hr>
-          <template v-for="item in $router.options.routes.filter(item => item.admin === true)">
+          <template v-for="item in $router.options.routes[0].children.filter(item => item.admin === true)">
             <q-item
               :index="item.path"
               :to="item.path"
@@ -60,9 +60,11 @@
 
       <q-img class="absolute-top" src="images/mountains.jpeg" style="height: 164px">
         <div class="absolute-bottom bg-transparent">
-          <q-avatar size="56px" class="q-mb-sm">
-            <img src="https://cdn.quasar.dev/img/boy-avatar.png">
-          </q-avatar>
+          <q-btn class="q-mb-sm" :to="'/profile'" round flat>
+            <q-avatar size="56px">
+              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+            </q-avatar>
+          </q-btn>
           <div class="text-weight-bold">User name</div>
           <div>@user-name</div>
         </div>
@@ -70,6 +72,7 @@
     </q-drawer>
 
     <q-page-container>
+      <music-player></music-player>
       <keep-alive>
         <router-view />
       </keep-alive>
@@ -79,16 +82,12 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
-import { date } from 'quasar'
-
-import EssentialLink from 'components/EssentialLink.vue'
+import MusicPlayer from 'src/components/default/MusicPlayer.vue'
 
 export default defineComponent({
   name: 'MainLayout',
 
-  components: {
-    EssentialLink
-  },
+  components: {MusicPlayer},
 
   setup () {
     const leftDrawerOpen = ref(false)
