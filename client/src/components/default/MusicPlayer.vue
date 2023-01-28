@@ -15,7 +15,7 @@
       </q-card-section>
 
       <q-card-section class="row justify-center no-wrap q-pa-sm">
-        <q-btn icon="shuffle" flat round />
+        <q-btn @click="musicPlayer.shuffle()" icon="shuffle" flat round />
         <q-btn
           @click="musicPlayer.prevTrack()"
           icon="skip_previous"

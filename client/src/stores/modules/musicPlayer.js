@@ -107,6 +107,19 @@ export const useMusicPlayer = defineStore('musicPlayer', {
 
         this.setTrack(this.playlist[this.idx + 1])
       }
+    },
+    shuffle() {
+      let currentIndex = this.playlist.length,
+          randomIndex;
+
+      while (currentIndex !== 0) {
+
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [this.playlist[currentIndex], this.playlist[randomIndex]] = [
+          this.playlist[randomIndex], this.playlist[currentIndex]];
+      }
     }
   }
 })
