@@ -3,14 +3,15 @@
     <q-header>
       <q-toolbar>
         <q-btn
+          @click="toggleLeftDrawer"
+          icon="menu"
+          aria-label="Menu"
           flat
           dense
           round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
         />
         <q-toolbar-title>Home Portal</q-toolbar-title>
+        <music-player></music-player>
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
       <div class="q-px-lg q-pt-xl q-mb-md">
@@ -62,7 +63,7 @@
         <div class="absolute-bottom bg-transparent">
           <q-btn class="q-mb-sm" :to="'/profile'" round flat>
             <q-avatar size="56px">
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+              <q-img src="https://cdn.quasar.dev/img/boy-avatar.png" />
             </q-avatar>
           </q-btn>
           <div class="text-weight-bold">User name</div>
@@ -72,7 +73,6 @@
     </q-drawer>
 
     <q-page-container>
-      <music-player></music-player>
       <keep-alive>
         <router-view />
       </keep-alive>

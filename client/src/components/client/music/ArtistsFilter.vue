@@ -29,19 +29,21 @@
         :options="secondaryTags"
         :size="'xs'"
         label="Select Style"
-        style="width: 250px"
+        style="width: 150px"
         outlined
+        dense
       />
       <q-select
         label="Select Genre"
         v-model="commonModel"
         input-debounce="0"
         :options="commonTags"
-        style="width: 250px"
+        style="width: 350px"
         use-input
         use-chips
         multiple
         outlined
+        dense
       />
       <q-btn color="primary" label="Filter" @click="submitFilter" />
     </div>

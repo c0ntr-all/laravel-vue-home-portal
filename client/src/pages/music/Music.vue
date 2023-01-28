@@ -25,14 +25,15 @@
 
     <div class="artists-list row items-start q-gutter-md">
       <q-card class="artist-card" v-for="artist in artists" :key="artist.id">
-        <img :src="artist.image" :alt="artist.name + ' image'">
-        <q-card-section>
-          <div class="text-h6">
-            <router-link :to="'/music/artists/' + artist.id">{{ artist.name }}</router-link>
+        <q-img :src="artist.image" :alt="artist.name + ' image'">
+          <div class="absolute-bottom text-h6">
+            <router-link :to="'/music/artists/' + artist.id" class="artist-card__link">{{ artist.name }}</router-link>
           </div>
-        </q-card-section>
-        <q-card-section class="q-pt-none">
-          <q-btn v-for="tag in artist.tagsNames.common" color="primary" :label="tag" outline />
+        </q-img>
+        <q-card-section class="q-pa-sm">
+          <q-chip v-for="tag in artist.tagsNames.common" size="sm" color="primary" text-color="white" outline>
+            {{ tag }}
+          </q-chip>
         </q-card-section>
       </q-card>
       <q-inner-loading :showing="artistsLoading">
@@ -91,5 +92,14 @@ export default {
   .artist-card {
     width: 100%;
     max-width: 250px;
+
+    &__link {
+      text-decoration: none;
+      color: #fff;
+
+      &:hover {
+        color: #ccc;
+      }
+    }
   }
 </style>
