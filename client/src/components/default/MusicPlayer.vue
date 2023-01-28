@@ -4,14 +4,14 @@
     <q-card class="music-player">
       <q-card-section class="row items-center no-wrap">
         <q-img
-          :src="musicPlayer.track.image || 'no-image.jpg'"
+          :src="musicPlayer.track.image"
           spinner-color="white"
           style="width:320px; height: 320px"
         />
       </q-card-section>
 
       <q-card-section class="row justify-center no-wrap q-pa-sm">
-        <span class="text-weight-bold">The Walker</span>. <span class="text-grey">Fitz & The Tantrums</span>
+        <span>{{ musicPlayer.track.artist }} - {{ musicPlayer.track.name }}</span>
       </q-card-section>
 
       <q-card-section class="row justify-center no-wrap q-pa-sm">

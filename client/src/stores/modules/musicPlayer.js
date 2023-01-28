@@ -5,7 +5,14 @@ export const useMusicPlayer = defineStore('musicPlayer', {
   state: () => {
     return {
       audio: new Audio(),
-      track: {},
+      track: {
+        id: 0,
+        number: 0,
+        name: "Track Name",
+        image: "http://localhost/storage/no-image.gif",
+        duration: "00:03:00",
+        artist: "Artist Name"
+      },
       status: 'paused',
       idx: 0,
       timePassed: '00:00',

@@ -18,8 +18,8 @@
         </div>
         <div class="artist-head__tags">
           <div class="tags-list q-gutter-sm">
-            <q-btn v-for="tag in artist.tagsNames?.common" class="mx-1">{{ tag }}</q-btn>
-            <q-btn v-for="tag in artist.tagsNames?.secondary" class="mx-1">{{ tag }}</q-btn>
+            <q-btn v-for="tag in artist.tagsNames?.common" dense>{{ tag }}</q-btn>
+            <q-btn v-for="tag in artist.tagsNames?.secondary" dense>{{ tag }}</q-btn>
           </div>
         </div>
       </div>
