@@ -1,7 +1,7 @@
 <template>
   <q-btn label="Open Player" color="primary" @click="dialog = true" />
   <q-dialog v-model="dialog" position="right">
-    <q-card style="width: 352px">
+    <q-card class="music-player">
       <q-card-section class="row items-center no-wrap">
         <q-img
           :src="musicPlayer.track.image || 'no-image.jpg'"
@@ -27,10 +27,32 @@
         <q-btn flat round icon="repeat" />
       </q-card-section>
 
-      <q-card-section class="rewind row items-center no-wrap q-px-md q-pt-sm">
+      <q-card-section class="music-player__rewind row items-center no-wrap q-px-md q-pb-sm">
         <span class="q-pr-xs">{{ musicPlayer.timePassed }}</span>
-        <q-slider @change="rewindNavigate" class="rewind__progress" v-model="musicPlayer.rewindProgressWidth" :min="0" :max="100"/>
+        <q-slider
+          class="music-player__rewind-progress"
+          @change="rewindNavigate"
+          v-model="musicPlayer.rewindProgressWidth"
+          :min="0"
+          :max="100"
+        />
         <span class="q-pl-xs">{{ musicPlayer.timeTotal }}</span>
+      </q-card-section>
+
+      <q-card-section class="music-player__volume row justify-center items-center no-wrap q-px-md q-pt-sm">
+        <q-icon
+          size="xs"
+          name="volume_up"
+        />
+        <q-slider
+          class="music-player__volume-progress"
+          @change="volumeNavigate"
+          v-model="musicPlayer.volume"
+          :min="0.00"
+          :max="1.00"
+          :step="0.01"
+          label
+        />
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -49,6 +71,9 @@ export default {
       rewindNavigate: value => {
         musicPlayer.audio.currentTime = (value / 100) * musicPlayer.audio.duration;
       },
+      volumeNavigate: value => {
+        musicPlayer.audio.volume = value;
+      },
     }
   },
   created() {
@@ -57,4 +82,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.music-player {
+  width: 352px;
+
+  &__volume {
+    width: 150px;
+  }
+}
 </style>
