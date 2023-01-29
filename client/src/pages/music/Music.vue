@@ -23,7 +23,7 @@
       <artists-filter></artists-filter>
     </div>
 
-    <div class="artists-list row items-start q-gutter-md">
+    <div class="artists-list row items-start q-gutter-md q-mb-lg">
       <q-card class="artist-card" v-for="artist in artists" :key="artist.id">
         <q-img :src="artist.image" :alt="artist.name + ' image'">
           <div class="absolute-bottom text-h6">
@@ -40,6 +40,16 @@
         <q-spinner-gears size="50px" color="primary" />
       </q-inner-loading>
     </div>
+    <div class="show-more-button flex justify-center">
+      <q-btn
+        v-if="pagination.hasPages"
+        color="primary"
+        label="Show more"
+        @click="loadMoreArtists"
+        :loading="paginationLoading"
+      >
+      </q-btn>
+    </div>
   </q-page>
 </template>
 <script>
@@ -55,6 +65,13 @@ export default {
     let tagsLoading = ref(true)
     const artists = ref([])
     let artistsLoading = ref(true)
+    let pagination = ref({
+      perPage: 0,
+      hasPages: false,
+      nextPageUrl: '',
+      prevPageUrl: ''
+    })
+    let paginationLoading = ref(false)
 
     const getTags = async () => {
       const {data} = await API.post('music/tags/tree')
@@ -66,7 +83,23 @@ export default {
       const {data} = await API.post('music/artists/get')
 
       artists.value = data.artists
+      pagination.value = data.pagination
       artistsLoading.value = false
+    }
+
+    const loadMoreArtists = async () => {
+      if (pagination.value.hasPages) {
+        paginationLoading.value = true
+        let obUrl = new URL(pagination.value.nextPageUrl)
+        let cursor = obUrl.searchParams.get("cursor")
+
+        await API.post('music/artists/get', {'cursor': cursor})
+          .then(response => {
+            pagination.value = response.data.pagination
+            artists.value.push(...response.data.artists)
+            paginationLoading.value = false
+          })
+      }
     }
 
     return {
@@ -74,8 +107,11 @@ export default {
       tagsLoading,
       artists,
       artistsLoading,
+      pagination,
+      paginationLoading,
       getTags,
-      getArtists
+      getArtists,
+      loadMoreArtists
     }
   },
   mounted() {
