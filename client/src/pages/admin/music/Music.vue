@@ -40,12 +40,10 @@
               transition-next="slide-up"
             >
               <q-tab-panel name="edit">
-                <div class="text-h6 q-mb-md">Редактирование исполнителей</div>
                 <artists-edit />
               </q-tab-panel>
 
               <q-tab-panel name="upload">
-                <div class="text-h6 q-mb-md">Загрузка исполнителей</div>
                 <artists-upload />
               </q-tab-panel>
             </q-tab-panels>
@@ -55,8 +53,7 @@
       </q-tab-panel>
 
       <q-tab-panel name="tags">
-        <div class="text-h6">Теги</div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        <tags-edit />
       </q-tab-panel>
     </q-tab-panels>
   </q-page>
@@ -65,9 +62,10 @@
 import {ref} from 'vue'
 import ArtistsEdit from 'src/components/admin/music/artists/ArtistsEdit.vue'
 import ArtistsUpload from 'src/components/admin/music/artists/ArtistsUpload.vue'
+import TagsEdit from 'src/components/admin/music/tags/TagsEdit.vue'
 
 export default {
-  components: {ArtistsEdit, ArtistsUpload},
+  components: {ArtistsEdit, ArtistsUpload, TagsEdit},
 
   setup() {
     const mainTabs = ref('artists')

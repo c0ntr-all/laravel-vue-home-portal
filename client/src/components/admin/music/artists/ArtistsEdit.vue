@@ -1,4 +1,5 @@
 <template>
+  <div class="text-h6 q-mb-md">Редактирование исполнителей</div>
   <div class="q-mb-md">
     Всего исполнителей: <b>{{ total }}</b>
   </div>

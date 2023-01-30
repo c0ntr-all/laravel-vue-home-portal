@@ -1,4 +1,5 @@
 <template>
+  <div class="text-h6 q-mb-md">Загрузка исполнителей</div>
   <q-btn @click="uploadArtist" label="Загрузить" color="primary" class="q-mb-lg"/>
   <q-input v-model="fullPath" label="Folder path" class="q-mb-lg" outlined dense />
   <q-tree

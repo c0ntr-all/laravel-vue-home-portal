@@ -20,7 +20,7 @@
     </div>
 
     <div class="q-mb-lg">
-      <artists-filter></artists-filter>
+      <artists-filter />
     </div>
 
     <div class="artists-list row items-start q-gutter-md q-mb-lg">
