@@ -7,37 +7,32 @@
       </template>
     </q-input>
     <q-table
-      title="Treats"
+      title="Основные теги"
+      row-key="id"
       :rows="tags"
       :columns="columns"
-      row-key="name"
+      :flat="true"
+      :rows-per-page-options="[0]"
+      :pagination.sync="{page: 1, rowsPerPage: 0}"
       dense
-    />
-    <q-tree
-      :nodes="tags"
-      node-key="label"
-      :filter="filter"
-      default-expand-all
     >
-      <template v-slot:default-header="prop">
-        <div class="tag row justify-center items-center">
-          <div class="tag__name q-ma-none">
-            {{ prop.node.label }}
-          </div>
-          <div class="tag__actions q-gutter-x-xs">
-            <q-btn @click="addTagDialog = true" size="xs" color="primary" dense>
-              <q-icon name="add" size="15px"></q-icon>
-            </q-btn>
-            <q-btn @click="editTagDialog = true" size="xs" color="secondary" dense>
-              <q-icon name="edit" size="15px"></q-icon>
-            </q-btn>
-            <q-btn @click="deleteTagDialog = true" size="xs" color="red" dense>
-              <q-icon name="delete" size="15px"></q-icon>
-            </q-btn>
-          </div>
-        </div>
+      <template v-slot:header="props">
+        <q-tr :props="props">
+          <q-th auto-width />
+          <q-th
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+          >
+            {{ col.label }}
+          </q-th>
+        </q-tr>
       </template>
-    </q-tree>
+
+      <template v-slot:body="props">
+        <recursive-table-row :props="props" />
+      </template>
+    </q-table>
     <q-dialog v-model="addTagDialog">
       <q-card>
         <q-card-section class="row items-center q-pb-none">
@@ -57,8 +52,10 @@
  import { ref, onMounted } from 'vue'
  import { useQuasar } from "quasar"
  import API from "src/utils/api"
+ import RecursiveTableRow from 'src/components/extra/RecursiveTableRow.vue'
 
  export default {
+   components: { RecursiveTableRow },
    setup() {
      const $q = useQuasar()
 
