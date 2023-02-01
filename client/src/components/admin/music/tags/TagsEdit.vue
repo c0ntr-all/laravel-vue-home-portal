@@ -6,7 +6,13 @@
         <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
       </template>
     </q-input>
-
+    <q-table
+      title="Treats"
+      :rows="tags"
+      :columns="columns"
+      row-key="name"
+      dense
+    />
     <q-tree
       :nodes="tags"
       node-key="label"
@@ -57,6 +63,29 @@
      const $q = useQuasar()
 
      const tags = ref([])
+     const columns = ref([{
+       name: "id",
+       required: true,
+       label: 'ID',
+       align: 'left',
+       field: row => row.id,
+       sortable: true,
+       style: 'width: 40px'
+     }, {
+       name: "name",
+       required: true,
+       label: 'Имя',
+       align: 'left',
+       field: row => row.label,
+       sortable: true
+     }, {
+       name: "createdAt",
+       required: true,
+       label: 'Дата добавления',
+       align: 'left',
+       field: row => row.createdAt,
+       sortable: true
+     }])
      const filter = ref('')
      const addTagDialog = ref(false)
      const editTagDialog = ref(false)
@@ -106,6 +135,7 @@
      })
      return {
        tags,
+       columns,
        filter,
        addTagDialog,
        editTagDialog,
