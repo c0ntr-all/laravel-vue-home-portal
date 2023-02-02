@@ -6,6 +6,13 @@
         <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
       </template>
     </q-input>
+
+    <app-table
+      :rows="tags"
+      :columns="columns"
+      row-key="id"
+    />
+
     <q-table
       title="Основные теги"
       row-key="id"
@@ -29,9 +36,9 @@
         </q-tr>
       </template>
 
-      <template v-slot:body="props">
-        <recursive-table-row :props="props" />
-      </template>
+<!--      <template v-slot:body="props">-->
+<!--        <recursive-table-row :props="props" />-->
+<!--      </template>-->
     </q-table>
     <q-dialog v-model="addTagDialog">
       <q-card>
@@ -52,10 +59,11 @@
  import { ref, onMounted } from 'vue'
  import { useQuasar } from "quasar"
  import API from "src/utils/api"
+ import AppTable from "components/extra/table/AppTable.vue"
  import RecursiveTableRow from 'src/components/extra/RecursiveTableRow.vue'
 
  export default {
-   components: { RecursiveTableRow },
+   components: { AppTable, RecursiveTableRow },
    setup() {
      const $q = useQuasar()
 
