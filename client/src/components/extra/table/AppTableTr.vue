@@ -1,25 +1,19 @@
 <template>
-  <tr>
-    <app-table-td v-for="cell in cells" :cell="cell" />
-  </tr>
+  <tr v-if="heading"><app-table-td v-for="cell in row" :cell="cell" /></tr>
+  <tr v-else><app-table-td v-for="cell in row" :cell="cell" /></tr>
 </template>
 <script>
-  import { computed,  } from "vue"
   import AppTableTd from 'components/extra/table/AppTableTd.vue'
 
   export default {
     props: {
+      heading: Boolean,
       row: Object,
-      cols: Array
     },
     components: { AppTableTd },
     setup(props) {
       return {
-        cells: computed(() => {
-          return props.cols.map(col => {
-            return col.field(props.row)
-          })
-        })
+
       }
     }
   }

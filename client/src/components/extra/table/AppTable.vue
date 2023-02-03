@@ -1,19 +1,19 @@
 <template>
   <table>
     <thead>
-<!--      <app-table-row v-for="col in columns" :row="col" />-->
+      <app-table-tr v-for="row in preparedHeading" :row="row" heading />
     </thead>
     <tbody>
-      <app-table-row v-for="row in rows" :row="row" :cols="columns" />
+      <app-table-tr v-for="row in preparedRows" :row="row" />
     </tbody>
   </table>
 </template>
 <script>
-import { onMounted } from "vue"
-import AppTableRow from 'components/extra/table/AppTableTr.vue'
+import {computed, onMounted} from "vue"
+import AppTableTr from 'components/extra/table/AppTableTr.vue'
 
 export default {
-  components: { AppTableRow },
+  components: { AppTableTr },
   props: {
     rows: {
       type: Array,
@@ -27,16 +27,20 @@ export default {
     columns: Array
   },
   setup(props) {
-    onMounted(() => {
-      props.rows.forEach(row => {
-        props.columns.forEach(col => {
-          console.log(col.field(row))
+    const preparedHeading = computed(() => {
+      return [props.columns.map(col => col.label)]
+    })
+    const preparedRows = computed(() => {
+      return props.rows.map(row => {
+        return props.columns.map(col => {
+          return col.field(row)
         })
       })
     })
 
     return {
-
+      preparedHeading,
+      preparedRows
     }
   },
 }
