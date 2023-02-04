@@ -1,7 +1,7 @@
 <template>
-  <table>
+  <table class="app-table">
     <thead>
-      <app-table-tr v-for="row in preparedHeading" :row="row" heading />
+      <app-table-tr :row="columns" heading />
     </thead>
     <tbody>
       <app-table-tr v-for="row in preparedRows" :row="row" />
@@ -45,3 +45,11 @@ export default {
   },
 }
 </script>
+<style>
+.app-table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+</style>
