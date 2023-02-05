@@ -1,59 +1,40 @@
 <template>
-  <div class="text-h6">Теги</div>
-  <div class="q-pa-md q-gutter-sm">
+  <div class="q-mb-md">
+    <div class="text-h6 q-mb-xs">Основные теги</div>
     <q-input ref="filterRef" v-model="filter" label="Filter" outlined dense>
       <template v-slot:append>
         <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
       </template>
     </q-input>
-
     <app-table
-      :rows="tags"
+      :rows="commonTags"
       :columns="columns"
       row-key="id"
     />
-
-    <q-table
-      title="Основные теги"
-      row-key="id"
-      :rows="tags"
-      :columns="columns"
-      :flat="true"
-      :rows-per-page-options="[0]"
-      :pagination.sync="{page: 1, rowsPerPage: 0}"
-      dense
-    >
-      <template v-slot:header="props">
-        <q-tr :props="props">
-          <q-th auto-width />
-          <q-th
-            v-for="col in props.cols"
-            :key="col.name"
-            :props="props"
-          >
-            {{ col.label }}
-          </q-th>
-        </q-tr>
-      </template>
-
-<!--      <template v-slot:body="props">-->
-<!--        <recursive-table-row :props="props" />-->
-<!--      </template>-->
-    </q-table>
-    <q-dialog v-model="addTagDialog">
-      <q-card>
-        <q-card-section class="row items-center q-pb-none">
-          <div class="text-h6">Close icon</div>
-          <q-space />
-          <q-btn icon="close" flat round dense v-close-popup />
-        </q-card-section>
-
-        <q-card-section>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
-        </q-card-section>
-      </q-card>
-    </q-dialog>
   </div>
+
+  <div class="q-mb-md">
+    <div class="text-h6 q-mb-xs">Второстепенные теги</div>
+    <app-table
+      :rows="secondaryTags"
+      :columns="columns"
+      row-key="id"
+    />
+  </div>
+
+  <q-dialog v-model="addTagDialog">
+    <q-card>
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-h6">Close icon</div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+
+      <q-card-section>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 <script>
  import { ref, onMounted } from 'vue'
@@ -67,7 +48,8 @@
    setup() {
      const $q = useQuasar()
 
-     const tags = ref([])
+     const commonTags = ref([])
+     const secondaryTags = ref([])
      const columns = ref([{
        name: "id",
        required: true,
@@ -99,7 +81,8 @@
      const getTags = async () => {
        await API.post('music/tags/tree')
          .then(response => {
-            tags.value = response.data.tags.common
+           commonTags.value = response.data.tags.common
+           secondaryTags.value = response.data.tags.secondary
          }).catch(error => {
            return false
          })
@@ -139,7 +122,8 @@
        getTags()
      })
      return {
-       tags,
+       commonTags,
+       secondaryTags,
        columns,
        filter,
        addTagDialog,
