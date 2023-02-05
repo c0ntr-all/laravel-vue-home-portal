@@ -1,6 +1,14 @@
 <template>
-  <tr v-if="heading" class="app-table__tr"><app-table-th v-for="cell in row" :cell="cell" /></tr>
-  <tr v-else class="app-table__tr"><app-table-td v-for="cell in row" :cell="cell" /></tr>
+  <slot name="head">
+    <tr v-if="heading" class="app-table__tr">
+      <app-table-th v-for="cell in row" :cell="cell" />
+    </tr>
+  </slot>
+  <slot name="body">
+    <tr v-if="!heading" class="app-table__tr">
+      <app-table-td v-for="cell in row" :cell="cell" />
+    </tr>
+  </slot>
 </template>
 <script>
   import AppTableTd from 'components/extra/table/AppTableTd.vue'

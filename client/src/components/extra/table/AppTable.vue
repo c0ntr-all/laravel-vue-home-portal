@@ -1,7 +1,7 @@
 <template>
   <table class="app-table">
     <thead>
-      <app-table-tr :row="columns" heading />
+      <app-table-tr :row="preparedHeading" heading />
     </thead>
     <tbody>
       <app-table-tr v-for="row in preparedRows" :row="row" />
@@ -9,7 +9,7 @@
   </table>
 </template>
 <script>
-import {computed, onMounted} from "vue"
+import { computed, ref } from "vue"
 import AppTableTr from 'components/extra/table/AppTableTr.vue'
 
 export default {
@@ -23,17 +23,26 @@ export default {
       type: String,
       default: 'id'
     },
-
-    columns: Array
+    columns: Array,
+    expand: Boolean
   },
   setup(props) {
-    const preparedHeading = computed(() => {
-      return [props.columns.map(col => col.label)]
-    })
-    const preparedRows = computed(() => {
+    const preparedHeading = ref([...props.columns])
+    if (props.expand) {
+      preparedHeading.value.unshift({
+        name: "#",
+        label: '#',
+        field: 'test',
+      })
+    }
+    let preparedRows = computed(() => {
       return props.rows.map(row => {
-        return props.columns.map(col => {
-          return col.field(row)
+        return preparedHeading.value.map(col => {
+          if (typeof col.field === 'function') {
+            return col.field(row)
+          } else {
+            return col.field
+          }
         })
       })
     })

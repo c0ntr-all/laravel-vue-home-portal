@@ -10,6 +10,7 @@
       :rows="commonTags"
       :columns="columns"
       row-key="id"
+      expand
     />
   </div>
 
@@ -41,10 +42,9 @@
  import { useQuasar } from "quasar"
  import API from "src/utils/api"
  import AppTable from "components/extra/table/AppTable.vue"
- import RecursiveTableRow from 'src/components/extra/RecursiveTableRow.vue'
 
  export default {
-   components: { AppTable, RecursiveTableRow },
+   components: { AppTable },
    setup() {
      const $q = useQuasar()
 
