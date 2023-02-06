@@ -1,5 +1,7 @@
 <template>
-  <td class="app-table__td">{{ cell }}</td>
+  <td class="app-table__td">
+    <slot name="cell">{{ cell }}</slot>
+  </td>
 </template>
 <script>
 export default {

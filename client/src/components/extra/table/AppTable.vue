@@ -1,10 +1,10 @@
 <template>
   <table class="app-table">
     <thead>
-      <app-table-tr :row="preparedHeading" heading />
+      <app-table-tr :row="columns" :expand="expand" heading />
     </thead>
     <tbody>
-      <app-table-tr v-for="row in preparedRows" :row="row" />
+      <app-table-tr v-for="row in preparedRows" :expand="expand" :row="row" />
     </tbody>
   </table>
 </template>
@@ -27,17 +27,9 @@ export default {
     expand: Boolean
   },
   setup(props) {
-    const preparedHeading = ref([...props.columns])
-    if (props.expand) {
-      preparedHeading.value.unshift({
-        name: "#",
-        label: '#',
-        field: 'test',
-      })
-    }
     let preparedRows = computed(() => {
       return props.rows.map(row => {
-        return preparedHeading.value.map(col => {
+        return props.columns.map(col => {
           if (typeof col.field === 'function') {
             return col.field(row)
           } else {
@@ -48,7 +40,6 @@ export default {
     })
 
     return {
-      preparedHeading,
       preparedRows
     }
   },
