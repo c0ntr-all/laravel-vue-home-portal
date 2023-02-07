@@ -1,6 +1,6 @@
 <template>
   <th class="app-table__th text-left">
-    <slot name="cell">{{ cell.label }}</slot>
+    <slot>{{ cell.label }}</slot>
   </th>
 </template>
 <script>

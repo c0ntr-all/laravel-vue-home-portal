@@ -1,10 +1,10 @@
 <template>
   <table class="app-table">
     <thead>
-      <app-table-tr :row="columns" :expand="expand" heading />
+      <app-table-tr :columns="columns" :expand="expand" heading />
     </thead>
     <tbody>
-      <app-table-tr v-for="row in preparedRows" :expand="expand" :row="row" />
+      <app-table-tr v-for="row in rows" :row="row" :columns="columns" :expand="expand" />
     </tbody>
   </table>
 </template>
@@ -27,20 +27,7 @@ export default {
     expand: Boolean
   },
   setup(props) {
-    let preparedRows = computed(() => {
-      return props.rows.map(row => {
-        return props.columns.map(col => {
-          if (typeof col.field === 'function') {
-            return col.field(row)
-          } else {
-            return col.field
-          }
-        })
-      })
-    })
-
     return {
-      preparedRows
     }
   },
 }
