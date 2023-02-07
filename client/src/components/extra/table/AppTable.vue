@@ -9,7 +9,6 @@
   </table>
 </template>
 <script>
-import { computed, ref } from "vue"
 import AppTableTr from 'components/extra/table/AppTableTr.vue'
 
 export default {
