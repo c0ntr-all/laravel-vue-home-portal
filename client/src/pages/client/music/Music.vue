@@ -19,12 +19,31 @@
       </div>
     </div>
 
-    <div class="q-mb-lg">
+    <div class="flex justify-between items-end q-mb-lg">
       <artists-filter />
+      <q-btn
+        @click="toggleCardMode"
+        color="primary"
+        :icon="cardMode === 'card' ? 'toc' : 'view_cozy'"
+        size="lg"
+        flat
+        round
+      />
     </div>
 
-    <div class="artists-list row items-start q-gutter-md q-mb-lg">
+    <div v-if="cardMode === 'card'" class="artists-list row items-start q-gutter-md q-mb-lg">
       <artist-card
+        v-for="artist in artists"
+        :key="artist.id"
+        :artist="artist"
+      />
+      <q-inner-loading :showing="artistsLoading">
+        <q-spinner-gears size="50px" color="primary" />
+      </q-inner-loading>
+    </div>
+
+    <div v-if="cardMode === 'horizontal'" class="row q-gutter-md q-mb-lg">
+      <artist-card-horizontal
         v-for="artist in artists"
         :key="artist.id"
         :artist="artist"
@@ -48,12 +67,13 @@
 <script>
 import ArtistsFilter from "src/components/client/music/ArtistsFilter.vue"
 import ArtistCard from 'src/components/client/music/ArtistCard.vue'
+import ArtistCardHorizontal from 'src/components/client/music/ArtistCardHorizontal.vue'
 
 import { ref, onMounted } from "vue";
 import API from "src/utils/api";
 
 export default {
-  components: { ArtistsFilter, ArtistCard },
+  components: { ArtistsFilter, ArtistCard, ArtistCardHorizontal },
   setup() {
     const tags = ref([])
     let tagsLoading = ref(true)
@@ -66,6 +86,7 @@ export default {
       prevPageUrl: ''
     })
     let paginationLoading = ref(false)
+    let cardMode = ref('card')
 
     const getTags = async () => {
       const {data} = await API.post('music/tags/tree')
@@ -96,6 +117,14 @@ export default {
       }
     }
 
+    const toggleCardMode = () => {
+      if (cardMode.value === 'card') {
+        cardMode.value = 'horizontal'
+      } else {
+        cardMode.value = 'card'
+      }
+    }
+
     onMounted(() => {
       getTags()
       getArtists()
@@ -108,9 +137,11 @@ export default {
       pagination,
       paginationLoading,
       artistsLoading,
+      cardMode,
       getTags,
       getArtists,
-      loadMoreArtists
+      loadMoreArtists,
+      toggleCardMode
     }
   }
 }
