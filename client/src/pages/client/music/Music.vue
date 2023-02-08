@@ -24,18 +24,11 @@
     </div>
 
     <div class="artists-list row items-start q-gutter-md q-mb-lg">
-      <q-card class="artist-card" v-for="artist in artists" :key="artist.id">
-        <q-img :src="artist.image" :alt="artist.name + ' image'">
-          <div class="absolute-bottom text-h6">
-            <router-link :to="'/music/artists/' + artist.id" class="artist-card__link">{{ artist.name }}</router-link>
-          </div>
-        </q-img>
-        <q-card-section class="q-pa-sm">
-          <q-chip v-for="tag in artist.tagsNames.common" size="sm" color="primary" text-color="white" outline>
-            {{ tag }}
-          </q-chip>
-        </q-card-section>
-      </q-card>
+      <artist-card
+        v-for="artist in artists"
+        :key="artist.id"
+        :artist="artist"
+      />
       <q-inner-loading :showing="artistsLoading">
         <q-spinner-gears size="50px" color="primary" />
       </q-inner-loading>
@@ -53,13 +46,14 @@
   </q-page>
 </template>
 <script>
-import ArtistsFilter from "components/client/music/ArtistsFilter.vue"
+import ArtistsFilter from "src/components/client/music/ArtistsFilter.vue"
+import ArtistCard from 'src/components/client/music/ArtistCard.vue'
 
-import {ref} from "vue";
+import { ref, onMounted } from "vue";
 import API from "src/utils/api";
 
 export default {
-  components: {ArtistsFilter},
+  components: { ArtistsFilter, ArtistCard },
   setup() {
     const tags = ref([])
     let tagsLoading = ref(true)
@@ -102,21 +96,22 @@ export default {
       }
     }
 
+    onMounted(() => {
+      getTags()
+      getArtists()
+    })
+
     return {
       tags,
       tagsLoading,
       artists,
-      artistsLoading,
       pagination,
       paginationLoading,
+      artistsLoading,
       getTags,
       getArtists,
       loadMoreArtists
     }
-  },
-  mounted() {
-    this.getTags()
-    this.getArtists()
   }
 }
 </script>
@@ -124,18 +119,5 @@ export default {
 <style lang="scss" scoped>
   .tags-list {
     position: relative;
-  }
-  .artist-card {
-    width: 100%;
-    max-width: 250px;
-
-    &__link {
-      text-decoration: none;
-      color: #fff;
-
-      &:hover {
-        color: #ccc;
-      }
-    }
   }
 </style>
