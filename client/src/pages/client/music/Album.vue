@@ -108,7 +108,7 @@ import {ref} from 'vue'
 import API from "src/utils/api";
 import AlbumCard from 'components/client/music/AlbumCard.vue'
 import RelatedAlbums from "components/client/music/RelatedAlbums.vue";
-import { useMusicPlayer } from 'src/stores/modules/musicPlayer'
+import { useMusicPlayer } from 'stores/modules/musicPlayer'
 
 export default {
   props: {

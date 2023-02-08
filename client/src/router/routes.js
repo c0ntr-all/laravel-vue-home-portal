@@ -63,7 +63,7 @@ const routes = [{
     menu: true
   }, {
     path: '/music',
-    component: () => import('pages/music/Music.vue'),
+    component: () => import('pages/client/music/Music.vue'),
     name: 'music',
     alias: '/music',
     menu: true,
@@ -73,7 +73,7 @@ const routes = [{
     }
   }, {
     path: '/music/tags/:slug',
-    component: () => import('pages/music/Tag.vue'),
+    component: () => import('pages/client/music/Tag.vue'),
     name: 'tag',
     props: true,
     meta: {
@@ -81,7 +81,7 @@ const routes = [{
     }
   }, {
     path: '/music/artists/:id',
-    component: () => import('pages/music/Artist.vue'),
+    component: () => import('pages/client/music/Artist.vue'),
     name: 'artist',
     props: true,
     meta: {
@@ -89,7 +89,7 @@ const routes = [{
     }
   }, {
     path: '/music/albums/:id',
-    component: () => import('pages/music/Album.vue'),
+    component: () => import('pages/client/music/Album.vue'),
     name: 'album',
     props: true,
     meta: {
