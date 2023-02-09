@@ -1,5 +1,8 @@
 <template>
-  <q-page class="q-pa-lg">
+  <q-page class="q-pa-lg" v-if="loading">
+    <ArtistPageSkeleton />
+  </q-page>
+  <q-page class="q-pa-lg" v-else>
     <div class="q-mb-sm">
       <q-btn type="primary" :to="'/music'">Вернуться назад</q-btn>
     </div>
@@ -18,8 +21,8 @@
         </div>
         <div class="artist-head__tags">
           <div class="tags-list q-gutter-sm">
-            <q-btn v-for="tag in artist.tagsNames?.common" dense>{{ tag }}</q-btn>
-            <q-btn v-for="tag in artist.tagsNames?.secondary" dense>{{ tag }}</q-btn>
+            <q-chip v-for="tag in artist.tagsNames?.common" dense>{{ tag }}</q-chip>
+            <q-chip v-for="tag in artist.tagsNames?.secondary" dense>{{ tag }}</q-chip>
           </div>
         </div>
       </div>
@@ -34,33 +37,36 @@
   </q-page>
 </template>
 <script>
-import {ref} from 'vue'
+import { ref, onMounted } from 'vue'
 import API from "src/utils/api";
+import ArtistPageSkeleton from 'src/components/client/music/skeleton/ArtistPage.vue'
 import AlbumCard from "components/client/music/AlbumCard.vue";
 
 export default {
   props: {
     'id': String
   },
-  components: {
-    AlbumCard
-  },
-  setup() {
+  components: { AlbumCard, ArtistPageSkeleton },
+  setup(props) {
     const artist = ref({})
+    const loading = ref(true)
     const getArtist = async (id) => {
-      const {data} = await API.post('music/artists', {id: id})
-
-      artist.value = data.artists
+      await API.post('music/artists', {id: id}).then(response => {
+        artist.value = response.data.artists
+        loading.value = false
+      })
     }
+
+    onMounted(() => {
+      getArtist(props.id)
+    })
 
     return {
       artist,
+      loading,
       getArtist
     }
   },
-  mounted() {
-    this.getArtist(this.id)
-  }
 }
 </script>
 

@@ -86,7 +86,7 @@ export default {
       prevPageUrl: ''
     })
     let paginationLoading = ref(false)
-    let cardMode = ref('card')
+    let cardMode = ref('horizontal')
 
     const getTags = async () => {
       const {data} = await API.post('music/tags/tree')
