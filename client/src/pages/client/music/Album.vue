@@ -1,5 +1,8 @@
 <template>
-  <q-page class="q-pa-lg">
+  <q-page class="q-pa-lg" v-if="loading">
+    <AlbumPageSkeleton />
+  </q-page>
+  <q-page class="q-pa-lg" v-else>
     <div class="q-mb-sm">
       <q-btn type="primary" @click="this.$router.push('/music/artists/' + album.artist.id)">Вернуться к исполнителю</q-btn>
     </div>
@@ -98,27 +101,30 @@
     <div class="related-albums">
       <div>
         <!-- v-if="loading === false" чтобы компонент дождался загрузки основного альбома -->
-        <related-albums v-if="loadingAlbum === false" :artistId="album.artist.id" :albumId="parseInt(id)" />
+        <related-albums v-if="loading === false" :artistId="album.artist.id" :albumId="parseInt(id)" />
       </div>
     </div>
   </q-page>
 </template>
 <script>
-import {ref} from 'vue'
+import { ref, onMounted } from 'vue'
 import API from "src/utils/api";
-import AlbumCard from 'components/client/music/AlbumCard.vue'
-import RelatedAlbums from "components/client/music/RelatedAlbums.vue";
+
 import { useMusicPlayer } from 'stores/modules/musicPlayer'
+
+import AlbumPageSkeleton from 'src/components/client/music/skeleton/AlbumPage.vue'
+import AlbumCard from 'components/client/music/AlbumCard.vue'
+import RelatedAlbums from "components/client/music/RelatedAlbums.vue"
 
 export default {
   props: {
     'id': String
   },
-  components: {AlbumCard, RelatedAlbums},
-  setup() {
+  components: { AlbumPageSkeleton, AlbumCard, RelatedAlbums },
+  setup(props) {
+    const loading = ref(true)
     const showImage = ref(false)
     const album = ref({})
-    const loadingAlbum = ref(true)
     const columns = ref([{
       name: "number",
       required: true,
@@ -147,11 +153,16 @@ export default {
       const {data} = await API.post('music/albums', {id: id})
 
       album.value = data.data
-      loadingAlbum.value = false
+      loading.value = false
     }
     const musicPlayer = useMusicPlayer()
+
+    onMounted(() => {
+      getAlbum(props.id)
+    })
+
     return {
-      loadingAlbum,
+      loading,
       showImage,
       album,
       columns,
@@ -173,9 +184,6 @@ export default {
       }
     )
   },
-  mounted() {
-    this.getAlbum(this.id)
-  }
 }
 </script>
 
