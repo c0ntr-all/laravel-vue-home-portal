@@ -18,7 +18,7 @@
             </q-dialog>
           </div>
           <div class="album-head__actions">
-            <q-btn icon="playlist_add" dense>
+            <q-btn @click="addToPlaylist" icon="playlist_add" dense>
               <q-tooltip anchor="top middle" self="bottom middle" :offset="[5, 5]">
                 <span style="font-size: .75rem">Add to playlist</span>
               </q-tooltip>
@@ -155,6 +155,11 @@ export default {
       album.value = data.data
       loading.value = false
     }
+
+    const addToPlaylist = () => {
+      musicPlayer.addToPlaylist(album.value.tracks)
+    }
+
     const musicPlayer = useMusicPlayer()
 
     onMounted(() => {
@@ -169,8 +174,10 @@ export default {
       hovered: ref(false),
       musicPlayer,
       getAlbum,
+      addToPlaylist,
       initPlay: track => {
-        if (!musicPlayer.playlist.length) {
+        // Replacing playlist for new track
+        if (!musicPlayer.playlist.includes(track)) {
           musicPlayer.setPlaylist(album.value.tracks)
         }
         musicPlayer.playTrack(track)
