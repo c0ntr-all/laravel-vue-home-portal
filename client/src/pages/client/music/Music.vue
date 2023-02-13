@@ -1,67 +1,97 @@
 <template>
   <q-page class="q-pa-lg">
-    <div class="tags q-mb-lg">
-      <div class="text-h5 q-mb-sm">Genres</div>
-      <div class="tags-list q-gutter-sm">
-        <q-btn
-          v-for="tag in tags.common"
-          :key="tag.id"
-          :label="tag.label"
-          :to="'/music/tags/' + tag.slug"
-          color="primary"
-          size="sm"
-          rounded
-          unelevated
-        />
-        <q-inner-loading :showing="tagsLoading">
-          <q-spinner-gears size="50px" color="primary" />
-        </q-inner-loading>
-      </div>
-    </div>
+    <q-tabs
+      v-model="tab"
+      align="left"
+      class="q-mb-md"
+      no-caps
+      outside-arrows
+      mobile-arrows
+    >
+      <q-tab name="artists" label="Artists" />
+      <q-tab name="playlists" label="Playlists" />
+      <q-tab name="genres" label="Genres" />
+    </q-tabs>
+    <q-tab-panels
+      v-model="tab"
+      animated
+      swipeable
+      vertical
+      transition-prev="jump-up"
+      transition-next="jump-up"
+    >
+      <q-tab-panel name="artists" class="q-pa-none">
+        <div class="text-h4 q-mb-md">Artists</div>
+        <div class="flex justify-between items-end q-mb-lg">
+          <artists-filter />
+          <q-btn
+            @click="toggleCardMode"
+            color="primary"
+            :icon="cardMode === 'card' ? 'toc' : 'view_cozy'"
+            size="lg"
+            flat
+            round
+          />
+        </div>
 
-    <div class="flex justify-between items-end q-mb-lg">
-      <artists-filter />
-      <q-btn
-        @click="toggleCardMode"
-        color="primary"
-        :icon="cardMode === 'card' ? 'toc' : 'view_cozy'"
-        size="lg"
-        flat
-        round
-      />
-    </div>
+        <div v-if="cardMode === 'card'" class="artists-list row items-start q-gutter-md q-mb-lg">
+          <artist-card
+            v-for="artist in artists"
+            :key="artist.id"
+            :artist="artist"
+          />
+          <q-inner-loading :showing="artistsLoading">
+            <q-spinner-gears size="50px" color="primary" />
+          </q-inner-loading>
+        </div>
 
-    <div v-if="cardMode === 'card'" class="artists-list row items-start q-gutter-md q-mb-lg">
-      <artist-card
-        v-for="artist in artists"
-        :key="artist.id"
-        :artist="artist"
-      />
-      <q-inner-loading :showing="artistsLoading">
-        <q-spinner-gears size="50px" color="primary" />
-      </q-inner-loading>
-    </div>
+        <div v-if="cardMode === 'horizontal'" class="row q-gutter-md q-mb-lg">
+          <artist-card-horizontal
+            v-for="artist in artists"
+            :key="artist.id"
+            :artist="artist"
+          />
+          <q-inner-loading :showing="artistsLoading">
+            <q-spinner-gears size="50px" color="primary" />
+          </q-inner-loading>
+        </div>
+        <div class="show-more-button flex justify-center">
+          <q-btn
+            v-if="pagination.hasPages"
+            color="primary"
+            label="Show more"
+            @click="loadMoreArtists"
+            :loading="paginationLoading"
+          >
+          </q-btn>
+        </div>
+      </q-tab-panel>
 
-    <div v-if="cardMode === 'horizontal'" class="row q-gutter-md q-mb-lg">
-      <artist-card-horizontal
-        v-for="artist in artists"
-        :key="artist.id"
-        :artist="artist"
-      />
-      <q-inner-loading :showing="artistsLoading">
-        <q-spinner-gears size="50px" color="primary" />
-      </q-inner-loading>
-    </div>
-    <div class="show-more-button flex justify-center">
-      <q-btn
-        v-if="pagination.hasPages"
-        color="primary"
-        label="Show more"
-        @click="loadMoreArtists"
-        :loading="paginationLoading"
-      >
-      </q-btn>
-    </div>
+      <q-tab-panel name="playlists" class="q-pa-none">
+        <div class="text-h4 q-mb-md">Playlists</div>
+      </q-tab-panel>
+
+      <q-tab-panel name="genres" class="q-pa-none">
+        <div class="text-h4 q-mb-md">Genres</div>
+        <div class="tags q-mb-lg">
+          <div class="tags-list q-gutter-sm">
+            <q-btn
+              v-for="tag in tags.common"
+              :key="tag.id"
+              :label="tag.label"
+              :to="'/music/tags/' + tag.slug"
+              color="primary"
+              size="sm"
+              rounded
+              unelevated
+            />
+            <q-inner-loading :showing="tagsLoading">
+              <q-spinner-gears size="50px" color="primary" />
+            </q-inner-loading>
+          </div>
+        </div>
+      </q-tab-panel>
+    </q-tab-panels>
   </q-page>
 </template>
 <script>
@@ -131,6 +161,7 @@ export default {
     })
 
     return {
+      tab: ref('artists'),
       tags,
       tagsLoading,
       artists,
