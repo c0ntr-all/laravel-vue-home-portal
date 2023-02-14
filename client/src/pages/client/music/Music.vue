@@ -8,6 +8,7 @@
       outside-arrows
       mobile-arrows
     >
+      <q-tab name="tracks" label="Tracks" />
       <q-tab name="artists" label="Artists" />
       <q-tab name="playlists" label="Playlists" />
       <q-tab name="genres" label="Genres" />
@@ -20,6 +21,9 @@
       transition-prev="jump-up"
       transition-next="jump-up"
     >
+      <q-tab-panel name="tracks" class="q-pa-none">
+        <div class="text-h4 q-mb-md">Tracks</div>
+      </q-tab-panel>
       <q-tab-panel name="artists" class="q-pa-none">
         <div class="text-h4 q-mb-md">Artists</div>
         <div class="flex justify-between items-end q-mb-lg">

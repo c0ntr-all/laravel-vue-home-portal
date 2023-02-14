@@ -87,6 +87,22 @@
                       />
                       <div class="table-track__number">{{ col.value }}</div>
                     </template>
+                    <template v-else-if="col.name === 'favorite'">
+                      <div class="table-track__rate q-gutter-y-md column">
+                        <q-rating
+                          v-model="col.rate"
+                          :max="4"
+                          size="1.5em"
+                          color="primary"
+                          :icon="[
+                            'sentiment_very_dissatisfied',
+                            'sentiment_dissatisfied',
+                            'sentiment_satisfied',
+                            'sentiment_very_satisfied'
+                          ]"
+                        />
+                      </div>
+                    </template>
                     <template v-else>
                       {{ col.value }}
                     </template>
@@ -133,6 +149,14 @@ export default {
       field: row => row.number,
       sortable: true,
       style: 'width: 70px'
+    },{
+      name: "favorite",
+      required: true,
+      label: '',
+      align: 'center',
+      field: row => row.favorite,
+      sortable: true,
+      style: 'width: 120px'
     },{
       name: "name",
       required: true,
