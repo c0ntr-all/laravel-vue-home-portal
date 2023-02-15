@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRatingsTable extends Migration
+class CreateMusicRateTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,23 @@ class CreateRatingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ratings', function (Blueprint $table) {
+        Schema::create('music_rate', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('ratingable_id');
-            $table->string('ratingable_type');
-            $table->unsignedInteger('rating');
+            $table->unsignedBigInteger('track_id');
+            $table->enum('rate', [1,2,3,4])->default(3);
             $table->timestamps();
 
             $table->foreign('user_id')
                   ->references('id')
                   ->on('users')
-                  ->onDelete('cascade');
+                  ->cascadeOnDelete();
+
+            $table->foreign('track_id')
+                  ->references('id')
+                  ->on('music_tracks')
+                  ->cascadeOnDelete()
+                  ->cascadeOnUpdate();
         });
     }
 
@@ -35,6 +40,6 @@ class CreateRatingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ratings');
+        Schema::dropIfExists('music_rate');
     }
 }
