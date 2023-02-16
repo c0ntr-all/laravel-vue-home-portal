@@ -54,60 +54,7 @@
               :pagination.sync="{page: 1, rowsPerPage: 0}"
             >
               <template v-slot:body="props">
-                <q-tr
-                  class="table-track"
-                  :class="{'table-track--active': props.row.id === musicPlayer.track.id}"
-                  :props="props"
-                  @click="initPlay(props.row)"
-                  @mouseover="hovered = true"
-                  @mouseout="hovered = false"
-                >
-                  <q-td
-                    v-for="col in props.cols"
-                    :key="col.name"
-                    :props="props"
-                  >
-                    <template v-if="col.name === 'number'">
-                      {{ col.id }}
-                      <q-btn
-                        class="table-track__play-icon"
-                        icon="play_arrow"
-                        flat
-                        round
-                        dense
-                        v-if="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== props.row.id)"
-                      />
-                      <q-btn
-                        class="table-track__play-icon"
-                        icon="pause"
-                        flat
-                        round
-                        dense
-                        v-else
-                      />
-                      <div class="table-track__number">{{ col.value }}</div>
-                    </template>
-                    <template v-else-if="col.name === 'favorite'">
-                      <div class="table-track__rate q-gutter-y-md column">
-                        <q-rating
-                          v-model="col.rate"
-                          :max="4"
-                          size="1.5em"
-                          color="primary"
-                          :icon="[
-                            'sentiment_very_dissatisfied',
-                            'sentiment_dissatisfied',
-                            'sentiment_satisfied',
-                            'sentiment_very_satisfied'
-                          ]"
-                        />
-                      </div>
-                    </template>
-                    <template v-else>
-                      {{ col.value }}
-                    </template>
-                  </q-td>
-                </q-tr>
+                <track-card-row :props="props" @play="initPlay" />
               </template>
             </q-table>
           </div>
@@ -131,12 +78,13 @@ import { useMusicPlayer } from 'stores/modules/musicPlayer'
 import AlbumPageSkeleton from 'src/components/client/music/skeleton/AlbumPage.vue'
 import AlbumCard from 'components/client/music/AlbumCard.vue'
 import RelatedAlbums from "components/client/music/RelatedAlbums.vue"
+import TrackCardRow from 'src/components/client/music/TrackCardRow.vue'
 
 export default {
   props: {
     'id': String
   },
-  components: { AlbumPageSkeleton, AlbumCard, RelatedAlbums },
+  components: { AlbumPageSkeleton, AlbumCard, RelatedAlbums, TrackCardRow },
   setup(props) {
     const loading = ref(true)
     const showImage = ref(false)
@@ -195,12 +143,11 @@ export default {
       showImage,
       album,
       columns,
-      hovered: ref(false),
       musicPlayer,
       getAlbum,
       addToPlaylist,
       initPlay: track => {
-        // Replacing playlist for new track
+        // Replacing playlist with new track
         if (!musicPlayer.playlist.includes(track)) {
           musicPlayer.setPlaylist(album.value.tracks)
         }
@@ -281,37 +228,7 @@ export default {
     max-width: 760px;
   }
 }
-.table-track {
-  &:hover {
-    cursor: pointer;
 
-    .table-track__play-icon {
-      display: flex;
-    }
-    .table-track__number {
-      display: none;
-    }
-  }
-  &--active {
-    background-color: rgba(0, 0, 0, 0.03);
-    .table-track__play-icon {
-      display: flex;
-    }
-    .table-track__number {
-      display: none;
-    }
-  }
-  &__play-icon {
-    display: none;
-  }
-  &__number {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 2.4em;
-    min-width: 2.4em;
-  }
-}
 .album-artist {
 
 }
