@@ -98,11 +98,11 @@ export default {
       sortable: true,
       style: 'width: 70px'
     },{
-      name: "favorite",
+      name: "rate",
       required: true,
       label: '',
       align: 'center',
-      field: row => row.favorite,
+      field: row => row.rate,
       sortable: true,
       style: 'width: 120px'
     },{

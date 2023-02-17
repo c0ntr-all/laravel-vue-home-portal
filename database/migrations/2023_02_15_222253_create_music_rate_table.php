@@ -17,7 +17,7 @@ class CreateMusicRateTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('track_id');
-            $table->enum('rate', [1,2,3,4])->default(3);
+            $table->tinyInteger('rate')->default(3);
             $table->timestamps();
 
             $table->foreign('user_id')

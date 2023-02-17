@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Music;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Rating extends Model
+class Rate extends Model
 {
-    public const DEFAULT_RATING = 3;
-    public const MIN_RATING = 1;
-    public const MAX_RATING = 5;
+    protected $table = 'music_rate';
+
+    public const DEFAULT_RATE = 3;
+    public const MIN_RATE = 1;
+    public const MAX_RATE = 4;
 
     protected $fillable = [
         'rating',
@@ -17,9 +19,4 @@ class Rating extends Model
         'ratingable_id',
         'ratingable_type',
     ];
-
-    public function ratingable()
-    {
-        return $this->morphTo();
-    }
 }

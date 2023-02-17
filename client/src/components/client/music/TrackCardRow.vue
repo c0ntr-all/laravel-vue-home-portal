@@ -27,10 +27,10 @@
         />
         <div class="table-track__number">{{ col.value }}</div>
       </template>
-      <template v-else-if="col.name === 'favorite'">
+      <template v-else-if="col.name === 'rate'">
         <div class="table-track__rate q-gutter-y-md column">
           <q-rating
-            v-model="col.rate"
+            v-model="rate"
             :max="4"
             size="1.5em"
             color="primary"
@@ -61,6 +61,7 @@ export default {
     const musicPlayer = useMusicPlayer()
     return {
       hovered: ref(false),
+      rate: ref(props.props.row.rate),
       musicPlayer,
       play: () => {
         emit('play', props.props.row)
