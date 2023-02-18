@@ -10,13 +10,12 @@ class Rate extends Model
     protected $table = 'music_rate';
 
     public const DEFAULT_RATE = 3;
-    public const MIN_RATE = 1;
+    public const MIN_RATE = 0;
     public const MAX_RATE = 4;
 
     protected $fillable = [
-        'rating',
+        'rate',
         'user_id',
-        'ratingable_id',
-        'ratingable_type',
+        'track_id',
     ];
 }

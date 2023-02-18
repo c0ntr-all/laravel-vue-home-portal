@@ -31,6 +31,7 @@
         <div class="table-track__rate q-gutter-y-md column">
           <q-rating
             v-model="rate"
+            @update:model-value="handleRate"
             :max="4"
             size="1.5em"
             color="primary"
@@ -50,21 +51,40 @@
   </q-tr>
 </template>
 <script>
-import { ref, defineEmits } from 'vue'
+import { ref, watch } from 'vue'
+import { useQuasar } from "quasar";
 
 import { useMusicPlayer } from 'stores/modules/musicPlayer'
+import API from "src/utils/api";
 
 export default {
   props: ['props'],
   emits: ['play'],
   setup(props, { emit }) {
     const musicPlayer = useMusicPlayer()
+    const $q = useQuasar()
+
+    const rate = ref(props.props.row.rate)
+
     return {
       hovered: ref(false),
-      rate: ref(props.props.row.rate),
+      rate,
       musicPlayer,
       play: () => {
         emit('play', props.props.row)
+      },
+      handleRate: async (value) => {
+        const previousRate = props.props.row.rate
+
+        await API.post(`music/tracks/${props.props.row.id}/rate`, {
+          rate: value
+        }).catch(error => {
+          $q.notify({
+            type: 'negative',
+            message: `Server Error: ${error.response.data.message}`
+          })
+          rate.value = previousRate
+        })
       }
     }
   }

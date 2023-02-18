@@ -92,6 +92,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::post('albums', [AlbumController::class, 'index']);
             Route::prefix('tracks')->group(function() {
                 Route::post('{track}/play', [TrackController::class, 'play']);
+                Route::post('{track}/rate', [TrackController::class, 'rate']);
             });
             Route::prefix('tags')->group(function() {
                 Route::post('/', [TagController::class, 'index']);
@@ -100,10 +101,6 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 Route::post('select', [TagController::class, 'tagsSelect']);
                 Route::post('tree', [TagController::class, 'tagsTree']);
             });
-        });
-
-        Route::prefix('rates')->group(function() {
-            Route::post('store', [RatingController::class, 'store']);
         });
 
         Route::prefix('folders')->group(function() {

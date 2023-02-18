@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Resources\Music\Artists\ArtistCollection;
+use App\Models\Music\Album;
 use App\Models\Music\Artist;
 use App\Models\Music\Tag;
 use Illuminate\Support\Facades\Route;
@@ -53,17 +54,3 @@ Route::get('/test3', function() {
 
     dd($value);
 })->name('test3');
-
-Route::get('/test4', function() {
-
-    $tags = Tag::find(12)->childrenCategories->toArray();
-    dd($tags);
-
-})->name('test5');
-
-Route::get('/test5', function() {
-    $path = 'F:\Video\Сериалы\Российские\Молодежка\Molodezhka.(01.seriya).2013.HQWEB-DLRip.Alexey724.avi';
-
-    VideoStreamer::streamFile($path);
-
-})->name('test5');
