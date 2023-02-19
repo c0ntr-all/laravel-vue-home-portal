@@ -4,12 +4,18 @@ namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Music\Track\RateRequest;
+use App\Http\Resources\Music\Tracks\TrackCollection;
 use App\Models\Music\Track;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use App\Http\Requests\Music\Track\PlayRequest;
 
 class TrackController extends Controller
 {
+    public function get()
+    {
+        return new TrackCollection(Track::cursorPaginate(50));
+    }
+
     public function play(PlayRequest $request, Track $track): BinaryFileResponse
     {
         return new BinaryFileResponse($track->path_windows);
