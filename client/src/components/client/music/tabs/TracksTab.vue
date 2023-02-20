@@ -1,7 +1,6 @@
 <template>
   <div class="text-h4 q-mb-md">Tracks</div>
   <q-table
-    title="Треки"
     :rows="tracks"
     :columns="columns"
     row-key="name"
@@ -48,6 +47,13 @@ export default {
       label: 'Имя',
       align: 'left',
       field: row => row.name,
+      sortable: true
+    },{
+      name: "artist",
+      required: true,
+      label: 'Исполнитель',
+      align: 'left',
+      field: row => row.artist,
       sortable: true
     },{
       name: "duration",
