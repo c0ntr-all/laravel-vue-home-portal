@@ -22,7 +22,7 @@
       transition-next="jump-up"
     >
       <q-tab-panel name="tracks" class="q-pa-none">
-        <div class="text-h4 q-mb-md">Tracks</div>
+        <TracksTab />
       </q-tab-panel>
       <q-tab-panel name="artists" class="q-pa-none">
         <div class="text-h4 q-mb-md">Artists</div>
@@ -102,12 +102,13 @@
 import ArtistsFilter from "src/components/client/music/ArtistsFilter.vue"
 import ArtistCard from 'src/components/client/music/ArtistCard.vue'
 import ArtistCardHorizontal from 'src/components/client/music/ArtistCardHorizontal.vue'
+import TracksTab from 'src/components/client/music/tabs/TracksTab.vue'
 
 import { ref, onMounted } from "vue";
 import API from "src/utils/api";
 
 export default {
-  components: { ArtistsFilter, ArtistCard, ArtistCardHorizontal },
+  components: { ArtistsFilter, ArtistCard, ArtistCardHorizontal, TracksTab },
   setup() {
     const tags = ref([])
     let tagsLoading = ref(true)
