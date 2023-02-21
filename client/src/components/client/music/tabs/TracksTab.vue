@@ -7,6 +7,7 @@
     :flat="true"
     :rows-per-page-options="[0]"
     :pagination.sync="{page: 1, rowsPerPage: 0}"
+    class="tracks"
   >
     <template v-slot:body="props">
       <track-card-row :props="props" @play="initPlay" />
@@ -129,5 +130,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+.tracks {
+  max-width: 960px;
+}
 </style>
