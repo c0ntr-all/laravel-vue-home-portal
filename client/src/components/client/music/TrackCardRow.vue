@@ -64,28 +64,33 @@ export default {
     const musicPlayer = useMusicPlayer()
     const $q = useQuasar()
 
+    const hovered = ref(false);
     const rate = ref(props.props.row.rate)
 
+    const play = () => {
+      emit('play', props.props.row)
+    }
+
+    const handleRate = async (value) => {
+      const previousRate = props.props.row.rate
+
+      await API.post(`music/tracks/${props.props.row.id}/rate`, {
+        rate: value
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+        rate.value = previousRate
+      })
+    }
+
     return {
-      hovered: ref(false),
+      hovered,
       rate,
       musicPlayer,
-      play: () => {
-        emit('play', props.props.row)
-      },
-      handleRate: async (value) => {
-        const previousRate = props.props.row.rate
-
-        await API.post(`music/tracks/${props.props.row.id}/rate`, {
-          rate: value
-        }).catch(error => {
-          $q.notify({
-            type: 'negative',
-            message: `Server Error: ${error.response.data.message}`
-          })
-          rate.value = previousRate
-        })
-      }
+      play,
+      handleRate
     }
   }
 }

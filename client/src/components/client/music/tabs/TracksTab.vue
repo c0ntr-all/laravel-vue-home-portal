@@ -80,7 +80,7 @@ export default {
     const getTracks = async () => {
       await API.post('music/tracks/get').then(response => {
           tracks.value = response.data.tracks
-          pagination.value = data.pagination
+          pagination.value = response.data.pagination
 
           loading.value = false
       }).catch(error => {
@@ -120,7 +120,7 @@ export default {
         // todo: Transfer all this constructions to one repository
         // Replacing playlist with new track
         if (!musicPlayer.playlist.includes(track)) {
-          musicPlayer.setPlaylist(tracks)
+          musicPlayer.setPlaylist(tracks.value)
         }
         musicPlayer.playTrack(track)
       }
