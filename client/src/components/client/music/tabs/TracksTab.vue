@@ -15,13 +15,13 @@
   </q-table>
 </template>
 <script>
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import { useQuasar } from "quasar";
 
 import { useMusicPlayer } from "stores/modules/musicPlayer";
 import API from "src/utils/api";
 
-import TrackCardRow from 'src/components/client/music/TrackCardRow.vue'
+import TrackCardRow from "src/components/client/music/TrackCardRow.vue"
 
 export default {
   components: { TrackCardRow },

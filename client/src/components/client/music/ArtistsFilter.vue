@@ -4,7 +4,7 @@
     <div class="music-filter__params q-mb-md">
       <q-btn-toggle
         v-model="type"
-        @change="checkRules"
+        @click="checkRules"
         class="tags-toggle"
         no-caps
         rounded
@@ -54,11 +54,13 @@
   </div>
 </template>
 <script>
-import {ref} from "vue";
-import API from "src/utils/api";
+import { ref } from "vue"
+
+import API from "src/utils/api"
 
 export default {
-  setup() {
+  emits: ['submitFilter'],
+  setup(props, {emit}) {
     const type = ref('strict')
     const union = ref(true)
     const commonTags = ref([])
@@ -68,23 +70,24 @@ export default {
     const filterLoading = ref(true)
 
     const checkRules = async () => {
-      this.union = this.type === 'strict'
+      union.value = type.value === 'strict'
     }
 
     const getTagsSelect = async () => {
-      const {data} = await API.post('music/tags/select')
-      commonTags.value = Object.keys(data.tags.common).map(key => data.tags.common[key])
-      secondaryTags.value = Object.keys(data.tags.secondary).map(key => data.tags.secondary[key])
+      await API.post('music/tags/select').then(response => {
+        commonTags.value = Object.keys(response.data.tags.common).map(key => response.data.tags.common[key])
+        secondaryTags.value = Object.keys(response.data.tags.secondary).map(key => response.data.tags.secondary[key])
 
-      filterLoading.value = false
+        filterLoading.value = false
+      })
     }
 
     const submitFilter = () => {
-      getArtists({
+      emit('submitFilter', {
         filters: {
-          tags: this.model.secondary ? this.model.common.concat(this.model.secondary) : this.model.common,
-          type: this.type,
-          union: this.union
+          tags: secondaryModel.value ? commonModel.value.concat(secondaryModel.value) : commonModel.value,
+          type: type.value,
+          union: union.value
         }
       })
     }
