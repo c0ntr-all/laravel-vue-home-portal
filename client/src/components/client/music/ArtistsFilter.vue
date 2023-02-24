@@ -48,7 +48,7 @@
       <q-btn color="primary" label="Filter" @click="submitFilter" />
     </div>
 
-    <q-inner-loading :showing="filterLoading">
+    <q-inner-loading :showing="loading">
       <q-spinner-gears size="50px" color="primary" />
     </q-inner-loading>
   </div>
@@ -67,7 +67,7 @@ export default {
     const secondaryTags = ref([])
     const commonModel = ref()
     const secondaryModel = ref()
-    const filterLoading = ref(true)
+    const loading = ref(true)
 
     const checkRules = async () => {
       union.value = type.value === 'strict'
@@ -78,7 +78,7 @@ export default {
         commonTags.value = Object.keys(response.data.tags.common).map(key => response.data.tags.common[key])
         secondaryTags.value = Object.keys(response.data.tags.secondary).map(key => response.data.tags.secondary[key])
 
-        filterLoading.value = false
+        loading.value = false
       })
     }
 
@@ -99,7 +99,7 @@ export default {
       secondaryTags,
       commonModel,
       secondaryModel,
-      filterLoading,
+      loading,
       checkRules,
       getTagsSelect,
       submitFilter

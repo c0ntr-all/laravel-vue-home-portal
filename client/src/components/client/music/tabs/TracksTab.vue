@@ -1,18 +1,66 @@
 <template>
   <div class="text-h4 q-mb-md">Tracks</div>
-  <q-table
-    :rows="tracks"
-    :columns="columns"
-    row-key="name"
-    :flat="true"
-    :rows-per-page-options="[0]"
-    :pagination.sync="{page: 1, rowsPerPage: 0}"
-    class="tracks"
-  >
-    <template v-slot:body="props">
-      <track-card-row :props="props" @play="initPlay" />
-    </template>
-  </q-table>
+<!--  I've tried to make a skeleton component with name TracksTabSkeleton for it, but it fired and error:
+      Internal server error: Cannot read property 'url' of undefined
+      Interesting, that it works with name like ArtistsTabSkeleton or another.
+      It seems that the word "Tracks" is unacceptable for this component.
+-->
+  <template v-if="loading">
+    <q-markup-table style="max-width: 960px;">
+      <thead>
+        <tr>
+          <th class="text-left">
+            <q-skeleton type="text" width="15px" />
+          </th>
+          <th class="text-right">
+          </th>
+          <th class="text-right">
+            <q-skeleton type="text" width="65px" />
+          </th>
+          <th class="text-right">
+            <q-skeleton type="text" width="65px" />
+          </th>
+          <th class="text-right">
+            <q-skeleton type="text" width="65px" />
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="n in 30" :key="n">
+          <td class="text-left">
+            <q-skeleton type="text" width="15px" />
+          </td>
+          <td class="text-right">
+            <q-skeleton type="text" width="100px" />
+          </td>
+          <td class="text-right">
+            <q-skeleton type="text" width="200px" />
+          </td>
+          <td class="text-left">
+            <q-skeleton type="text" width="200px" />
+          </td>
+          <td class="text-right">
+            <q-skeleton type="text" width="100px" />
+          </td>
+        </tr>
+      </tbody>
+    </q-markup-table>
+  </template>
+  <template v-else>
+    <q-table
+      :rows="tracks"
+      :columns="columns"
+      row-key="name"
+      :flat="true"
+      :rows-per-page-options="[0]"
+      :pagination.sync="{page: 1, rowsPerPage: 0}"
+      class="tracks"
+    >
+      <template v-slot:body="props">
+        <track-card-row :props="props" @play="initPlay" />
+      </template>
+    </q-table>
+  </template>
 </template>
 <script>
 import { onMounted, ref } from "vue";
@@ -115,6 +163,7 @@ export default {
       columns,
       tracks,
       musicPlayer,
+      loading,
       getTracks,
       loadMoreTracks,
       initPlay: track => {

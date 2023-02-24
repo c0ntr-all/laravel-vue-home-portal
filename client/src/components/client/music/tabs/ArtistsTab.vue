@@ -14,37 +14,38 @@
     />
   </div>
 
-  <div v-if="cardMode === 'card'" class="artists-list row items-start q-gutter-md q-mb-lg">
-    <artist-card
-      v-for="artist in artists"
-      :key="artist.id"
-      :artist="artist"
-    />
-    <q-inner-loading :showing="artistsLoading">
-      <q-spinner-gears size="50px" color="primary" />
-    </q-inner-loading>
-  </div>
+  <template v-if="loading">
+    <div class="row q-gutter-md q-mb-lg">
+      <ArtistsCardHorizontalSkeleton v-for="n in 20" :key="n" />
+    </div>
+  </template>
+  <template v-else>
+    <div v-if="cardMode === 'card'" class="artists-list row items-start q-gutter-md q-mb-lg">
+      <artist-card
+        v-for="artist in artists"
+        :key="artist.id"
+        :artist="artist"
+      />
+    </div>
 
-  <div v-if="cardMode === 'horizontal'" class="row q-gutter-md q-mb-lg">
-    <artist-card-horizontal
-      v-for="artist in artists"
-      :key="artist.id"
-      :artist="artist"
-    />
-    <q-inner-loading :showing="artistsLoading">
-      <q-spinner-gears size="50px" color="primary" />
-    </q-inner-loading>
-  </div>
-  <div class="show-more-button flex justify-center">
-    <q-btn
-      v-if="pagination.hasPages"
-      color="primary"
-      label="Show more"
-      @click="loadMoreArtists"
-      :loading="paginationLoading"
-    >
-    </q-btn>
-  </div>
+    <div v-if="cardMode === 'horizontal'" class="row q-gutter-md q-mb-lg">
+      <artist-card-horizontal
+        v-for="artist in artists"
+        :key="artist.id"
+        :artist="artist"
+      />
+    </div>
+    <div class="show-more-button flex justify-center">
+      <q-btn
+        v-if="pagination.hasPages"
+        color="primary"
+        label="Show more"
+        @click="loadMoreArtists"
+        :loading="paginationLoading"
+      >
+      </q-btn>
+    </div>
+  </template>
 </template>
 <script>
 import { onMounted, ref } from "vue"
@@ -53,17 +54,18 @@ import { useQuasar } from "quasar"
 import API from "src/utils/api"
 
 import ArtistsFilter from "src/components/client/music/ArtistsFilter.vue"
-import ArtistCard from 'src/components/client/music/ArtistCard.vue'
-import ArtistCardHorizontal from 'src/components/client/music/ArtistCardHorizontal.vue'
+import ArtistCard from "src/components/client/music/ArtistCard.vue"
+import ArtistCardHorizontal from "src/components/client/music/ArtistCardHorizontal.vue"
+import ArtistsCardHorizontalSkeleton from "components/client/music/skeleton/ArtistsCardHorizontal.vue"
 
 export default {
-  components: { ArtistsFilter, ArtistCard, ArtistCardHorizontal },
+  components: { ArtistsCardHorizontalSkeleton, ArtistsFilter, ArtistCard, ArtistCardHorizontal },
   setup() {
     const $q = useQuasar()
 
     const artists = ref([])
     let cardMode = ref('horizontal')
-    let artistsLoading = ref(true)
+    let loading = ref(true)
     let pagination = ref({
       perPage: 0,
       hasPages: false,
@@ -79,7 +81,7 @@ export default {
       await API.post('music/artists/get', filters).then(response => {
         artists.value = response.data.artists
         pagination.value = response.data.pagination
-        artistsLoading.value = false
+        loading.value = false
       }).catch(error => {
         $q.notify({
           type: 'negative',
@@ -118,7 +120,7 @@ export default {
     return {
       artists,
       cardMode,
-      artistsLoading,
+      loading,
       pagination,
       paginationLoading,
       getArtists,
