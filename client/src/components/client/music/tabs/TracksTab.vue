@@ -5,6 +5,7 @@
       Interesting, that it works with name like ArtistsTabSkeleton or another.
       It seems that the word "Tracks" is unacceptable for this component.
 -->
+  <tracks-filter @submitFilter="getTracks" />
   <template v-if="loading">
     <q-markup-table style="max-width: 960px;">
       <thead>
@@ -69,10 +70,11 @@ import { useQuasar } from "quasar";
 import { useMusicPlayer } from "stores/modules/musicPlayer";
 import API from "src/utils/api";
 
+import TracksFilter from "src/components/client/music/TracksFilter.vue"
 import TrackCardRow from "src/components/client/music/TrackCardRow.vue"
 
 export default {
-  components: { TrackCardRow },
+  components: { TracksFilter, TrackCardRow },
   setup() {
     const columns = ref([{
       name: "number",
@@ -126,8 +128,10 @@ export default {
     const $q = useQuasar()
     const musicPlayer = useMusicPlayer()
 
-    const getTracks = async () => {
-      await API.post('music/tracks/get').then(response => {
+    const getTracks = async filters => {
+      filters = filters || {}
+
+      await API.post('music/tracks/get', filters).then(response => {
           tracks.value = response.data.tracks
           pagination.value = response.data.pagination
 
