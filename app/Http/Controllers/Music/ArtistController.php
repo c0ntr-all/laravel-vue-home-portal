@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Music\Artist\FilterRequest;
 use App\Http\Requests\Music\Artist\IndexRequest;
+use App\Http\Requests\Music\FilterRequest;
 use App\Http\Resources\Music\Artists\ArtistCollection;
 use App\Http\Resources\Music\Artists\ArtistResource;
 use App\Models\Music\Artist;

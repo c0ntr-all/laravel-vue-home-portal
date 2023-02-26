@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Music\FilterRequest;
 use App\Http\Requests\Music\Track\RateRequest;
 use App\Http\Resources\Music\Tracks\TrackCollection;
 use App\Models\Music\Track;
@@ -11,9 +12,11 @@ use App\Http\Requests\Music\Track\PlayRequest;
 
 class TrackController extends Controller
 {
-    public function get()
+    public function get(FilterRequest $request)
     {
-        return new TrackCollection(Track::cursorPaginate(50));
+        $filters = $request->validated()['filters'] ?? [];
+
+        return new TrackCollection(Track::filterWithCursor($filters));
     }
 
     public function play(PlayRequest $request, Track $track): BinaryFileResponse
