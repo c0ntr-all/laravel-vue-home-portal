@@ -57,7 +57,7 @@
       :pagination.sync="{page: 1, rowsPerPage: 0}"
       class="tracks"
     >
-      <template v-slot:body="props">
+      <template v-slot:body="props" :key="props.row.id">
         <track-card-row :props="props" @play="initPlay" />
       </template>
     </q-table>

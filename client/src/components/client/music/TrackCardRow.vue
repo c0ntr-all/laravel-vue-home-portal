@@ -51,7 +51,7 @@
   </q-tr>
 </template>
 <script>
-import { ref, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { useQuasar } from "quasar";
 
 import { useMusicPlayer } from 'stores/modules/musicPlayer'
@@ -65,7 +65,10 @@ export default {
     const $q = useQuasar()
 
     const hovered = ref(false);
-    const rate = ref(props.props.row.rate)
+    let rate = computed({
+      get: () => props.props.row.rate,
+      set: value => props.props.row.rate = value
+    })
 
     const play = () => {
       emit('play', props.props.row)

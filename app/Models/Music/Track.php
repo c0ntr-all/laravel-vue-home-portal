@@ -87,11 +87,11 @@ class Track extends Model
     {
         $query = static::orderBy('created_at', 'DESC');
 
-        if (array_key_exists('tags', $filters)) {
+        if (!empty($filters['tags'])) {
             $query = $query->whereTags($filters);
         }
 
-        if (array_key_exists('rate', $filters)) {
+        if (!empty($filters['rate'])) {
             $query = $query->whereRate($filters);
         }
 
