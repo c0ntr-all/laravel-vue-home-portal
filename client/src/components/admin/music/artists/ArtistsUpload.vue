@@ -1,6 +1,7 @@
 <template>
+  <div class="text-h6 q-mb-md">Загрузка исполнителей</div>
   <q-btn @click="uploadArtist" label="Загрузить" color="primary" class="q-mb-lg"/>
-  <p  class="q-mb-lg">Выбранная папка - "{{ fullPath || 'Не выбрано' }}"</p>
+  <q-input v-model="fullPath" label="Folder path" class="q-mb-lg" outlined dense />
   <q-tree
     :nodes="data"
     default-expand-all
@@ -11,8 +12,8 @@
   />
 </template>
 <script>
-import {ref} from "vue";
-import {useQuasar} from "quasar";
+import { ref } from "vue";
+import { useQuasar } from "quasar";
 import API from "src/utils/api";
 
 export default {
@@ -76,16 +77,14 @@ export default {
           })
           done(nodes)
         })
-
-      fullPath.value = getNodeByKey(selectedNode.value)
     }
 
     const uploadArtist = async () => {
-      await API.post('music/upload', {'folder': path}).then(response => {
+      await API.post('music/upload', {'folder': fullPath.value}).then(response => {
         if(response.data.success) {
           $q.notify({
             type: 'positive',
-            message: `Исполнитель ${data.artist} успешно загружен!`
+            message: `Исполнитель ${response.data.artist} успешно загружен!`
           })
         }else{
           $q.notify({

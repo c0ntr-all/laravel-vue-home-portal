@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Music\Artist;
+namespace App\Http\Requests\Music\Track;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FilterRequest extends FormRequest
+class RateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class FilterRequest extends FormRequest
     public function rules()
     {
         return [
-            'filters' => 'sometimes|array'
+            'rate' => 'required|integer|min:0|max:4'
         ];
     }
 }

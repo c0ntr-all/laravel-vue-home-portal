@@ -96,6 +96,7 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         }
 
         this.setTrack(this.playlist[this.idx - 1])
+        this.run()
       }
     },
     nextTrack() {
@@ -106,6 +107,7 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         }
 
         this.setTrack(this.playlist[this.idx + 1])
+        this.run()
       }
     },
     shuffle() {

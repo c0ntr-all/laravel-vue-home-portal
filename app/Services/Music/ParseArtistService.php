@@ -6,6 +6,7 @@ use App\Models\Music\Artist;
 use App\Models\Music\Album;
 use App\Models\Music\Track;
 use App\Helpers\ImageUpload;
+use getID3;
 use Illuminate\Http\File;
 
 class ParseArtistService
@@ -15,6 +16,11 @@ class ParseArtistService
     private const EXTENSIONS = ['mp3'];
 
     private const TYPES = ['lp', 'ep', 'single', 'demo', 'split', 'tribute', 'bootleg', 'live', 'instrumental', 'remaster'];
+
+    public function __construct(private getID3 $getID3)
+    {
+
+    }
 
     /**
      * Проверяет являются ли переданные каталоги музыкальными альбомами формата 2019 - AlbumName
@@ -212,14 +218,16 @@ class ParseArtistService
                 ]);
 
                 foreach ($album['tracks'] as $track) {
+                    $id3TrackInfo = $this->getID3->analyze($track['path']);
+
                     $albumModel->tracks()->updateOrCreate([
                         'name' => $track['name']
                     ], [
                         'user_id' => auth()->user()->id,
                         'number' => $track['number'],
                         'path_windows' => $track['path'],
-                        'duration' => '00:03:00',
-                        'bitrate' => 0
+                        'duration' => $id3TrackInfo['playtime_string'],
+                        'bitrate' => $id3TrackInfo['audio']['bitrate']
                     ]);
                 }
             }

@@ -1,5 +1,8 @@
 <template>
-  <q-page class="q-pa-lg">
+  <q-page class="q-pa-lg" v-if="loading">
+    <AlbumPageSkeleton />
+  </q-page>
+  <q-page class="q-pa-lg" v-else>
     <div class="q-mb-sm">
       <q-btn type="primary" @click="this.$router.push('/music/artists/' + album.artist.id)">Вернуться к исполнителю</q-btn>
     </div>
@@ -15,7 +18,7 @@
             </q-dialog>
           </div>
           <div class="album-head__actions">
-            <q-btn icon="playlist_add" dense>
+            <q-btn @click="addToPlaylist" icon="playlist_add" dense>
               <q-tooltip anchor="top middle" self="bottom middle" :offset="[5, 5]">
                 <span style="font-size: .75rem">Add to playlist</span>
               </q-tooltip>
@@ -51,44 +54,7 @@
               :pagination.sync="{page: 1, rowsPerPage: 0}"
             >
               <template v-slot:body="props">
-                <q-tr
-                  class="table-track"
-                  :class="{'table-track--active': props.row.id === musicPlayer.track.id}"
-                  :props="props"
-                  @click="initPlay(props.row)"
-                  @mouseover="hovered = true"
-                  @mouseout="hovered = false"
-                >
-                  <q-td
-                    v-for="col in props.cols"
-                    :key="col.name"
-                    :props="props"
-                  >
-                    <template v-if="col.name === 'number'">
-                      {{ col.id }}
-                      <q-btn
-                        class="table-track__play-icon"
-                        icon="play_arrow"
-                        flat
-                        round
-                        dense
-                        v-if="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== props.row.id)"
-                      />
-                      <q-btn
-                        class="table-track__play-icon"
-                        icon="pause"
-                        flat
-                        round
-                        dense
-                        v-else
-                      />
-                      <div class="table-track__number">{{ col.value }}</div>
-                    </template>
-                    <template v-else>
-                      {{ col.value }}
-                    </template>
-                  </q-td>
-                </q-tr>
+                <track-card-row :props="props" @play="initPlay" />
               </template>
             </q-table>
           </div>
@@ -98,27 +64,31 @@
     <div class="related-albums">
       <div>
         <!-- v-if="loading === false" чтобы компонент дождался загрузки основного альбома -->
-        <related-albums v-if="loadingAlbum === false" :artistId="album.artist.id" :albumId="parseInt(id)" />
+        <related-albums v-if="loading === false" :artistId="album.artist.id" :albumId="parseInt(id)" />
       </div>
     </div>
   </q-page>
 </template>
 <script>
-import {ref} from 'vue'
+import { ref, onMounted } from 'vue'
 import API from "src/utils/api";
+
+import { useMusicPlayer } from 'stores/modules/musicPlayer'
+
+import AlbumPageSkeleton from 'src/components/client/music/skeleton/AlbumPage.vue'
 import AlbumCard from 'components/client/music/AlbumCard.vue'
-import RelatedAlbums from "components/client/music/RelatedAlbums.vue";
-import { useMusicPlayer } from 'src/stores/modules/musicPlayer'
+import RelatedAlbums from "components/client/music/RelatedAlbums.vue"
+import TrackCardRow from 'src/components/client/music/TrackCardRow.vue'
 
 export default {
   props: {
     'id': String
   },
-  components: {AlbumCard, RelatedAlbums},
-  setup() {
+  components: { AlbumPageSkeleton, AlbumCard, RelatedAlbums, TrackCardRow },
+  setup(props) {
+    const loading = ref(true)
     const showImage = ref(false)
     const album = ref({})
-    const loadingAlbum = ref(true)
     const columns = ref([{
       name: "number",
       required: true,
@@ -127,6 +97,14 @@ export default {
       field: row => row.number,
       sortable: true,
       style: 'width: 70px'
+    },{
+      name: "rate",
+      required: true,
+      label: '',
+      align: 'center',
+      field: row => row.rate,
+      sortable: true,
+      style: 'width: 120px'
     },{
       name: "name",
       required: true,
@@ -147,19 +125,30 @@ export default {
       const {data} = await API.post('music/albums', {id: id})
 
       album.value = data.data
-      loadingAlbum.value = false
+      loading.value = false
     }
+
+    const addToPlaylist = () => {
+      musicPlayer.addToPlaylist(album.value.tracks)
+    }
+
     const musicPlayer = useMusicPlayer()
+
+    onMounted(() => {
+      getAlbum(props.id)
+    })
+
     return {
-      loadingAlbum,
+      loading,
       showImage,
       album,
       columns,
-      hovered: ref(false),
       musicPlayer,
       getAlbum,
+      addToPlaylist,
       initPlay: track => {
-        if (!musicPlayer.playlist.length) {
+        // Replacing playlist with new track
+        if (!musicPlayer.playlist.includes(track)) {
           musicPlayer.setPlaylist(album.value.tracks)
         }
         musicPlayer.playTrack(track)
@@ -173,9 +162,6 @@ export default {
       }
     )
   },
-  mounted() {
-    this.getAlbum(this.id)
-  }
 }
 </script>
 
@@ -242,37 +228,7 @@ export default {
     max-width: 760px;
   }
 }
-.table-track {
-  &:hover {
-    cursor: pointer;
 
-    .table-track__play-icon {
-      display: flex;
-    }
-    .table-track__number {
-      display: none;
-    }
-  }
-  &--active {
-    background-color: rgba(0, 0, 0, 0.03);
-    .table-track__play-icon {
-      display: flex;
-    }
-    .table-track__number {
-      display: none;
-    }
-  }
-  &__play-icon {
-    display: none;
-  }
-  &__number {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 2.4em;
-    min-width: 2.4em;
-  }
-}
 .album-artist {
 
 }

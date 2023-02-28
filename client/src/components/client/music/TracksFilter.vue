@@ -1,7 +1,7 @@
 <template>
-  <div class="music-filter">
+  <div class="tracks-filter">
     <div class="text-h5 q-mb-sm">Filter</div>
-    <div class="music-filter__params q-mb-md">
+    <div class="tracks-filter__params q-mb-md">
       <q-btn-toggle
         v-model="type"
         @click="checkRules"
@@ -45,6 +45,34 @@
         outlined
         dense
       />
+    </div>
+    <div class="flex q-mb-sm q-gutter-md">
+      <q-checkbox
+        v-model="rate"
+        val="1"
+        checked-icon="sentiment_very_dissatisfied"
+        unchecked-icon="sentiment_very_dissatisfied"
+      />
+      <q-checkbox
+        v-model="rate"
+        val="2"
+        checked-icon="sentiment_dissatisfied"
+        unchecked-icon="sentiment_dissatisfied"
+      />
+      <q-checkbox
+        v-model="rate"
+        val="3"
+        checked-icon="sentiment_satisfied"
+        unchecked-icon="sentiment_satisfied"
+      />
+      <q-checkbox
+        v-model="rate"
+        val="4"
+        checked-icon="sentiment_very_satisfied"
+        unchecked-icon="sentiment_very_satisfied"
+      />
+    </div>
+    <div class="flex q-mb-sm q-gutter-md">
       <q-btn color="primary" label="Filter" @click="submitFilter" />
     </div>
 
@@ -63,6 +91,7 @@ export default {
   setup(props, {emit}) {
     const type = ref('strict')
     const union = ref(true)
+    const rate = ref([])
     const commonTags = ref([])
     const secondaryTags = ref([])
     const commonModel = ref()
@@ -87,7 +116,8 @@ export default {
         filters: {
           tags: secondaryModel.value ? commonModel.value.concat(secondaryModel.value) : commonModel.value,
           type: type.value,
-          union: union.value
+          union: union.value,
+          rate: rate.value
         }
       })
     }
@@ -95,6 +125,7 @@ export default {
     return {
       type,
       union,
+      rate,
       commonTags,
       secondaryTags,
       commonModel,
@@ -111,10 +142,10 @@ export default {
 }
 </script>
 <style lang="scss">
-  .music-filter {
-    position: relative;
-  }
-  .tags-toggle {
-    border: 1px solid #027be3;
-  }
+.tracks-filter {
+  position: relative;
+}
+.tags-toggle {
+  border: 1px solid #027be3;
+}
 </style>
