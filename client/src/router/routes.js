@@ -33,7 +33,7 @@ const routes = [{
     menu: true
   }, {
     path: '/tasks',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('pages/client/Tasks.vue'),
     meta: {
       title: 'Задачи',
       icon: 'list'
