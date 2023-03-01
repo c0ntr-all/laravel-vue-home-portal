@@ -1,25 +1,22 @@
 <template>
-  <div class="list">
-    <div class="list__header">
-      <div class="list__header--cover js-header-cover"></div>
-      <textarea class="list__header-name"
-                spellcheck="false"
-                dir="auto"
-                maxlength="512"
-                data-autosize="true"
-                style="overflow: hidden; overflow-wrap: break-word; height: 28px;"
-      >{{ list.title }}</textarea>
-    </div>
-    <div class="list__body">
-    </div>
-    <div class="list__footer">
-    </div>
-  </div>
+  <q-card class="list">
+    <q-card-section class="list__header">
+      <p>{{ list.title }}</p>
+    </q-card-section>
+    <q-separator dark />
+    <q-card-section class="list__body">
+      <TaskItem v-for="item in items" :key="item.id" :item="item" />
+    </q-card-section>
+    <q-card-section class="list__footer">
+    </q-card-section>
+  </q-card>
 </template>
-
 <script>
+import TaskItem from 'src/components/client/tasks/TaskItem.vue'
+
 export default {
-  props: ['list'],
+  components: { TaskItem },
+  props: ['list', 'items'],
   setup() {
     return {
 
@@ -27,25 +24,24 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .list {
-  background-color: #ebecf0;
-  border-radius: 3px;
-  box-sizing: border-box;
+  position: relative;
   display: flex;
   flex-direction: column;
-  max-height: 100%;
-  position: relative;
-  white-space: normal;
   width: 272px;
+  max-height: 100%;
+  border-radius: 3px;
+  white-space: normal;
+  background-color: #ebecf0;
+  box-sizing: border-box;
 
   &__header {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 8px;
+    padding: 8px;
+
+    p {
+      margin: 0;
+    }
 
     &-name {
       background: #0000;
