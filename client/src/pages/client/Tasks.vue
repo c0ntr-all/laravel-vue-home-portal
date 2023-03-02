@@ -10,7 +10,7 @@
         :items="list.items"
         :key="list.id"
         :ref="'list-ref-' + index"
-      ></TaskList>
+      />
     </div>
   </q-page>
 </template>

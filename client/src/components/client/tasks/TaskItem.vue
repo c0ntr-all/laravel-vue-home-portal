@@ -8,7 +8,7 @@
   </div>
 
   <q-dialog v-model="showModal">
-    <q-card class="task">
+    <q-card style="width: 768px; max-width: 80vw;">
       <q-card-section>
         <div class="task__title text-h6">{{ item.title }}</div>
       </q-card-section>
@@ -44,19 +44,8 @@ export default {
   props: ['item'],
   setup() {
     const showModal = ref(false)
-    let model = ref({
-      id: 0,
-      name: null,
-      content: null,
-      image: null,
-      tags: {
-        common: [],
-        secondary: []
-      }
-    })
     return {
-      showModal,
-      model
+      showModal
     }
   }
 }
@@ -88,9 +77,5 @@ export default {
       border-bottom-color: #091e4240;
     }
   }
-}
-.task {
-  width: 700px;
-  max-width: 80vw;
 }
 </style>

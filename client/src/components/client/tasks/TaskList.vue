@@ -8,18 +8,80 @@
       <TaskItem v-for="item in items" :key="item.id" :item="item" />
     </q-card-section>
     <q-card-section class="list__footer">
+      <div v-if="showAddForm === false" @click="openAddForm" class="list__add-button">
+        <q-icon name="add" size="sm" />
+        <span>Добавить карточку</span>
+      </div>
+      <div v-if="showAddForm === true" class="list__add-form">
+        <q-input
+          @keyup.enter="addNewCard"
+          v-model="model.newCardName"
+          ref="listAddTextarea"
+          type="textarea"
+          input-style="height: 60px; resize: none"
+          class="list__add-textarea q-mb-sm"
+          dense
+          outlined
+        />
+        <q-btn @click="addNewCard" label="Добавить карточку" color="secondary" class="q-mr-sm" no-caps dense />
+        <q-btn @click="showAddForm = false" icon="close" color="danger" size="md" flat round dense />
+      </div>
     </q-card-section>
   </q-card>
 </template>
 <script>
+import {ref, nextTick} from 'vue'
+import {useQuasar} from "quasar"
+
+import API from "src/utils/api"
+
 import TaskItem from 'src/components/client/tasks/TaskItem.vue'
 
 export default {
   components: { TaskItem },
   props: ['list', 'items'],
-  setup() {
-    return {
+  setup(props) {
+    const $q = useQuasar()
 
+    const showAddForm = ref(false)
+    const listAddTextarea = ref(null)
+    const model = ref({
+      listName: '',
+      newCardName: ''
+    })
+
+    const openAddForm = () => {
+      showAddForm.value = true
+      nextTick(() => {
+        listAddTextarea.value.focus()
+      })
+    }
+    //todo Change title to name in tasks entity
+    const addNewCard = async () => {
+      const cardName = model.value.newCardName
+      model.value.newCardName = ''
+
+      await API.put('tasks/store/' + props.list.id, {
+        'title': cardName
+      }).then(response => {
+        $q.notify({
+          type: 'positive',
+          message: 'Карточка успешно добавлена!'
+        })
+        props.items.push(response.data.items)
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+      })
+    }
+    return {
+      showAddForm,
+      listAddTextarea,
+      model,
+      openAddForm,
+      addNewCard
     }
   }
 }
@@ -83,8 +145,16 @@ export default {
   &__footer {
     padding: 10px 8px;
   }
-}
-.is-hidden {
-  display: none;
+  &__add-button {
+    display: flex;
+    align-items: center;
+    border-radius: 3px;
+    padding: 5px 0;
+
+    &:hover {
+      cursor: pointer;
+      background-color: #091e4214;
+    }
+  }
 }
 </style>
