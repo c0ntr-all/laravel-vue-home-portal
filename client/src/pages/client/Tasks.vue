@@ -1,5 +1,8 @@
 <template>
-  <q-page class="q-pa-lg">
+  <q-page class="q-pa-lg" v-if="loading">
+    <TasksPageSkeleton />
+  </q-page>
+  <q-page class="q-pa-lg" v-else>
     <div class="task-lists row items-start q-gutter-md q-mb-lg">
       <TaskList
         v-for="(list, index) in taskLists"
@@ -17,10 +20,11 @@ import {useQuasar} from "quasar"
 
 import API from "src/utils/api"
 
+import TasksPageSkeleton from 'src/components/client/tasks/skeleton/TasksPage.vue'
 import TaskList from "components/client/tasks/TaskList.vue"
 
 export default {
-  components: { TaskList },
+  components: { TasksPageSkeleton, TaskList },
   setup() {
     const $q = useQuasar()
 
@@ -43,6 +47,7 @@ export default {
       getTaskLists()
     })
     return {
+      loading,
       taskLists
     }
   }
