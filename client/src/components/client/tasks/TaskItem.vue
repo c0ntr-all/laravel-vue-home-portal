@@ -20,13 +20,13 @@
           >
             <q-input
               v-model="scope.value"
-              @keyup.enter="saveTitle(scope.value)"
+              @keyup.enter="updateTitle(scope.value)"
               dense
               autofocus
               counter
             />
             <div class="q-pt-sm">
-              <q-btn @click="saveTitle(scope.value)" label="Сохранить" color="primary" flat />
+              <q-btn @click="updateTitle(scope.value)" label="Сохранить" color="primary" flat />
               <q-btn @click="titlePopup.cancel()" label="Отмена" color="primary" flat />
             </div>
           </q-popup-edit>
@@ -51,15 +51,25 @@
             @keyup.enter.stop
           />
           <div class="q-pt-sm">
-            <q-btn @click="saveContent(scope.value)" label="Сохранить" color="primary" flat />
+            <q-btn @click="updateContent(scope.value)" label="Сохранить" color="primary" flat />
             <q-btn @click="contentPopup.cancel()" label="Отмена" color="primary" flat />
           </div>
         </q-popup-edit>
       </q-card-section>
 
       <q-card-section>
-        <div class="task__comments">
+        <div class="comments">
           <div class="text-h6 q-mb-sm">Комментарии</div>
+          <div class="comments-form q-mb-md">
+            <q-input
+              v-model="comment"
+              class="q-mb-sm"
+              placeholder="Напишите комментарий..."
+              filled
+              autogrow
+            />
+            <q-btn @click="createComment" color="primary" label="Отправить" />
+          </div>
           <div v-if="item.comments.length" class="comments-list column q-gutter-sm">
             <q-card v-for="comment in item.comments" :key="comment.id">
               <q-card-section class="flex justify-between">
@@ -91,7 +101,9 @@ export default {
     const showModal = ref(false)
     const titlePopup = ref(null)
     const contentPopup = ref(null)
-    const saveTitle = value => {
+    const comment = ref('')
+
+    const updateTitle = value => {
       API.patch(`tasks/${props.item.id}/update`, {
         title: value
       }).then(response => {
@@ -108,7 +120,7 @@ export default {
         titlePopup.value.cancel()
       })
     }
-    const saveContent = value => {
+    const updateContent = value => {
       API.patch(`tasks/${props.item.id}/update`, {
         content: value
       }).then(response => {
@@ -125,13 +137,34 @@ export default {
         contentPopup.value.cancel()
       })
     }
+    const createComment = () => {
+      API.post(`comments/store`, {
+        commentable_id: props.item.id,
+        commentable_type: 'task',
+        content: comment.value
+      }).then(response => {
+        props.item.comments.push(response.data.comments)
+
+        $q.notify({
+          type: 'positive',
+          message: 'Комментарий успешно добавлен!'
+        })
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+      })
+    }
 
     return {
       showModal,
       titlePopup,
       contentPopup,
-      saveTitle,
-      saveContent
+      comment,
+      updateTitle,
+      updateContent,
+      createComment
     }
   }
 }
