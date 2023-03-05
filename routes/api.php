@@ -54,9 +54,6 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::put('store/{taskList}', [TaskController::class, 'store']);
             Route::patch('{task}/update', [TaskController::class, 'update']);
             Route::delete('{task}/delete', [TaskController::class, 'delete']);
-
-            Route::post('comments/store', [CommentController::class, 'store']);
-            Route::post('comments/delete', [CommentController::class, 'delete']);
         });
 
         Route::prefix('reminds')->group(function() {
@@ -102,6 +99,10 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 Route::post('select', [TagController::class, 'tagsSelect']);
                 Route::post('tree', [TagController::class, 'tagsTree']);
             });
+        });
+
+        Route::prefix('comments')->group(function() {
+            Route::post('store', [CommentController::class, 'store']);
         });
 
         Route::prefix('folders')->group(function() {
