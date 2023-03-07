@@ -114,6 +114,14 @@ export default {
     }
 
     onMounted(() => {
+      window.onscroll = () => {
+        let bottomWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
+
+        if (bottomWindow) {
+          loadMoreArtists()
+        }
+      }
+
       getArtists()
     })
 
