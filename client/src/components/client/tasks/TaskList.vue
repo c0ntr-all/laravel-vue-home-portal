@@ -14,16 +14,16 @@
       </div>
       <div v-if="showAddForm === true" class="list__add-form">
         <q-input
-          @keyup.enter="addNewCard"
+          @keyup.enter="addNewTask"
           v-model="model.newCardName"
-          ref="listAddTextarea"
+          ref="taskAddTextarea"
           type="textarea"
           input-style="height: 60px; resize: none"
           class="list__add-textarea q-mb-sm"
           dense
           outlined
         />
-        <q-btn @click="addNewCard" label="Добавить карточку" color="secondary" class="q-mr-sm" no-caps dense />
+        <q-btn @click="addNewTask" label="Добавить карточку" color="secondary" class="q-mr-sm" no-caps dense />
         <q-btn @click="showAddForm = false" icon="close" color="danger" size="md" flat round dense />
       </div>
     </q-card-section>
@@ -44,7 +44,7 @@ export default {
     const $q = useQuasar()
 
     const showAddForm = ref(false)
-    const listAddTextarea = ref(null)
+    const taskAddTextarea = ref(null)
     const model = ref({
       listName: '',
       newCardName: ''
@@ -53,11 +53,11 @@ export default {
     const openAddForm = () => {
       showAddForm.value = true
       nextTick(() => {
-        listAddTextarea.value.focus()
+        taskAddTextarea.value.focus()
       })
     }
     //todo Change title to name in tasks entity
-    const addNewCard = async () => {
+    const addNewTask = async () => {
       const cardName = model.value.newCardName
       model.value.newCardName = ''
 
@@ -78,10 +78,10 @@ export default {
     }
     return {
       showAddForm,
-      listAddTextarea,
+      taskAddTextarea,
       model,
       openAddForm,
-      addNewCard
+      addNewTask
     }
   }
 }
