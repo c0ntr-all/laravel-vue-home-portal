@@ -43,7 +43,7 @@ const routes = [{
     menu: true
   }, {
     path: '/reminds',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('pages/client/Reminds.vue'),
     meta: {
       title: 'Напоминания',
       icon: 'calendar_month'
