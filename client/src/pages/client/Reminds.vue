@@ -1,5 +1,8 @@
 <template>
   <q-page class="q-pa-lg">
+    <div class="q-mb-lg">
+      <q-btn color="primary" label="Create Remind" icon="add" />
+    </div>
     <q-table
       :rows="reminds"
       :columns="columns"
@@ -7,9 +10,9 @@
       :flat="true"
       :rows-per-page-options="[0]"
       :pagination.sync="{page: 1, rowsPerPage: 0}"
+      ref="remindTable"
       dense
     >
-
       <template v-slot:header="props">
         <q-tr :props="props">
           <q-th auto-width />
@@ -34,7 +37,12 @@
             :props="props"
           >
             <template v-if="col.name === 'active'">
-              <q-toggle v-model="col.value" checked-icon="add" unchecked-icon="remove" />
+              <q-toggle
+                v-model="props.row.isActive"
+                @click="switchActive(props.row)"
+                checked-icon="add"
+                unchecked-icon="remove"
+              />
             </template>
             <template v-else>
               {{ col.value }}
@@ -60,6 +68,7 @@ export default {
   setup() {
     const $q = useQuasar()
 
+    const remindTable = ref(null)
     const columns = [
       { name: 'title', label: 'Title', field: 'title', align: 'left', sortable: true },
       { name: 'date', label: 'Date', field: 'datetime', align: 'center', sortable: true },
@@ -77,6 +86,25 @@ export default {
         })
       })
     }
+    const switchActive = async row => {
+      await API.post(`reminds/${row.id}/update`, {
+        'id': row.id,
+        'is_active': row.isActive,
+      }).then(response => {
+        setTimeout(() => {
+          reminds.value.sort((a, b) => b.isActive > a.isActive ? 1 : -1)
+        }, 500)
+        $q.notify({
+          type: 'positive',
+          message: `The status of remind has been changed!`
+        })
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+      })
+    }
 
     onMounted(() => {
       getReminds()
@@ -84,7 +112,9 @@ export default {
 
     return {
       columns,
-      reminds
+      reminds,
+      remindTable,
+      switchActive
     }
   }
 }
