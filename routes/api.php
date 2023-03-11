@@ -58,7 +58,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
 
         Route::prefix('reminds')->group(function() {
             Route::get('/', [RemindController::class, 'index']);
-            Route::post('store', [RemindController::class, 'store']);
+            Route::put('store', [RemindController::class, 'store']);
             Route::post('/{remind}/update', [RemindController::class, 'update']);
         });
 

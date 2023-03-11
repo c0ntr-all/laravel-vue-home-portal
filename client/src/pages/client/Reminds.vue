@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-lg">
     <div class="q-mb-lg">
-      <q-btn color="primary" label="Create Remind" icon="add" />
+      <q-btn @click="showModal = true" color="primary" label="Create Remind" icon="add" />
     </div>
     <q-table
       :rows="reminds"
@@ -56,6 +56,63 @@
         </q-tr>
       </template>
     </q-table>
+    <q-dialog v-model="showModal">
+      <q-card style="width: 700px; max-width: 80vw;">
+        <q-card-section>
+          <div class="text-h6">Добавить напоминание</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <q-form class="q-gutter-y-md column">
+            <q-input
+              v-model="model.title"
+              label="Заголовок"
+              :rules="[ val => val && val.length > 0 || 'Поле title должно быть заполнено!']"
+              outlined
+              dense
+            />
+            <q-input
+              v-model="model.content"
+              label="Описание"
+              type="textarea"
+              outlined
+              dense
+            />
+            <q-input v-model="model.datetime" outlined filled>
+              <template v-slot:prepend>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="model.datetime" mask="YYYY-MM-DD HH:mm">
+                      <div class="row items-center justify-end">
+                        <q-btn label="Close" color="primary" v-close-popup flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+
+              <template v-slot:append>
+                <q-icon name="access_time" class="cursor-pointer">
+                  <q-popup-proxy transition-show="scale" transition-hide="scale" cover>
+                    <q-time v-model="model.datetime" mask="YYYY-MM-DD HH:mm" format24h>
+                      <div class="row items-center justify-end">
+                        <q-btn label="Close" color="primary" v-close-popup flat />
+                      </div>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </q-form>
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white">
+          <q-btn label="Create" color="primary" @click="createRemind" :loading="createRemindLoading" />
+          <!--Todo: Need to write cancel update handler for returning previous values to model-->
+          <q-btn label="Cancel" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 <script>
@@ -75,6 +132,14 @@ export default {
       { name: 'active', label: 'Active', field: 'isActive', align: 'center', }
     ]
     const reminds = ref([])
+    const showModal = ref(false)
+    const model = ref({
+      title: '',
+      content: '',
+      datetime: '',
+      is_active: true
+    })
+    const createRemindLoading = ref(false)
 
     const getReminds = async () => {
       await API.get('reminds').then(response => {
@@ -105,6 +170,26 @@ export default {
         })
       })
     }
+    const createRemind = async () => {
+      createRemindLoading.value = true
+      await API.put('reminds/store', {
+        ...model.value
+      }).then(response => {
+        createRemindLoading.value = false
+        reminds.value.unshift(response.data.reminds)
+        $q.notify({
+          type: 'positive',
+          message: `Remind has been created`
+        })
+        showModal.value = false
+      }).catch(error => {
+        createRemindLoading.value = false
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+      })
+    }
 
     onMounted(() => {
       getReminds()
@@ -114,7 +199,11 @@ export default {
       columns,
       reminds,
       remindTable,
-      switchActive
+      showModal,
+      model,
+      createRemindLoading,
+      switchActive,
+      createRemind
     }
   }
 }

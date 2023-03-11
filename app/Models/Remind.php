@@ -24,7 +24,7 @@ class Remind extends Model
 
     public function getItems(): Collection
     {
-        return Remind::orderByDesc('is_active')->get();
+        return Remind::orderByDesc('is_active')->orderByDesc('datetime')->get();
     }
 
     public function user(): BelongsTo
