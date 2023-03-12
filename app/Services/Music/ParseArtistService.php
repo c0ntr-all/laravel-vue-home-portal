@@ -220,13 +220,21 @@ class ParseArtistService
                 foreach ($album['tracks'] as $track) {
                     $id3TrackInfo = $this->getID3->analyze($track['path']);
 
+                    $duration = $id3TrackInfo['playtime_string'];
+
+                    $durationParts = explode(':', $duration);
+
+                    if (count($durationParts) == 2) {
+                        $duration = '00:' . $durationParts[0] . ':' . $durationParts[1];
+                    }
+
                     $albumModel->tracks()->updateOrCreate([
                         'name' => $track['name']
                     ], [
                         'user_id' => auth()->user()->id,
                         'number' => $track['number'],
                         'path_windows' => $track['path'],
-                        'duration' => $id3TrackInfo['playtime_string'],
+                        'duration' => $duration,
                         'bitrate' => $id3TrackInfo['audio']['bitrate']
                     ]);
                 }
