@@ -21,8 +21,10 @@
         </div>
         <div class="artist-head__tags">
           <div class="tags-list q-gutter-sm">
-            <q-chip v-for="tag in artist.tagsNames?.common" dense>{{ tag }}</q-chip>
-            <q-chip v-for="tag in artist.tagsNames?.secondary" dense>{{ tag }}</q-chip>
+            <q-chip v-for="tag in artist.tagsNames?.common" color="primary" text-color="white">{{ tag }}</q-chip>
+          </div>
+          <div class="tags-list q-gutter-sm">
+            <q-chip v-for="tag in artist.tagsNames?.secondary">{{ tag }}</q-chip>
           </div>
         </div>
       </div>
