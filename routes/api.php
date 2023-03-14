@@ -17,6 +17,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Tasks\TaskListController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\WidgetController;
 use Illuminate\Http\Request;
 
 /*
@@ -41,6 +42,9 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
     Route::post('me', [AuthController::class, 'me']);
 
     Route::middleware('jwt.auth')->group(function() {
+        Route::prefix('widgets')->group(function() {
+            Route::get('get', [WidgetController::class, 'getWidgets']);
+        });
         Route::prefix('finances')->group(function() {
             Route::get('/', [FinancesController::class, 'index']);
             Route::get('{finance}', [FinancesController::class, 'show']);

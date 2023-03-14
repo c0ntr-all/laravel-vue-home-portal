@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Tasks\TaskList;
 use App\Models\Remind;
+use App\Models\Widgets\WidgetPlacement;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -32,6 +33,11 @@ class User extends Authenticatable implements JWTSubject
     public function reminds(): HasMany
     {
         return $this->hasMany(Remind::class);
+    }
+
+    public function widgets(): HasMany
+    {
+        return $this->hasMany(WidgetPlacement::class);
     }
 
     public function setPasswordAttribute(string $password): void
