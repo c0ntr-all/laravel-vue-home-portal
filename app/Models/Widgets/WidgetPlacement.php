@@ -35,7 +35,8 @@ class WidgetPlacement extends Model
 
             return [
                 'name' => $item->widget->name,
-                'widget' => $widgetModel->getWidget()
+                'type' => basename($item->widget->model),
+                'data' => $widgetModel->getWidget()
             ];
         });
     }
