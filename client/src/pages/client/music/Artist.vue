@@ -1,8 +1,6 @@
 <template>
-  <q-page class="q-pa-lg" v-if="loading">
-    <ArtistPageSkeleton />
-  </q-page>
-  <q-page class="q-pa-lg" v-else>
+  <ArtistPageSkeleton v-if="loading" />
+  <template v-else>
     <div class="q-mb-sm">
       <q-btn type="primary" :to="'/music'">Вернуться назад</q-btn>
     </div>
@@ -36,7 +34,7 @@
         <album-card v-for="album in this.artist.albums" :key="album.id" :album="album"></album-card>
       </div>
     </div>
-  </q-page>
+  </template>
 </template>
 <script>
 import { ref, onMounted } from 'vue'

@@ -1,26 +1,24 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header>
+    <q-header class="header q-py-sm flex items-center">
       <q-toolbar>
         <q-btn
           @click="toggleLeftDrawer"
           icon="menu"
           aria-label="Menu"
+          color="primary"
           flat
           dense
           round
         />
         <q-toolbar-title>Home Portal</q-toolbar-title>
         <music-player></music-player>
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn :to="'/profile'" round flat>
+          <q-avatar size="35px">
+            <q-img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+          </q-avatar>
+        </q-btn>
       </q-toolbar>
-      <div class="q-px-md q-pt-sm q-mb-md">
-        <div class="text-h3">{{ this.$route.meta.title || 'No Title' }}</div>
-      </div>
-      <q-img
-        src="images/mountains.jpeg"
-        class="header-image absolute-top"
-      />
     </q-header>
 
     <q-drawer
@@ -29,7 +27,7 @@
       :width="250"
       :breakpoint="600"
     >
-      <q-scroll-area style="height: calc(100% - 124px); margin-top: 124px; border-right: 1px solid #ddd">
+      <q-scroll-area style="height: calc(100% - 75px); margin-top: 75px; border-right: 1px solid #ddd">
         <q-list padding>
           <template v-for="item in $router.options.routes[0].children.filter(item => item.menu === true)">
             <q-item
@@ -59,23 +57,17 @@
         </q-list>
       </q-scroll-area>
 
-      <q-img class="absolute-top" src="images/mountains.jpeg" style="height: 124px">
+      <q-img class="absolute-top" src="images/mountains.jpeg" style="height: 75px">
         <div class="absolute-bottom bg-transparent">
-          <q-btn class="q-mb-sm" :to="'/profile'" round flat>
-            <q-avatar size="56px">
-              <q-img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-            </q-avatar>
-          </q-btn>
-          <div class="text-weight-bold">User name</div>
-          <div>@user-name</div>
         </div>
       </q-img>
     </q-drawer>
 
     <q-page-container>
-      <keep-alive>
+      <q-page class="q-pa-lg">
+        <div class="text-h4 q-mb-lg">{{ this.$route.meta.title || 'No Title' }}</div>
         <router-view />
-      </keep-alive>
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>
@@ -101,11 +93,20 @@ export default defineComponent({
   }
 })
 </script>
-<style lang="scss">
-  .header-image {
+<style lang="scss" scoped>
+.q-page {
+  background-color: #f0f0f5;
+}
+.header {
+  height: 75px;
+  background-color: #ffffff;
+  border-block-end: 1px solid #e9edf4;
+
+  &-image {
     height: 100%;
     z-index: -1;
     opacity: .2;
     filter: grayscale(100%);
   }
+}
 </style>

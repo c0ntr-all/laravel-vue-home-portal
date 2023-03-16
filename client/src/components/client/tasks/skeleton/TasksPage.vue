@@ -1,4 +1,7 @@
 <template>
+  <div class="q-mb-lg">
+    <q-skeleton type="QBtn" width="200px" />
+  </div>
   <div class="task-lists row items-start q-gutter-md q-mb-lg">
     <q-card
       v-for="q in Math.floor(Math.random() * 10)"

@@ -1,8 +1,6 @@
 <template>
-  <q-page class="q-pa-lg" v-if="loading">
-    <TasksPageSkeleton />
-  </q-page>
-  <q-page class="q-pa-lg" v-else>
+  <TasksPageSkeleton v-if="loading" />
+  <template v-else>
     <q-btn
       v-if="showAddForm === false"
       @click="openAddForm"
@@ -33,7 +31,7 @@
         :ref="'list-ref-' + index"
       />
     </div>
-  </q-page>
+  </template>
 </template>
 <script>
 import {ref, onMounted, nextTick} from 'vue'

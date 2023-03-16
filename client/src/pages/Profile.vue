@@ -1,7 +1,5 @@
 <template>
-  <q-page padding>
-    <q-skeleton :type="'text'" style="width: 250px" />
-  </q-page>
+  <q-skeleton :type="'text'" style="width: 250px" />
 </template>
 
 <script>

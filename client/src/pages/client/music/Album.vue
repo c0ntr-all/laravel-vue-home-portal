@@ -1,8 +1,6 @@
 <template>
-  <q-page class="q-pa-lg" v-if="loading">
-    <AlbumPageSkeleton />
-  </q-page>
-  <q-page class="q-pa-lg" v-else>
+  <AlbumPageSkeleton v-if="loading" />
+  <template v-else>
     <div class="q-mb-sm">
       <q-btn type="primary" @click="this.$router.push('/music/artists/' + album.artist.id)">Вернуться к исполнителю</q-btn>
     </div>
@@ -67,7 +65,7 @@
         <related-albums v-if="loading === false" :artistId="album.artist.id" :albumId="parseInt(id)" />
       </div>
     </div>
-  </q-page>
+  </template>
 </template>
 <script>
 import { ref, onMounted } from 'vue'
