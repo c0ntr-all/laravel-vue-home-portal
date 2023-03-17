@@ -46,7 +46,6 @@
     <div class="album-body">
       <div class="album-tracks">
         <div class="album-tracks__list q-mb-md">
-          <q-skeleton class="q-mb-md" type="text" width="200px" />
           <q-markup-table>
             <thead>
             <tr>

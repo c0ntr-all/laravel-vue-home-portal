@@ -41,8 +41,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .artist-card {
-  width: 100%;
-  height: 150px;
 
   &__image {
     width: 150px;

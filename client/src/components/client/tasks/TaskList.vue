@@ -1,5 +1,5 @@
 <template>
-  <q-card class="list">
+  <q-card class="list bg-grey-4">
     <q-card-section class="list__header">
       <p>{{ list.title }}</p>
     </q-card-section>
@@ -95,7 +95,6 @@ export default {
   max-height: 100%;
   border-radius: 3px;
   white-space: normal;
-  background-color: #ebecf0;
   box-sizing: border-box;
 
   &__header {

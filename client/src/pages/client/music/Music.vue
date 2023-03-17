@@ -29,28 +29,36 @@
     </q-tab-panel>
 
     <q-tab-panel name="playlists" class="q-pa-none">
-      <div class="text-h4 q-mb-md">Playlists</div>
+      <q-card>
+        <q-card-section>
+          <div class="text-h4 q-mb-md">Playlists</div>
+        </q-card-section>
+      </q-card>
     </q-tab-panel>
 
     <q-tab-panel name="genres" class="q-pa-none">
-      <div class="text-h4 q-mb-md">Genres</div>
-      <div class="tags q-mb-lg">
-        <div class="tags-list q-gutter-sm">
-          <q-btn
-            v-for="tag in tags.common"
-            :key="tag.id"
-            :label="tag.label"
-            :to="'/music/tags/' + tag.slug"
-            color="primary"
-            size="sm"
-            rounded
-            unelevated
-          />
-          <q-inner-loading :showing="tagsLoading">
-            <q-spinner-gears size="50px" color="primary" />
-          </q-inner-loading>
-        </div>
-      </div>
+      <q-card>
+        <q-card-section>
+          <div class="text-h4 q-mb-md">Genres</div>
+          <div class="tags q-mb-lg">
+            <div class="tags-list q-gutter-sm">
+              <q-btn
+                v-for="tag in tags.common"
+                :key="tag.id"
+                :label="tag.label"
+                :to="'/music/tags/' + tag.slug"
+                color="primary"
+                size="sm"
+                rounded
+                unelevated
+              />
+              <q-inner-loading :showing="tagsLoading">
+                <q-spinner-gears size="50px" color="primary" />
+              </q-inner-loading>
+            </div>
+          </div>
+        </q-card-section>
+      </q-card>
     </q-tab-panel>
   </q-tab-panels>
 </template>
@@ -91,5 +99,8 @@ export default {
 <style lang="scss" scoped>
   .tags-list {
     position: relative;
+  }
+  .q-tab-panels {
+    background-color: transparent;
   }
 </style>

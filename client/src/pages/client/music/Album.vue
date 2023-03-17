@@ -39,11 +39,11 @@
           </div>
         </div>
       </div>
-      <div class="album-body">
+
+      <div class="album-body q-mb-lg">
         <div class="album-tracks" v-if="album.tracks">
           <div class="album-tracks__list">
             <q-table
-              title="Треки"
               :rows="album.tracks"
               :columns="columns"
               row-key="name"
@@ -59,6 +59,7 @@
         </div>
       </div>
     </div>
+
     <div class="related-albums">
       <div>
         <!-- v-if="loading === false" чтобы компонент дождался загрузки основного альбома -->
@@ -196,8 +197,6 @@ export default {
   flex-direction: row;
 }
 .album-tracks {
-  flex: 0 0 760px;
-
   &__header {
     display: flex;
     align-items: center;
@@ -221,9 +220,6 @@ export default {
     }
   }
   &__list {
-    display: flex;
-    flex-direction: column;
-    max-width: 760px;
   }
 }
 

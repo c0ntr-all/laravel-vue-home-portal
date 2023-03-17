@@ -1,49 +1,52 @@
 <template>
-  <div class="text-h4 q-mb-md">Tracks</div>
-<!--  I've tried to make a skeleton component with name TracksTabSkeleton for it, but it fired and error:
-      Internal server error: Cannot read property 'url' of undefined
-      Interesting, that it works with name like ArtistsTabSkeleton or another.
-      It seems that the word "Tracks" is unacceptable for this component.
--->
-  <tracks-filter @submitFilter="getTracks" />
+  <q-card class="q-mb-md" flat bordered>
+    <q-card-section>
+      <!--  I've tried to make a skeleton component with name TracksTabSkeleton for it, but it fired and error:
+            Internal server error: Cannot read property 'url' of undefined
+            Interesting, that it works with name like ArtistsTabSkeleton or another.
+            It seems that the word "Tracks" is unacceptable for this component.
+      -->
+      <tracks-filter @submitFilter="getTracks" />
+    </q-card-section>
+  </q-card>
   <template v-if="loading">
-    <q-markup-table style="max-width: 960px;">
+    <q-markup-table>
       <thead>
-        <tr>
-          <th class="text-left">
-            <q-skeleton type="text" width="15px" />
-          </th>
-          <th class="text-right">
-          </th>
-          <th class="text-right">
-            <q-skeleton type="text" width="65px" />
-          </th>
-          <th class="text-right">
-            <q-skeleton type="text" width="65px" />
-          </th>
-          <th class="text-right">
-            <q-skeleton type="text" width="65px" />
-          </th>
-        </tr>
+      <tr>
+        <th class="text-left">
+          <q-skeleton type="text" width="15px" />
+        </th>
+        <th class="text-right">
+        </th>
+        <th class="text-right">
+          <q-skeleton type="text" width="65px" />
+        </th>
+        <th class="text-right">
+          <q-skeleton type="text" width="65px" />
+        </th>
+        <th class="text-right">
+          <q-skeleton type="text" width="65px" />
+        </th>
+      </tr>
       </thead>
       <tbody>
-        <tr v-for="n in 30" :key="n">
-          <td class="text-left">
-            <q-skeleton type="text" width="15px" />
-          </td>
-          <td class="text-right">
-            <q-skeleton type="text" width="100px" />
-          </td>
-          <td class="text-right">
-            <q-skeleton type="text" width="200px" />
-          </td>
-          <td class="text-left">
-            <q-skeleton type="text" width="200px" />
-          </td>
-          <td class="text-right">
-            <q-skeleton type="text" width="100px" />
-          </td>
-        </tr>
+      <tr v-for="n in 30" :key="n">
+        <td class="text-left">
+          <q-skeleton type="text" width="15px" />
+        </td>
+        <td class="text-right">
+          <q-skeleton type="text" width="100px" />
+        </td>
+        <td class="text-right">
+          <q-skeleton type="text" width="200px" />
+        </td>
+        <td class="text-left">
+          <q-skeleton type="text" width="200px" />
+        </td>
+        <td class="text-right">
+          <q-skeleton type="text" width="100px" />
+        </td>
+      </tr>
       </tbody>
     </q-markup-table>
   </template>
@@ -184,6 +187,5 @@ export default {
 </script>
 <style lang="scss" scoped>
 .tracks {
-  max-width: 960px;
 }
 </style>
