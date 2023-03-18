@@ -11,22 +11,53 @@
           dense
           round
         />
-        <q-toolbar-title>Home Portal</q-toolbar-title>
-        <music-player></music-player>
-        <q-btn :to="'/profile'" round flat>
+
+        <q-space />
+
+<!--        <q-toolbar-title>Home Portal</q-toolbar-title>-->
+
+        <music-player />
+
+        <q-btn class="q-ml-md" round flat>
           <q-avatar size="35px">
             <q-img src="https://cdn.quasar.dev/img/boy-avatar.png" />
           </q-avatar>
+
+          <q-menu class="user-menu" style="width: 190px">
+            <div class="row no-wrap">
+              <q-list style="width: 100%">
+                <q-item class="column items-center">
+                  <q-item-section class="user-menu__name">Sergey Taturin</q-item-section>
+                  <q-item-section class="user-menu__role" style="margin: 0">
+                    <small class="text-grey-6">Admin</small>
+                  </q-item-section>
+                </q-item>
+
+                <q-separator />
+
+                <q-item :to="'/profile'" clickable>
+                  <q-item-section side><q-icon name="person" /></q-item-section>
+                  <q-item-section>Profile</q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section side><q-icon name="settings" /></q-item-section>
+                  <q-item-section>Settings</q-item-section>
+                </q-item>
+
+                <q-separator />
+
+                <q-item clickable>
+                  <q-item-section side><q-icon name="logout" /></q-item-section>
+                  <q-item-section>Logout</q-item-section>
+                </q-item>
+              </q-list>
+            </div>
+          </q-menu>
         </q-btn>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      :width="250"
-      :breakpoint="600"
-    >
+    <q-drawer v-model="leftDrawerOpen" :width="250" :breakpoint="600" show-if-above>
       <q-scroll-area style="height: calc(100% - 75px); margin-top: 75px; border-right: 1px solid #ddd">
         <q-list padding>
           <template v-for="item in $router.options.routes[0].children.filter(item => item.menu === true)">
@@ -94,19 +125,27 @@ export default defineComponent({
 })
 </script>
 <style lang="scss" scoped>
-.q-page {
-  background-color: #f0f0f5;
-}
-.header {
-  height: 75px;
-  background-color: #ffffff;
-  border-block-end: 1px solid #e9edf4;
-
-  &-image {
-    height: 100%;
-    z-index: -1;
-    opacity: .2;
-    filter: grayscale(100%);
+  .q-page {
+    background-color: #f0f0f5;
   }
-}
+  .header {
+    height: 75px;
+    background-color: #ffffff;
+    border-block-end: 1px solid #e9edf4;
+
+    &-image {
+      height: 100%;
+      z-index: -1;
+      opacity: .2;
+      filter: grayscale(100%);
+    }
+  }
+  .user-menu {
+    &__name {
+
+    }
+    &__role {
+
+    }
+  }
 </style>
