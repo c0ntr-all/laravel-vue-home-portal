@@ -1,6 +1,6 @@
 <template>
-  <div class="row">
-    <div v-for="widget in widgets" class="col-2">
+  <div class="row q-gutter-lg">
+    <div v-for="widget in widgets" class="col-md-6 col-sm-12 col-lg-3">
       <component :is="widget.type" :widget="widget" />
     </div>
   </div>
@@ -13,10 +13,12 @@ import API from "src/utils/api"
 
 /* For now, we will load all available widgets. */
 import MusicWidget from 'src/components/extra/widgets/MusicWidget.vue'
+import RemindsWidget from 'src/components/extra/widgets/RemindsWidget.vue'
 
 export default {
   components: {
-    MusicWidget
+    MusicWidget,
+    RemindsWidget
   },
   setup() {
     const $q = useQuasar()
