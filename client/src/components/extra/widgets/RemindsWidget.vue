@@ -3,6 +3,8 @@
     <q-card-section>
       <div class="text-h6">{{ widget.name }}</div>
     </q-card-section>
+    
+    <q-separator />
 
     <q-card-section>
       <div class="row justify-between">

@@ -4,6 +4,8 @@
       <div class="text-h6">{{ widget.name }}</div>
     </q-card-section>
 
+    <q-separator />
+
     <q-card-section>
       <div class="row justify-between">
         <div class="flex items-center">

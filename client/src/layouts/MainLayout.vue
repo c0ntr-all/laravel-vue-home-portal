@@ -14,9 +14,11 @@
 
         <q-space />
 
-<!--        <q-toolbar-title>Home Portal</q-toolbar-title>-->
-
         <music-player />
+
+        <q-btn class="q-ml-md" icon="dark_mode" color="primary" flat dense />
+
+        <q-btn class="q-ml-md" icon="notifications" color="primary" flat dense />
 
         <q-btn class="q-ml-md" round flat>
           <q-avatar size="35px">
@@ -75,7 +77,9 @@
               <q-item-section>{{ item.meta.title }}</q-item-section>
             </q-item>
           </template>
-          <hr>
+
+          <q-separator color="grey-3" />
+
           <template v-for="item in $router.options.routes[0].children.filter(item => item.admin === true)">
             <q-item
               :index="item.path"
