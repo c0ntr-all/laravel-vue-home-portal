@@ -64,11 +64,14 @@
             <q-item
               :index="item.path"
               :to="item.path"
+              class="sidebar-menu__item"
               exact
               clickable
               v-ripple
             >
-              <q-item-section avatar><q-icon :name="item.meta.icon ?? 'label'" /></q-item-section>
+              <q-item-section side>
+                <q-icon :name="item.meta.icon ?? 'label'" color="primary" />
+              </q-item-section>
               <q-item-section>{{ item.meta.title }}</q-item-section>
             </q-item>
           </template>
@@ -77,21 +80,23 @@
             <q-item
               :index="item.path"
               :to="item.path"
+              class="sidebar-menu__item"
               exact
               clickable
               v-ripple
             >
-              <q-item-section avatar><q-icon :name="item.meta.icon ?? 'label'" /></q-item-section>
+              <q-item-section side>
+                <q-icon :name="item.meta.icon ?? 'label'" color="primary" />
+              </q-item-section>
               <q-item-section>{{ item.meta.title }}</q-item-section>
             </q-item>
           </template>
         </q-list>
       </q-scroll-area>
 
-      <q-img class="absolute-top" src="images/mountains.jpeg" style="height: 75px">
-        <div class="absolute-bottom bg-transparent">
-        </div>
-      </q-img>
+      <div class="logo-wrap q-px-md absolute-top">
+        <q-img class="logo" src="logo/logo-1.svg" fit="contain" />
+      </div>
     </q-drawer>
 
     <q-page-container>
@@ -146,6 +151,20 @@ export default defineComponent({
     }
     &__role {
 
+    }
+  }
+  .logo-wrap {
+    height: 75px;
+    border-block-end: 1px solid #e9edf4;
+    border-inline-end: 1px solid #e9edf4;
+  }
+  .logo {
+    height: 75px;
+  }
+  .sidebar-menu {
+    &__item {
+      color: #282f53;
+      font-size: 16px;
     }
   }
 </style>
