@@ -126,6 +126,7 @@ export default {
     const remindTable = ref(null)
     const columns = [
       { name: 'title', label: 'Title', field: 'title', align: 'left', sortable: true },
+      { name: 'time_left', label: 'Time left', field: 'time_left', align: 'center', sortable: true },
       { name: 'date', label: 'Date', field: 'datetime', align: 'center', sortable: true },
       { name: 'active', label: 'Active', field: 'isActive', align: 'center', }
     ]
