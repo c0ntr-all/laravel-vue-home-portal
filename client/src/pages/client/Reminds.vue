@@ -35,17 +35,7 @@
           :key="col.name"
           :props="props"
         >
-          <template v-if="col.name === 'active'">
-            <q-toggle
-              v-model="props.row.isActive"
-              @click="switchActive(props.row)"
-              checked-icon="add"
-              unchecked-icon="remove"
-            />
-          </template>
-          <template v-else>
-            {{ col.value }}
-          </template>
+          <table-col :col="col" :row="props.row" @activeSwitched="sortReminds" />
         </q-td>
       </q-tr>
       <q-tr v-show="props.expand" :props="props">
@@ -119,7 +109,12 @@ import {useQuasar} from "quasar"
 
 import API from "src/utils/api"
 
+import TableCol from 'src/components/client/reminds/RemindsTableCol.vue'
+
 export default {
+  components: {
+    TableCol
+  },
   setup() {
     const $q = useQuasar()
 
@@ -150,25 +145,6 @@ export default {
         })
       })
     }
-    const switchActive = async row => {
-      await API.post(`reminds/${row.id}/update`, {
-        'id': row.id,
-        'is_active': row.isActive,
-      }).then(response => {
-        setTimeout(() => {
-          reminds.value.sort((a, b) => b.isActive > a.isActive ? 1 : -1)
-        }, 500)
-        $q.notify({
-          type: 'positive',
-          message: `The status of remind has been changed!`
-        })
-      }).catch(error => {
-        $q.notify({
-          type: 'negative',
-          message: `Server Error: ${error.response.data.message}`
-        })
-      })
-    }
     const createRemind = async () => {
       createRemindLoading.value = true
       await API.put('reminds/store', {
@@ -190,6 +166,12 @@ export default {
       })
     }
 
+    const sortReminds = () => {
+      setTimeout(() => {
+        reminds.value.sort((a, b) => b.isActive > a.isActive ? 1 : -1)
+      }, 500)
+    }
+
     onMounted(() => {
       getReminds()
     })
@@ -201,8 +183,8 @@ export default {
       showModal,
       model,
       createRemindLoading,
-      switchActive,
-      createRemind
+      createRemind,
+      sortReminds
     }
   }
 }
