@@ -15,7 +15,8 @@ class CreateRemindsTable extends Migration
     {
         Schema::create('reminds', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('group_id')->nullable()->default(NULL);;
             $table->string('title');
             $table->text('content')->nullable()->default(NULL);
             $table->timestamp('datetime')->nullable();
@@ -25,6 +26,7 @@ class CreateRemindsTable extends Migration
             $table->timestamp('updated_at')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('group_id')->references('id')->on('reminds_groups');
         });
     }
 

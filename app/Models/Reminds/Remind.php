@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Reminds;
 
 use App\Models\Traits\HasDates;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Lang;
 
@@ -24,14 +25,14 @@ class Remind extends Model
         'updated_at'
     ];
 
-    public function getItems(): Collection
-    {
-        return Remind::orderByDesc('is_active')->orderByDesc('datetime')->get();
-    }
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(RemindGroup::class);
     }
 
     public function getTimeLeftAttribute()
@@ -85,5 +86,10 @@ class Remind extends Model
             'past' => $past,
             'message' => $out
         ];
+    }
+
+    public function getItems(): Collection
+    {
+        return Remind::orderByDesc('is_active')->orderByDesc('datetime')->get();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Models\Widgets;
 
-use App\Models\Remind;
+use App\Models\Reminds\Remind;
 use Illuminate\Support\Carbon;
 
 class RemindsWidget extends Widget implements WidgetInterface

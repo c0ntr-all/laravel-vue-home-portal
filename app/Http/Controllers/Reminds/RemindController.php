@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Reminds;
 
 use App\Http\Controllers\Controller;
-use App\Models\Remind;
-use App\Http\Resources\RemindCollection;
-use App\Http\Resources\RemindResource;
 use App\Http\Requests\Reminds\IndexRequest;
 use App\Http\Requests\Reminds\StoreRequest;
 use App\Http\Requests\Reminds\UpdateRequest;
+use App\Http\Resources\RemindCollection;
+use App\Http\Resources\RemindResource;
+use App\Models\Reminds\Remind;
 use R64\NovaFields\Boolean;
 
 class RemindController extends Controller

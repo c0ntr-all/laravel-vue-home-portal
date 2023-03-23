@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\Models\Traits\HasDates;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Reminds\Remind;
 use App\Models\Tasks\TaskList;
-use App\Models\Remind;
+use App\Models\Traits\HasDates;
 use App\Models\Widgets\WidgetPlacement;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
