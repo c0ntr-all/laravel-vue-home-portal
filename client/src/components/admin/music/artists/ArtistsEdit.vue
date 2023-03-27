@@ -193,11 +193,11 @@ export default {
       commonTags.value = Object.keys(data.tags.common).map(key => data.tags.common[key])
       secondaryTags.value = Object.keys(data.tags.secondary).map(key => data.tags.secondary[key])
     }
-    const searchArtists = async (search) => {
+    const searchArtists = async search => {
       const {data} = await API.post('music/admin/artists/search', {name: search})
       artists.value = data.data.artists
     }
-    const initArtistEdit = async (artist) => {
+    const initArtistEdit = artist => {
       model.value = artist
 
       showModal.value = true
@@ -209,7 +209,7 @@ export default {
         cancel: true,
         persistent: true
       }).onOk(() => {
-
+        //todo Add method to delete artist
       })
     }
     const updateArtist = async () => {

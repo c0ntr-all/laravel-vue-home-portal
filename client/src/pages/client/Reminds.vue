@@ -3,7 +3,7 @@
 
   <template v-else>
     <div class="q-mb-lg">
-      <q-btn @click="showModal = true" color="primary" label="Create Remind" icon="add" />
+      <q-btn @click="createRemindModal = true" color="primary" label="Create Remind" icon="add" />
     </div>
     <q-table
       :rows="reminds"
@@ -31,7 +31,21 @@
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td auto-width>
-            <q-btn size="sm" round dense @click="props.expand = !props.expand" :icon="props.expand ? 'expand_more' : 'chevron_right'" />
+            <q-btn
+              class="q-mr-sm"
+              size="sm"
+              @click="props.expand = !props.expand"
+              :icon="props.expand ? 'expand_more' : 'chevron_right'"
+              round
+              dense
+            />
+            <q-btn
+              @click="initRemindUpdate(props.row)"
+              size="sm"
+              icon="edit"
+              round
+              dense
+            />
           </q-td>
           <q-td
             v-for="col in props.cols"
@@ -43,12 +57,12 @@
         </q-tr>
         <q-tr v-show="props.expand" :props="props">
           <q-td colspan="100%">
-            <div class="text-left">This is expand slot for row above: {{ props.row.title }}.</div>
+            <div class="text-left">{{ props.row.content }}</div>
           </q-td>
         </q-tr>
       </template>
     </q-table>
-    <q-dialog v-model="showModal">
+    <q-dialog v-model="createRemindModal" @hide="onHideModal">
       <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section>
           <div class="text-h6">Добавить напоминание</div>
@@ -105,6 +119,63 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="updateRemindModal" @hide="onHideModal">
+      <q-card style="width: 700px; max-width: 80vw;">
+        <q-card-section>
+          <div class="text-h6">Редактировать напоминание</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <q-form class="q-gutter-y-md column">
+            <q-input
+              v-model="model.title"
+              label="Заголовок"
+              :rules="[ val => val && val.length > 0 || 'Поле title должно быть заполнено!']"
+              outlined
+              dense
+            />
+            <q-input
+              v-model="model.content"
+              label="Описание"
+              type="textarea"
+              outlined
+              dense
+            />
+            <q-input v-model="model.datetime" outlined filled>
+              <template v-slot:prepend>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="model.datetime" mask="YYYY-MM-DD HH:mm">
+                      <div class="row items-center justify-end">
+                        <q-btn label="Close" color="primary" v-close-popup flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+
+              <template v-slot:append>
+                <q-icon name="access_time" class="cursor-pointer">
+                  <q-popup-proxy transition-show="scale" transition-hide="scale" cover>
+                    <q-time v-model="model.datetime" mask="YYYY-MM-DD HH:mm" format24h>
+                      <div class="row items-center justify-end">
+                        <q-btn label="Close" color="primary" v-close-popup flat />
+                      </div>
+                    </q-time>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </q-form>
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white">
+          <q-btn label="Update" color="primary" @click="updateRemind" :loading="updateRemindLoading" />
+          <!--Todo: Need to write cancel update handler for returning previous values to model-->
+          <q-btn label="Cancel" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </template>
 </template>
 <script>
@@ -133,7 +204,8 @@ export default {
       { name: 'active', label: 'Active', field: 'isActive', align: 'center', }
     ]
     const reminds = ref([])
-    const showModal = ref(false)
+    const createRemindModal = ref(false)
+    const updateRemindModal = ref(false)
     const model = ref({
       title: '',
       content: '',
@@ -141,6 +213,7 @@ export default {
       is_active: true
     })
     const createRemindLoading = ref(false)
+    const updateRemindLoading = ref(false)
 
     const getReminds = async () => {
       await API.get('reminds').then(response => {
@@ -154,6 +227,7 @@ export default {
         loading.value = false
       })
     }
+
     const createRemind = async () => {
       createRemindLoading.value = true
       await API.put('reminds/store', {
@@ -165,9 +239,35 @@ export default {
           type: 'positive',
           message: `Remind has been created`
         })
-        showModal.value = false
+        createRemindModal.value = false
       }).catch(error => {
         createRemindLoading.value = false
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+      })
+    }
+
+    const updateRemind = async () => {
+      updateRemindLoading.value = true
+
+      await API.patch('reminds/update', {
+        ...model.value
+      }).then(response => {
+        for(let key in reminds.value) {
+          if(reminds.value[key].id === response.data.data.id) {
+            reminds.value[key] = response.data.data
+          }
+        }
+        updateRemindLoading.value = false
+        $q.notify({
+          type: 'positive',
+          message: `Remind has been updated!`
+        })
+        updateRemindModal.value = false
+      }).catch(error => {
+        updateRemindLoading.value = false
         $q.notify({
           type: 'negative',
           message: `Server Error: ${error.response.data.message}`
@@ -181,6 +281,16 @@ export default {
       }, 500)
     }
 
+    const initRemindUpdate = remind => {
+      model.value = remind
+
+      updateRemindModal.value = true
+    }
+
+    const onHideModal = () => {
+      model.value = {}
+    }
+
     onMounted(() => {
       getReminds()
     })
@@ -190,11 +300,16 @@ export default {
       columns,
       reminds,
       remindTable,
-      showModal,
+      createRemindModal,
+      updateRemindModal,
       model,
       createRemindLoading,
+      updateRemindLoading,
       createRemind,
-      sortReminds
+      sortReminds,
+      initRemindUpdate,
+      updateRemind,
+      onHideModal
     }
   }
 }
