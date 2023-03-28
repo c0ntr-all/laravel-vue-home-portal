@@ -25,6 +25,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'title' => 'sometimes|string',
+            'content' => 'sometimes|string',
             'date' => 'sometimes',
             'is_active' => 'sometimes|bool'
         ];

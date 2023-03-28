@@ -230,6 +230,7 @@ export default {
 
     const createRemind = async () => {
       createRemindLoading.value = true
+
       await API.put('reminds/store', {
         ...model.value
       }).then(response => {
@@ -252,7 +253,7 @@ export default {
     const updateRemind = async () => {
       updateRemindLoading.value = true
 
-      await API.patch('reminds/update', {
+      await API.patch(`reminds/${model.value.id}/update`, {
         ...model.value
       }).then(response => {
         for(let key in reminds.value) {

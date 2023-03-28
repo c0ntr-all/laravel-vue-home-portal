@@ -63,7 +63,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
         Route::prefix('reminds')->group(function() {
             Route::get('/', [RemindController::class, 'index']);
             Route::put('store', [RemindController::class, 'store']);
-            Route::post('/{remind}/update', [RemindController::class, 'update']);
+            Route::patch('/{remind}/update', [RemindController::class, 'update']);
         });
 
         Route::prefix('restaurants')->group(function() {
