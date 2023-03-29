@@ -10,6 +10,16 @@ class RemindGroup extends Model
 {
     use HasFactory;
 
+    public $table = 'reminds_groups';
+    public $timestamps = false;
+
+    public $fillable = [
+        'user_id',
+        'name',
+        'content',
+        'color',
+    ];
+
     public function reminds(): HasMany
     {
         return $this->hasMany(Remind::class);

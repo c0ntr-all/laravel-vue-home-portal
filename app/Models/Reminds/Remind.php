@@ -35,7 +35,12 @@ class Remind extends Model
         return $this->belongsTo(RemindGroup::class);
     }
 
-    public function getTimeLeftAttribute()
+    public function getGroupNameAttribute(): string|null
+    {
+        return $this->group()->first()?->name;
+    }
+
+    public function getTimeLeftAttribute(): array
     {
         $startdate = Carbon::now();
         $enddate = Carbon::parse($this->datetime);

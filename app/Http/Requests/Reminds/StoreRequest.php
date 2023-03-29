@@ -26,6 +26,7 @@ class StoreRequest extends FormRequest
         return [
             'title' => 'required|string|max:70',
             'content' => 'sometimes|string|max:1000',
+            'group' => 'sometimes|string|max:50',
             'datetime' => 'required|string',
             'is_active' => 'sometimes|bool'
         ];

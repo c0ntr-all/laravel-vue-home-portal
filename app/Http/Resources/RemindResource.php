@@ -14,6 +14,7 @@ class RemindResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'content' => $this->content,
+            'group' => $this->groupName,
             'time_left' => $this->time_left,
             'datetime' => $this->datetime,
             'isActive' => (bool)$this->is_active,

@@ -109,6 +109,14 @@
                 </q-icon>
               </template>
             </q-input>
+            <div class="q-gutter-sm">
+              <q-radio v-model="model.group" val="teal" label="Teal" color="teal" />
+              <q-radio v-model="model.group" val="orange" label="Orange" color="orange" />
+              <q-radio v-model="model.group" val="red" label="Red" color="red" />
+              <q-radio v-model="model.group" val="cyan" label="Cyan" color="cyan" />
+              <q-radio v-model="model.group" val="green" label="Green" color="green" />
+              <q-radio v-model="model.group" val="blue" label="Blue" color="blue" />
+            </div>
           </q-form>
         </q-card-section>
 
@@ -166,6 +174,14 @@
                 </q-icon>
               </template>
             </q-input>
+            <div class="q-gutter-sm">
+              <q-radio v-model="model.group" val="teal" label="Teal" color="teal" />
+              <q-radio v-model="model.group" val="orange" label="Orange" color="orange" />
+              <q-radio v-model="model.group" val="red" label="Red" color="red" />
+              <q-radio v-model="model.group" val="cyan" label="Cyan" color="cyan" />
+              <q-radio v-model="model.group" val="green" label="Green" color="green" />
+              <q-radio v-model="model.group" val="blue" label="Blue" color="blue" />
+            </div>
           </q-form>
         </q-card-section>
 
@@ -209,6 +225,7 @@ export default {
     const model = ref({
       title: '',
       content: '',
+      group: '',
       datetime: '',
       is_active: true
     })
