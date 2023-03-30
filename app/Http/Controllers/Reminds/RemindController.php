@@ -39,7 +39,9 @@ class RemindController extends Controller
     public function update(Remind $remind, UpdateRequest $request)
     {
         if($remind->update($request->validated())) {
-            $this->remindService->syncGroup($remind, $request->validated()['group']);
+            if (isset($request->validated()['group'])) {
+                $this->remindService->syncGroup($remind, $request->validated()['group']);
+            }
 
             return $this->remindResponse($remind);
         }

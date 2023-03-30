@@ -17,9 +17,7 @@ class RemindResource extends JsonResource
             'group' => $this->groupName,
             'time_left' => $this->time_left,
             'datetime' => $this->datetime,
-            'isActive' => (bool)$this->is_active,
-            'createdAt' => $this->created_at,
-            'updatedAt' => $this->updated_at,
+            'is_active' => (bool)$this->is_active
         ];
     }
 }

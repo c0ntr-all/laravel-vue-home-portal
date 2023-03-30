@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
         return [
             'title' => 'sometimes|string',
             'content' => 'sometimes|string',
-            'group' => 'sometimes|string|max:50',
+            'group' => 'sometimes|string|nullable|max:50',
             'datetime' => 'sometimes',
             'is_active' => 'sometimes|bool'
         ];

@@ -38,14 +38,6 @@
             >
             </span>
             <q-btn
-              class="q-mr-sm"
-              size="sm"
-              @click="props.expand = !props.expand"
-              :icon="props.expand ? 'expand_more' : 'chevron_right'"
-              round
-              dense
-            />
-            <q-btn
               @click="initRemindUpdate(props.row)"
               size="sm"
               icon="edit"
@@ -59,11 +51,6 @@
             :props="props"
           >
             <table-col :col="col" :row="props.row" @activeSwitched="sortReminds" />
-          </q-td>
-        </q-tr>
-        <q-tr v-show="props.expand" :props="props">
-          <q-td colspan="100%">
-            <div class="text-left">{{ props.row.content }}</div>
           </q-td>
         </q-tr>
       </template>
@@ -123,6 +110,15 @@
               <q-radio v-model="model.group" val="green" label="Green" color="green" />
               <q-radio v-model="model.group" val="blue" label="Blue" color="blue" />
             </div>
+            <div class="justify-start">
+              <q-toggle
+                v-model="model.is_active"
+                checked-icon="add"
+                unchecked-icon="remove"
+                label="Active"
+                left-label
+              />
+            </div>
           </q-form>
         </q-card-section>
 
@@ -148,13 +144,9 @@
               outlined
               dense
             />
-            <q-input
-              v-model="model.content"
-              label="Описание"
-              type="textarea"
-              outlined
-              dense
-            />
+
+            <q-editor v-model="model.content" min-height="5rem" />
+
             <q-input v-model="model.datetime" outlined filled>
               <template v-slot:prepend>
                 <q-icon name="event" class="cursor-pointer">
@@ -187,6 +179,15 @@
               <q-radio v-model="model.group" val="cyan" label="Cyan" color="cyan" />
               <q-radio v-model="model.group" val="green" label="Green" color="green" />
               <q-radio v-model="model.group" val="blue" label="Blue" color="blue" />
+            </div>
+            <div class="justify-start">
+              <q-toggle
+                v-model="model.is_active"
+                checked-icon="add"
+                unchecked-icon="remove"
+                label="Active"
+                left-label
+              />
             </div>
           </q-form>
         </q-card-section>
@@ -221,9 +222,9 @@ export default {
     const remindTable = ref(null)
     const columns = [
       { name: 'title', label: 'Title', field: 'title', align: 'left', sortable: true },
-      { name: 'time_left', label: 'Time left', field: 'time_left', align: 'center', sortable: true },
+      { name: 'time_left', label: 'Time left', field: 'time_left', align: 'center' },
       { name: 'date', label: 'Date', field: 'datetime', align: 'center', sortable: true },
-      { name: 'active', label: 'Active', field: 'isActive', align: 'center', }
+      { name: 'active', label: 'Active', field: 'is_active', align: 'center', }
     ]
     const reminds = ref([])
     const createRemindModal = ref(false)
@@ -301,7 +302,7 @@ export default {
 
     const sortReminds = () => {
       setTimeout(() => {
-        reminds.value.sort((a, b) => b.isActive > a.isActive ? 1 : -1)
+        reminds.value.sort((a, b) => b.group > a.group ? 1 : -1)
       }, 500)
     }
 
