@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Reminds\IndexRequest;
 use App\Http\Requests\Reminds\StoreRequest;
 use App\Http\Requests\Reminds\UpdateRequest;
-use App\Http\Resources\RemindCollection;
-use App\Http\Resources\RemindResource;
+use App\Http\Resources\Remind\RemindCollection;
+use App\Http\Resources\Remind\RemindResource;
 use App\Models\Reminds\Remind;
 use App\Services\RemindService;
 

@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Tasks;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tasks\TaskLists\IndexRequest;
 use App\Http\Requests\Tasks\TaskLists\StoreRequest;
-use App\Http\Resources\TaskListCollection;
-use App\Http\Resources\TaskListResource;
+use App\Http\Resources\Task\TaskListCollection;
+use App\Http\Resources\Task\TaskListResource;
 use App\Models\Tasks\TaskList;
-use App\Models\User;
 
 class TaskListController extends Controller
 {

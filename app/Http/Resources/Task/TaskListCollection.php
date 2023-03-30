@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Task;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class RemindCollection extends ResourceCollection
+class TaskListCollection extends ResourceCollection
 {
     public static $wrap = '';
 
     public function toArray($request): array
     {
         return [
-            'reminds' => $this->collection,
-            'remindsCount' => $this->count()
+            'lists' => $this->collection,
+            'listsCount' => $this->count()
         ];
     }
 }

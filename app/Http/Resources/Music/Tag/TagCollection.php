@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Music\Tag;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Collection;

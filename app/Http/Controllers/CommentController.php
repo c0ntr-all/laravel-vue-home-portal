@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Comment\StoreRequest;
+use App\Http\Resources\Comment\CommentResource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use App\Http\Requests\Comment\StoreRequest;
-use App\Http\Resources\CommentResource;
 
 class CommentController extends Controller {
 
