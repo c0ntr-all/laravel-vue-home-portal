@@ -95,6 +95,6 @@ class Remind extends Model
 
     public function getItems(): Collection
     {
-        return Remind::orderByDesc('is_active')->orderByDesc('datetime')->get();
+        return Remind::orderByDesc('group_id')->orderByDesc('is_active')->orderByDesc('datetime')->get();
     }
 }

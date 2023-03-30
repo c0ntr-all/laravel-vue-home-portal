@@ -29,8 +29,14 @@
       </template>
 
       <template v-slot:body="props">
-        <q-tr :props="props">
-          <q-td auto-width>
+        <q-tr :props="props" class="remind">
+          <q-td class="remind__col" auto-width>
+            <span
+              v-if="props.row.group"
+              class="remind__group"
+              :style="[props.row.group ? {'background-color': props.row.group} : {'background-color': 'transparent'}]"
+            >
+            </span>
             <q-btn
               class="q-mr-sm"
               size="sm"
@@ -333,5 +339,17 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+  .remind {
+    position: relative;
 
+    &__group {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      padding: 0 !important;
+      border-radius: 0 50% 50% 0;
+    }
+  }
 </style>
