@@ -21,34 +21,52 @@
   >
     <q-tab-panel name="reminds" class="q-pa-none">
       <q-card class="q-mb-md" flat bordered>
-        <q-card-section class="row">
+        <q-card-section class="settings-area row">
           <div class="col-lg-2">
             Группы
           </div>
           <div class="col-lg-10">
-            <q-table
-              class="q-mb-md"
-              :rows="[
-                { name: 'Teal', color: 'teal' },
-                { name: 'Orange', color: 'orange' },
-                { name: 'Red', color: 'red' },
-                { name: 'Cyan', color: 'cyan' },
-                { name: 'Green', color: 'green' },
-                { name: 'Blue', color: 'blue' },
-              ]"
-              :columns="[
-                { name: 'name', align: 'left', field: row => row.name },
-                { name: 'color', align: 'center', field: 'color' }
-              ]"
-              row-key="name"
-              hide-header
-              hide-bottom
-              flat
-              bordered
-              dense
-            />
-            <q-btn label="Add" color="primary" icon="add" />
+            <table class="settings-table q-mb-lg">
+              <tr v-for="row in settings" class="settings-table__row">
+                <td class="settings-table__col">
+                  <q-input
+                    v-model="row.name"
+                    :rules="[ val => val.length >= 3 || 'Please use minimum 3 characters' ]"
+                    class="q-pa-none"
+                    borderless
+                    dense
+                  />
+                </td>
+                <td class="settings-table__col">
+                  <div class="flex items-center">
+                    <div class="color-square q-mr-sm" :style="`background-color:${row.color}`"></div>
+                    <q-input
+                      v-model="row.color"
+                      :rules="['anyColor']"
+                      class="q-pa-none"
+                      borderless
+                      dense
+                    >
+                      <template v-slot:append>
+                        <q-icon name="colorize" class="cursor-pointer">
+                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                            <q-color v-model="row.color" format-model="hex" />
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                    </q-input>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <q-btn @click="addRow" label="Add" color="secondary" icon="add" />
           </div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section>
+          <q-btn label="Save" color="primary" />
         </q-card-section>
       </q-card>
     </q-tab-panel>
@@ -66,35 +84,54 @@ import API from '../../../utils/api'
 export default {
   setup() {
     const tab = ref('reminds')
+    const columns = ref([
+      { name: 'name', align: 'left', field: row => row.name },
+      { name: 'color', align: 'left', field: 'color' }
+    ])
+    const settings = ref([
+      { name: 'Teal', color: '#008080' },
+      { name: 'Orange', color: '#ffa500' },
+      { name: 'Red', color: '#ff0000' },
+      { name: 'Cyan', color: '#00ffff' },
+      { name: 'Green', color: '#008000' },
+      { name: 'Blue', color: '#0000ff' },
+    ])
 
-    return {
-      tab
-    }
-  },
-  data() {
-    return {
-      email: '',
-      loading: false
-    }
-  },
-  methods: {
-    async getProfile() {
-      this.loading = true
+    const addRow = () => {
+      const lastItem = settings.value[settings.value.length - 1]
 
-      const {data} = await API.post('me')
-      if(!data) {
-        throw new Error('Нет данных!')
+      if (lastItem.name && lastItem.color) {
+        settings.value.push({name: '', color: ''})
       }
-      this.email = data.email
-      this.loading = false
     }
-  },
-  mounted() {
-    this.getProfile()
+
+    return {
+      columns,
+      settings,
+      tab,
+      addRow
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
+.settings {
+  &-area {
+    max-width: 700px;
+  }
+  &-table {
+    border-collapse: collapse;
+
+    &__col {
+      padding: 0 1rem;
+      border: 1px solid #ccc;
+    }
+  }
+}
+.color-square {
+  width: 10px;
+  height: 10px;
+}
 .q-tab-panels {
   background-color: transparent;
 }
