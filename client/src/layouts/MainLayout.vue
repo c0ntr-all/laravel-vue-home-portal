@@ -41,7 +41,7 @@
                   <q-item-section side><q-icon name="person" /></q-item-section>
                   <q-item-section>Profile</q-item-section>
                 </q-item>
-                <q-item clickable>
+                <q-item :to="'/settings'" clickable>
                   <q-item-section side><q-icon name="settings" /></q-item-section>
                   <q-item-section>Settings</q-item-section>
                 </q-item>

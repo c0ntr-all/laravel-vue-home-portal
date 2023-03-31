@@ -4,12 +4,21 @@ const routes = [{
   component: () => import('layouts/MainLayout.vue'),
   children: [{
     path: '/profile',
-    component: () => import('pages/Profile.vue'),
+    component: () => import('pages/client/profile/Profile.vue'),
     meta: {
       title: 'Профиль'
     },
     name: 'profile',
     alias: '/profile',
+    menu: false
+  }, {
+    path: '/settings',
+    component: () => import('pages/client/profile/Settings.vue'),
+    meta: {
+      title: 'Настройки'
+    },
+    name: 'settings',
+    alias: '/settings',
     menu: false
   }, {
     path: '/home',
