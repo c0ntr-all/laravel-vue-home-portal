@@ -27,7 +27,7 @@
           </div>
           <div class="col-lg-10">
             <table class="settings-table q-mb-lg">
-              <tr v-for="row in settings" class="settings-table__row">
+              <tr v-for="(row, index) in settings" class="settings-table__row">
                 <td class="settings-table__col">
                   <q-input
                     v-model="row.name"
@@ -56,6 +56,9 @@
                       </template>
                     </q-input>
                   </div>
+                </td>
+                <td>
+                  <q-btn @click="removeRow(index)" class="q-ml-sm" icon="close" flat dense round />
                 </td>
               </tr>
             </table>
@@ -102,6 +105,10 @@ export default {
       }
     }
 
+    const removeRow = index => {
+      settings.value.splice(index, 1)
+    }
+
     const getSettings = async () => {
       await API.get('user/settings').then(response => {
         settings.value = response.data.value
@@ -145,6 +152,7 @@ export default {
       settings,
       tab,
       addRow,
+      removeRow,
       saveSettings
     }
   }
