@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWidgetsPlacementsTable extends Migration
+class CreateUsersSettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,24 +13,20 @@ class CreateWidgetsPlacementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('widgets_placements', function (Blueprint $table) {
+        Schema::create('users_settings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('widget_id');
-            $table->integer('rank');
-            $table->string('size');
+            $table->string('model');
+            $table->string('key');
+            $table->text('value');
+            $table->timestamps();
 
             $table->foreign('user_id')
                   ->references('id')
                   ->on('users')
                   ->cascadeOnDelete();
-            $table->foreign('widget_id')
-                  ->references('id')
-                  ->on('widgets')
-                  ->cascadeOnDelete();
         });
     }
-
     /**
      * Reverse the migrations.
      *
@@ -38,6 +34,6 @@ class CreateWidgetsPlacementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('widgets_placements');
+        Schema::dropIfExists('users_settings');
     }
 }

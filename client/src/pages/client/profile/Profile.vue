@@ -16,7 +16,7 @@ export default {
     async getProfile() {
       this.loading = true
 
-      const {data} = await API.post('me')
+      const {data} = await API.get('user')
       if(!data) {
         throw new Error('Нет данных!')
       }

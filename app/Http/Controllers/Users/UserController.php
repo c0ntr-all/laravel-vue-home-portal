@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Users;
 
-use App\Http\Requests\User\LoginRequest;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
-use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -15,6 +14,16 @@ class UserController extends Controller
     public function __construct(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index()
+    {
+        return response()->json(auth()->user());
     }
 
     public function show(): array
@@ -36,15 +45,6 @@ class UserController extends Controller
         auth()->user()->update($request->validated()['user']);
 
         return $this->userResource(auth()->getToken()->get());
-    }
-
-    public function login(LoginRequest $request): array
-    {
-        if ($token = auth()->attempt($request->validated()['user'])) {
-            return $this->userResource($token);
-        }
-
-        abort(Response::HTTP_FORBIDDEN);
     }
 
     protected function userResource(string $jwtToken): array

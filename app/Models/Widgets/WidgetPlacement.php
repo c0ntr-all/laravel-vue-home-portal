@@ -6,15 +6,13 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Traits\HasUser;
 
 class WidgetPlacement extends Model
 {
-    public $table = 'widgets_placements';
+    use HasUser;
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+    public $table = 'widgets_placements';
 
     public function widget(): belongsTo
     {

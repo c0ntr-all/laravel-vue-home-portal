@@ -66,7 +66,7 @@
         <q-separator />
 
         <q-card-section>
-          <q-btn label="Save" color="primary" />
+          <q-btn @click="saveSettings" label="Save" color="primary" />
         </q-card-section>
       </q-card>
     </q-tab-panel>
@@ -77,25 +77,22 @@
 </template>
 
 <script>
-import {ref} from 'vue'
+import {ref, onMounted} from 'vue'
+import {useQuasar} from "quasar"
 
 import API from '../../../utils/api'
 
 export default {
   setup() {
+    const $q = useQuasar()
+
+    let loading = ref(true)
     const tab = ref('reminds')
     const columns = ref([
       { name: 'name', align: 'left', field: row => row.name },
       { name: 'color', align: 'left', field: 'color' }
     ])
-    const settings = ref([
-      { name: 'Teal', color: '#008080' },
-      { name: 'Orange', color: '#ffa500' },
-      { name: 'Red', color: '#ff0000' },
-      { name: 'Cyan', color: '#00ffff' },
-      { name: 'Green', color: '#008000' },
-      { name: 'Blue', color: '#0000ff' },
-    ])
+    const settings = ref([])
 
     const addRow = () => {
       const lastItem = settings.value[settings.value.length - 1]
@@ -105,11 +102,50 @@ export default {
       }
     }
 
+    const getSettings = async () => {
+      await API.get('user/settings').then(response => {
+        settings.value = response.data.value
+        loading.value = false
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+        loading.value = false
+      })
+    }
+
+    const saveSettings = async () => {
+      const remindsSettings = {
+        model: 'reminds',
+        key: 'groups',
+        value: settings.value
+      }
+      await API.patch('user/settings/update', {
+        'settings': remindsSettings
+      }).then(response => {
+        $q.notify({
+          type: 'positive',
+          message: 'Настройки успешно сохранены!'
+        })
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server error: ${error.data.message}`
+        })
+      })
+    }
+
+    onMounted(() => {
+      getSettings()
+    })
+
     return {
       columns,
       settings,
       tab,
-      addRow
+      addRow,
+      saveSettings
     }
   }
 }

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Users;
 
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
@@ -31,16 +30,6 @@ class AuthController extends Controller
         }
 
         return $this->respondWithToken($token);
-    }
-
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function me()
-    {
-        return response()->json(auth()->user());
     }
 
     /**

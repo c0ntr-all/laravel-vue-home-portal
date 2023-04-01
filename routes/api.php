@@ -1,21 +1,22 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Finances\FinancesController;
 use App\Http\Controllers\FolderController;
+use App\Http\Controllers\Music\Admin\ArtistController as AdminArtistController;
 use App\Http\Controllers\Music\AlbumController;
 use App\Http\Controllers\Music\ArtistController;
-use App\Http\Controllers\Music\Admin\ArtistController as AdminArtistController;
 use App\Http\Controllers\Music\TagController;
 use App\Http\Controllers\Music\TrackController;
 use App\Http\Controllers\Music\UploadController;
-use App\Http\Controllers\RatingController;
 use App\Http\Controllers\Reminds\RemindController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Tasks\TaskListController;
+use App\Http\Controllers\Users\AuthController;
+use App\Http\Controllers\Users\UserController;
+use App\Http\Controllers\Users\UserSettingsController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\WidgetController;
 use Illuminate\Http\Request;
@@ -39,7 +40,12 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::post('me', [AuthController::class, 'me']);
+
+    Route::prefix('user')->group(function() {
+        Route::get('/', [UserController::class, 'index']);
+        Route::get('settings', [UserSettingsController::class, 'index']);
+        Route::patch('settings/update', [UserSettingsController::class, 'update']);
+    });
 
     Route::middleware('jwt.auth')->group(function() {
         Route::prefix('widgets')->group(function() {
