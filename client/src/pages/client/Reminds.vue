@@ -50,7 +50,7 @@
             :key="col.name"
             :props="props"
           >
-            <table-col :col="col" :row="props.row" @activeSwitched="sortReminds" />
+            <table-col :col="col" :row="props.row" />
           </q-td>
         </q-tr>
       </template>
@@ -172,13 +172,16 @@
                 </q-icon>
               </template>
             </q-input>
-            <div class="q-gutter-sm">
-              <q-radio v-model="model.group" val="teal" label="Teal" color="teal" />
-              <q-radio v-model="model.group" val="orange" label="Orange" color="orange" />
-              <q-radio v-model="model.group" val="red" label="Red" color="red" />
-              <q-radio v-model="model.group" val="cyan" label="Cyan" color="cyan" />
-              <q-radio v-model="model.group" val="green" label="Green" color="green" />
-              <q-radio v-model="model.group" val="blue" label="Blue" color="blue" />
+            <div class="relative-position q-gutter-sm" style="height: 48px">
+              <q-radio
+                v-for="group in groups"
+                :key="group.color"
+                v-model="model.group"
+                :val="group.color"
+                :label="group.name"
+                :color="group.color"
+              />
+              <q-inner-loading :showing="getGroupsLoading" />
             </div>
             <div class="justify-start">
               <q-toggle
@@ -238,6 +241,8 @@ export default {
     })
     const createRemindLoading = ref(false)
     const updateRemindLoading = ref(false)
+    const getGroupsLoading = ref(false)
+    const groups = ref([])
 
     const getReminds = async () => {
       await API.get('reminds').then(response => {
@@ -306,10 +311,24 @@ export default {
       }, 500)
     }
 
-    const initRemindUpdate = remind => {
-      model.value = remind
-
+    const initRemindUpdate = async remind => {
       updateRemindModal.value = true
+
+      model.value = remind
+      if (!groups.value.length) {
+        getGroupsLoading.value = true
+
+        await API.get('user/settings').then(response => {
+          groups.value = response.data.value
+        }).catch(error => {
+          $q.notify({
+            type: 'negative',
+            message: 'There is a problem with loading groups!'
+          })
+        })
+
+        getGroupsLoading.value = false
+      }
     }
 
     const onHideModal = () => {
@@ -330,6 +349,8 @@ export default {
       model,
       createRemindLoading,
       updateRemindLoading,
+      getGroupsLoading,
+      groups,
       createRemind,
       sortReminds,
       initRemindUpdate,
