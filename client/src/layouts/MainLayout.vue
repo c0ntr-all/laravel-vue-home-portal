@@ -12,9 +12,9 @@
           round
         />
 
-        <q-space />
-
         <music-player />
+
+        <q-space />
 
         <q-btn class="q-ml-md" icon="dark_mode" color="primary" flat dense />
 

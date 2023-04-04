@@ -1,4 +1,118 @@
 <template>
+  <div class="music-player__panel flex row items-center q-px-md q-ml-md">
+    <div class="music-player__buttons">
+      <q-btn
+        icon="skip_previous"
+        color="primary"
+        flat
+        round
+      />
+      <q-btn
+        icon="play_arrow"
+        color="primary"
+        flat
+        round
+      />
+      <q-btn
+        icon="skip_next"
+        color="primary"
+        flat
+        round
+      />
+    </div>
+    <div class="music-player__title q-ml-md text-primary">
+      <span class="text-bold">Artist name</span> - Track name
+    </div>
+    <q-menu
+      class="music-player__menu"
+      transition-show="jump-down"
+      transition-hide="jump-up"
+      style="width: 660px; min-height: 200px"
+    >
+      <div class="flex row q-pa-md">
+        <div class="music-player__buttons-group">
+          <q-btn
+            @click="musicPlayer.prevTrack()"
+            icon="skip_previous"
+            flat
+            round
+          />
+          <q-btn
+            @click="musicPlayer.run()"
+            :icon="musicPlayer.status === 'playing' ? 'pause' : 'play_arrow'"
+            flat
+            round
+          />
+          <q-btn
+            @click="musicPlayer.nextTrack()"
+            icon="skip_next"
+            flat
+            round
+          />
+        </div>
+        <div class="music-player__track-info">
+          <div class="artist-name">{{ musicPlayer.track.artist }}</div>
+          <div class="track-name">{{ musicPlayer.track.name }}</div>
+        </div>
+        <div class="music-player__buttons-group">
+          <q-btn @click="musicPlayer.shuffle()" icon="shuffle" flat round />
+          <q-btn icon="repeat" flat round />
+        </div>
+      </div>
+      <q-separator />
+      <div class="q-pa-md">
+        <q-table
+          :rows="musicPlayer.playlist"
+          :columns="columns"
+          row-key="name"
+          :flat="true"
+          :rows-per-page-options="[0]"
+          :pagination.sync="{page: 1, rowsPerPage: 0}"
+        >
+          <template v-slot:body="props">
+            <q-tr
+              class="table-track"
+              :class="{'table-track--active': props.row.id === musicPlayer.track.id}"
+              :props="props"
+              @click="initPlay(props.row)"
+              @mouseover="hovered = true"
+              @mouseout="hovered = false"
+            >
+              <q-td
+                v-for="col in props.cols"
+                :key="col.name"
+                :props="props"
+              >
+                <template v-if="col.name === 'number'">
+                  {{ col.id }}
+                  <q-btn
+                    class="table-track__play-icon"
+                    icon="play_arrow"
+                    flat
+                    round
+                    dense
+                    v-if="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== props.row.id)"
+                  />
+                  <q-btn
+                    class="table-track__play-icon"
+                    icon="pause"
+                    flat
+                    round
+                    dense
+                    v-else
+                  />
+                  <div class="table-track__number">{{ col.value }}</div>
+                </template>
+                <template v-else>
+                  {{ col.value }}
+                </template>
+              </q-td>
+            </q-tr>
+          </template>
+        </q-table>
+      </div>
+    </q-menu>
+  </div>
   <q-btn label="Open Player" color="primary" @click="dialog = true" />
   <q-dialog v-model="dialog" position="right" style="height: 100%">
     <q-card class="music-player">
@@ -179,14 +293,25 @@ export default {
 </script>
 <style lang="scss" scoped>
 .music-player {
-  width: 352px;
-  height: 100%;
-  max-height: 100%;
-
-  &__volume {
-    width: 150px;
+  &__panel {
+    &:hover {
+      background: rgba(174, 183, 194, 0.12);
+      cursor: pointer;
+    }
+  }
+  &__track-info {
+    width: 160px;
   }
 }
+//.music-player {
+//  width: 352px;
+//  height: 100%;
+//  max-height: 100%;
+//
+//  &__volume {
+//    width: 150px;
+//  }
+//}
 .table-track {
   &:hover {
     cursor: pointer;
