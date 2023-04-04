@@ -29,8 +29,8 @@
       transition-hide="jump-up"
       style="width: 660px; min-height: 200px"
     >
-      <div class="flex row q-pa-md">
-        <div class="music-player__buttons-group">
+      <div class="music-player__controls flex row q-pa-sm">
+        <div class="music-player__buttons-group q-mr-sm">
           <q-btn
             @click="musicPlayer.prevTrack()"
             icon="skip_previous"
@@ -50,7 +50,7 @@
             round
           />
         </div>
-        <div class="music-player__track-info">
+        <div class="music-player__track-info q-mr-sm">
           <div class="artist-name">{{ musicPlayer.track.artist }}</div>
           <div class="track-name">{{ musicPlayer.track.name }}</div>
         </div>
@@ -59,57 +59,15 @@
           <q-btn icon="repeat" flat round />
         </div>
       </div>
-      <q-separator />
-      <div class="q-pa-md">
-        <q-table
-          :rows="musicPlayer.playlist"
-          :columns="columns"
-          row-key="name"
-          :flat="true"
-          :rows-per-page-options="[0]"
-          :pagination.sync="{page: 1, rowsPerPage: 0}"
-        >
-          <template v-slot:body="props">
-            <q-tr
-              class="table-track"
-              :class="{'table-track--active': props.row.id === musicPlayer.track.id}"
-              :props="props"
-              @click="initPlay(props.row)"
-              @mouseover="hovered = true"
-              @mouseout="hovered = false"
-            >
-              <q-td
-                v-for="col in props.cols"
-                :key="col.name"
-                :props="props"
-              >
-                <template v-if="col.name === 'number'">
-                  {{ col.id }}
-                  <q-btn
-                    class="table-track__play-icon"
-                    icon="play_arrow"
-                    flat
-                    round
-                    dense
-                    v-if="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== props.row.id)"
-                  />
-                  <q-btn
-                    class="table-track__play-icon"
-                    icon="pause"
-                    flat
-                    round
-                    dense
-                    v-else
-                  />
-                  <div class="table-track__number">{{ col.value }}</div>
-                </template>
-                <template v-else>
-                  {{ col.value }}
-                </template>
-              </q-td>
-            </q-tr>
-          </template>
-        </q-table>
+      <div class="q-pa-md q-gutter-xs">
+        <q-card v-for="item in 10" class="track-card flex row items-center" flat bordered>
+          <q-card-section class="track-card__image q-pa-none"></q-card-section>
+          <q-card-section class="track-card__info q-pa-none q-ml-sm">
+            <div class="track-card__track-name">Track Name</div>
+            <div class="track-card__artist-name">Artist Name</div>
+          </q-card-section>
+          <q-card-section class="track-card__time q-pa-none q-mr-sm">4:19</q-card-section>
+        </q-card>
       </div>
     </q-menu>
   </div>
@@ -299,8 +257,37 @@ export default {
       cursor: pointer;
     }
   }
+  &__controls {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 999;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
   &__track-info {
     width: 160px;
+  }
+}
+.track-card {
+  &__image {
+    width: 40px;
+    height: 40px;
+    margin: 4px;
+    border-radius: 8px;
+    background: #ccc;
+  }
+  &__info {
+    flex-grow: 1;
+  }
+  &__track-name,
+  &__artist-name {
+    font-size: 12.5px;
+  }
+  &__track-name {
+    font-weight: bold;
+  }
+  &__time {
+    flex-shrink: 0;
   }
 }
 //.music-player {
