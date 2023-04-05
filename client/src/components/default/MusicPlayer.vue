@@ -28,6 +28,7 @@
       transition-show="jump-down"
       transition-hide="jump-up"
       style="width: 660px; min-height: 200px"
+      @show="initPlayerParams"
     >
       <div class="music-player__controls flex row q-pa-sm">
         <div class="music-player__buttons-group q-mr-sm">
@@ -53,6 +54,14 @@
         <div class="music-player__track-info q-mr-sm">
           <div class="artist-name">{{ musicPlayer.track.artist }}</div>
           <div class="track-name">{{ musicPlayer.track.name }}</div>
+          <div class="music-player-slider">
+            <div class="music-player-slider__wrapper" ref="rangeLine">
+              <div class="music-player-slider__line">
+                <div class="music-player-slider__circle" ref="rangeCircle"></div>
+                <div class="music-player-slider__amount" ref="rangeAmount"></div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="music-player__buttons-group">
           <q-btn @click="musicPlayer.shuffle()" icon="shuffle" flat round />
@@ -63,138 +72,138 @@
         <q-card v-for="item in 10" class="track-card flex row items-center" flat bordered>
           <q-card-section class="track-card__image q-pa-none"></q-card-section>
           <q-card-section class="track-card__info q-pa-none q-ml-sm">
-            <div class="track-card__track-name">Track Name</div>
-            <div class="track-card__artist-name">Artist Name</div>
+            <div class="track-name">Track Name</div>
+            <div class="artist-name">Artist Name</div>
           </q-card-section>
           <q-card-section class="track-card__time q-pa-none q-mr-sm">4:19</q-card-section>
         </q-card>
       </div>
     </q-menu>
   </div>
-  <q-btn label="Open Player" color="primary" @click="dialog = true" />
-  <q-dialog v-model="dialog" position="right" style="height: 100%">
-    <q-card class="music-player">
-      <q-card-section class="row items-center no-wrap">
-        <q-img
-          :src="musicPlayer.track.image"
-          spinner-color="white"
-          style="width:320px; height: 320px"
-        />
-      </q-card-section>
+<!--  <q-btn label="Open Player" color="primary" @click="dialog = true" />-->
+<!--  <q-dialog v-model="dialog" position="right" style="height: 100%">-->
+<!--    <q-card class="music-player">-->
+<!--      <q-card-section class="row items-center no-wrap">-->
+<!--        <q-img-->
+<!--          :src="musicPlayer.track.image"-->
+<!--          spinner-color="white"-->
+<!--          style="width:320px; height: 320px"-->
+<!--        />-->
+<!--      </q-card-section>-->
 
-      <q-card-section class="row justify-center no-wrap q-pa-sm">
-        <span>{{ musicPlayer.track.artist }} - {{ musicPlayer.track.name }}</span>
-      </q-card-section>
+<!--      <q-card-section class="row justify-center no-wrap q-pa-sm">-->
+<!--        <span>{{ musicPlayer.track.artist }} - {{ musicPlayer.track.name }}</span>-->
+<!--      </q-card-section>-->
 
-      <q-card-section class="row justify-center no-wrap q-pa-sm">
-        <q-btn @click="musicPlayer.shuffle()" icon="shuffle" flat round />
-        <q-btn
-          @click="musicPlayer.prevTrack()"
-          icon="skip_previous"
-          flat
-          round
-        />
-        <q-btn
-          @click="musicPlayer.run()"
-          :icon="musicPlayer.status === 'playing' ? 'pause' : 'play_arrow'"
-          flat
-          round
-        />
-        <q-btn
-          @click="musicPlayer.nextTrack()"
-          icon="skip_next"
-          flat
-          round
-        />
-        <q-btn icon="repeat" flat round />
-      </q-card-section>
+<!--      <q-card-section class="row justify-center no-wrap q-pa-sm">-->
+<!--        <q-btn @click="musicPlayer.shuffle()" icon="shuffle" flat round />-->
+<!--        <q-btn-->
+<!--          @click="musicPlayer.prevTrack()"-->
+<!--          icon="skip_previous"-->
+<!--          flat-->
+<!--          round-->
+<!--        />-->
+<!--        <q-btn-->
+<!--          @click="musicPlayer.run()"-->
+<!--          :icon="musicPlayer.status === 'playing' ? 'pause' : 'play_arrow'"-->
+<!--          flat-->
+<!--          round-->
+<!--        />-->
+<!--        <q-btn-->
+<!--          @click="musicPlayer.nextTrack()"-->
+<!--          icon="skip_next"-->
+<!--          flat-->
+<!--          round-->
+<!--        />-->
+<!--        <q-btn icon="repeat" flat round />-->
+<!--      </q-card-section>-->
 
-      <q-card-section class="music-player__rewind row items-center no-wrap q-px-md q-pb-sm">
-        <span class="q-pr-xs">{{ musicPlayer.timePassed }}</span>
-        <q-slider
-          class="music-player__rewind-progress"
-          @change="rewindNavigate"
-          v-model="musicPlayer.rewindProgressWidth"
-          :min="0"
-          :max="100"
-        />
-        <span class="q-pl-xs">{{ musicPlayer.timeTotal }}</span>
-      </q-card-section>
+<!--      <q-card-section class="music-player__rewind row items-center no-wrap q-px-md q-pb-sm">-->
+<!--        <span class="q-pr-xs">{{ musicPlayer.timePassed }}</span>-->
+<!--        <q-slider-->
+<!--          class="music-player__rewind-progress"-->
+<!--          @change="rewindNavigate"-->
+<!--          v-model="musicPlayer.rewindProgressWidth"-->
+<!--          :min="0"-->
+<!--          :max="100"-->
+<!--        />-->
+<!--        <span class="q-pl-xs">{{ musicPlayer.timeTotal }}</span>-->
+<!--      </q-card-section>-->
 
-      <q-card-section class="music-player__volume row justify-center items-center no-wrap q-px-md q-pt-sm">
-        <q-icon
-          size="xs"
-          name="volume_up"
-        />
-        <q-slider
-          class="music-player__volume-progress"
-          @change="volumeNavigate"
-          v-model="musicPlayer.volume"
-          :min="0.00"
-          :max="1.00"
-          :step="0.01"
-          label
-        />
-      </q-card-section>
-      <q-card-section>
-        <div class="playlist">
-          <q-table
-            title="Плейлист"
-            :rows="musicPlayer.playlist"
-            :columns="columns"
-            row-key="name"
-            :flat="true"
-            :rows-per-page-options="[0]"
-            :pagination.sync="{page: 1, rowsPerPage: 0}"
-          >
-            <template v-slot:body="props">
-              <q-tr
-                class="table-track"
-                :class="{'table-track--active': props.row.id === musicPlayer.track.id}"
-                :props="props"
-                @click="initPlay(props.row)"
-                @mouseover="hovered = true"
-                @mouseout="hovered = false"
-              >
-                <q-td
-                  v-for="col in props.cols"
-                  :key="col.name"
-                  :props="props"
-                >
-                  <template v-if="col.name === 'number'">
-                    {{ col.id }}
-                    <q-btn
-                      class="table-track__play-icon"
-                      icon="play_arrow"
-                      flat
-                      round
-                      dense
-                      v-if="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== props.row.id)"
-                    />
-                    <q-btn
-                      class="table-track__play-icon"
-                      icon="pause"
-                      flat
-                      round
-                      dense
-                      v-else
-                    />
-                    <div class="table-track__number">{{ col.value }}</div>
-                  </template>
-                  <template v-else>
-                    {{ col.value }}
-                  </template>
-                </q-td>
-              </q-tr>
-            </template>
-          </q-table>
-        </div>
-      </q-card-section>
-    </q-card>
-  </q-dialog>
+<!--      <q-card-section class="music-player__volume row justify-center items-center no-wrap q-px-md q-pt-sm">-->
+<!--        <q-icon-->
+<!--          size="xs"-->
+<!--          name="volume_up"-->
+<!--        />-->
+<!--        <q-slider-->
+<!--          class="music-player__volume-progress"-->
+<!--          @change="volumeNavigate"-->
+<!--          v-model="musicPlayer.volume"-->
+<!--          :min="0.00"-->
+<!--          :max="1.00"-->
+<!--          :step="0.01"-->
+<!--          label-->
+<!--        />-->
+<!--      </q-card-section>-->
+<!--      <q-card-section>-->
+<!--        <div class="playlist">-->
+<!--          <q-table-->
+<!--            title="Плейлист"-->
+<!--            :rows="musicPlayer.playlist"-->
+<!--            :columns="columns"-->
+<!--            row-key="name"-->
+<!--            :flat="true"-->
+<!--            :rows-per-page-options="[0]"-->
+<!--            :pagination.sync="{page: 1, rowsPerPage: 0}"-->
+<!--          >-->
+<!--            <template v-slot:body="props">-->
+<!--              <q-tr-->
+<!--                class="table-track"-->
+<!--                :class="{'table-track&#45;&#45;active': props.row.id === musicPlayer.track.id}"-->
+<!--                :props="props"-->
+<!--                @click="initPlay(props.row)"-->
+<!--                @mouseover="hovered = true"-->
+<!--                @mouseout="hovered = false"-->
+<!--              >-->
+<!--                <q-td-->
+<!--                  v-for="col in props.cols"-->
+<!--                  :key="col.name"-->
+<!--                  :props="props"-->
+<!--                >-->
+<!--                  <template v-if="col.name === 'number'">-->
+<!--                    {{ col.id }}-->
+<!--                    <q-btn-->
+<!--                      class="table-track__play-icon"-->
+<!--                      icon="play_arrow"-->
+<!--                      flat-->
+<!--                      round-->
+<!--                      dense-->
+<!--                      v-if="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== props.row.id)"-->
+<!--                    />-->
+<!--                    <q-btn-->
+<!--                      class="table-track__play-icon"-->
+<!--                      icon="pause"-->
+<!--                      flat-->
+<!--                      round-->
+<!--                      dense-->
+<!--                      v-else-->
+<!--                    />-->
+<!--                    <div class="table-track__number">{{ col.value }}</div>-->
+<!--                  </template>-->
+<!--                  <template v-else>-->
+<!--                    {{ col.value }}-->
+<!--                  </template>-->
+<!--                </q-td>-->
+<!--              </q-tr>-->
+<!--            </template>-->
+<!--          </q-table>-->
+<!--        </div>-->
+<!--      </q-card-section>-->
+<!--    </q-card>-->
+<!--  </q-dialog>-->
 </template>
 <script>
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useMusicPlayer } from 'src/stores/modules/musicPlayer'
 
 import TrackCard from 'src/components/default/PlaylistTrackCard.vue'
@@ -203,6 +212,9 @@ export default {
   components: { TrackCard },
   setup() {
     const musicPlayer = useMusicPlayer()
+    const rangeLine = ref(null)
+    const rangeAmount = ref(null)
+    const rangeCircle = ref(null)
     const columns = ref([{
       name: "number",
       required: true,
@@ -228,11 +240,27 @@ export default {
       style: 'width: 130px'
     }])
 
+    const initPlayerParams = () => {
+      rangeLine.value.addEventListener('click', event => {
+        const x = event.offsetX;
+        const rewindElementWidth = rangeLine.value.clientWidth
+        rangeAmount.value.style.width = `${x}px`
+        rangeCircle.value.style.left = `${x}px`
+        console.log(rewindElementWidth)
+        console.log(x)
+        // this.player.audio.currentTime = (x / rewindElementWidth) * this.player.audio.duration;
+      })
+    }
+
     return {
       dialog: ref(false),
       hovered: ref(false),
       columns,
       musicPlayer,
+      rangeLine,
+      rangeAmount,
+      rangeCircle,
+      initPlayerParams,
       initPlay: track => {
         musicPlayer.playTrack(track)
       },
@@ -267,6 +295,38 @@ export default {
   &__track-info {
     width: 160px;
   }
+  &-slider {
+    &__wrapper {
+      padding: 7px 0;
+    }
+    &__line {
+      position: relative;
+      width: 100%;
+      height: 2px;
+      background: #0C79F8;
+    }
+    &__amount {
+      width: 0;
+      top: auto;
+      bottom: 0;
+      height: 2px;
+      background: green;
+    }
+    &__circle {
+      position: absolute;
+      top: -2px;
+      width: 5px;
+      height: 5px;
+      margin-left: -3px;
+      border-radius: 50%;
+      background: red;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+  }
 }
 .track-card {
   &__image {
@@ -279,16 +339,16 @@ export default {
   &__info {
     flex-grow: 1;
   }
-  &__track-name,
-  &__artist-name {
-    font-size: 12.5px;
-  }
-  &__track-name {
-    font-weight: bold;
-  }
   &__time {
     flex-shrink: 0;
   }
+}
+.track-name,
+.artist-name {
+  font-size: 12.5px;
+}
+.track-name {
+  font-weight: bold;
 }
 //.music-player {
 //  width: 352px;
@@ -299,35 +359,35 @@ export default {
 //    width: 150px;
 //  }
 //}
-.table-track {
-  &:hover {
-    cursor: pointer;
-
-    .table-track__play-icon {
-      display: flex;
-    }
-    .table-track__number {
-      display: none;
-    }
-  }
-  &--active {
-    background-color: rgba(0, 0, 0, 0.03);
-    .table-track__play-icon {
-      display: flex;
-    }
-    .table-track__number {
-      display: none;
-    }
-  }
-  &__play-icon {
-    display: none;
-  }
-  &__number {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 2.4em;
-    min-width: 2.4em;
-  }
-}
+//.table-track {
+//  &:hover {
+//    cursor: pointer;
+//
+//    .table-track__play-icon {
+//      display: flex;
+//    }
+//    .table-track__number {
+//      display: none;
+//    }
+//  }
+//  &--active {
+//    background-color: rgba(0, 0, 0, 0.03);
+//    .table-track__play-icon {
+//      display: flex;
+//    }
+//    .table-track__number {
+//      display: none;
+//    }
+//  }
+//  &__play-icon {
+//    display: none;
+//  }
+//  &__number {
+//    display: flex;
+//    justify-content: center;
+//    align-items: center;
+//    min-height: 2.4em;
+//    min-width: 2.4em;
+//  }
+//}
 </style>
