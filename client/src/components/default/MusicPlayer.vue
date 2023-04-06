@@ -57,15 +57,24 @@
           <div class="music-player-slider">
             <div class="music-player-slider__wrapper" ref="rangeLine">
               <div class="music-player-slider__line">
-                <div class="music-player-slider__circle" ref="rangeCircle"></div>
                 <div class="music-player-slider__amount" ref="rangeAmount"></div>
+                <div class="music-player-slider__circle" ref="rangeCircle" draggable="true"></div>
               </div>
             </div>
           </div>
         </div>
         <div class="music-player__buttons-group">
-          <q-btn @click="musicPlayer.shuffle()" icon="shuffle" flat round />
-          <q-btn icon="repeat" flat round />
+          <q-btn
+            @click="musicPlayer.shuffle()"
+            icon="shuffle"
+            flat
+            round
+          />
+          <q-btn
+            icon="repeat"
+            flat
+            round
+          />
         </div>
       </div>
       <div class="q-pa-md q-gutter-xs">
@@ -203,8 +212,8 @@
 <!--  </q-dialog>-->
 </template>
 <script>
-import { ref, onMounted, nextTick } from 'vue'
-import { useMusicPlayer } from 'src/stores/modules/musicPlayer'
+import {ref} from 'vue'
+import {useMusicPlayer} from 'src/stores/modules/musicPlayer'
 
 import TrackCard from 'src/components/default/PlaylistTrackCard.vue'
 
@@ -215,6 +224,7 @@ export default {
     const rangeLine = ref(null)
     const rangeAmount = ref(null)
     const rangeCircle = ref(null)
+    const currentPosition = ref(0)
     const columns = ref([{
       name: "number",
       required: true,
@@ -240,15 +250,34 @@ export default {
       style: 'width: 130px'
     }])
 
+    const processRewind = event => {
+      currentPosition.value = event.offsetX
+      const rewindElementWidth = rangeLine.value.clientWidth
+      rangeAmount.value.style.width = `${currentPosition.value}px`
+      rangeCircle.value.style.left = `${currentPosition.value}px`
+      // console.log(rewindElementWidth, x)
+      // this.player.audio.currentTime = (x / rewindElementWidth) * this.player.audio.duration;
+    }
+
     const initPlayerParams = () => {
+      let isMoving = false
+
+      rangeLine.value.addEventListener('mousedown', event => {
+        isMoving = true
+      })
+      rangeLine.value.addEventListener('mousemove', event => {
+        if (isMoving) {
+          processRewind(event)
+        }
+      })
       rangeLine.value.addEventListener('click', event => {
-        const x = event.offsetX;
-        const rewindElementWidth = rangeLine.value.clientWidth
-        rangeAmount.value.style.width = `${x}px`
-        rangeCircle.value.style.left = `${x}px`
-        console.log(rewindElementWidth)
-        console.log(x)
-        // this.player.audio.currentTime = (x / rewindElementWidth) * this.player.audio.duration;
+        processRewind(event)
+      })
+      rangeLine.value.addEventListener('mouseup', event => {
+        isMoving = false
+      })
+      rangeLine.value.addEventListener('mouseleave', event => {
+        isMoving = false
       })
     }
 
@@ -260,6 +289,7 @@ export default {
       rangeLine,
       rangeAmount,
       rangeCircle,
+      currentPosition,
       initPlayerParams,
       initPlay: track => {
         musicPlayer.playTrack(track)
@@ -298,28 +328,38 @@ export default {
   &-slider {
     &__wrapper {
       padding: 7px 0;
+
+      &:hover {
+        .music-player-slider__circle {
+          opacity: 1;
+        }
+      }
     }
     &__line {
       position: relative;
       width: 100%;
       height: 2px;
-      background: #0C79F8;
+      background: rgba(96, 29, 192, 0.15);
+      z-index: -1;
     }
     &__amount {
       width: 0;
       top: auto;
       bottom: 0;
       height: 2px;
-      background: green;
+      background: $primary;
     }
     &__circle {
       position: absolute;
       top: -2px;
-      width: 5px;
-      height: 5px;
+      width: 6px;
+      height: 6px;
       margin-left: -3px;
       border-radius: 50%;
-      background: red;
+      background: $primary;
+      opacity: 0;
+      -webkit-transition: top 80ms linear,width 80ms linear,height 80ms linear,margin-left 80ms linear,opacity 160ms linear;
+      transition: top 80ms linear,width 80ms linear,height 80ms linear,margin-left 80ms linear,opacity 160ms linear;
     }
 
     &:hover {
