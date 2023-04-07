@@ -2,18 +2,21 @@
   <div class="music-player__panel flex row items-center q-px-md q-ml-md">
     <div class="music-player__buttons">
       <q-btn
+        @click="musicPlayer.prevTrack()"
         icon="skip_previous"
         color="primary"
         flat
         round
       />
       <q-btn
-        icon="play_arrow"
+        @click="musicPlayer.run()"
+        :icon="musicPlayer.status === 'playing' ? 'pause' : 'play_arrow'"
         color="primary"
         flat
         round
       />
       <q-btn
+        @click="musicPlayer.nextTrack()"
         icon="skip_next"
         color="primary"
         flat
@@ -21,7 +24,7 @@
       />
     </div>
     <div class="music-player__title q-ml-md text-primary">
-      <span class="text-bold">Artist name</span> - Track name
+      <span class="text-bold">{{ musicPlayer.track.artist }}</span> - {{ musicPlayer.track.name }}
     </div>
     <q-menu
       class="music-player__menu"
@@ -31,7 +34,7 @@
       @show="initPlayerParams"
     >
       <div class="music-player__controls flex row q-pa-sm">
-        <div class="music-player__buttons-group q-mr-sm">
+        <div class="music-player__buttons-group flex items-center q-mr-sm">
           <q-btn
             @click="musicPlayer.prevTrack()"
             icon="skip_previous"
@@ -52,18 +55,18 @@
           />
         </div>
         <div class="music-player__track-info q-mr-sm">
-          <div class="artist-name">{{ musicPlayer.track.artist }}</div>
           <div class="track-name">{{ musicPlayer.track.name }}</div>
+          <div class="artist-name">{{ musicPlayer.track.artist }}</div>
           <div class="music-player-slider">
             <div class="music-player-slider__wrapper" ref="rangeLine">
               <div class="music-player-slider__line">
-                <div class="music-player-slider__amount" ref="rangeAmount"></div>
-                <div class="music-player-slider__circle" ref="rangeCircle" draggable="true"></div>
+                <div class="music-player-slider__amount" :style="`width: ${musicPlayer.rewindProgressWidth}%`"></div>
+                <div class="music-player-slider__circle" :style="`left: ${isCircleMoving ? circlePosition : musicPlayer.rewindProgressWidth}%`"></div>
               </div>
             </div>
           </div>
         </div>
-        <div class="music-player__buttons-group">
+        <div class="music-player__buttons-group flex items-center">
           <q-btn
             @click="musicPlayer.shuffle()"
             icon="shuffle"
@@ -78,13 +81,36 @@
         </div>
       </div>
       <div class="q-pa-md q-gutter-xs">
-        <q-card v-for="item in 10" class="track-card flex row items-center" flat bordered>
-          <q-card-section class="track-card__image q-pa-none"></q-card-section>
-          <q-card-section class="track-card__info q-pa-none q-ml-sm">
-            <div class="track-name">Track Name</div>
-            <div class="artist-name">Artist Name</div>
+        <q-card
+          v-for="track in musicPlayer.playlist"
+          @click="initPlay(track)"
+          class="track-card flex row items-center"
+          :class="{'track-card--active': track.id === musicPlayer.track.id}"
+          flat
+        >
+          <q-card-section class="track-card__image flex items-center justify-center q-pa-none">
+            <template v-if="track.id === musicPlayer.track.id">
+              <q-spinner-audio
+                v-if="musicPlayer.status === 'playing'"
+                size="1rem"
+                color="white"
+              />
+              <div class="text-white" v-else>....</div>
+            </template>
+            <q-icon
+              class="track-card__status-icon"
+              size="xs"
+              :name="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== track.id) ? 'play_arrow' : 'pause'"
+              flat
+              round
+              dense
+            />
           </q-card-section>
-          <q-card-section class="track-card__time q-pa-none q-mr-sm">4:19</q-card-section>
+          <q-card-section class="track-card__info q-pa-none q-ml-sm">
+            <div class="track-name">{{ track.name }}</div>
+            <div class="artist-name">{{ track.artist }}</div>
+          </q-card-section>
+          <q-card-section class="track-card__time q-pa-none q-mr-sm">{{ track.duration }}</q-card-section>
         </q-card>
       </div>
     </q-menu>
@@ -222,9 +248,8 @@ export default {
   setup() {
     const musicPlayer = useMusicPlayer()
     const rangeLine = ref(null)
-    const rangeAmount = ref(null)
-    const rangeCircle = ref(null)
-    const currentPosition = ref(0)
+    const circlePosition = ref(0)
+    const isCircleMoving = ref(false)
     const columns = ref([{
       name: "number",
       required: true,
@@ -250,36 +275,36 @@ export default {
       style: 'width: 130px'
     }])
 
-    const processRewind = event => {
-      currentPosition.value = event.offsetX
-      const rewindElementWidth = rangeLine.value.clientWidth
-      rangeAmount.value.style.width = `${currentPosition.value}px`
-      rangeCircle.value.style.left = `${currentPosition.value}px`
-      // console.log(rewindElementWidth, x)
-      // this.player.audio.currentTime = (x / rewindElementWidth) * this.player.audio.duration;
+    const moveRewind = event => {
+      musicPlayer.audio.currentTime = (event.offsetX / rangeLine.value.clientWidth) * musicPlayer.audio.duration
+    }
+
+    const moveCircle = event => {
+      circlePosition.value = (event.offsetX / rangeLine.value.clientWidth) * 100
     }
 
     const initPlayerParams = () => {
-      let isMoving = false
-
-      rangeLine.value.addEventListener('mousedown', event => {
-        isMoving = true
+      rangeLine.value.addEventListener('mousedown', () => {
+        isCircleMoving.value = true
       })
       rangeLine.value.addEventListener('mousemove', event => {
-        if (isMoving) {
-          processRewind(event)
+        if (isCircleMoving.value) {
+          moveCircle(event)
         }
       })
       rangeLine.value.addEventListener('click', event => {
-        processRewind(event)
+        moveRewind(event)
+        moveCircle(event)
       })
-      rangeLine.value.addEventListener('mouseup', event => {
-        isMoving = false
+      rangeLine.value.addEventListener('mouseup', () => {
+        isCircleMoving.value = false
       })
-      rangeLine.value.addEventListener('mouseleave', event => {
-        isMoving = false
+      rangeLine.value.addEventListener('mouseleave', () => {
+        isCircleMoving.value = false
       })
     }
+
+    musicPlayer.init()
 
     return {
       dialog: ref(false),
@@ -287,9 +312,8 @@ export default {
       columns,
       musicPlayer,
       rangeLine,
-      rangeAmount,
-      rangeCircle,
-      currentPosition,
+      circlePosition,
+      isCircleMoving,
       initPlayerParams,
       initPlay: track => {
         musicPlayer.playTrack(track)
@@ -301,10 +325,7 @@ export default {
         musicPlayer.audio.volume = value;
       },
     }
-  },
-  created() {
-    this.musicPlayer.init()
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -339,7 +360,7 @@ export default {
       position: relative;
       width: 100%;
       height: 2px;
-      background: rgba(96, 29, 192, 0.15);
+      background: $primary-light;
       z-index: -1;
     }
     &__amount {
@@ -382,12 +403,34 @@ export default {
   &__time {
     flex-shrink: 0;
   }
+  &__status-icon {
+    display: none;
+    position: absolute;
+    padding: 4px;
+    background: #fff;
+    border-radius: 50%;
+  }
+
+  &--active,
+  &:hover {
+    cursor: pointer;
+    background-color: rgba(174,183,194,0.12);
+
+    .track-card__image {
+      background-color: rgba(0,0,0,.5);
+    }
+  }
+  &:hover {
+    .track-card__status-icon {
+      display: flex;
+    }
+  }
 }
 .track-name,
 .artist-name {
   font-size: 12.5px;
 }
-.track-name {
+.artist-name {
   font-weight: bold;
 }
 //.music-player {
