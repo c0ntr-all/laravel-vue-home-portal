@@ -39,29 +39,52 @@
             @click="musicPlayer.prevTrack()"
             icon="skip_previous"
             flat
+            dense
             round
           />
           <q-btn
             @click="musicPlayer.run()"
             :icon="musicPlayer.status === 'playing' ? 'pause' : 'play_arrow'"
             flat
+            dense
             round
           />
           <q-btn
             @click="musicPlayer.nextTrack()"
             icon="skip_next"
             flat
+            dense
             round
           />
         </div>
-        <div class="music-player__track-info q-mr-sm">
-          <div class="track-name">{{ musicPlayer.track.name }}</div>
-          <div class="artist-name">{{ musicPlayer.track.artist }}</div>
-          <div class="music-player-slider">
-            <div class="music-player-slider__wrapper" ref="rangeLine">
+        <div class="music-player__main-card row self-start items-center col-grow">
+          <div class="track-card__image flex items-center justify-center q-pa-none" />
+          <div class="q-pa-none q-ml-sm col-grow">
+            <div class="flex justify-between items-center">
+              <div>
+                <div class="track-name">{{ musicPlayer.track.name }}</div>
+                <div class="artist-name">{{ musicPlayer.track.artist }}</div>
+              </div>
+              <div class="track-card__time">
+                {{ musicPlayer.timePassed }}
+              </div>
+            </div>
+            <div class="music-player-slider col-grow">
+              <div class="music-player-slider__wrapper" ref="rangeLine">
+                <div class="music-player-slider__line">
+                  <div class="music-player-slider__amount" :style="`width: ${musicPlayer.rewindProgressWidth}%`"></div>
+                  <div class="music-player-slider__circle" :style="`left: ${isCircleMoving ? circlePosition : musicPlayer.rewindProgressWidth}%`"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="music-player__volume flex items-center q-mx-md">
+          <div class="music-player-slider col-grow">
+            <div class="music-player-slider__wrapper" ref="rangeVolume">
               <div class="music-player-slider__line">
-                <div class="music-player-slider__amount" :style="`width: ${musicPlayer.rewindProgressWidth}%`"></div>
-                <div class="music-player-slider__circle" :style="`left: ${isCircleMoving ? circlePosition : musicPlayer.rewindProgressWidth}%`"></div>
+                <div class="music-player-slider__amount" :style="`width: ${musicPlayer.volume * 100}%`"></div>
+                <div class="music-player-slider__circle" :style="`left: ${musicPlayer.volume * 100}%`"></div>
               </div>
             </div>
           </div>
@@ -71,11 +94,13 @@
             @click="musicPlayer.shuffle()"
             icon="shuffle"
             flat
+            dense
             round
           />
           <q-btn
             icon="repeat"
             flat
+            dense
             round
           />
         </div>
@@ -115,127 +140,6 @@
       </div>
     </q-menu>
   </div>
-<!--  <q-btn label="Open Player" color="primary" @click="dialog = true" />-->
-<!--  <q-dialog v-model="dialog" position="right" style="height: 100%">-->
-<!--    <q-card class="music-player">-->
-<!--      <q-card-section class="row items-center no-wrap">-->
-<!--        <q-img-->
-<!--          :src="musicPlayer.track.image"-->
-<!--          spinner-color="white"-->
-<!--          style="width:320px; height: 320px"-->
-<!--        />-->
-<!--      </q-card-section>-->
-
-<!--      <q-card-section class="row justify-center no-wrap q-pa-sm">-->
-<!--        <span>{{ musicPlayer.track.artist }} - {{ musicPlayer.track.name }}</span>-->
-<!--      </q-card-section>-->
-
-<!--      <q-card-section class="row justify-center no-wrap q-pa-sm">-->
-<!--        <q-btn @click="musicPlayer.shuffle()" icon="shuffle" flat round />-->
-<!--        <q-btn-->
-<!--          @click="musicPlayer.prevTrack()"-->
-<!--          icon="skip_previous"-->
-<!--          flat-->
-<!--          round-->
-<!--        />-->
-<!--        <q-btn-->
-<!--          @click="musicPlayer.run()"-->
-<!--          :icon="musicPlayer.status === 'playing' ? 'pause' : 'play_arrow'"-->
-<!--          flat-->
-<!--          round-->
-<!--        />-->
-<!--        <q-btn-->
-<!--          @click="musicPlayer.nextTrack()"-->
-<!--          icon="skip_next"-->
-<!--          flat-->
-<!--          round-->
-<!--        />-->
-<!--        <q-btn icon="repeat" flat round />-->
-<!--      </q-card-section>-->
-
-<!--      <q-card-section class="music-player__rewind row items-center no-wrap q-px-md q-pb-sm">-->
-<!--        <span class="q-pr-xs">{{ musicPlayer.timePassed }}</span>-->
-<!--        <q-slider-->
-<!--          class="music-player__rewind-progress"-->
-<!--          @change="rewindNavigate"-->
-<!--          v-model="musicPlayer.rewindProgressWidth"-->
-<!--          :min="0"-->
-<!--          :max="100"-->
-<!--        />-->
-<!--        <span class="q-pl-xs">{{ musicPlayer.timeTotal }}</span>-->
-<!--      </q-card-section>-->
-
-<!--      <q-card-section class="music-player__volume row justify-center items-center no-wrap q-px-md q-pt-sm">-->
-<!--        <q-icon-->
-<!--          size="xs"-->
-<!--          name="volume_up"-->
-<!--        />-->
-<!--        <q-slider-->
-<!--          class="music-player__volume-progress"-->
-<!--          @change="volumeNavigate"-->
-<!--          v-model="musicPlayer.volume"-->
-<!--          :min="0.00"-->
-<!--          :max="1.00"-->
-<!--          :step="0.01"-->
-<!--          label-->
-<!--        />-->
-<!--      </q-card-section>-->
-<!--      <q-card-section>-->
-<!--        <div class="playlist">-->
-<!--          <q-table-->
-<!--            title="Плейлист"-->
-<!--            :rows="musicPlayer.playlist"-->
-<!--            :columns="columns"-->
-<!--            row-key="name"-->
-<!--            :flat="true"-->
-<!--            :rows-per-page-options="[0]"-->
-<!--            :pagination.sync="{page: 1, rowsPerPage: 0}"-->
-<!--          >-->
-<!--            <template v-slot:body="props">-->
-<!--              <q-tr-->
-<!--                class="table-track"-->
-<!--                :class="{'table-track&#45;&#45;active': props.row.id === musicPlayer.track.id}"-->
-<!--                :props="props"-->
-<!--                @click="initPlay(props.row)"-->
-<!--                @mouseover="hovered = true"-->
-<!--                @mouseout="hovered = false"-->
-<!--              >-->
-<!--                <q-td-->
-<!--                  v-for="col in props.cols"-->
-<!--                  :key="col.name"-->
-<!--                  :props="props"-->
-<!--                >-->
-<!--                  <template v-if="col.name === 'number'">-->
-<!--                    {{ col.id }}-->
-<!--                    <q-btn-->
-<!--                      class="table-track__play-icon"-->
-<!--                      icon="play_arrow"-->
-<!--                      flat-->
-<!--                      round-->
-<!--                      dense-->
-<!--                      v-if="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== props.row.id)"-->
-<!--                    />-->
-<!--                    <q-btn-->
-<!--                      class="table-track__play-icon"-->
-<!--                      icon="pause"-->
-<!--                      flat-->
-<!--                      round-->
-<!--                      dense-->
-<!--                      v-else-->
-<!--                    />-->
-<!--                    <div class="table-track__number">{{ col.value }}</div>-->
-<!--                  </template>-->
-<!--                  <template v-else>-->
-<!--                    {{ col.value }}-->
-<!--                  </template>-->
-<!--                </q-td>-->
-<!--              </q-tr>-->
-<!--            </template>-->
-<!--          </q-table>-->
-<!--        </div>-->
-<!--      </q-card-section>-->
-<!--    </q-card>-->
-<!--  </q-dialog>-->
 </template>
 <script>
 import {ref} from 'vue'
@@ -248,6 +152,8 @@ export default {
   setup() {
     const musicPlayer = useMusicPlayer()
     const rangeLine = ref(null)
+    const rangeVolume = ref(null)
+    const isVolumeCircleMoving = ref(false)
     const circlePosition = ref(0)
     const isCircleMoving = ref(false)
     const columns = ref([{
@@ -302,6 +208,24 @@ export default {
       rangeLine.value.addEventListener('mouseleave', () => {
         isCircleMoving.value = false
       })
+
+      rangeVolume.value.addEventListener('mousedown', () => {
+        isVolumeCircleMoving.value = true
+      })
+      rangeVolume.value.addEventListener('mousemove', event => {
+        if (isVolumeCircleMoving.value) {
+          musicPlayer.audio.volume = (event.offsetX / rangeVolume.value.clientWidth)
+        }
+      })
+      rangeVolume.value.addEventListener('click', event => {
+        musicPlayer.audio.volume = (event.offsetX / rangeVolume.value.clientWidth)
+      })
+      rangeVolume.value.addEventListener('mouseup', () => {
+        isVolumeCircleMoving.value = false
+      })
+      rangeVolume.value.addEventListener('mouseleave', () => {
+        isVolumeCircleMoving.value = false
+      })
     }
 
     musicPlayer.init()
@@ -312,17 +236,16 @@ export default {
       columns,
       musicPlayer,
       rangeLine,
+      rangeVolume,
       circlePosition,
       isCircleMoving,
+      isVolumeCircleMoving,
       initPlayerParams,
       initPlay: track => {
         musicPlayer.playTrack(track)
       },
       rewindNavigate: value => {
         musicPlayer.audio.currentTime = (value / 100) * musicPlayer.audio.duration;
-      },
-      volumeNavigate: value => {
-        musicPlayer.audio.volume = value;
       },
     }
   }
@@ -343,8 +266,11 @@ export default {
     z-index: 999;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   }
-  &__track-info {
-    width: 160px;
+  &__main-card {
+    position: relative;
+  }
+  &__volume {
+    width: 50px;
   }
   &-slider {
     &__wrapper {
@@ -386,7 +312,6 @@ export default {
     &:hover {
       cursor: pointer;
     }
-
   }
 }
 .track-card {
@@ -402,6 +327,12 @@ export default {
   }
   &__time {
     flex-shrink: 0;
+    color: #818c99;
+    cursor: pointer;
+    padding: 12px 0 0 8px;
+    font-size: 12px;
+    min-width: 3em;
+    text-align: right;
   }
   &__status-icon {
     display: none;
@@ -429,6 +360,7 @@ export default {
 .track-name,
 .artist-name {
   font-size: 12.5px;
+  line-height: 16px;
 }
 .artist-name {
   font-weight: bold;

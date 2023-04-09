@@ -42,6 +42,10 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         this.timePassed = `${addZero(minutesPassed)}:${addZero(secondsPassed)}`
       })
 
+      this.audio.addEventListener('volumechange', () => {
+        this.volume = this.audio.volume
+      })
+
       this.audio.addEventListener('ended', () => {
         this.nextTrack()
         this.run()
