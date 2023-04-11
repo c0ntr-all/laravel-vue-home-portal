@@ -6,6 +6,7 @@ use App\Http\Controllers\FolderController;
 use App\Http\Controllers\Music\Admin\ArtistController as AdminArtistController;
 use App\Http\Controllers\Music\AlbumController;
 use App\Http\Controllers\Music\ArtistController;
+use App\Http\Controllers\Music\PlaylistController;
 use App\Http\Controllers\Music\TagController;
 use App\Http\Controllers\Music\TrackController;
 use App\Http\Controllers\Music\UploadController;
@@ -108,6 +109,10 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 Route::post('update', [TagController::class, 'update']);
                 Route::post('select', [TagController::class, 'tagsSelect']);
                 Route::post('tree', [TagController::class, 'tagsTree']);
+            });
+            Route::prefix('playlists')->group(function() {
+                // Trying to set "playlists" route as default for list of playlists for better view while requesting.
+                Route::get('/', [PlaylistController::class, 'getItems']);
             });
         });
 

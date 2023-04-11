@@ -29,11 +29,7 @@
     </q-tab-panel>
 
     <q-tab-panel name="playlists" class="q-pa-none">
-      <q-card>
-        <q-card-section>
-          <div class="text-h4 q-mb-md">Playlists</div>
-        </q-card-section>
-      </q-card>
+      <PlaylistsTab />
     </q-tab-panel>
 
     <q-tab-panel name="genres" class="q-pa-none">
@@ -65,12 +61,13 @@
 <script>
 import TracksTab from 'src/components/client/music/tabs/TracksTab.vue'
 import ArtistsTab from 'src/components/client/music/tabs/ArtistsTab.vue'
+import PlaylistsTab from 'src/components/client/music/tabs/PlaylistsTab.vue'
 
 import { ref, onMounted } from "vue";
 import API from "src/utils/api";
 
 export default {
-  components: { TracksTab, ArtistsTab },
+  components: { TracksTab, ArtistsTab, PlaylistsTab },
   setup() {
     const tags = ref([])
     let tagsLoading = ref(true)
