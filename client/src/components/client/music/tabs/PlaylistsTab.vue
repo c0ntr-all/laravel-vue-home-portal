@@ -3,9 +3,7 @@
   <q-card class="q-mb-md" flat bordered>
     <q-card-section>
       <div class="row">
-        <div v-for="playlist in items" class="col-4">
-          {{ playlist.name }}
-        </div>
+        <PlaylistCard v-for="playlist in items" :playlist="playlist" class="col-4" />
       </div>
     </q-card-section>
   </q-card>
@@ -15,7 +13,10 @@ import {ref,onMounted} from 'vue'
 
 import API from 'src/utils/api'
 
+import PlaylistCard from 'components/client/music/playlists/PlaylistCard.vue'
+
 export default {
+  components: {PlaylistCard},
   setup() {
     const items = ref([])
     const total = ref(0)
