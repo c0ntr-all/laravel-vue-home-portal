@@ -3,9 +3,12 @@
 namespace App\Http\Resources\Music\Playlists;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Music\Tracks\TrackResource;
 
 class PlaylistResource extends JsonResource
 {
+    public static $wrap = '';
+
     /**
      * Transform the resource into an array.
      *
@@ -18,7 +21,7 @@ class PlaylistResource extends JsonResource
             'name' => $this->name,
             'content' => $this->content,
             'created_at' => $this->created_at,
-            'tracks' => $this->tracks
+            'tracks' => TrackResource::collection($this->tracks)
         ];
     }
 }

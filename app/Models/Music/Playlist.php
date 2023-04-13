@@ -6,7 +6,7 @@ use App\Models\Traits\HasDates;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Playlist extends Model
 {
@@ -15,9 +15,9 @@ class Playlist extends Model
 
     public $table = 'music_playlists';
 
-    public function tracks(): HasMany
+    public function tracks(): belongsToMany
     {
-        return $this->hasMany(PlaylistItem::class);
+        return $this->belongsToMany(Track::class, 'music_playlists_tracks', 'playlist_id', 'track_id');
     }
 
     public function scopeUser(Builder $query, int $userid): void

@@ -7,14 +7,16 @@ use App\Models\Traits\HasMusicTags;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Query\Builder;
+use Znck\Eloquent\Relations\BelongsToThrough;
 
 class Track extends Model
 {
     use HasFactory;
     use HasDates;
     use HasMusicTags;
+    use \Znck\Eloquent\Traits\BelongsToThrough;
 
     protected $table = 'music_tracks';
 
@@ -32,6 +34,22 @@ class Track extends Model
     public function album(): BelongsTo
     {
         return $this->belongsTo(Album::class);
+    }
+
+    public function artist(): BelongsToThrough
+    {
+        return $this->belongsToThrough(
+            Artist::class,
+            Album::class,
+            null,
+            '',
+            [Artist::class => 'artist_id', Album::class => 'album_id']
+        );
+    }
+
+    public function playlists(): belongsToMany
+    {
+        return $this->belongsToMany(Playlist::class, 'music_playlists_tracks', 'track_id', 'playlist_id');
     }
 
     public function rate(): HasOne
