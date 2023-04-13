@@ -105,6 +105,14 @@ const routes = [{
       title: 'Музыка'
     }
   }, {
+    path: '/music/playlists/:id',
+    component: () => import('pages/client/music/Playlist.vue'),
+    name: 'playlist',
+    props: true,
+    meta: {
+      title: 'Playlists'
+    }
+  }, {
     path: '/video',
     component: () => import('layouts/MainLayout.vue'),
     meta: {
