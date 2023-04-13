@@ -151,6 +151,7 @@ export default {
   components: { TrackCard },
   setup() {
     const musicPlayer = useMusicPlayer()
+
     const rangeLine = ref(null)
     const rangeVolume = ref(null)
     const isVolumeCircleMoving = ref(false)
