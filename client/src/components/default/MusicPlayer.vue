@@ -30,7 +30,7 @@
       class="music-player__menu"
       transition-show="jump-down"
       transition-hide="jump-up"
-      style="width: 660px; min-height: 200px"
+      style="width: 660px; min-height: 500px"
       @show="initPlayerParams"
     >
       <div class="music-player__controls flex row q-pa-sm">
@@ -106,49 +106,24 @@
         </div>
       </div>
       <div class="q-pa-md q-gutter-xs">
-        <q-card
+        <MusicTrackCard
           v-for="track in musicPlayer.playlist"
           @click="initPlay(track)"
-          class="track-card flex row items-center"
-          :class="{'track-card--active': track.id === musicPlayer.track.id}"
-          flat
-        >
-          <q-card-section class="track-card__image flex items-center justify-center q-pa-none">
-            <template v-if="track.id === musicPlayer.track.id">
-              <q-spinner-audio
-                v-if="musicPlayer.status === 'playing'"
-                size="1rem"
-                color="white"
-              />
-              <div class="text-white" v-else>....</div>
-            </template>
-            <q-icon
-              class="track-card__status-icon"
-              size="xs"
-              :name="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== track.id) ? 'play_arrow' : 'pause'"
-              flat
-              round
-              dense
-            />
-          </q-card-section>
-          <q-card-section class="track-card__info q-pa-none q-ml-sm">
-            <div class="track-name">{{ track.name }}</div>
-            <div class="artist-name">{{ track.artist }}</div>
-          </q-card-section>
-          <q-card-section class="track-card__time q-pa-none q-mr-sm">{{ track.duration }}</q-card-section>
-        </q-card>
+          :key="track.id"
+          :track="track"
+        />
       </div>
     </q-menu>
   </div>
 </template>
 <script>
 import {ref} from 'vue'
-import {useMusicPlayer} from 'src/stores/modules/musicPlayer'
+import {useMusicPlayer} from "src/stores/modules/musicPlayer";
 
-import TrackCard from 'src/components/default/PlaylistTrackCard.vue'
+import MusicTrackCard from "src/components/client/music/MusicTrackCard.vue";
 
 export default {
-  components: { TrackCard },
+  components: { MusicTrackCard },
   setup() {
     const musicPlayer = useMusicPlayer()
 
@@ -267,9 +242,6 @@ export default {
     z-index: 999;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   }
-  &__main-card {
-    position: relative;
-  }
   &__volume {
     width: 50px;
   }
@@ -315,95 +287,4 @@ export default {
     }
   }
 }
-.track-card {
-  &__image {
-    width: 40px;
-    height: 40px;
-    margin: 4px;
-    border-radius: 8px;
-    background: #ccc;
-  }
-  &__info {
-    flex-grow: 1;
-  }
-  &__time {
-    flex-shrink: 0;
-    color: #818c99;
-    cursor: pointer;
-    padding: 12px 0 0 8px;
-    font-size: 12px;
-    min-width: 3em;
-    text-align: right;
-  }
-  &__status-icon {
-    display: none;
-    position: absolute;
-    padding: 4px;
-    background: #fff;
-    border-radius: 50%;
-  }
-
-  &--active,
-  &:hover {
-    cursor: pointer;
-    background-color: rgba(174,183,194,0.12);
-
-    .track-card__image {
-      background-color: rgba(0,0,0,.5);
-    }
-  }
-  &:hover {
-    .track-card__status-icon {
-      display: flex;
-    }
-  }
-}
-.track-name,
-.artist-name {
-  font-size: 12.5px;
-  line-height: 16px;
-}
-.artist-name {
-  font-weight: bold;
-}
-//.music-player {
-//  width: 352px;
-//  height: 100%;
-//  max-height: 100%;
-//
-//  &__volume {
-//    width: 150px;
-//  }
-//}
-//.table-track {
-//  &:hover {
-//    cursor: pointer;
-//
-//    .table-track__play-icon {
-//      display: flex;
-//    }
-//    .table-track__number {
-//      display: none;
-//    }
-//  }
-//  &--active {
-//    background-color: rgba(0, 0, 0, 0.03);
-//    .table-track__play-icon {
-//      display: flex;
-//    }
-//    .table-track__number {
-//      display: none;
-//    }
-//  }
-//  &__play-icon {
-//    display: none;
-//  }
-//  &__number {
-//    display: flex;
-//    justify-content: center;
-//    align-items: center;
-//    min-height: 2.4em;
-//    min-width: 2.4em;
-//  }
-//}
 </style>

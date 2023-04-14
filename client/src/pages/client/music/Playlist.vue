@@ -6,9 +6,7 @@
     <div class="playlist-head q-mb-lg">
       <div class="playlist-head__left">
         <div class="playlist-head__image q-mb-md">
-          <a href="images/no-image.jpg">
-            <img src="images/no-image.jpg" alt="" />
-          </a>
+          <img src="images/no-image.jpg" alt="" />
         </div>
       </div>
       <div class="playlist-head__right">
@@ -20,38 +18,15 @@
         </div>
       </div>
     </div>
-    <div class="playlist-tracks__list q-pa-md q-gutter-xs">
-      <q-card
-        v-for="track in playlist.tracks"
-        @click="musicPlayer.playTrack(track)"
-        class="track-card flex row items-center"
-        :class="{'track-card--active': track.id === musicPlayer.track.id}"
-        flat
-      >
-        <q-card-section class="track-card__image flex items-center justify-center q-pa-none">
-          <template v-if="track.id === musicPlayer.track.id">
-            <q-spinner-audio
-              v-if="musicPlayer.status === 'playing'"
-              size="1rem"
-              color="white"
-            />
-            <div class="text-white" v-else>....</div>
-          </template>
-          <q-icon
-            class="track-card__status-icon"
-            size="xs"
-            :name="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== track.id) ? 'play_arrow' : 'pause'"
-            flat
-            round
-            dense
-          />
-        </q-card-section>
-        <q-card-section class="track-card__info q-pa-none q-ml-sm">
-          <div class="track-name">{{ track.name }}</div>
-          <div class="artist-name">{{ track.artist }}</div>
-        </q-card-section>
-        <q-card-section class="track-card__time q-pa-none q-mr-sm">{{ track.duration }}</q-card-section>
-      </q-card>
+    <div class="bg-white q-pa-lg">
+      <div class="tracks-list q-gutter-xs q-pr-lg">
+        <MusicTrackCard
+          v-for="track in playlist.tracks"
+          @click="initPlay(track)"
+          :key="track.id"
+          :track="track"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -62,7 +37,12 @@ import { useRoute } from 'vue-router'
 import API from 'src/utils/api'
 import {useMusicPlayer} from "stores/modules/musicPlayer";
 
+import MusicTrackCard from "src/components/client/music/MusicTrackCard.vue";
+
 export default {
+  components: {
+    MusicTrackCard
+  },
   props: {
     'id': String
   },
@@ -72,7 +52,7 @@ export default {
     const musicPlayer = useMusicPlayer()
 
     const loading = ref(true)
-    const playlist = ref({})
+    const playlist = ref([])
 
     const getPlaylist = async id => {
       await API.get(`music/playlists/${id}/index`).then(response => {
@@ -97,6 +77,13 @@ export default {
       loading,
       playlist,
       musicPlayer,
+      initPlay: track => {
+        // Replacing playlist with new track
+        if (!musicPlayer.playlist.includes(track)) {
+          musicPlayer.setPlaylist(playlist.value.tracks)
+        }
+        musicPlayer.playTrack(track)
+      },
       getPlaylist
     }
   },
@@ -131,55 +118,8 @@ export default {
     }
   }
 }
-.track-card {
-  &__image {
-    width: 40px;
-    height: 40px;
-    margin: 4px;
-    border-radius: 8px;
-    background: #ccc;
-  }
-  &__info {
-    flex-grow: 1;
-  }
-  &__time {
-    flex-shrink: 0;
-    color: #818c99;
-    cursor: pointer;
-    padding: 12px 0 0 8px;
-    font-size: 12px;
-    min-width: 3em;
-    text-align: right;
-  }
-  &__status-icon {
-    display: none;
-    position: absolute;
-    padding: 4px;
-    background: #fff;
-    border-radius: 50%;
-  }
-
-  &--active,
-  &:hover {
-    cursor: pointer;
-    background-color: rgba(174,183,194,0.12);
-
-    .track-card__image {
-      background-color: rgba(0,0,0,.5);
-    }
-  }
-  &:hover {
-    .track-card__status-icon {
-      display: flex;
-    }
-  }
-}
-.track-name,
-.artist-name {
-  font-size: 12.5px;
-  line-height: 16px;
-}
-.artist-name {
-  font-weight: bold;
+.tracks-list {
+  max-width: 700px;
+  border-right: 1px solid #ccc;
 }
 </style>
