@@ -69,11 +69,11 @@ export default {
   &__artist-name {
     font-size: 12.5px;
     line-height: 16px;
+    font-weight: bold;
   }
   &__track-name {
     font-size: 12.5px;
     line-height: 16px;
-    font-weight: bold;
   }
   &__time {
     flex-shrink: 0;
