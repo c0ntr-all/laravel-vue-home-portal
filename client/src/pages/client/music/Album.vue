@@ -41,22 +41,7 @@
       </div>
 
       <div class="album-body q-mb-lg">
-        <div class="album-tracks" v-if="album.tracks">
-          <div class="album-tracks__list">
-            <q-table
-              :rows="album.tracks"
-              :columns="columns"
-              row-key="name"
-              :flat="true"
-              :rows-per-page-options="[0]"
-              :pagination.sync="{page: 1, rowsPerPage: 0}"
-            >
-              <template v-slot:body="props">
-                <track-card-row :props="props" @play="initPlay" />
-              </template>
-            </q-table>
-          </div>
-        </div>
+        <MusicTracksList :tracks="album.tracks" />
       </div>
     </div>
 
@@ -69,57 +54,29 @@
   </template>
 </template>
 <script>
-import { ref, onMounted } from 'vue'
-import API from "src/utils/api";
+import {ref, onMounted, watch} from "vue"
+import { useRoute } from "vue-router"
 
-import { useMusicPlayer } from 'stores/modules/musicPlayer'
+import API from "src/utils/api"
+import { useMusicPlayer } from "stores/modules/musicPlayer"
 
-import AlbumPageSkeleton from 'src/components/client/music/skeleton/AlbumPage.vue'
-import AlbumCard from 'components/client/music/AlbumCard.vue'
+import AlbumPageSkeleton from "src/components/client/music/skeleton/AlbumPage.vue"
+import AlbumCard from "components/client/music/AlbumCard.vue"
 import RelatedAlbums from "components/client/music/RelatedAlbums.vue"
-import TrackCardRow from 'src/components/client/music/TrackCardRow.vue'
+import MusicTracksList from "src/components/client/music/MusicTracksList.vue"
 
 export default {
   props: {
     'id': String
   },
-  components: { AlbumPageSkeleton, AlbumCard, RelatedAlbums, TrackCardRow },
+  components: { AlbumPageSkeleton, AlbumCard, RelatedAlbums, MusicTracksList },
   setup(props) {
+    const route = useRoute()
+
     const loading = ref(true)
     const showImage = ref(false)
     const album = ref({})
-    const columns = ref([{
-      name: "number",
-      required: true,
-      label: '#',
-      align: 'center',
-      field: row => row.number,
-      sortable: true,
-      style: 'width: 70px'
-    },{
-      name: "rate",
-      required: true,
-      label: '',
-      align: 'center',
-      field: row => row.rate,
-      sortable: true,
-      style: 'width: 120px'
-    },{
-      name: "name",
-      required: true,
-      label: 'Имя',
-      align: 'left',
-      field: row => row.name,
-      sortable: true
-    },{
-      name: "duration",
-      required: true,
-      label: 'Длительность',
-      align: 'right',
-      field: row => row.duration,
-      sortable: true,
-      style: 'width: 130px'
-    }])
+
     const getAlbum = async (id) => {
       const {data} = await API.post('music/albums', {id: id})
 
@@ -137,30 +94,20 @@ export default {
       getAlbum(props.id)
     })
 
+    watch(() => route.params, (toParams, previousParams) => {
+        getAlbum(toParams.id)
+      }
+    )
+
     return {
       loading,
       showImage,
       album,
-      columns,
       musicPlayer,
       getAlbum,
-      addToPlaylist,
-      initPlay: track => {
-        // Replacing playlist with new track
-        if (!musicPlayer.playlist.includes(track)) {
-          musicPlayer.setPlaylist(album.value.tracks)
-        }
-        musicPlayer.playTrack(track)
-      }
+      addToPlaylist
     }
-  },
-  created() {
-    // Реагирование на смену id в маршруте альбома
-    this.$watch(() => this.$route.params, (toParams, previousParams) => {
-        this.getAlbum(toParams.id)
-      }
-    )
-  },
+  }
 }
 </script>
 
@@ -192,10 +139,6 @@ export default {
     }
   }
 }
-.album-body {
-  display: flex;
-  flex-direction: row;
-}
 .album-tracks {
   &__header {
     display: flex;
@@ -219,12 +162,6 @@ export default {
       margin-right: 15px;
     }
   }
-  &__list {
-  }
-}
-
-.album-artist {
-
 }
 .album-year {
   color: #777;

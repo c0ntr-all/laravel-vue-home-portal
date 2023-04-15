@@ -18,15 +18,8 @@
         </div>
       </div>
     </div>
-    <div class="bg-white q-pa-lg">
-      <div class="tracks-list q-gutter-xs q-pr-lg">
-        <MusicTrackCard
-          v-for="track in playlist.tracks"
-          @click="initPlay(track)"
-          :key="track.id"
-          :track="track"
-        />
-      </div>
+    <div class="playlist-body">
+      <MusicTracksList :tracks="playlist.tracks" />
     </div>
   </div>
 </template>
@@ -34,15 +27,13 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import API from 'src/utils/api'
-import {useMusicPlayer} from "stores/modules/musicPlayer";
+import API from "src/utils/api"
+import { useMusicPlayer } from "stores/modules/musicPlayer"
 
-import MusicTrackCard from "src/components/client/music/MusicTrackCard.vue";
+import MusicTracksList from "src/components/client/music/MusicTracksList.vue"
 
 export default {
-  components: {
-    MusicTrackCard
-  },
+  components: { MusicTracksList },
   props: {
     'id': String
   },
@@ -77,13 +68,6 @@ export default {
       loading,
       playlist,
       musicPlayer,
-      initPlay: track => {
-        // Replacing playlist with new track
-        if (!musicPlayer.playlist.includes(track)) {
-          musicPlayer.setPlaylist(playlist.value.tracks)
-        }
-        musicPlayer.playTrack(track)
-      },
       getPlaylist
     }
   },
@@ -117,9 +101,5 @@ export default {
       margin-bottom: 1rem;
     }
   }
-}
-.tracks-list {
-  max-width: 700px;
-  border-right: 1px solid #ccc;
 }
 </style>

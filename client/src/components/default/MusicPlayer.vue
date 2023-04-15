@@ -132,30 +132,6 @@ export default {
     const isVolumeCircleMoving = ref(false)
     const circlePosition = ref(0)
     const isCircleMoving = ref(false)
-    const columns = ref([{
-      name: "number",
-      required: true,
-      label: '#',
-      align: 'center',
-      field: row => row.number,
-      sortable: true,
-      style: 'width: 70px'
-    },{
-      name: "name",
-      required: true,
-      label: 'Имя',
-      align: 'left',
-      field: row => row.name,
-      sortable: true
-    },{
-      name: "duration",
-      required: true,
-      label: 'Длительность',
-      align: 'right',
-      field: row => row.duration,
-      sortable: true,
-      style: 'width: 130px'
-    }])
 
     const moveRewind = event => {
       musicPlayer.audio.currentTime = (event.offsetX / rangeLine.value.clientWidth) * musicPlayer.audio.duration
@@ -209,7 +185,6 @@ export default {
     return {
       dialog: ref(false),
       hovered: ref(false),
-      columns,
       musicPlayer,
       rangeLine,
       rangeVolume,
