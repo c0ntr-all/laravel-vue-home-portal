@@ -2,7 +2,11 @@
   <ArtistPageSkeleton v-if="loading" />
   <template v-else>
     <div class="q-mb-sm">
-      <q-btn type="primary" :to="'/music'">Вернуться назад</q-btn>
+      <q-btn
+        icon="arrow_back"
+        color="primary"
+        :to="'/music'"
+      ><div class="q-ml-xs">Вернуться назад</div></q-btn>
     </div>
 
     <div class="artist-head q-mb-lg">

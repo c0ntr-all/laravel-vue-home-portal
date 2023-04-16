@@ -43,8 +43,46 @@
           ]"
         />
       </div>
-      <div class="music-track__time">
-        {{ track.duration }}
+      <div class="music-track__end-column">
+        <div class="music-track__time">
+          {{ track.duration }}
+        </div>
+        <div class="music-track__more">
+          <q-btn color="grey-7" icon="more_horiz" round flat>
+            <q-menu cover auto-close>
+              <q-list>
+                <q-item clickable>
+                  <q-item-section>
+                    <div class="flex items-center">
+                      <q-icon
+                        size="xs"
+                        name="add"
+                        flat
+                        round
+                        dense
+                      />
+                      <div class="q-ml-xs">Add to playlist</div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section>
+                    <div class="flex items-center">
+                      <q-icon
+                        size="xs"
+                        name="delete"
+                        flat
+                        round
+                        dense
+                      />
+                      <div class="q-ml-xs">Remove</div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </div>
       </div>
     </div>
   </div>
@@ -120,6 +158,13 @@ export default {
   &__rate {
     margin-right: 1rem;
   }
+  &__end-column {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 48px;
+  }
   &__time {
     flex-shrink: 0;
     color: #818c99;
@@ -127,6 +172,14 @@ export default {
     font-size: 12px;
     min-width: 3em;
     text-align: right;
+  }
+  &__more {
+    position: absolute;
+    //top: 50%;
+    //left: 50%;
+    //margin-top: -10px;
+    //margin-left: -9px;
+    visibility: hidden;
   }
 
   &--active,
@@ -141,6 +194,12 @@ export default {
   &:hover {
     .music-track__status-icon {
       display: flex;
+    }
+    .music-track__more {
+      visibility: visible;
+    }
+    .music-track__time {
+      visibility: hidden;
     }
   }
 }

@@ -2,7 +2,11 @@
   <AlbumPageSkeleton v-if="loading" />
   <template v-else>
     <div class="q-mb-sm">
-      <q-btn type="primary" @click="this.$router.push('/music/artists/' + album.artist.id)">Вернуться к исполнителю</q-btn>
+      <q-btn
+        icon="arrow_back"
+        color="primary"
+        :to="'/music/artists/' + album.artist.id"
+      ><div class="q-ml-xs">Вернуться к исполнителю</div></q-btn>
     </div>
     <div class="album">
       <div class="album-head q-mb-lg">

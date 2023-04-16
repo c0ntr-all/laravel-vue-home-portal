@@ -1,6 +1,10 @@
 <template>
   <div class="q-mb-sm">
-    <q-btn type="primary" @click="this.$router.push('/music')">Back to the Music</q-btn>
+    <q-btn
+      icon="arrow_back"
+      color="primary"
+      :to="'/music'"
+    ><div class="q-ml-xs">Back to the Music</div></q-btn>
   </div>
   <div class="playlist">
     <div class="playlist-head q-mb-lg">
