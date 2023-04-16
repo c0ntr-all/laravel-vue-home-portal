@@ -108,7 +108,7 @@
       <div class="q-pa-md q-gutter-xs">
         <MusicTrackCard
           v-for="track in musicPlayer.playlist"
-          @click="initPlay(track)"
+          @play="initPlay(track)"
           :key="track.id"
           :track="track"
         />

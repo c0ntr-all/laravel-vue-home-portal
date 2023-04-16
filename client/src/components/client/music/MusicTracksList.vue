@@ -3,7 +3,7 @@
     <div class="tracks-list q-gutter-xs q-pr-lg">
       <MusicTrackCard
         v-for="track in tracks"
-        @click="initPlay(track)"
+        @play="initPlay(track)"
         :key="track.id"
         :track="track"
       />
