@@ -62,8 +62,8 @@
           <div class="q-pa-none q-ml-sm col-grow">
             <div class="flex justify-between items-center">
               <div>
-                <div class="track-name">{{ musicPlayer.track.name }}</div>
-                <div class="artist-name">{{ musicPlayer.track.artist }}</div>
+                <div class="music-player__track-name">{{ musicPlayer.track.name }}</div>
+                <div class="music-player__artist-name">{{ musicPlayer.track.artist }}</div>
               </div>
               <div class="track-card__time">
                 {{ musicPlayer.timePassed }}
@@ -216,6 +216,15 @@ export default {
     background: #fff;
     z-index: 999;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  &__track-name {
+    font-size: 12.5px;
+    line-height: 16px;
+  }
+  &__artist-name {
+    font-size: 12.5px;
+    line-height: 16px;
+    font-weight: bold;
   }
   &__volume {
     width: 50px;

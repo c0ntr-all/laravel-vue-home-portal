@@ -51,7 +51,7 @@
           <q-btn color="grey-7" icon="more_horiz" round flat>
             <q-menu cover auto-close>
               <q-list>
-                <q-item clickable>
+                <q-item @click="showPlaylistModal = true" clickable>
                   <q-item-section>
                     <div class="flex items-center">
                       <q-icon
@@ -86,17 +86,115 @@
       </div>
     </div>
   </div>
+  <q-dialog v-model="showPlaylistModal">
+    <q-card class="playlist-modal">
+      <q-card-section class="flex justify-between">
+        <div class="text-h6">Add to playlist</div>
+        <q-btn @click="showPlaylistModal = false" icon="close" size="md" flat rounded dense />
+      </q-card-section>
+
+      <q-separator />
+
+      <q-card-section>
+        <q-input
+          v-model="playlistSearch"
+          type="search"
+          label="Search playlist"
+          filled
+          dense
+        >
+          <template v-slot:append>
+            <q-btn
+              v-if="playlistSearch.length"
+              @click="playlistSearch = ''"
+              icon="close"
+              flat
+              rounded
+              dense
+            />
+            <q-icon name="search" />
+          </template>
+        </q-input>
+      </q-card-section>
+
+      <q-separator />
+
+      <q-card-section>
+        <div class="playlists-list">
+          <q-checkbox
+            v-for="item in filteredPlaylists"
+            v-model="selectedPlaylists"
+            class="playlist-item"
+            :label="item.name"
+            :val="item.id"
+            color="teal"
+            left-label
+            dense
+          />
+        </div>
+      </q-card-section>
+
+      <q-separator />
+
+      <q-card-section>
+        Selected playlists - {{ selectedPlaylists }}
+      </q-card-section>
+
+      <q-separator />
+
+      <q-card-section class="flex justify-end">
+        <q-btn class="q-px-sm q-mr-md" dense flat>Cancel</q-btn>
+        <q-btn class="q-px-md" color="primary" dense>Save</q-btn>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
 </template>
 <script>
-import { computed } from "vue"
+import { ref, computed, watch } from "vue"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
 import API from "src/utils/api";
 
 export default {
   emits: ['play'],
-  props: ['track'],
+  props: {
+    track: {
+      type: Object,
+      required: true
+    },
+    actions: {
+      type: Array,
+      required: false
+    }
+  },
   setup(props) {
     const musicPlayer = useMusicPlayer()
+
+    const showPlaylistModal = ref(false)
+    const playlists = ref([
+      {
+        id: 32,
+        name: 'Post Rock'
+      },
+      {
+        id: 15,
+        name: 'Hardcore'
+      },
+      {
+        id: 76,
+        name: 'Ambient Electronics'
+      },
+      {
+        id: 29,
+        name: 'Techno Industrial'
+      },
+      {
+        id: 99,
+        name: 'Death Metal'
+      },
+    ])
+    const filteredPlaylists = ref(playlists.value)
+    const playlistSearch = ref('')
+    const selectedPlaylists = ref([])
 
     let rate = computed({
       get: () => props.track.rate,
@@ -117,9 +215,20 @@ export default {
       })
     }
 
+    watch(playlistSearch, (value) => {
+      filteredPlaylists.value = playlists.value.filter(item =>
+        item.name.toLowerCase().includes(value.toLowerCase())
+      )
+    })
+
     return {
       rate,
+      showPlaylistModal,
+      playlistSearch,
       musicPlayer,
+      playlists,
+      filteredPlaylists,
+      selectedPlaylists,
       changeRate
     }
   }
@@ -200,6 +309,31 @@ export default {
     }
     .music-track__time {
       visibility: hidden;
+    }
+  }
+}
+.playlist-modal {
+  width: 768px;
+  max-width: 80vw;
+}
+.playlists-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  height: 60vh;
+
+  .playlist-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    &:hover {
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.05);
     }
   }
 }

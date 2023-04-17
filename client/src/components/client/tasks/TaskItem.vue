@@ -31,7 +31,7 @@
             </div>
           </q-popup-edit>
         </div>
-        <q-btn @click="showModal = false" class="task__close" icon="close" size="md" flat rounded />
+        <q-btn @click="showModal = false" class="task__close" icon="close" size="md" flat rounded dense />
       </q-card-section>
 
       <q-separator dark />
