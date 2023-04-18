@@ -2,8 +2,8 @@
   <p class="text-h6 q-pa-md">Total: {{ total }}</p>
   <q-card class="q-mb-md" flat bordered>
     <q-card-section>
-      <div class="row">
-        <PlaylistCard v-for="playlist in items" :playlist="playlist" class="col-4" />
+      <div class="row q-gutter-md">
+        <PlaylistCard v-for="playlist in items" :playlist="playlist" />
       </div>
     </q-card-section>
   </q-card>

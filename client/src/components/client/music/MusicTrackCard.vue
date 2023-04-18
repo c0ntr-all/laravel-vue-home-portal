@@ -86,7 +86,7 @@
       </div>
     </div>
   </div>
-  <q-dialog v-model="showPlaylistModal">
+  <q-dialog v-model="showPlaylistModal" @show="initPlaylistDialog">
     <q-card class="playlist-modal">
       <q-card-section class="flex justify-between">
         <div class="text-h6">Add to playlist</div>
@@ -127,7 +127,7 @@
             class="playlist-item"
             :label="item.name"
             :val="item.id"
-            color="teal"
+            color="primary"
             left-label
             dense
           />
@@ -143,16 +143,19 @@
       <q-separator />
 
       <q-card-section class="flex justify-end">
-        <q-btn class="q-px-sm q-mr-md" dense flat>Cancel</q-btn>
+        <q-btn class="q-px-sm q-mr-md" @click="showPlaylistModal = false" dense flat>Cancel</q-btn>
         <q-btn class="q-px-md" color="primary" dense>Save</q-btn>
       </q-card-section>
+      <q-inner-loading :showing="playlistsLoading">
+        <q-spinner-gears size="50px" color="primary" />
+      </q-inner-loading>
     </q-card>
   </q-dialog>
 </template>
 <script>
 import { ref, computed, watch } from "vue"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
-import API from "src/utils/api";
+import API from "src/utils/api"
 
 export default {
   emits: ['play'],
@@ -170,29 +173,9 @@ export default {
     const musicPlayer = useMusicPlayer()
 
     const showPlaylistModal = ref(false)
-    const playlists = ref([
-      {
-        id: 32,
-        name: 'Post Rock'
-      },
-      {
-        id: 15,
-        name: 'Hardcore'
-      },
-      {
-        id: 76,
-        name: 'Ambient Electronics'
-      },
-      {
-        id: 29,
-        name: 'Techno Industrial'
-      },
-      {
-        id: 99,
-        name: 'Death Metal'
-      },
-    ])
-    const filteredPlaylists = ref(playlists.value)
+    const playlists = ref([])
+    const playlistsLoading = ref(false)
+    const filteredPlaylists = ref([])
     const playlistSearch = ref('')
     const selectedPlaylists = ref([])
 
@@ -215,6 +198,22 @@ export default {
       })
     }
 
+    const initPlaylistDialog = async () => {
+      playlistsLoading.value = true
+
+      await API.get('music/playlists').then(response => {
+        playlists.value = response.data.items
+        filteredPlaylists.value = response.data.items
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+      }).finally(() => {
+        playlistsLoading.value = false
+      })
+    }
+
     watch(playlistSearch, (value) => {
       filteredPlaylists.value = playlists.value.filter(item =>
         item.name.toLowerCase().includes(value.toLowerCase())
@@ -227,8 +226,10 @@ export default {
       playlistSearch,
       musicPlayer,
       playlists,
+      playlistsLoading,
       filteredPlaylists,
       selectedPlaylists,
+      initPlaylistDialog,
       changeRate
     }
   }

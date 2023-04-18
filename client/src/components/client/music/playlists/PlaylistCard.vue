@@ -1,5 +1,5 @@
 <template>
-  <q-card class="playlist-card">
+  <q-card class="playlist-card col-4">
     <q-img src="images/no-image.jpg" :alt="playlist.name">
       <div class="absolute-bottom text-h6">
         <router-link :to="'/music/playlists/' + playlist.id" class="playlist-card__link">{{ playlist.name }}</router-link>
