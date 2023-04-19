@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Finances;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\Finances\IndexRequest;
+use App\Http\Resources\Finances\FinancesCollection;
+use App\Http\Resources\Finances\FinancesResource;
 use App\Models\Finances\Finances;
-use App\Models\Finances\FinancesShop;
-use App\Http\Resources\FinancesCollection;
-use App\Http\Resources\FinancesResource;
-use App\Services\FinancesService;
 use App\Models\User;
+use App\Services\FinancesService;
 
 class FinancesController extends Controller
 {

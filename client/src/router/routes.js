@@ -4,12 +4,21 @@ const routes = [{
   component: () => import('layouts/MainLayout.vue'),
   children: [{
     path: '/profile',
-    component: () => import('pages/Profile.vue'),
+    component: () => import('pages/client/profile/Profile.vue'),
     meta: {
       title: 'Профиль'
     },
     name: 'profile',
     alias: '/profile',
+    menu: false
+  }, {
+    path: '/settings',
+    component: () => import('pages/client/profile/Settings.vue'),
+    meta: {
+      title: 'Настройки'
+    },
+    name: 'settings',
+    alias: '/settings',
     menu: false
   }, {
     path: '/home',
@@ -43,7 +52,7 @@ const routes = [{
     menu: true
   }, {
     path: '/reminds',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('pages/client/Reminds.vue'),
     meta: {
       title: 'Напоминания',
       icon: 'calendar_month'
@@ -94,6 +103,14 @@ const routes = [{
     props: true,
     meta: {
       title: 'Музыка'
+    }
+  }, {
+    path: '/music/playlists/:id',
+    component: () => import('pages/client/music/Playlist.vue'),
+    name: 'playlist',
+    props: true,
+    meta: {
+      title: 'Playlists'
     }
   }, {
     path: '/video',

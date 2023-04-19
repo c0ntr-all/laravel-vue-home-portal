@@ -24,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        date_default_timezone_set('Europe/Moscow');
+
         Relation::enforceMorphMap([
             'artist' => 'App\Models\Music\Artist',
             'album' => 'App\Models\Music\Album',

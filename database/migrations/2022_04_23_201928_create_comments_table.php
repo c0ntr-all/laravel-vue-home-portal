@@ -17,12 +17,14 @@ class CreateCommentsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->text('content');
-            $table->morphs('comment');
+            $table->morphs('commentable');
 
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users');
         });
     }
 

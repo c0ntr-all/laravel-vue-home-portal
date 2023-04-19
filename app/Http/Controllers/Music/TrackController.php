@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Music;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Music\FilterRequest;
 use App\Http\Requests\Music\Track\RateRequest;
+use App\Http\Requests\Music\Track\UpdatePlaylistsRequest;
 use App\Http\Resources\Music\Tracks\TrackCollection;
 use App\Models\Music\Track;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -42,5 +43,19 @@ class TrackController extends Controller
             'track_id' => $result['track_id'],
             'rate' => $result['rate']
         ];
+    }
+
+    public function updatePlaylists(Track $track, UpdatePlaylistsRequest $request)
+    {
+        $playlists = $request->validated()['playlists'];
+
+        $now = date('Y-m-d H:i:s');
+        $pivotValues = [
+            'user_id' => auth()->user()->id,
+            'created_at' => $now,
+            'updated_at' => $now
+        ];
+
+        $track->playlists()->syncWithPivotValues($playlists, $pivotValues);
     }
 }

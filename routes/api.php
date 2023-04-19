@@ -1,22 +1,25 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Finances\FinancesController;
 use App\Http\Controllers\FolderController;
+use App\Http\Controllers\Music\Admin\ArtistController as AdminArtistController;
 use App\Http\Controllers\Music\AlbumController;
 use App\Http\Controllers\Music\ArtistController;
-use App\Http\Controllers\Music\Admin\ArtistController as AdminArtistController;
+use App\Http\Controllers\Music\PlaylistController;
 use App\Http\Controllers\Music\TagController;
 use App\Http\Controllers\Music\TrackController;
 use App\Http\Controllers\Music\UploadController;
-use App\Http\Controllers\RatingController;
 use App\Http\Controllers\Reminds\RemindController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Tasks\TaskListController;
+use App\Http\Controllers\Users\AuthController;
+use App\Http\Controllers\Users\UserController;
+use App\Http\Controllers\Users\UserSettingsController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\WidgetController;
 use Illuminate\Http\Request;
 
 /*
@@ -38,9 +41,17 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::post('me', [AuthController::class, 'me']);
+
+    Route::prefix('user')->group(function() {
+        Route::get('/', [UserController::class, 'index']);
+        Route::get('settings', [UserSettingsController::class, 'index']);
+        Route::patch('settings/update', [UserSettingsController::class, 'update']);
+    });
 
     Route::middleware('jwt.auth')->group(function() {
+        Route::prefix('widgets')->group(function() {
+            Route::get('get', [WidgetController::class, 'getWidgets']);
+        });
         Route::prefix('finances')->group(function() {
             Route::get('/', [FinancesController::class, 'index']);
             Route::get('{finance}', [FinancesController::class, 'show']);
@@ -51,18 +62,15 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::put('list/store', [TaskListController::class, 'store']);
             Route::post('list/{list}/update', [TaskListController::class, 'update']);
             Route::delete('list/{list}/delete', [TaskListController::class, 'delete']);
-            Route::post('store/{taskList}', [TaskController::class, 'store']);
+            Route::put('store/{taskList}', [TaskController::class, 'store']);
             Route::patch('{task}/update', [TaskController::class, 'update']);
             Route::delete('{task}/delete', [TaskController::class, 'delete']);
-
-            Route::post('comments/store', [CommentController::class, 'store']);
-            Route::post('comments/delete', [CommentController::class, 'delete']);
         });
 
         Route::prefix('reminds')->group(function() {
             Route::get('/', [RemindController::class, 'index']);
-            Route::post('store', [RemindController::class, 'store']);
-            Route::post('/{remind}/update', [RemindController::class, 'update']);
+            Route::put('store', [RemindController::class, 'store']);
+            Route::patch('/{remind}/update', [RemindController::class, 'update']);
         });
 
         Route::prefix('restaurants')->group(function() {
@@ -94,6 +102,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 Route::post('get', [TrackController::class, 'get']);
                 Route::post('{track}/play', [TrackController::class, 'play']);
                 Route::post('{track}/rate', [TrackController::class, 'rate']);
+                Route::patch('{track}/playlists/update', [TrackController::class, 'updatePlaylists']);
             });
             Route::prefix('tags')->group(function() {
                 Route::post('/', [TagController::class, 'index']);
@@ -102,6 +111,15 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 Route::post('select', [TagController::class, 'tagsSelect']);
                 Route::post('tree', [TagController::class, 'tagsTree']);
             });
+            Route::prefix('playlists')->group(function() {
+                // Trying to set "playlists" route as default for list of playlists for better view while requesting.
+                Route::post('/', [PlaylistController::class, 'getItems']);
+                Route::get('{playlist}/index', [PlaylistController::class, 'index']);
+            });
+        });
+
+        Route::prefix('comments')->group(function() {
+            Route::post('store', [CommentController::class, 'store']);
         });
 
         Route::prefix('folders')->group(function() {

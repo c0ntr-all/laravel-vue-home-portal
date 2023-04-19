@@ -1,10 +1,12 @@
 <template>
-  <q-page class="q-pa-lg" v-if="loading">
-    <ArtistPageSkeleton />
-  </q-page>
-  <q-page class="q-pa-lg" v-else>
+  <ArtistPageSkeleton v-if="loading" />
+  <template v-else>
     <div class="q-mb-sm">
-      <q-btn type="primary" :to="'/music'">Вернуться назад</q-btn>
+      <q-btn
+        icon="arrow_back"
+        color="primary"
+        :to="'/music'"
+      ><div class="q-ml-xs">Вернуться назад</div></q-btn>
     </div>
 
     <div class="artist-head q-mb-lg">
@@ -21,8 +23,10 @@
         </div>
         <div class="artist-head__tags">
           <div class="tags-list q-gutter-sm">
-            <q-chip v-for="tag in artist.tagsNames?.common" dense>{{ tag }}</q-chip>
-            <q-chip v-for="tag in artist.tagsNames?.secondary" dense>{{ tag }}</q-chip>
+            <q-chip v-for="tag in artist.tagsNames?.common" color="primary" text-color="white">{{ tag }}</q-chip>
+          </div>
+          <div class="tags-list q-gutter-sm">
+            <q-chip v-for="tag in artist.tagsNames?.secondary">{{ tag }}</q-chip>
           </div>
         </div>
       </div>
@@ -34,7 +38,7 @@
         <album-card v-for="album in this.artist.albums" :key="album.id" :album="album"></album-card>
       </div>
     </div>
-  </q-page>
+  </template>
 </template>
 <script>
 import { ref, onMounted } from 'vue'

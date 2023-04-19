@@ -45,13 +45,14 @@ class Artist extends Model
     public static function getWithCursor(array $filters = [])
     {
         return static::filter($filters, 'tags', 'tags', 'id')
-                      ->cursorPaginate(12);
+                     ->orderByDesc('created_at')
+                     ->cursorPaginate(12);
     }
 
     public static function getWithPaginate(array $filters = [])
     {
         return static::filter($filters, 'tags', 'tags', 'id')
-                     ->orderBy('name')
+                     ->orderByDesc('created_at')
                      ->paginate(100);
     }
 

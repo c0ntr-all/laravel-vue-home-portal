@@ -1,21 +1,23 @@
 <template>
-  <div class="text-h4 q-mb-md">Artists</div>
-  <div class="flex justify-between items-end q-mb-lg">
+  <q-card class="q-mb-md" flat bordered>
+    <q-card-section>
+      <div class="flex justify-between items-end q-mb-lg">
+        <artists-filter @submitFilter="getArtists" />
 
-    <artists-filter @submitFilter="getArtists" />
-
-    <q-btn
-      @click="toggleCardMode"
-      color="primary"
-      :icon="cardMode === 'card' ? 'toc' : 'view_cozy'"
-      size="lg"
-      flat
-      round
-    />
-  </div>
+        <q-btn
+          @click="toggleCardMode"
+          color="primary"
+          :icon="cardMode === 'card' ? 'toc' : 'view_cozy'"
+          size="lg"
+          flat
+          round
+        />
+      </div>
+    </q-card-section>
+  </q-card>
 
   <template v-if="loading">
-    <div class="row q-gutter-md q-mb-lg">
+    <div class="column q-gutter-md q-mb-lg">
       <ArtistsCardHorizontalSkeleton v-for="n in 20" :key="n" />
     </div>
   </template>
@@ -28,7 +30,7 @@
       />
     </div>
 
-    <div v-if="cardMode === 'horizontal'" class="row q-gutter-md q-mb-lg">
+    <div v-if="cardMode === 'horizontal'" class="column q-gutter-md q-mb-lg">
       <artist-card-horizontal
         v-for="artist in artists"
         :key="artist.id"
@@ -114,6 +116,14 @@ export default {
     }
 
     onMounted(() => {
+      window.onscroll = () => {
+        let bottomWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
+
+        if (bottomWindow) {
+          loadMoreArtists()
+        }
+      }
+
       getArtists()
     })
 

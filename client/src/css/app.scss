@@ -1,1 +1,8 @@
-// app global css in SCSS form
+@font-face {
+  font-family: 'IBM Plex Sans';
+  src: url(src/assets/fonts/IBMPlexSans-Regular.ttf);
+}
+
+body {
+  font-family: 'IBM Plex Sans', Arial, Helvetica, sans-serif;
+}

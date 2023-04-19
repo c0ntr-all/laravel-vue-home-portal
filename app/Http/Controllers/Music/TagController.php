@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Music\Tag\IndexRequest;
 use App\Http\Requests\Music\Tag\StoreRequest;
 use App\Http\Requests\Music\Tag\UpdateRequest;
+use App\Http\Resources\Music\Tag\TagCollection;
+use App\Http\Resources\Music\Tag\TagResource;
+use App\Http\Resources\Music\Tag\TagSelectCollection;
 use App\Http\Resources\Music\Tag\TagTreeCollection;
-use App\Http\Resources\TagCollection;
-use App\Http\Resources\TagResource;
-use App\Http\Resources\TagSelectCollection;
 use App\Models\Music\Tag;
 use App\Services\Music\TagService;
 

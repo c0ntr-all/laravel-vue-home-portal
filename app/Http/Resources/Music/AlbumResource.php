@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Music;
 
+use App\Http\Resources\Music\Tracks\TrackResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
@@ -20,17 +21,7 @@ class AlbumResource extends JsonResource
             'image' => $this->full_image,
             'createdAt' => $this->created_at,
             'artist' => ['id' => $this->artist->id, 'name' => $this->artist->name],
-            'tracks' => $this->tracks->map(function($item) {
-                return [
-                    'id' => $item->id,
-                    'number' => $item->number,
-                    'name' => $item->name,
-                    'duration' => $item->duration,
-                    'rate' => $item->rate?->rate ?? 0,
-                    'image' => $this->full_image,
-                    'artist' => $this->artist->name,
-                ];
-            }),
+            'tracks' => TrackResource::collection($this->tracks),
             'tags' => $this->tags->pluck('tag')
         ];
     }

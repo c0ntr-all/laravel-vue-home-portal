@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
+use App\Models\Comment;
 use App\Models\Finances\Finances;
 use App\Models\Finances\FinancesShop;
-use App\Models\Tasks\TaskList;
+use App\Models\Reminds\Remind;
 use App\Models\Tasks\Task;
-use App\Models\Remind;
-use App\Models\Comment;
+use App\Models\Tasks\TaskList;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 
 class DatabaseSeeder extends Seeder

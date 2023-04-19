@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Tasks;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tasks\Tasks\StoreRequest;
 use App\Http\Requests\Tasks\Tasks\UpdateRequest;
-use App\Models\User;
+use App\Http\Resources\Task\TaskResource;
 use App\Models\Tasks\Task;
 use App\Models\Tasks\TaskList;
-use App\Http\Resources\TaskResource;
+use App\Models\User;
 use App\Services\TaskService;
 
 class TaskController extends Controller

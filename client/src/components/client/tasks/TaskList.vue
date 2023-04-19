@@ -1,51 +1,108 @@
 <template>
-  <div class="list">
-    <div class="list__header">
-      <div class="list__header--cover js-header-cover"></div>
-      <textarea class="list__header-name"
-                spellcheck="false"
-                dir="auto"
-                maxlength="512"
-                data-autosize="true"
-                style="overflow: hidden; overflow-wrap: break-word; height: 28px;"
-      >{{ list.title }}</textarea>
-    </div>
-    <div class="list__body">
-    </div>
-    <div class="list__footer">
-    </div>
-  </div>
+  <q-card class="list bg-grey-4">
+    <q-card-section class="list__header">
+      <p>{{ list.title }}</p>
+    </q-card-section>
+    <q-separator dark />
+    <q-card-section class="list__body">
+      <TaskItem v-for="item in items" :key="item.id" :item="item" />
+    </q-card-section>
+    <q-card-section class="list__footer">
+      <div v-if="showAddForm === false" @click="openAddForm" class="list__add-button">
+        <q-icon name="add" size="sm" />
+        <span>Добавить карточку</span>
+      </div>
+      <div v-if="showAddForm === true" class="list__add-form">
+        <q-input
+          @keyup.enter="addNewTask"
+          v-model="model.newCardName"
+          ref="taskAddTextarea"
+          type="textarea"
+          input-style="height: 60px; resize: none"
+          class="list__add-textarea q-mb-sm"
+          dense
+          outlined
+        />
+        <q-btn @click="addNewTask" label="Добавить карточку" color="secondary" class="q-mr-sm" no-caps dense />
+        <q-btn @click="showAddForm = false" icon="close" color="danger" size="md" flat round dense />
+      </div>
+    </q-card-section>
+  </q-card>
 </template>
-
 <script>
-export default {
-  props: ['list'],
-  setup() {
-    return {
+import {ref, nextTick} from 'vue'
+import {useQuasar} from "quasar"
 
+import API from "src/utils/api"
+
+import TaskItem from 'src/components/client/tasks/TaskItem.vue'
+
+export default {
+  components: { TaskItem },
+  props: ['list', 'items'],
+  setup(props) {
+    const $q = useQuasar()
+
+    const showAddForm = ref(false)
+    const taskAddTextarea = ref(null)
+    const model = ref({
+      listName: '',
+      newCardName: ''
+    })
+
+    const openAddForm = () => {
+      showAddForm.value = true
+      nextTick(() => {
+        taskAddTextarea.value.focus()
+      })
+    }
+    //todo Change title to name in tasks entity
+    const addNewTask = async () => {
+      const cardName = model.value.newCardName
+      model.value.newCardName = ''
+
+      await API.put('tasks/store/' + props.list.id, {
+        'title': cardName
+      }).then(response => {
+        $q.notify({
+          type: 'positive',
+          message: 'Карточка успешно добавлена!'
+        })
+        props.items.push(response.data.items)
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+      })
+    }
+    return {
+      showAddForm,
+      taskAddTextarea,
+      model,
+      openAddForm,
+      addNewTask
     }
   }
 }
 </script>
-
 <style lang="scss" scoped>
 .list {
-  background-color: #ebecf0;
-  border-radius: 3px;
-  box-sizing: border-box;
+  position: relative;
   display: flex;
   flex-direction: column;
-  max-height: 100%;
-  position: relative;
-  white-space: normal;
   width: 272px;
+  max-height: 100%;
+  border-radius: 3px;
+  white-space: normal;
+  box-sizing: border-box;
 
   &__header {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 8px;
+    padding: 8px;
+
+    p {
+      margin: 0;
+    }
 
     &-name {
       background: #0000;
@@ -87,8 +144,16 @@ export default {
   &__footer {
     padding: 10px 8px;
   }
-}
-.is-hidden {
-  display: none;
+  &__add-button {
+    display: flex;
+    align-items: center;
+    border-radius: 3px;
+    padding: 5px 0;
+
+    &:hover {
+      cursor: pointer;
+      background-color: #091e4214;
+    }
+  }
 }
 </style>

@@ -2,15 +2,16 @@
 
 namespace App\Models\Tasks;
 
+use App\Models\Traits\HasComments;
 use App\Models\Traits\HasDates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Comment;
 
 class Task extends Model
 {
     use HasFactory;
     use HasDates;
+    use HasComments;
 
     protected $fillable = [
         'id',
@@ -21,9 +22,4 @@ class Task extends Model
         'updated_at',
         'deleted_at',
     ];
-
-    public function comments()
-    {
-        return $this->morphMany(Comment::class, 'comment');
-    }
 }

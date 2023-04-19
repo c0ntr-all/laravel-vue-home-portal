@@ -15,6 +15,8 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       },
       status: 'paused',
       idx: 0,
+      checkPlaying: () => {},
+      timePlayed: 0,
       timePassed: '00:00',
       timeTotal: '00:00',
       rewindProgressWidth: 0,
@@ -27,6 +29,10 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       this.audio.volume = this.volume
 
       this.audio.addEventListener('timeupdate', () => {
+        if (this.status === 'paused') {
+          clearInterval(this.checkPlaying)
+        }
+
         const duration = this.audio.duration,
           currentTime = this.audio.currentTime
 
@@ -42,9 +48,12 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         this.timePassed = `${addZero(minutesPassed)}:${addZero(secondsPassed)}`
       })
 
+      this.audio.addEventListener('volumechange', () => {
+        this.volume = this.audio.volume
+      })
+
       this.audio.addEventListener('ended', () => {
         this.nextTrack()
-        this.run()
       });
     },
     run() {
@@ -57,6 +66,9 @@ export const useMusicPlayer = defineStore('musicPlayer', {
     play() {
       this.status = 'playing'
       this.audio.play()
+      this.checkPlaying = setInterval(() => {
+        this.timePlayed++
+      }, 1000)
     },
     pause() {
       this.status = 'paused'
