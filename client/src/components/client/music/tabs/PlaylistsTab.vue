@@ -22,7 +22,7 @@ export default {
     const total = ref(0)
 
     const getItems = async () => {
-      await API.get('music/playlists').then(response => {
+      await API.post('music/playlists').then(response => {
         items.value = response.data.items
         total.value = response.data.total
       }).catch(error => {

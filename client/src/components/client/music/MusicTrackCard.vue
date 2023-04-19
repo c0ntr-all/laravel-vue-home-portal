@@ -144,7 +144,7 @@
 
       <q-card-section class="flex justify-end">
         <q-btn class="q-px-sm q-mr-md" @click="showPlaylistModal = false" dense flat>Cancel</q-btn>
-        <q-btn class="q-px-md" color="primary" dense>Save</q-btn>
+        <q-btn @click="updatePlaylists" class="q-px-md" color="primary" dense>Save</q-btn>
       </q-card-section>
       <q-inner-loading :showing="playlistsLoading">
         <q-spinner-gears size="50px" color="primary" />
@@ -154,6 +154,7 @@
 </template>
 <script>
 import { ref, computed, watch } from "vue"
+import { useQuasar } from "quasar"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
 import API from "src/utils/api"
 
@@ -170,6 +171,7 @@ export default {
     }
   },
   setup(props) {
+    const $q = useQuasar()
     const musicPlayer = useMusicPlayer()
 
     const showPlaylistModal = ref(false)
@@ -201,9 +203,15 @@ export default {
     const initPlaylistDialog = async () => {
       playlistsLoading.value = true
 
-      await API.get('music/playlists').then(response => {
+      await API.post('music/playlists', {with_tracks: true}).then(response => {
         playlists.value = response.data.items
         filteredPlaylists.value = response.data.items
+
+        response.data.items.forEach(playlist => {
+          if (playlist.tracks.includes(props.track.id)) {
+            selectedPlaylists.value.push(playlist.id)
+          }
+        })
       }).catch(error => {
         $q.notify({
           type: 'negative',
@@ -211,6 +219,16 @@ export default {
         })
       }).finally(() => {
         playlistsLoading.value = false
+      })
+    }
+
+    const updatePlaylists = async () => {
+      await API.patch(`music/tracks/${props.track.id}/playlists/update`, {playlists: selectedPlaylists.value})
+      .then(response => {
+        $q.notify({
+          type: 'positive',
+          message: 'Playlists updated!'
+        })
       })
     }
 
@@ -230,6 +248,7 @@ export default {
       filteredPlaylists,
       selectedPlaylists,
       initPlaylistDialog,
+      updatePlaylists,
       changeRate
     }
   }

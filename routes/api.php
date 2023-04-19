@@ -102,6 +102,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 Route::post('get', [TrackController::class, 'get']);
                 Route::post('{track}/play', [TrackController::class, 'play']);
                 Route::post('{track}/rate', [TrackController::class, 'rate']);
+                Route::patch('{track}/playlists/update', [TrackController::class, 'updatePlaylists']);
             });
             Route::prefix('tags')->group(function() {
                 Route::post('/', [TagController::class, 'index']);
@@ -112,7 +113,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             });
             Route::prefix('playlists')->group(function() {
                 // Trying to set "playlists" route as default for list of playlists for better view while requesting.
-                Route::get('/', [PlaylistController::class, 'getItems']);
+                Route::post('/', [PlaylistController::class, 'getItems']);
                 Route::get('{playlist}/index', [PlaylistController::class, 'index']);
             });
         });
