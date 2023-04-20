@@ -51,31 +51,17 @@
           <q-btn color="grey-7" icon="more_horiz" round flat>
             <q-menu cover auto-close>
               <q-list>
-                <q-item @click="showPlaylistModal = true" clickable>
+                <q-item v-for="action in filteredActions" @click="handleFunction(action.name)" clickable>
                   <q-item-section>
                     <div class="flex items-center">
                       <q-icon
                         size="xs"
-                        name="add"
+                        :name="action.icon"
                         flat
                         round
                         dense
                       />
-                      <div class="q-ml-xs">Add to playlist</div>
-                    </div>
-                  </q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>
-                    <div class="flex items-center">
-                      <q-icon
-                        size="xs"
-                        name="delete"
-                        flat
-                        round
-                        dense
-                      />
-                      <div class="q-ml-xs">Remove</div>
+                      <div class="q-ml-xs">{{ action.label }}</div>
                     </div>
                   </q-item-section>
                 </q-item>
@@ -136,12 +122,6 @@
 
       <q-separator />
 
-      <q-card-section>
-        Selected playlists - {{ selectedPlaylists }}
-      </q-card-section>
-
-      <q-separator />
-
       <q-card-section class="flex justify-end">
         <q-btn class="q-px-sm q-mr-md" @click="showPlaylistModal = false" dense flat>Cancel</q-btn>
         <q-btn @click="updatePlaylists" class="q-px-md" color="primary" dense>Save</q-btn>
@@ -167,12 +147,23 @@ export default {
     },
     actions: {
       type: Array,
-      required: false
+      required: false,
+      default: ['addToPlaylist']
     }
   },
   setup(props) {
     const $q = useQuasar()
     const musicPlayer = useMusicPlayer()
+
+    const availableActions = [{
+      name: 'addToPlaylist',
+      label: 'Add to playlist',
+      icon: 'add'
+    },{
+      name: 'removeFromPlaylist',
+      label: 'Remove from playlist',
+      icon: 'delete'
+    }]
 
     const showPlaylistModal = ref(false)
     const playlists = ref([])
@@ -184,6 +175,10 @@ export default {
     let rate = computed({
       get: () => props.track.rate,
       set: value => props.track.rate = value
+    })
+
+    const filteredActions = computed(() => {
+      return availableActions.filter(item => props.actions.includes(item.name))
     })
 
     const changeRate = async (value) => {
@@ -222,13 +217,33 @@ export default {
       })
     }
 
+    const handleFunction = actionName => {
+      switch(actionName) {
+        case 'addToPlaylist':
+          showPlaylistModal.value = true
+          break;
+
+        case 'removeFromPlaylist':
+          console.log('removeFromPlaylist')
+          break;
+      }
+    }
+
     const updatePlaylists = async () => {
-      await API.patch(`music/tracks/${props.track.id}/playlists/update`, {playlists: selectedPlaylists.value})
-      .then(response => {
+      await API.patch(`music/tracks/${props.track.id}/playlists/update`, {
+        playlists: selectedPlaylists.value
+      }).then(response => {
         $q.notify({
           type: 'positive',
           message: 'Playlists updated!'
         })
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+      }).finally(() => {
+        showPlaylistModal.value = false
       })
     }
 
@@ -247,6 +262,8 @@ export default {
       playlistsLoading,
       filteredPlaylists,
       selectedPlaylists,
+      filteredActions,
+      handleFunction,
       initPlaylistDialog,
       updatePlaylists,
       changeRate

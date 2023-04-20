@@ -23,13 +23,13 @@
       </div>
     </div>
     <div class="playlist-body">
-      <MusicTracksList :tracks="playlist.tracks" />
+      <MusicTracksList :tracks="playlist.tracks" :actions="['addToPlaylist', 'removeFromPlaylist']" />
     </div>
   </div>
 </template>
 <script>
-import { ref, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted, watch } from "vue"
+import { useRoute } from "vue-router"
 
 import API from "src/utils/api"
 import { useMusicPlayer } from "stores/modules/musicPlayer"

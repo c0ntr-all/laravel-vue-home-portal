@@ -6,6 +6,7 @@
         @play="initPlay(track)"
         :key="track.id"
         :track="track"
+        :actions="actions"
       />
     </div>
   </div>
@@ -16,7 +17,15 @@ import MusicTrackCard from "src/components/client/music/MusicTrackCard.vue"
 
 export default {
   components: { MusicTrackCard },
-  props: ['tracks'],
+  props: {
+    tracks: {
+      type: Array
+    },
+    actions: {
+      type: Array,
+      required: false
+    }
+  },
   setup(props) {
     const musicPlayer = useMusicPlayer()
 
