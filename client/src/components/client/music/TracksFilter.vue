@@ -113,12 +113,10 @@ export default {
 
     const submitFilter = () => {
       emit('submitFilter', {
-        filters: {
-          tags: secondaryModel.value ? commonModel.value.concat(secondaryModel.value) : commonModel.value,
-          type: type.value,
-          union: union.value,
-          rate: rate.value
-        }
+        tags: secondaryModel.value ? commonModel.value.concat(secondaryModel.value) : commonModel.value,
+        type: type.value,
+        union: union.value,
+        rate: rate.value
       })
     }
 

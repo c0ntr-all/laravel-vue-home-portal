@@ -13,7 +13,7 @@ use App\Http\Requests\Music\Track\PlayRequest;
 
 class TrackController extends Controller
 {
-    public function get(FilterRequest $request)
+    public function getItems(FilterRequest $request)
     {
         $filters = $request->validated()['filters'] ?? [];
 

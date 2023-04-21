@@ -110,6 +110,13 @@ export default {
       field: row => row.artist,
       sortable: true
     },{
+      name: "tags",
+      required: true,
+      label: 'Теги',
+      align: 'left',
+      field: row => row.tags,
+      sortable: true
+    },{
       name: "duration",
       required: true,
       label: 'Длительность',
@@ -134,7 +141,10 @@ export default {
     const getTracks = async filters => {
       filters = filters || {}
 
-      await API.post('music/tracks/get', filters).then(response => {
+      await API.post('music/tracks', {
+        filters: filters,
+        with_tags: true
+      }).then(response => {
           tracks.value = response.data.tracks
           pagination.value = response.data.pagination
 
@@ -153,7 +163,7 @@ export default {
         let obUrl = new URL(pagination.value.nextPageUrl)
         let cursor = obUrl.searchParams.get("cursor")
 
-        await API.post('music/tracks/get', {'cursor': cursor})
+        await API.post('music/tracks', {'cursor': cursor})
           .then(response => {
             pagination.value = response.data.pagination
             tracks.value.push(...response.data.tracks)

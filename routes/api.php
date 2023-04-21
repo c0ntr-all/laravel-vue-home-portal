@@ -99,7 +99,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             });
             Route::post('albums', [AlbumController::class, 'index']);
             Route::prefix('tracks')->group(function() {
-                Route::post('get', [TrackController::class, 'get']);
+                Route::post('/', [TrackController::class, 'getItems']);
                 Route::post('{track}/play', [TrackController::class, 'play']);
                 Route::post('{track}/rate', [TrackController::class, 'rate']);
                 Route::patch('{track}/playlists/update', [TrackController::class, 'updatePlaylists']);

@@ -10,7 +10,7 @@ class TrackResource extends JsonResource
 
     public function toArray($request): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'number' => $this->number,
             'name' => $this->name,
@@ -19,5 +19,14 @@ class TrackResource extends JsonResource
             'image' => $this->full_image,
             'artist' => $this->album->artist->name,
         ];
+
+        if ($request->input('with_tags')) {
+            $data['tags'] = [
+                'common' => $this->tags->where('common', true)->pluck('name'),
+                'secondary' => $this->tags->where('common', false)->pluck('name')
+            ];
+        }
+
+        return $data;
     }
 }
