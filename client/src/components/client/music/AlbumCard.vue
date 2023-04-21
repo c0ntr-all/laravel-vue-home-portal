@@ -2,7 +2,7 @@
   <q-card class="album-card">
     <!--todo Поправить формирование полного урла в будущем (с бека)          -->
     <div class="album-card__image">
-      <img :src="'http://home-portal.local/storage/' + album.image">
+      <img :src="album.image">
     </div>
 
     <q-card-section class="album-card__info">

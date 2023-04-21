@@ -30,19 +30,22 @@
     </div>
     <div class="flex q-mb-sm q-gutter-md">
       <q-select
-        v-model="secondaryModel"
-        :options="secondaryTags"
-        :size="'xs'"
-        label="Select Style"
+        label="Select Styles"
+        v-model="secondaryTagsModel"
+        :options="secondaryTagsSelect"
+        input-debounce="0"
         style="width: 100%"
+        use-input
+        use-chips
+        multiple
         outlined
         dense
       />
       <q-select
         label="Select Genre"
-        v-model="commonModel"
+        v-model="commonTagsModel"
+        :options="commonTagsSelect"
         input-debounce="0"
-        :options="commonTags"
         style="width: 100%"
         use-input
         use-chips
@@ -74,10 +77,10 @@ export default {
 
     const type = ref('strict')
     const union = ref(true)
-    const commonTags = ref([])
-    const secondaryTags = ref([])
-    const commonModel = ref()
-    const secondaryModel = ref()
+    const commonTagsSelect = ref([])
+    const secondaryTagsSelect = ref([])
+    const commonTagsModel = ref([])
+    const secondaryTagsModel = ref([])
     const loading = ref(true)
 
     const setUnion = async () => {
@@ -86,8 +89,8 @@ export default {
 
     const getTagsSelect = async () => {
       await API.post('music/tags/select').then(response => {
-        commonTags.value = Object.keys(response.data.tags.common).map(key => response.data.tags.common[key])
-        secondaryTags.value = Object.keys(response.data.tags.secondary).map(key => response.data.tags.secondary[key])
+        commonTagsSelect.value = Object.keys(response.data.tags.common).map(key => response.data.tags.common[key])
+        secondaryTagsSelect.value = Object.keys(response.data.tags.secondary).map(key => response.data.tags.secondary[key])
       }).catch(error => {
         $q.notify({
           type: 'negative',
@@ -98,9 +101,21 @@ export default {
       })
     }
 
+    const commonTagsFilter = (val, update) => {
+      const params = commonTags.value.map(item => {
+        return item.label
+      })
+
+      update(() => {
+        const needle = val.toLowerCase()
+        commonOptions.value = params.filter(tag => tag.toLowerCase().indexOf(needle) > -1)
+      })
+    }
+
+
     const resetFilter = () => {
-      commonModel.value = []
-      secondaryModel.value = []
+      commonTagsModel.value = []
+      secondaryTagsModel.value = []
       type.value = 'strict'
       union.value = true
 
@@ -108,12 +123,19 @@ export default {
     }
 
     const submitFilter = () => {
+      let tags = []
+      const array = commonTagsModel.value.concat(secondaryTagsModel.value)
+      for (const key in array) {
+        tags.push(array[key].value)
+      }
+
+      const filters =  {
+        tags: tags,
+        type: type.value,
+        union: union.value
+      }
       emit('submitFilter', {
-        filters: {
-          tags: secondaryModel.value ? commonModel.value.concat(secondaryModel.value) : commonModel.value,
-          type: type.value,
-          union: union.value
-        }
+        filters
       })
     }
 
@@ -124,10 +146,10 @@ export default {
     return {
       type,
       union,
-      commonTags,
-      secondaryTags,
-      commonModel,
-      secondaryModel,
+      commonTagsSelect,
+      secondaryTagsSelect,
+      commonTagsModel,
+      secondaryTagsModel,
       loading,
       setUnion,
       getTagsSelect,
