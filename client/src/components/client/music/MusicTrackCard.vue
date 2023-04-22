@@ -149,6 +149,10 @@ export default {
       type: Array,
       required: false,
       default: ['addToPlaylist']
+    },
+    playlist: {
+      type: String,
+      required: false
     }
   },
   setup(props) {
@@ -224,7 +228,7 @@ export default {
           break;
 
         case 'removeFromPlaylist':
-          console.log('removeFromPlaylist')
+          removeFromPlaylist()
           break;
       }
     }
@@ -244,6 +248,22 @@ export default {
         })
       }).finally(() => {
         showPlaylistModal.value = false
+      })
+    }
+
+    const removeFromPlaylist = async () => {
+      await API.post(`music/tracks/${props.track.id}/playlists/delete`, {
+        playlist: props.playlist
+      }).then(response => {
+        $q.notify({
+          type: 'positive',
+          message: 'Track has been removed from playlist!'
+        })
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
       })
     }
 

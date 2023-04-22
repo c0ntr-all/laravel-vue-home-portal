@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="playlist-body">
-      <MusicTracksList :tracks="playlist.tracks" :actions="['addToPlaylist', 'removeFromPlaylist']" />
+      <MusicTracksList :tracks="playlist.tracks" :actions="['addToPlaylist', 'removeFromPlaylist']" :playlist="id" />
     </div>
   </div>
 </template>

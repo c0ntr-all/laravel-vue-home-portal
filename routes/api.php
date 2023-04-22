@@ -103,6 +103,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 Route::post('{track}/play', [TrackController::class, 'play']);
                 Route::post('{track}/rate', [TrackController::class, 'rate']);
                 Route::patch('{track}/playlists/update', [TrackController::class, 'updatePlaylists']);
+                Route::post('{track}/playlists/delete', [TrackController::class, 'deleteFromPlaylist']);
             });
             Route::prefix('tags')->group(function() {
                 Route::post('/', [TagController::class, 'index']);

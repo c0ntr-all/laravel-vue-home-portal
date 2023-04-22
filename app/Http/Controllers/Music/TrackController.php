@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Music\FilterRequest;
+use App\Http\Requests\Music\Track\DeleteFromPlaylistRequest;
 use App\Http\Requests\Music\Track\RateRequest;
 use App\Http\Requests\Music\Track\UpdatePlaylistsRequest;
 use App\Http\Resources\Music\Tracks\TrackCollection;
@@ -57,5 +58,12 @@ class TrackController extends Controller
         ];
 
         $track->playlists()->syncWithPivotValues($playlists, $pivotValues);
+    }
+
+    public function deleteFromPlaylist(Track $track, DeleteFromPlaylistRequest $request)
+    {
+        $playlistId = $request->validated()['playlist'];
+
+        $track->playlists()->detach($playlistId);
     }
 }

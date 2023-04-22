@@ -7,6 +7,7 @@
         :key="track.id"
         :track="track"
         :actions="actions"
+        :playlist="playlist || 0"
       />
     </div>
   </div>
@@ -23,6 +24,10 @@ export default {
     },
     actions: {
       type: Array,
+      required: false
+    },
+    playlist: {
+      type: String,
       required: false
     }
   },
