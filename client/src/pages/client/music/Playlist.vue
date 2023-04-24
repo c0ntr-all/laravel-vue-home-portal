@@ -10,20 +10,31 @@
     <div class="playlist-head q-mb-lg">
       <div class="playlist-head__left">
         <div class="playlist-head__image q-mb-md">
-          <img src="images/no-image.jpg" alt="" />
+          <q-skeleton v-if="loading" height="200px" width="200px" square />
+          <img v-else src="images/no-image.jpg" alt="" />
         </div>
       </div>
       <div class="playlist-head__right">
-        <h2 class="playlist-head__name">{{ playlist.name }}</h2>
+        <h2 v-if="loading" class="playlist-head__name">
+          <q-skeleton type="text" width="300px" />
+        </h2>
+        <h2 v-else class="playlist-head__name">{{ playlist.name }}</h2>
         <div class="playlist-head__description">
-          <p class="playlist-head__description-item">{{ playlist.artist?.name }}</p>
-          <p class="playlist-head__description-item">{{ playlist.year }}</p>
-          <div class="playlist-head__description-item">{{ playlist.content }}</div>
+          <q-skeleton v-if="loading" type="text" width="300px" />
+          <q-skeleton v-if="loading" type="text" width="300px" />
+          <q-skeleton v-if="loading" type="text" width="300px" />
+          <q-skeleton v-if="loading" type="text" width="300px" />
+          <div v-else class="playlist-head__description-item">{{ playlist.content }}</div>
         </div>
       </div>
     </div>
     <div class="playlist-body">
-      <MusicTracksList :tracks="playlist.tracks" :actions="['addToPlaylist', 'removeFromPlaylist']" :playlist="id" />
+      <MusicTracksList
+        @remove="console.log(track)"
+        :tracks="playlist.tracks"
+        :actions="['addToPlaylist', 'deleteFromPlaylist']"
+        :playlist="id"
+      />
     </div>
   </div>
 </template>
@@ -54,6 +65,8 @@ export default {
         playlist.value = response.data
       }).catch(error => {
 
+      }).finally(() => {
+        loading.value = false
       })
     }
 
@@ -85,7 +98,7 @@ export default {
   padding: 1rem 0 0 0;
 
   &__image {
-    img {
+    & > * {
       width: 200px;
       height: 200px;
     }

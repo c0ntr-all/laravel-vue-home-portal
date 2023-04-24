@@ -64,6 +64,8 @@ class TrackController extends Controller
     {
         $playlistId = $request->validated()['playlist'];
 
-        $track->playlists()->detach($playlistId);
+        if ($track->playlists()->detach($playlistId)) {
+            return ['track_id' => $track->id];
+        }
     }
 }

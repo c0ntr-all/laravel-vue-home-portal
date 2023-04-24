@@ -8,6 +8,7 @@
         :track="track"
         :actions="actions"
         :playlist="playlist || 0"
+        @remove="removeTrackFromList"
       />
     </div>
   </div>
@@ -41,8 +42,15 @@ export default {
       }
       musicPlayer.playTrack(track)
     }
+    const removeTrackFromList = trackId => {
+      const index = props.tracks.indexOf(props.tracks.filter(item => item.id === trackId)[0])
+
+      props.tracks.splice(index, 1)
+    }
+
     return {
-      initPlay
+      initPlay,
+      removeTrackFromList
     }
   }
 }

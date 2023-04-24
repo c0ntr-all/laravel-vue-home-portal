@@ -139,7 +139,7 @@ import { useMusicPlayer } from "stores/modules/musicPlayer"
 import API from "src/utils/api"
 
 export default {
-  emits: ['play'],
+  emits: ['play', 'remove'],
   props: {
     track: {
       type: Object,
@@ -155,7 +155,7 @@ export default {
       required: false
     }
   },
-  setup(props) {
+  setup(props, {emit}) {
     const $q = useQuasar()
     const musicPlayer = useMusicPlayer()
 
@@ -164,7 +164,7 @@ export default {
       label: 'Add to playlist',
       icon: 'add'
     },{
-      name: 'removeFromPlaylist',
+      name: 'deleteFromPlaylist',
       label: 'Remove from playlist',
       icon: 'delete'
     }]
@@ -212,6 +212,7 @@ export default {
           }
         })
       }).catch(error => {
+        console.log(error)
         $q.notify({
           type: 'negative',
           message: `Server Error: ${error.response.data.message}`
@@ -227,8 +228,8 @@ export default {
           showPlaylistModal.value = true
           break;
 
-        case 'removeFromPlaylist':
-          removeFromPlaylist()
+        case 'deleteFromPlaylist':
+          deleteFromPlaylist()
           break;
       }
     }
@@ -251,15 +252,17 @@ export default {
       })
     }
 
-    const removeFromPlaylist = async () => {
+    const deleteFromPlaylist = async () => {
       await API.post(`music/tracks/${props.track.id}/playlists/delete`, {
         playlist: props.playlist
       }).then(response => {
+        emit('remove', props.track.id)
         $q.notify({
           type: 'positive',
           message: 'Track has been removed from playlist!'
         })
       }).catch(error => {
+        console.log(error)
         $q.notify({
           type: 'negative',
           message: `Server Error: ${error.response.data.message}`
