@@ -5,6 +5,14 @@
   >
     <div class="flex items-center col-grow" @click="$emit('play')">
       <div class="music-track__image q-mr-md">
+        <q-icon
+          v-if="track.id !== musicPlayer.track.id"
+          size="xs"
+          name="music_note"
+          flat
+          round
+          dense
+        />
         <template v-if="track.id === musicPlayer.track.id">
           <q-spinner-audio
             v-if="musicPlayer.status === 'playing'"
