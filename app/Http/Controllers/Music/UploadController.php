@@ -4,16 +4,16 @@ namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Music\Upload\UploadRequest;
-use App\Services\Music\ParseArtistService;
+use App\Services\Music\ParseArtistServiceAlt;
 
 class UploadController extends Controller
 {
     /**
-     * @var ParseArtistService
+     * @var ParseArtistServiceAlt
      */
     private $parseArtistService;
 
-    public function __construct(ParseArtistService $parseArtistService)
+    public function __construct(ParseArtistServiceAlt $parseArtistService)
     {
         $this->parseArtistService = $parseArtistService;
     }
