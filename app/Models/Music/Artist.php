@@ -7,6 +7,7 @@ use App\Models\Traits\HasMusicTags;
 use App\Models\Traits\HasImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -32,14 +33,14 @@ class Artist extends Model
         'deleted_at'
     ];
 
-    /**
-     * Получает все альбомы исполнителя
-     *
-     * @return HasMany
-     */
     public function albums(): HasMany
     {
         return $this->hasMany(Album::class, 'artist_id', 'id');
+    }
+
+    public function tracks(): HasManyThrough
+    {
+        return $this->hasManyThrough(Track::class, Album::class);
     }
 
     public static function getWithCursor(array $filters = [])

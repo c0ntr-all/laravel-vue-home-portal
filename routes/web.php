@@ -25,10 +25,13 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 /*Для тестирования*/
-Route::get('/test/{id}', [\App\Http\Controllers\Music\TagController::class, 'test'])->name('test');
+Route::get('/test1', function() {
+    $artist = Artist::find(1);
+    dd($artist->tracks()->get()->toArray());
+})->name('test1');
 
 Route::get('/test2', function() {
-    $path = 'F:\Music\Разборка\Crystal Castles-Plague-kissvk.com.mp3';
+    $path = 'F:\\Music\\Metal\\Death Metal\\Melodic Death Metal\\Modern Melodic Death Metal\\In Flames\\Albums\\1995 - Lunar Strain (Japanese Edition)\\16. Eye Of The Beholder.mp3';
 
     $getID3 = new getID3();
     $file = $getID3->analyze($path);
