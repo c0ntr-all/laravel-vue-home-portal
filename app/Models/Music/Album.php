@@ -31,6 +31,7 @@ class Album extends Model
         'year',
         'content',
         'image',
+        'path',
         'updated_at',
         'deleted_at'
     ];

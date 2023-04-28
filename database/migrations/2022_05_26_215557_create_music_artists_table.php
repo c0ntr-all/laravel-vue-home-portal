@@ -15,16 +15,14 @@ class CreateMusicArtistsTable extends Migration
     {
         Schema::create('music_artists', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
             $table->string('name');
             $table->string('country')->nullable();
             $table->text('content')->nullable();
             $table->string('image')->nullable()->default(NULL);
+            $table->string('path');
 
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

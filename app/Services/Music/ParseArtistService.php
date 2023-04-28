@@ -233,7 +233,7 @@ class ParseArtistService
                     ], [
                         'user_id' => auth()->user()->id,
                         'number' => $track['number'],
-                        'path_windows' => $track['path'],
+                        'path' => $track['path'],
                         'duration' => $duration,
                         'bitrate' => $id3TrackInfo['audio']['bitrate']
                     ]);

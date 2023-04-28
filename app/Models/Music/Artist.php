@@ -29,6 +29,7 @@ class Artist extends Model
         'name',
         'content',
         'image',
+        'path',
         'updated_at',
         'deleted_at'
     ];

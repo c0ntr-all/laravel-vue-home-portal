@@ -30,7 +30,8 @@ class CreateMusicPlaylistsItemsTable extends Migration
 
             $table->foreign('playlist_id')
                   ->references('id')
-                  ->on('music_playlists');
+                  ->on('music_playlists')
+                  ->onDelete('cascade');
         });
     }
 

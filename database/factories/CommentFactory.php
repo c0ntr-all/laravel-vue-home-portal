@@ -17,8 +17,8 @@ class CommentFactory extends Factory
 
         return [
             'user_id' => 1,
-            'comment_id' => rand(1, 10),
-            'comment_type' => 'task',
+            'commentable_id' => rand(1, 10),
+            'commentable_type' => 'task',
             'content' => $this->faker->word,
             'created_at' => $date,
             'updated_at' => $date

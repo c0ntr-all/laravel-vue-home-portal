@@ -15,21 +15,18 @@ class CreateMusicAlbumsTable extends Migration
     {
         Schema::create('music_albums', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('artist_id');
             $table->integer('year');
             $table->string('name');
-            $table->string('type')->default(NULL);
-            $table->enum('version', ['instrumental', 'remaster', 'remix', 'live'])->nullable()->default(NULL);
+            $table->string('attributes')->nullable();
             $table->string('edition')->nullable();
             $table->text('content')->nullable();
             $table->string('image')->nullable();
-            $table->string('path_windows');
+            $table->string('path');
 
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('artist_id')
                   ->references('id')
                   ->on('music_artists')

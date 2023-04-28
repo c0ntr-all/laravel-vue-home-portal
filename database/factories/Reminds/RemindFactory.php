@@ -1,11 +1,14 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Reminds;
 
+use App\Models\Reminds\Remind;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RemindFactory extends Factory
 {
+    protected $model = Remind::class;
+
     /**
      * Define the model's default state.
      *

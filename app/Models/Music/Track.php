@@ -25,7 +25,7 @@ class Track extends Model
         'album_id',
         'number',
         'name',
-        'path_windows',
+        'path',
         'duration',
         'bitrate',
         'updated_at',
