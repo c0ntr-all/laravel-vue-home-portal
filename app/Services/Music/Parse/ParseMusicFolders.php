@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Services\Music;
+namespace App\Services\Music\Parse;
 
-use App\Models\Music\Artist;
-use App\Models\Music\Album;
-use App\Models\Music\Track;
 use App\Helpers\ImageUpload;
+use App\Models\Music\Artist;
 use getID3;
 use Illuminate\Http\File;
 
-class ParseArtistService
+class ParseMusicFolders
 {
     private string $noImage = 'no-image.gif';
 

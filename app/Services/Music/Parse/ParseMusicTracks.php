@@ -1,20 +1,15 @@
 <?php
 
-namespace App\Services\Music;
+namespace App\Services\Music\Parse;
 
 use App\Models\Music\Artist;
-use App\Helpers\ImageUpload;
 use getID3;
 
-class ParseArtistServiceAlt
+class ParseMusicTracks extends BaseMusicParse
 {
-    private string $noImage = 'no-image.gif';
-
-    private const EXTENSIONS = ['mp3'];
-
     public function __construct(private getID3 $getID3)
     {
-
+        parent::__construct($getID3);
     }
 
     public function upload(string $folder)
@@ -36,7 +31,7 @@ class ParseArtistServiceAlt
             foreach ($albums as $albumPath) {
                 $albumItems = scandir($albumPath);
 
-                $cover = $this->getCover($albumPath);
+                $cover = $this->getCoverFolderPath($albumPath);
 
                 foreach ($albumItems as $key => $item) {
                     if ($item === '.' || $item === '..') {
@@ -45,7 +40,7 @@ class ParseArtistServiceAlt
 
                     $info = pathinfo($item);
 
-                    if (isset($info['extension']) && $info['extension'] == 'mp3') {
+                    if (isset($info['extension']) && in_array($info['extension'], self::EXTENSIONS)) {
                         $trackPath = $albumPath . DIRECTORY_SEPARATOR . $item;
                         $id3TrackInfo = $this->getID3->analyze($trackPath);
 
@@ -71,12 +66,20 @@ class ParseArtistServiceAlt
 
                         $trackName = $id3TrackInfo['id3v2']['comments']['title'][0];
 
+                        $duration = $id3TrackInfo['playtime_string'];
+
+                        $durationParts = explode(':', $duration);
+
+                        if (count($durationParts) == 2) {
+                            $duration = '00:' . $durationParts[0] . ':' . $durationParts[1];
+                        }
+
                         $album->tracks()->updateOrCreate([
                             'album_id' => $album->id,
                             'name' => $trackName
                         ],[
                             'number' => $id3TrackInfo['id3v2']['comments']['track_number'][0] ?? NULL,
-                            'duration' => $id3TrackInfo['playtime_string'],
+                            'duration' => $duration,
                             'bitrate' => $id3TrackInfo['audio']['bitrate'],
                             'path' => $trackPath
                         ]);
@@ -84,29 +87,6 @@ class ParseArtistServiceAlt
                 }
             }
         }
-
-        $dirCanonical = realpath($folder);
-
-        static $items = [];
-
-        if ($fileOrDir = opendir($dirCanonical)) {
-            while (false !== ($fileName = readdir($fileOrDir))) {
-                if ($fileName == "." || $fileName == "..") {
-                    continue;
-                }
-
-                $dirItem = $dirCanonical . DIRECTORY_SEPARATOR . $fileName;
-                $info = pathinfo($dirItem);
-
-                if (is_dir($dirItem)) {
-                    $this->parseFolder($dirItem);
-                }
-            }
-
-            closedir($fileOrDir);
-        }
-
-        return $items;
     }
 
     private function getAlbumDir($file, $count = 0): string|null
@@ -149,26 +129,5 @@ class ParseArtistServiceAlt
         }
 
         return $items;
-    }
-
-    private function getCover(string $albumPath): string|null
-    {
-        $defaultCover = $albumPath . DIRECTORY_SEPARATOR . 'Cover.jpg';
-
-        if (file_exists($defaultCover)) {
-            return $defaultCover;
-        } else {
-            $albumItems = scandir($albumPath);
-
-            foreach ($albumItems as $item) {
-                $info = pathinfo($item);
-
-                if (in_array($info['extension'], ['jpg', 'png', 'jpeg'])) {
-                    return $item;
-                }
-            }
-        }
-
-        return null;
     }
 }
