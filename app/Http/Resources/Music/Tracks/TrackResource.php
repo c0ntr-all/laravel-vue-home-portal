@@ -16,8 +16,8 @@ class TrackResource extends JsonResource
             'name' => $this->name,
             'duration' => $this->duration,
             'rate' => $this->rate?->rate ?? 0,
-            'image' => $this->full_image,
             'artist' => $this->album->artist->name,
+            'image' => $this->full_image,
         ];
 
         if ($request->input('with_tags')) {

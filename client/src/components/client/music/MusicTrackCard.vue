@@ -4,25 +4,25 @@
     :class="{'music-track--active': track.id === musicPlayer.track.id}"
   >
     <div class="flex items-center col-grow" @click="$emit('play')">
-      <div class="music-track__image q-mr-md">
-        <q-icon
-          v-if="track.id !== musicPlayer.track.id"
-          size="xs"
-          name="music_note"
-          flat
-          round
-          dense
+      <div class="music-track-cover q-mr-md">
+        <q-img
+          v-if="track.image"
+          :src="track.image"
+          class="music-track-cover__image"
+          :alt="track.name"
         />
-        <template v-if="track.id === musicPlayer.track.id">
-          <q-spinner-audio
-            v-if="musicPlayer.status === 'playing'"
-            size="1rem"
-            color="white"
-          />
-          <div class="text-white" v-else>....</div>
-        </template>
+        <div class="music-track-cover__overlay">
+          <div class="music-track-cover__play-icon">
+            <q-spinner-audio
+              v-if="musicPlayer.status === 'playing'"
+              size="1rem"
+              color="white"
+            />
+            <div class="text-white" v-else>....</div>
+          </div>
+        </div>
         <q-icon
-          class="music-track__status-icon"
+          class="music-track-cover__status-icon"
           size="xs"
           :name="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== track.id) ? 'play_arrow' : 'pause'"
           flat
@@ -306,8 +306,9 @@ export default {
 .music-track {
   position: relative;
 
-  &__image {
+  &-cover {
     display: flex;
+    position: relative;
     justify-content: center;
     align-items: center;
     width: 40px;
@@ -315,13 +316,32 @@ export default {
     margin: 4px;
     border-radius: 8px;
     background: #ccc;
-  }
-  &__status-icon {
-    display: none;
-    position: absolute;
-    padding: 4px;
-    background: #fff;
-    border-radius: 50%;
+
+    &__image {
+      border-radius: 8px;
+    }
+    &__status-icon {
+      display: none;
+      position: absolute;
+      padding: 4px;
+      background: #fff;
+      border-radius: 50%;
+    }
+    &__play-icon {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    &__overlay {
+      display: none;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      background-color: rgba(0,0,0,.5);
+    }
   }
   &__artist {
     font-size: 12.5px;
@@ -364,12 +384,12 @@ export default {
     cursor: pointer;
     background-color: rgba(174,183,194,0.12);
 
-    .music-track__image {
-      background-color: rgba(0,0,0,.5);
+    .music-track-cover__overlay {
+      display: block;
     }
   }
   &:hover {
-    .music-track__status-icon {
+    .music-track-cover__status-icon {
       display: flex;
     }
     .music-track__more {

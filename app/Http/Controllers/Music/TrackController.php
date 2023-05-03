@@ -23,7 +23,7 @@ class TrackController extends Controller
 
     public function play(PlayRequest $request, Track $track): BinaryFileResponse
     {
-        return new BinaryFileResponse($track->path_windows);
+        return new BinaryFileResponse($track->path);
     }
 
     public function rate(RateRequest $request, Track $track)

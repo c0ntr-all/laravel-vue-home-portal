@@ -21,7 +21,7 @@ class CreateMusicAlbumsTable extends Migration
             $table->string('attributes')->nullable();
             $table->string('edition')->nullable();
             $table->text('content')->nullable();
-            $table->string('image')->nullable();
+            $table->string('image')->nullable()->default(NULL);
             $table->string('path');
 
             $table->timestamps();
