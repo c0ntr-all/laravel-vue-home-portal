@@ -2,302 +2,116 @@
 
 namespace App\Services\Music\Parse;
 
-use App\Helpers\ImageUpload;
 use App\Models\Music\Artist;
 use getID3;
-use Illuminate\Http\File;
 
-class ParseMusicFolders
+class ParseMusicFolders extends BaseMusicParse
 {
-    private string $noImage = 'no-image.gif';
-
-    private const EXTENSIONS = ['mp3'];
-
-    private const TYPES = ['lp', 'ep', 'single', 'demo', 'split', 'tribute', 'bootleg', 'live', 'instrumental', 'remaster'];
-
     public function __construct(private getID3 $getID3)
     {
-
+        parent::__construct($getID3);
     }
 
-    /**
-     * Проверяет являются ли переданные каталоги музыкальными альбомами формата 2019 - AlbumName
-     *
-     * @param $folders
-     * @return bool
-     * @throws \Exception
-     */
-    private function validateAlbums($folders): bool
+    public function upload(string $folder): bool
     {
-        if (empty($folders))
-            throw new \Exception('В каталоге отсутствуют папки');
+        if (file_exists($folder)) {
+            return $this->parseFolder($folder);
+        } else {
+            throw new \Exception('The chosen catalog doesn\'t exists!');
+        }
+    }
 
-        foreach ($folders as $folder) {
-            if (!preg_match('/[0-9]{4} - .*/i', $folder)) {
-                throw new \Exception('В каталоге присутствует папка неверного формата: ' . $folder);
+    private function parseFolder(string $folder): bool
+    {
+        $albums = $this->findAlbums($folder);
+
+        if (!empty($albums)) {
+            foreach ($albums as $albumPath) {
+                $albumItems = scandir($albumPath);
+
+                $coverOriginalPath = $this->getCoverFolderPath($albumPath);
+                $coverPath = null;
+
+                if ($coverOriginalPath) {
+                    $coverPath = $this->saveCover($coverOriginalPath, basename($albumPath));
+                }
+
+                foreach ($albumItems as $item) {
+                    if ($item === '.' || $item === '..') {
+                        continue;
+                    }
+
+                    $info = pathinfo($item);
+
+                    if (isset($info['extension']) && in_array($info['extension'], self::EXTENSIONS)) {
+                        $trackPath = $albumPath . DIRECTORY_SEPARATOR . $item;
+                        $id3TrackInfo = $this->getID3->analyze($trackPath);
+
+                        $artistName = $id3TrackInfo['id3v2']['comments']['artist'][0];
+
+                        $dataForArtist = ['path' => $folder];
+                        if ($coverPath) {
+                            $dataForArtist['image'] = $coverPath;
+                        }
+                        // Добавляем исполнителя по имени
+                        $artist = Artist::updateOrCreate([
+                            'name' => $artistName
+                        ], $dataForArtist);
+
+                        $albumName = $id3TrackInfo['id3v2']['comments']['album'][0];
+
+                        $album = $artist->albums()->updateOrCreate([
+                            'name' => $albumName
+                        ],[
+                            'image' => $coverPath,
+                            'year' => $id3TrackInfo['id3v2']['comments']['year'][0],
+                            'path' => $albumPath
+                        ]);
+
+                        $trackName = $id3TrackInfo['id3v2']['comments']['title'][0];
+
+                        $album->tracks()->updateOrCreate([
+                            'album_id' => $album->id,
+                            'name' => $trackName
+                        ],[
+                            'number' => $id3TrackInfo['id3v2']['comments']['track_number'][0] ?? NULL,
+                            'duration' => $this->formatDuration($id3TrackInfo['playtime_string']),
+                            'bitrate' => $id3TrackInfo['audio']['bitrate'],
+                            'path' => $trackPath,
+                            'image' => $coverPath,
+                        ]);
+                    }
+                }
             }
+        } else {
+            throw new \Exception('There is no albums here!');
         }
 
         return true;
     }
 
-    /**
-     * Проверяет трек на валидность и в случае true возвращает результат разбивки по регулярному выражению
-     *
-     * @param $track
-     * @return mixed
-     * @throws \Exception
-     */
-    private function parseTrack($track): mixed
+    public function findAlbums(string $path): array
     {
-        preg_match_all('/([0-9]{2}).\s(.*)/i', $track, $match);
+        $dirCanonical = realpath($path);
 
-        if (empty($match[0]))
-            throw new \Exception('Трек неверного формата - ' . $track);
+        static $items = [];
 
-        return $match;
-    }
-
-    /**
-     * Ищет в каталоге все папки или файлы. При поиске файлов, забирает все MP3 файлы и первую попавшуюся картинку jpg|jpeg|png
-     *
-     * @param $folder
-     * @return array
-     */
-    private function parseFolder($folder, $mode = 'folders'): array
-    {
-        if (!empty($folder)) {
-            $dirElements = scandir($folder);
-            $items = [];
-
-            foreach ($dirElements as $key => $dirItem) {
-                if ($dirItem != '..' && $dirItem != '.') {
-                    switch ($mode) {
-                        case 'folders':
-                            if (is_dir($folder . $dirItem)) {
-                                $items[] = $dirItem;
-                            }
-                            break;
-
-                        case 'tracks':
-                            if (!is_dir($folder . '\\' . $dirItem)) {
-                                $info = pathinfo($folder . '\\' . $dirItem);
-                                if (in_array($info['extension'], self::EXTENSIONS)) {
-                                    $items[] = $info['basename'];
-                                } elseif ($info['extension'] === 'jpg' || $info['extension'] === 'jpeg' || $info['extension'] === 'png') {
-                                    $items['cover'] = $folder . '\\' . $info['basename'];
-                                }
-                            }
-                            break;
-                    }
-                }
-            }
-
-            return $items;
-        }
-    }
-
-    /**
-     * Возвращает имя выбранного каталога из пути
-     *
-     * @param $folder
-     * @return string
-     */
-    private function getFolderName($folder): string
-    {
-        $foldersPath = explode('\\', rtrim($folder, '\\'));
-
-        return array_pop($foldersPath);
-    }
-
-    /**
-     * Собирает данные по исполнителю в каталоге и формирует массив для загрузки в БД
-     *
-     * @param $folder
-     * @return mixed
-     */
-    private function collectData($folder): mixed
-    {
-        $folder = strpos($folder, '\\', -1) ? $folder : $folder . '\\';
-
-        $folders = $this->parseFolder($folder);
-        try {
-            $this->validateAlbums($folders);
-        } catch (\Exception $exception) {
-            return ['success' => false, 'message' => $exception->getMessage()];
-        }
-
-        $artistName = $this->getFolderName($folder);
-
-        $result = [
-            'success' => true,
-            'artist' => $artistName
-        ];
-        $result['albums'] = [];
-
-        foreach ($folders as $albumKey => $albumName) {
-            preg_match_all('/([0-9]{4}) - (.*)/i', $albumName, $match);
-            $albumParts = array_column($match, 0);
-
-            $albumFolder = $folder . $albumName;
-            $rawTracks = $this->parseFolder($albumFolder, 'tracks');
-
-            $tracks = [];
-
-            foreach ($rawTracks as $trackKey => $track) {
-                try {
-                    $match = $this->parseTrack($track);
-                } catch (\Exception $exception) {
-                    return ['success' => false, 'message' => $exception->getMessage()];
+        if ($dirStream = opendir($dirCanonical)) {
+            while (false !== ($fileName = readdir($dirStream))) {
+                if ($fileName == "." || $fileName == "..") {
+                    continue;
                 }
 
-                $trackParts = array_column($match, 0);
+                $dirItem = $dirCanonical . DIRECTORY_SEPARATOR . $fileName;
 
-                $tracks[$trackKey]['number'] = $trackParts[1];
-                $tracks[$trackKey]['name'] = pathinfo($trackParts[2], PATHINFO_FILENAME);
-                $tracks[$trackKey]['path'] = $albumFolder . '\\' . $track;
-            }
-
-            $cover = array_key_exists('cover', $rawTracks) ? $rawTracks['cover'] : null;
-            unset($tracks['cover']);
-
-            array_push($result['albums'], [
-                'year' => $albumParts[1],
-                'name' => $albumParts[2],
-                'type' => $this->parseAlbumType($albumName),
-                'cover' => $cover,
-                'tracks' => $tracks
-            ]);
-        }
-
-        return $result;
-    }
-
-    /**
-     * Заносит собранную информацию по папкам в базу данных
-     *
-     * @param $folder
-     */
-    public function upload($folder)
-    {
-        $data = $this->collectData($folder);
-
-        if ($data['success']) {
-            $artistModel = Artist::updateOrCreate([
-                'name' => $data['artist']
-            ], [
-                'user_id' => auth()->user()->id,
-                'name' => $data['artist'],
-                'image' => $this->noImage
-            ]);
-
-            $lastAlbumPoster = $this->noImage;
-
-            foreach ($data['albums'] as $album) {
-                if (!empty($album['cover'])) {
-                    $image = new File($album['cover']);
-                    $posterPath = ImageUpload::make()
-                                             ->setDiskName('public')
-                                             ->setFolder('music/albums/posters')
-                                             ->setSourceName($album['name'])
-                                             ->upload($image);
-                    $lastAlbumPoster = $posterPath;
-                } else {
-                    $posterPath = $this->noImage;
-                }
-
-                $albumModel = $artistModel->albums()->updateOrCreate([
-                    'name' => $album['name']
-                ], [
-                    'user_id' => auth()->user()->id,
-                    'type' => $album['type'],
-                    'year' => $album['year'],
-                    'image' => $posterPath
-                ]);
-
-                foreach ($album['tracks'] as $track) {
-                    $id3TrackInfo = $this->getID3->analyze($track['path']);
-
-                    $duration = $id3TrackInfo['playtime_string'];
-
-                    $durationParts = explode(':', $duration);
-
-                    if (count($durationParts) == 2) {
-                        $duration = '00:' . $durationParts[0] . ':' . $durationParts[1];
-                    }
-
-                    $albumModel->tracks()->updateOrCreate([
-                        'name' => $track['name']
-                    ], [
-                        'user_id' => auth()->user()->id,
-                        'number' => $track['number'],
-                        'path' => $track['path'],
-                        'duration' => $duration,
-                        'bitrate' => $id3TrackInfo['audio']['bitrate']
-                    ]);
-                }
-            }
-
-            $artistModel->image = $lastAlbumPoster;
-            $artistModel->save();
-
-            return ['success' => true, 'artist' => $data['artist']];
-        } else {
-            return $data;
-        }
-    }
-
-    private function parseAlbumType($albumName)
-    {
-        if (!$this->checkAlbumName($albumName)) {
-            if (!$this->checkAlbumCircleBrackets($albumName)) {
-                return static::TYPES[0];
-            } else {
-                return $this->checkAlbumCircleBrackets($albumName);
-            }
-        } else {
-            return $this->checkAlbumName($albumName);
-        }
-    }
-
-    /**
-     * Проверяет непосредственно имя альбома, является ли оно типом, например Demo или Split
-     *
-     * @param $albumName
-     * @return mixed
-     */
-    private function checkAlbumName($string)
-    {
-        $nameWords = explode(' ', $string);
-
-        foreach (static::TYPES as $type) {
-            if (in_array($type, array_map('strtolower', $nameWords))) {
-                return $type;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Проверяет круглые скобки в имени альбома, есть ли там тип альбома, например, Single или EP
-     *
-     * @param $string
-     * @return mixed
-     */
-    private function checkAlbumCircleBrackets($string)
-    {
-        preg_match_all('/\((.+?)\)/', $string, $matches);
-
-        if (!empty($matches[1])) {
-            foreach ($matches[1] as $item) {
-                $lower = strtolower($item);
-                if (in_array($lower, static::TYPES)) {
-                    return $lower;
+                if (preg_match('/[0-9]{4} - .*/i', basename($fileName))) {
+                    $items[] = $dirItem;
+                } else if(is_dir($dirItem)) {
+                    $this->findAlbums($dirItem);
                 }
             }
         }
 
-        return null;
+        return $items;
     }
 }

@@ -73,4 +73,26 @@ abstract class BaseMusicParse
 
         return null;
     }
+
+    /**
+     * Сохраняет изображение на сервер и возвращает полученный путь
+     *
+     * @param string $path
+     * @param string $name
+     * @return string
+     */
+    protected function saveCover(string $path, string $name): string
+    {
+        if ($path != NULL && is_file($path)) {
+            $image = new File($path);
+
+            return ImageUpload::make()
+                              ->setDiskName('public')
+                              ->setFolder('music/albums/posters')
+                              ->setSourceName($name)
+                              ->upload($image);
+        } else {
+            return self::NOIMAGE;
+        }
+    }
 }
