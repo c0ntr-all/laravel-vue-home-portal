@@ -102,7 +102,7 @@ class Track extends Model
 
     private function getTagsHierarchy($tags)
     {
-        return Tag::whereIn('id', $tags)->get()->map(function($item) {
+        return MusicTag::whereIn('id', $tags)->get()->map(function($item) {
             $tagsList = $this->normalizeArray($item->childrenCategories->toArray());
 
             return array_column($tagsList, 'id');

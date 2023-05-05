@@ -75,7 +75,7 @@ class Artist extends Model
     public function scopeFilter($query, array $filters, string $key, string $relation, string $column)
     {
         if (!empty($filters['tags']) && $filters['type'] == 'hierarchical') {
-            $result = Tag::whereIn('id', $filters['tags'])->get()->map(function($item) {
+            $result = MusicTag::whereIn('id', $filters['tags'])->get()->map(function($item) {
                 $tagsList = $this->normalizeArray($item->childrenCategories->toArray());
                 return array_column($tagsList, 'id');
             });

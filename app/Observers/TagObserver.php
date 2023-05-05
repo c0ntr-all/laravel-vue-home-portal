@@ -2,21 +2,21 @@
 
 namespace App\Observers;
 
-use App\Models\Music\Tag;
+use App\Models\Music\MusicTag;
 
 class TagObserver
 {
-    public function creating(Tag $tag): void
+    public function creating(MusicTag $tag): void
     {
         $this->setSlug($tag);
     }
 
-    public function updating(Tag $tag): void
+    public function updating(MusicTag $tag): void
     {
         $tag->slug = \Str::slug($tag->name);
     }
 
-    protected function setSlug(Tag $tag): void
+    protected function setSlug(MusicTag $tag): void
     {
         $tag->slug = \Str::slug($tag->name);
     }

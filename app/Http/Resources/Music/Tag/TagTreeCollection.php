@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Music\Tag;
 
-use App\Models\Music\Tag;
+use App\Models\Music\MusicTag;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class TagTreeCollection extends ResourceCollection
@@ -33,7 +33,7 @@ class TagTreeCollection extends ResourceCollection
         return $out;
     }
 
-    public function tree(Tag $tag): array
+    public function tree(MusicTag $tag): array
     {
         if ($tag->childrenCategories) {
             $item = [

@@ -1,10 +1,10 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Music;
 
 use Illuminate\Database\Seeder;
 
-class Music/Album extends Seeder
+class AlbumTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
