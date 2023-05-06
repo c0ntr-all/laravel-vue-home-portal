@@ -1,26 +1,102 @@
 <template>
   <div class="q-mb-md">
     <div class="text-h6 q-mb-xs">Основные теги</div>
-    <q-input ref="filterRef" v-model="filter" label="Filter" outlined dense>
+    <q-input
+      ref="filterRef"
+      filled
+      v-model="filter"
+      label="Search tags"
+      dense
+    >
       <template v-slot:append>
         <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
       </template>
     </q-input>
-    <app-table
-      :rows="commonTags"
-      :columns="columns"
-      row-key="id"
-      expand
-    />
+
+    <q-tree
+      :nodes="commonTags"
+      node-key="label"
+      :filter="filter"
+      :filter-method="filterMethod"
+    >
+      <template v-slot:default-header="scope">
+        <div class="flex items-center">
+          <div>{{ scope.node.label }}</div>
+          <div class="flex q-ml-xs">
+            <q-btn
+              @click.stop="addTagDialog = true"
+              icon="add"
+              size="xs"
+              color="primary"
+              dense
+              flat
+              rounded
+            />
+            <q-btn
+              @click.stop="editTagDialog = true"
+              icon="edit"
+              size="xs"
+              color="primary"
+              dense
+              flat
+              rounded
+            />
+            <q-btn
+              @click.stop="deleteTagDialog = true"
+              icon="delete"
+              size="xs"
+              color="primary"
+              dense
+              flat
+              rounded
+            />
+          </div>
+        </div>
+      </template>
+    </q-tree>
   </div>
 
   <div class="q-mb-md">
     <div class="text-h6 q-mb-xs">Второстепенные теги</div>
-    <app-table
-      :rows="secondaryTags"
-      :columns="columns"
-      row-key="id"
-    />
+
+    <q-tree
+      :nodes="secondaryTags"
+      node-key="label"
+      :filter="filter"
+      :filter-method="filterMethod"
+    >
+      <template v-slot:default-header="scope">
+        <div class="flex items-center">
+          <div>{{ scope.node.label }}</div>
+          <div class="flex q-ml-xs">
+            <q-btn
+              @click.stop="addTagDialog = true"
+              icon="add"
+              size="xs"
+              dense
+              flat
+              rounded
+            />
+            <q-btn
+              @click.stop="editTagDialog = true"
+              icon="edit"
+              size="xs"
+              dense
+              flat
+              rounded
+            />
+            <q-btn
+              @click.stop="deleteTagDialog = true"
+              icon="delete"
+              size="xs"
+              dense
+              flat
+              rounded
+            />
+          </div>
+        </div>
+      </template>
+    </q-tree>
   </div>
 
   <q-dialog v-model="addTagDialog">
@@ -41,42 +117,28 @@
  import { ref, onMounted } from 'vue'
  import { useQuasar } from "quasar"
  import API from "src/utils/api"
- import AppTable from "components/extra/table/AppTable.vue"
 
  export default {
-   components: { AppTable },
    setup() {
      const $q = useQuasar()
 
      const commonTags = ref([])
      const secondaryTags = ref([])
-     const columns = ref([{
-       name: "id",
-       required: true,
-       label: 'ID',
-       align: 'left',
-       field: row => row.id,
-       sortable: true,
-       style: 'width: 40px'
-     }, {
-       name: "name",
-       required: true,
-       label: 'Имя',
-       align: 'left',
-       field: row => row.label,
-       sortable: true
-     }, {
-       name: "createdAt",
-       required: true,
-       label: 'Дата добавления',
-       align: 'left',
-       field: row => row.createdAt,
-       sortable: true
-     }])
      const filter = ref('')
+     const filterRef = ref(null)
+     const selected = ref('')
      const addTagDialog = ref(false)
      const editTagDialog = ref(false)
      const deleteTagDialog = ref(false)
+
+     const filterMethod = (node, text) => {
+       return node.label && node.label.toLowerCase().indexOf(text.toLowerCase()) > -1
+     }
+
+     const resetFilter = () => {
+       filter.value = ''
+       filterRef.value.focus()
+     }
 
      const getTags = async () => {
        await API.post('music/tags/tree')
@@ -118,17 +180,21 @@
      const deleteTag = async () => {
 
      }
+
      onMounted(() => {
        getTags()
      })
      return {
        commonTags,
        secondaryTags,
-       columns,
        filter,
+       filterRef,
+       selected,
        addTagDialog,
        editTagDialog,
        deleteTagDialog,
+       filterMethod,
+       resetFilter,
        getTags,
        addTag,
        editTag,
