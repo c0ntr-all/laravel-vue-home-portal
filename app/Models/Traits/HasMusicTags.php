@@ -17,6 +17,6 @@ trait HasMusicTags
 
     public function tags(): MorphToMany
     {
-        return $this->morphToMany(MusicTag::class, 'tagable', 'music_tagables');
+        return $this->morphToMany(MusicTag::class, 'tagable', 'music_tagables', 'tagable_id', 'tag_id');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Services\Music\Parse;
 
 use App\Models\Music\Artist;
+use App\Models\Music\MusicTag;
 use getID3;
 
 class ParseMusicFolders extends BaseMusicParse
@@ -70,7 +71,7 @@ class ParseMusicFolders extends BaseMusicParse
 
                         $trackName = $id3TrackInfo['id3v2']['comments']['title'][0];
 
-                        $album->tracks()->updateOrCreate([
+                        $track = $album->tracks()->updateOrCreate([
                             'album_id' => $album->id,
                             'name' => $trackName
                         ],[
@@ -80,6 +81,13 @@ class ParseMusicFolders extends BaseMusicParse
                             'path' => $trackPath,
                             'image' => $coverPath,
                         ]);
+
+                        $genres = $id3TrackInfo['id3v2']['comments']['genre'];
+
+                        if (count($genres) > 0) {
+                            $ids = $this->getTagsIds($genres);
+                            $track->tags()->sync($ids);
+                        }
                     }
                 }
             }
@@ -88,6 +96,18 @@ class ParseMusicFolders extends BaseMusicParse
         }
 
         return true;
+    }
+
+    private function getTagsIds(array $tagsNames): array
+    {
+        $ids = [];
+        foreach($tagsNames as $name) {
+            if ($musicTag = MusicTag::where(['name' => $name])->first()) {
+                $ids[] = $musicTag->id;
+            }
+        }
+
+        return $ids;
     }
 
     public function findAlbums(string $path): array
