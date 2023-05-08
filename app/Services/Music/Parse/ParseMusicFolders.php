@@ -30,12 +30,7 @@ class ParseMusicFolders extends BaseMusicParse
             foreach ($albums as $albumPath) {
                 $albumItems = scandir($albumPath);
 
-                $coverOriginalPath = $this->getCoverFolderPath($albumPath);
-                $coverPath = null;
-
-                if ($coverOriginalPath) {
-                    $coverPath = $this->saveCover($coverOriginalPath, basename($albumPath));
-                }
+                $coverPath = $this->getCover($albumPath);
 
                 foreach ($albumItems as $item) {
                     if ($item === '.' || $item === '..') {
@@ -44,14 +39,14 @@ class ParseMusicFolders extends BaseMusicParse
 
                     $info = pathinfo($item);
 
-                    if (isset($info['extension']) && in_array($info['extension'], self::EXTENSIONS)) {
+                    if (isset($info['extension']) && in_array($info['extension'], self::TRACK_EXTENSIONS)) {
                         $trackPath = $albumPath . DIRECTORY_SEPARATOR . $item;
                         $id3TrackInfo = $this->getID3->analyze($trackPath);
 
                         $artistName = $id3TrackInfo['id3v2']['comments']['artist'][0];
 
                         $dataForArtist = ['path' => $folder];
-                        if ($coverPath) {
+                        if ($coverPath != self::NO_IMAGE) {
                             $dataForArtist['image'] = $coverPath;
                         }
                         // Добавляем исполнителя по имени

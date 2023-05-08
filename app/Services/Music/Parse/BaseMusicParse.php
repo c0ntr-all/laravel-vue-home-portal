@@ -3,14 +3,14 @@
 namespace App\Services\Music\Parse;
 
 use App\Helpers\ImageUpload;
-use App\Models\Music\Artist;
 use getID3;
 use Illuminate\Http\File;
 
 abstract class BaseMusicParse
 {
-    protected const NOIMAGE = 'no-image.gif';
-    protected const EXTENSIONS = ['mp3'];
+    protected const NO_IMAGE = 'no-image.gif';
+    protected const COVER_EXTENSIONS = ['jpg','jpeg','png','gif'];
+    protected const TRACK_EXTENSIONS = ['mp3'];
 
     public function __construct(private getID3 $getID3)
     {
@@ -48,30 +48,44 @@ abstract class BaseMusicParse
     }
 
     /**
-     * Возвращает путь до обложки альбома. Либо Cover.jpg, либо иное изображение с расширением jpg,jpeg,png, либо NUll
+     * Возвращает путь первого попавшегося изображения в каталоге
+     *
+     * @param string $path
+     * @return string|null
+     */
+    private function findAnotherImageAsCover(string $path): string|null
+    {
+        $folderItems = scandir($path);
+
+        $coverPath = null;
+
+        foreach ($folderItems as $item) {
+            $info = pathinfo($item);
+
+            if (isset($info['extension']) && in_array($info['extension'], self::COVER_EXTENSIONS)) {
+                $coverPath = $path . DIRECTORY_SEPARATOR . $item;
+                break;
+            }
+        }
+
+        return $coverPath;
+    }
+
+    /**
+     * Возвращает путь файла Cover.jpg в каталоге, либо иное изображение в формате jpg,jpeg,png, либо null
      *
      * @param string $albumPath
      * @return string|null
      */
-    protected function getCoverFolderPath(string $albumPath): string|null
+    protected function getCoverFromFolder(string $albumPath): string|null
     {
         $defaultCover = $albumPath . DIRECTORY_SEPARATOR . 'Cover.jpg';
 
         if (file_exists($defaultCover)) {
             return $defaultCover;
         } else {
-            $albumItems = scandir($albumPath);
-
-            foreach ($albumItems as $item) {
-                $info = pathinfo($item);
-
-                if (in_array($info['extension'], ['jpg', 'png', 'jpeg'])) {
-                    return $item;
-                }
-            }
+            return $this->findAnotherImageAsCover($albumPath);
         }
-
-        return null;
     }
 
     /**
@@ -83,16 +97,29 @@ abstract class BaseMusicParse
      */
     protected function saveCover(string $path, string $name): string
     {
-        if ($path != NULL && is_file($path)) {
-            $image = new File($path);
+        $image = new File($path);
 
-            return ImageUpload::make()
-                              ->setDiskName('public')
-                              ->setFolder('music/albums/posters')
-                              ->setSourceName($name)
-                              ->upload($image);
+        return ImageUpload::make()
+                          ->setDiskName('public')
+                          ->setFolder('music/albums/posters')
+                          ->setSourceName($name)
+                          ->upload($image);
+    }
+
+    /**
+     * Получает изображение по переданному пути. Варианты: Cover,jpg, иное изображение в формате jpg,jpeg,png,gif, no-image.gif
+     *
+     * @param string $path
+     * @return string
+     */
+    protected function getCover(string $path): string
+    {
+        $coverOriginalPath = $this->getCoverFromFolder($path);
+
+        if ($coverOriginalPath != NULL) {
+            return $this->saveCover($coverOriginalPath, basename($path));
         } else {
-            return self::NOIMAGE;
+            return self::NO_IMAGE;
         }
     }
 }
