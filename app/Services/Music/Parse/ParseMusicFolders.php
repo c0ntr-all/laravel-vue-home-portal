@@ -4,13 +4,12 @@ namespace App\Services\Music\Parse;
 
 use App\Models\Music\Artist;
 use App\Models\Music\MusicTag;
-use getID3;
 
 class ParseMusicFolders extends BaseMusicParse
 {
-    public function __construct(private getID3 $getID3)
+    public function __construct()
     {
-        parent::__construct($getID3);
+        parent::__construct();
     }
 
     public function upload(string $folder): bool

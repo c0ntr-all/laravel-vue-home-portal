@@ -8,13 +8,15 @@ use Illuminate\Http\File;
 
 abstract class BaseMusicParse
 {
+    protected getID3 $getID3;
+
     protected const NO_IMAGE = 'no-image.gif';
     protected const COVER_EXTENSIONS = ['jpg','jpeg','png','gif'];
     protected const TRACK_EXTENSIONS = ['mp3'];
 
-    public function __construct(private getID3 $getID3)
+    public function __construct()
     {
-
+        $this->getID3 = new getID3();
     }
 
     /**
