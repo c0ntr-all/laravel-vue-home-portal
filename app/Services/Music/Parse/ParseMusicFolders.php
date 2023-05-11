@@ -28,10 +28,10 @@ class ParseMusicFolders extends BaseMusicParse
         if (!empty($albums)) {
             foreach ($albums as $albumPath) {
                 $albumItems = scandir($albumPath);
-
                 $coverPath = $this->getCover($albumPath);
 
-                foreach ($albumItems as $item) {
+                $albumData = ['artists' => []];
+                foreach ($albumItems as $key => $item) {
                     if ($item === '.' || $item === '..') {
                         continue;
                     }
@@ -44,42 +44,55 @@ class ParseMusicFolders extends BaseMusicParse
 
                         $artistName = $id3TrackInfo['id3v2']['comments']['artist'][0];
 
-                        $dataForArtist = ['path' => $folder];
-                        if ($coverPath != self::NO_IMAGE) {
-                            $dataForArtist['image'] = $coverPath;
+                        if (!empty($artistName) && !in_array($artistName, $albumData['artists'])) {
+                            $albumData['artists'][] = $artistName;
                         }
-                        // Добавляем исполнителя по имени
-                        $artist = Artist::updateOrCreate([
-                            'name' => $artistName
-                        ], $dataForArtist);
 
-                        $albumName = $id3TrackInfo['id3v2']['comments']['album'][0];
+                        // У всех треков должно быть только одно название альбома, даже если это split, так что берем его с любого трека
+                        $albumData['album']['name'] = $id3TrackInfo['id3v2']['comments']['album'][0];
+                        $albumData['album']['year'] = $id3TrackInfo['id3v2']['comments']['year'][0];
 
-                        $album = $artist->albums()->updateOrCreate([
-                            'name' => $albumName
-                        ],[
-                            'image' => $coverPath,
-                            'year' => $id3TrackInfo['id3v2']['comments']['year'][0],
-                            'path' => $albumPath
-                        ]);
+                        $albumData['tracks'][$key]['name'] = $id3TrackInfo['id3v2']['comments']['title'][0];
+                        $albumData['tracks'][$key]['number'] = $id3TrackInfo['id3v2']['comments']['track_number'][0];
+                        $albumData['tracks'][$key]['duration'] = $this->formatDuration($id3TrackInfo['playtime_string']);
+                        $albumData['tracks'][$key]['bitrate'] = $id3TrackInfo['audio']['bitrate'];
+                        $albumData['tracks'][$key]['path'] = $albumPath . DIRECTORY_SEPARATOR . $item;
+                        $albumData['tracks'][$key]['genres'] = $id3TrackInfo['id3v2']['comments']['genre'];
+                    }
+                }
 
-                        $trackName = $id3TrackInfo['id3v2']['comments']['title'][0];
+                // Добавляем исполнителей по имени
+                foreach ($albumData['artists'] as $artistName) {
+                    $dataForArtist = ['path' => $folder];
+                    if ($coverPath != self::NO_IMAGE) {
+                        $dataForArtist['image'] = $coverPath;
+                    }
+                    $artist = Artist::updateOrCreate([
+                        'name' => $artistName
+                    ], $dataForArtist);
 
+                    $album = $artist->albums()->updateOrCreate([
+                        'name' => $albumData['album']['name']
+                    ],[
+                        'image' => $coverPath,
+                        'year' => $albumData['album']['year'],
+                        'path' => $albumPath
+                    ]);
+
+                    foreach ($albumData['tracks'] as $trackData) {
                         $track = $album->tracks()->updateOrCreate([
                             'album_id' => $album->id,
-                            'name' => $trackName
+                            'name' => $trackData['name']
                         ],[
-                            'number' => $id3TrackInfo['id3v2']['comments']['track_number'][0] ?? NULL,
-                            'duration' => $this->formatDuration($id3TrackInfo['playtime_string']),
-                            'bitrate' => $id3TrackInfo['audio']['bitrate'],
-                            'path' => $trackPath,
+                            'number' => $trackData['number'],
+                            'duration' => $trackData['duration'],
+                            'bitrate' => $trackData['bitrate'],
+                            'path' => $trackData['path'],
                             'image' => $coverPath,
                         ]);
 
-                        $genres = $id3TrackInfo['id3v2']['comments']['genre'];
-
-                        if (count($genres) > 0) {
-                            $ids = $this->getTagsIds($genres);
+                        if (count($trackData['genres']) > 0) {
+                            $ids = $this->getTagsIds($trackData['genres']);
                             $track->tags()->sync($ids);
                         }
                     }
