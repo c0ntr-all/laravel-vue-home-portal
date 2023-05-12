@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-import addZero from "src/utils/addzero";
+import { defineStore } from "pinia"
+import addZero from "src/utils/addzero"
 
 export const useMusicPlayer = defineStore('musicPlayer', {
   state: () => {
@@ -112,15 +112,22 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       }
     },
     nextTrack() {
-      if (this.playlist.length) {
+      if (this.playlist.length && this.playlist.length > 1) {
         if (this.idx === this.playlist.length - 1) {
-          this.setTrack(this.playlist[0])
+          this.stop()
           return
         }
 
         this.setTrack(this.playlist[this.idx + 1])
         this.run()
+      } else {
+        this.stop()
       }
+    },
+    stop() {
+      this.pause()
+      this.setTrack(this.playlist[0])
+      this.audio.currentTime = 0
     },
     shuffle() {
       let currentIndex = this.playlist.length,
