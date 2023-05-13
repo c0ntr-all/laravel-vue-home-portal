@@ -3,10 +3,10 @@
     <div class="text-h6 q-mb-xs">Основные теги</div>
     <q-input
       ref="filterRef"
-      filled
       v-model="filter"
       label="Search tags"
       dense
+      filled
     >
       <template v-slot:append>
         <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
@@ -24,7 +24,7 @@
           <div>{{ scope.node.label }}</div>
           <div class="flex q-ml-xs">
             <q-btn
-              @click.stop="addTagDialog = true"
+              @click.stop="addTagHandler(scope)"
               icon="add"
               size="xs"
               color="primary"
@@ -33,7 +33,7 @@
               rounded
             />
             <q-btn
-              @click.stop="editTagDialog = true"
+              @click.stop="editTagHandler(scope)"
               icon="edit"
               size="xs"
               color="primary"
@@ -70,7 +70,7 @@
           <div>{{ scope.node.label }}</div>
           <div class="flex q-ml-xs">
             <q-btn
-              @click.stop="addTagDialog = true"
+              @click.stop="addTagHandler(scope)"
               icon="add"
               size="xs"
               dense
@@ -78,7 +78,7 @@
               rounded
             />
             <q-btn
-              @click.stop="editTagDialog = true"
+              @click.stop="editTagHandler(scope)"
               icon="edit"
               size="xs"
               dense
@@ -86,7 +86,7 @@
               rounded
             />
             <q-btn
-              @click.stop="deleteTagDialog = true"
+              @click.stop="deleteTagHandler(scope)"
               icon="delete"
               size="xs"
               dense
@@ -100,15 +100,83 @@
   </div>
 
   <q-dialog v-model="addTagDialog">
-    <q-card>
+    <q-card class="tag-dialog">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">Close icon</div>
+        <div class="text-h6">Create new child tag for <b>{{ addTagModel.parentTag.label }}</b></div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
 
       <q-card-section>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+        <div class="q-gutter-md">
+          <q-input
+            v-model="addTagModel.name"
+            placeholder="Name"
+            dense
+            filled
+          />
+          <q-input
+            v-model="addTagModel.name"
+            placeholder="Description"
+            type="textarea"
+            dense
+            filled
+          />
+        </div>
+      </q-card-section>
+
+      <q-card-section>
+        <q-btn>Create</q-btn>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="editTagDialog">
+    <q-card class="tag-dialog">
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-h6">Edit tag <b>{{ addTagModel.tag.label }}</b></div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+
+      <q-card-section>
+        <div class="q-gutter-md">
+          <q-input
+            v-model="addTagModel.name"
+            placeholder="Name"
+            dense
+            filled
+          />
+          <q-input
+            v-model="addTagModel.name"
+            placeholder="Description"
+            type="textarea"
+            dense
+            filled
+          />
+        </div>
+      </q-card-section>
+
+      <q-card-section>
+        <q-btn>Save</q-btn>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="deleteTagDialog">
+    <q-card class="tag-dialog">
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-h6">Are you sure?</div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+
+      <q-card-section>
+        <p>Delete tag <b>{{ addTagModel.tag.label }}</b></p>
+      </q-card-section>
+
+      <q-card-section>
+        <q-btn>Delete</q-btn>
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -126,10 +194,26 @@
      const secondaryTags = ref([])
      const filter = ref('')
      const filterRef = ref(null)
-     const selected = ref('')
      const addTagDialog = ref(false)
      const editTagDialog = ref(false)
      const deleteTagDialog = ref(false)
+
+     const addTagModel = ref({})
+
+     const addTagHandler = scope => {
+       addTagDialog.value = true
+       addTagModel.value.parentTag = scope.node
+     }
+
+     const editTagHandler = scope => {
+       editTagDialog.value = true
+       addTagModel.value.tag = scope.node
+     }
+
+     const deleteTagHandler = scope => {
+       deleteTagDialog.value = true
+       addTagModel.value.tag = scope.node
+     }
 
      const filterMethod = (node, text) => {
        return node.label && node.label.toLowerCase().indexOf(text.toLowerCase()) > -1
@@ -149,6 +233,7 @@
            return false
          })
      }
+
      const addTag = async () => {
        await API.post('music/tags/store', tag)
          .then(response => {
@@ -189,10 +274,12 @@
        secondaryTags,
        filter,
        filterRef,
-       selected,
        addTagDialog,
        editTagDialog,
        deleteTagDialog,
+       addTagModel,
+       addTagHandler,
+       editTagHandler,
        filterMethod,
        resetFilter,
        getTags,
@@ -207,6 +294,10 @@
   .tag {
     &__actions {
       margin-left: 5px;
+    }
+
+    &-dialog {
+      min-width: 500px;
     }
   }
 </style>
