@@ -42,7 +42,7 @@
               rounded
             />
             <q-btn
-              @click.stop="deleteTagDialog = true"
+              @click.stop="deleteTagHandler(scope)"
               icon="delete"
               size="xs"
               color="primary"
@@ -102,7 +102,7 @@
   <q-dialog v-model="addTagDialog">
     <q-card class="tag-dialog">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">Create new child tag for <b>{{ addTagModel.parentTag.label }}</b></div>
+        <div class="text-h6">Create new child tag for <b>{{ tagModel.parentTag.label }}</b></div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -110,13 +110,13 @@
       <q-card-section>
         <div class="q-gutter-md">
           <q-input
-            v-model="addTagModel.name"
+            v-model="tagModel.name"
             placeholder="Name"
             dense
             filled
           />
           <q-input
-            v-model="addTagModel.name"
+            v-model="tagModel.content"
             placeholder="Description"
             type="textarea"
             dense
@@ -126,7 +126,7 @@
       </q-card-section>
 
       <q-card-section>
-        <q-btn>Create</q-btn>
+        <q-btn @click="addTag" color="primary">Create</q-btn>
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -134,7 +134,7 @@
   <q-dialog v-model="editTagDialog">
     <q-card class="tag-dialog">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">Edit tag <b>{{ addTagModel.tag.label }}</b></div>
+        <div class="text-h6">Edit tag <b>{{ tagModel.tag.label }}</b></div>
         <q-space />
         <q-btn icon="close" flat round dense v-close-popup />
       </q-card-section>
@@ -142,13 +142,13 @@
       <q-card-section>
         <div class="q-gutter-md">
           <q-input
-            v-model="addTagModel.name"
+            v-model="tagModel.name"
             placeholder="Name"
             dense
             filled
           />
           <q-input
-            v-model="addTagModel.name"
+            v-model="tagModel.content"
             placeholder="Description"
             type="textarea"
             dense
@@ -158,7 +158,7 @@
       </q-card-section>
 
       <q-card-section>
-        <q-btn>Save</q-btn>
+        <q-btn @click="editTag" color="primary">Save</q-btn>
       </q-card-section>
     </q-card>
   </q-dialog>
@@ -172,17 +172,17 @@
       </q-card-section>
 
       <q-card-section>
-        <p>Delete tag <b>{{ addTagModel.tag.label }}</b></p>
+        <p>Delete tag <b>{{ tagModel.tag.label }}</b></p>
       </q-card-section>
 
       <q-card-section>
-        <q-btn>Delete</q-btn>
+        <q-btn @click="deleteTag" color="primary">Delete</q-btn>
       </q-card-section>
     </q-card>
   </q-dialog>
 </template>
 <script>
- import { ref, onMounted } from 'vue'
+ import { ref, onMounted } from "vue"
  import { useQuasar } from "quasar"
  import API from "src/utils/api"
 
@@ -198,21 +198,21 @@
      const editTagDialog = ref(false)
      const deleteTagDialog = ref(false)
 
-     const addTagModel = ref({})
+     const tagModel = ref({})
 
      const addTagHandler = scope => {
        addTagDialog.value = true
-       addTagModel.value.parentTag = scope.node
+       tagModel.value.parentTag = scope.node
      }
 
      const editTagHandler = scope => {
        editTagDialog.value = true
-       addTagModel.value.tag = scope.node
+       tagModel.value.tag = scope.node
      }
 
      const deleteTagHandler = scope => {
        deleteTagDialog.value = true
-       addTagModel.value.tag = scope.node
+       tagModel.value.tag = scope.node
      }
 
      const filterMethod = (node, text) => {
@@ -230,40 +230,67 @@
            commonTags.value = response.data.tags.common
            secondaryTags.value = response.data.tags.secondary
          }).catch(error => {
-           return false
+           $q.notify({
+             type: 'negative',
+             message: error.response.data.message
+           })
          })
      }
 
      const addTag = async () => {
-       await API.post('music/tags/store', tag)
-         .then(response => {
+       await API.put('music/tags/store', {
+         name: tagModel.value.name,
+         content: tagModel.value.content,
+         parentTag: tagModel.value.parentTag.id
+       }).then(response => {
            $q.notify({
              type: 'positive',
-             message: `Тег ${response.label} успешно добавлен!`
+             message: `Тег ${response.data.tag.label} успешно добавлен!`
            })
        }).catch(error => {
            $q.notify({
              type: 'negative',
-             message: error
+             message: error.response.data.message
            })
        })
+
+       tagModel.value = {}
      }
+
      const editTag = async () => {
-       await API.post('music/tags/update', tag)
-         .then(response => {
+       await API.patch('music/tags/update', {
+         id: tagModel.value.tag.id,
+         name: tagModel.value.tag.name,
+         content: tagModel.value.tag.content
+       }).then(response => {
            $q.notify({
              type: 'positive',
-             message: `Тег ${response.label} успешно обновлён!`
+             message: `Тег ${response.data.tag.label} успешно обновлён!`
            })
        }).catch(error => {
            $q.notify({
              type: 'negative',
-             message: error
+             message: error.response.data.message
            })
        })
+
+       tagModel.value = {}
      }
      const deleteTag = async () => {
-
+       await API.post('music/tags/delete', {
+         id: tagModel.value.tag.id
+       })
+         .then(response => {
+           $q.notify({
+             type: 'positive',
+             message: `Тег ${response.data.tag.label} успешно удалён!`
+           })
+         }).catch(error => {
+           $q.notify({
+             type: 'negative',
+             message: error.response.data.message
+           })
+         })
      }
 
      onMounted(() => {
@@ -277,9 +304,10 @@
        addTagDialog,
        editTagDialog,
        deleteTagDialog,
-       addTagModel,
+       tagModel,
        addTagHandler,
        editTagHandler,
+       deleteTagHandler,
        filterMethod,
        resetFilter,
        getTags,
