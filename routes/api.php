@@ -107,8 +107,9 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             });
             Route::prefix('tags')->group(function() {
                 Route::post('/', [TagController::class, 'index']);
-                Route::post('store', [TagController::class, 'store']);
-                Route::post('update', [TagController::class, 'update']);
+                Route::put('store', [TagController::class, 'store']);
+                Route::patch('{tag}/update', [TagController::class, 'update']);
+                Route::post('{tag}/delete', [TagController::class, 'delete']);
                 Route::post('select', [TagController::class, 'tagsSelect']);
                 Route::post('tree', [TagController::class, 'tagsTree']);
             });

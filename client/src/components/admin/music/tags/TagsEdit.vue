@@ -241,7 +241,7 @@
        await API.put('music/tags/store', {
          name: tagModel.value.name,
          content: tagModel.value.content,
-         parentTag: tagModel.value.parentTag.id
+         parent_id: tagModel.value.parentTag.id
        }).then(response => {
            $q.notify({
              type: 'positive',
@@ -258,10 +258,9 @@
      }
 
      const editTag = async () => {
-       await API.patch('music/tags/update', {
-         id: tagModel.value.tag.id,
-         name: tagModel.value.tag.name,
-         content: tagModel.value.tag.content
+       await API.patch(`music/tags/${tagModel.value.tag.id}/update`, {
+         name: tagModel.value.name,
+         content: tagModel.value.content
        }).then(response => {
            $q.notify({
              type: 'positive',
@@ -277,9 +276,7 @@
        tagModel.value = {}
      }
      const deleteTag = async () => {
-       await API.post('music/tags/delete', {
-         id: tagModel.value.tag.id
-       })
+       await API.post(`music/tags/${tagModel.value.tag.id}/delete`)
          .then(response => {
            $q.notify({
              type: 'positive',
