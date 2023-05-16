@@ -99,7 +99,7 @@
     </q-tree>
   </div>
 
-  <q-dialog v-model="addTagDialog">
+  <q-dialog v-model="addTagDialog" @hide="clearTagModel">
     <q-card class="tag-dialog">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">Create new child tag for <b>{{ tagModel.parentTag.label }}</b></div>
@@ -131,7 +131,7 @@
     </q-card>
   </q-dialog>
 
-  <q-dialog v-model="editTagDialog">
+  <q-dialog v-model="editTagDialog" @hide="clearTagModel">
     <q-card class="tag-dialog">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">Edit tag <b>{{ tagModel.tag.label }}</b></div>
@@ -142,13 +142,13 @@
       <q-card-section>
         <div class="q-gutter-md">
           <q-input
-            v-model="tagModel.name"
+            v-model="tagModel.tag.label"
             placeholder="Name"
             dense
             filled
           />
           <q-input
-            v-model="tagModel.content"
+            v-model="tagModel.tag.content"
             placeholder="Description"
             type="textarea"
             dense
@@ -185,6 +185,7 @@
  import { ref, onMounted } from "vue"
  import { useQuasar } from "quasar"
  import API from "src/utils/api"
+ import deleteFromTree from "src/utils/deleteFromTree"
 
  export default {
    setup() {
@@ -213,6 +214,10 @@
      const deleteTagHandler = scope => {
        deleteTagDialog.value = true
        tagModel.value.tag = scope.node
+     }
+
+     const clearTagModel = () => {
+       tagModel.value = {}
      }
 
      const filterMethod = (node, text) => {
@@ -254,7 +259,7 @@
            })
        })
 
-       tagModel.value = {}
+       clearTagModel()
      }
 
      const editTag = async () => {
@@ -273,14 +278,16 @@
            })
        })
 
-       tagModel.value = {}
+       clearTagModel()
      }
      const deleteTag = async () => {
        await API.post(`music/tags/${tagModel.value.tag.id}/delete`)
          .then(response => {
+           deleteFromTree(commonTags.value, tagModel.value.tag.id)
+
            $q.notify({
              type: 'positive',
-             message: `Тег ${response.data.tag.label} успешно удалён!`
+             message: `Тег ${response.data.tag} успешно удалён!`
            })
          }).catch(error => {
            $q.notify({
@@ -305,6 +312,7 @@
        addTagHandler,
        editTagHandler,
        deleteTagHandler,
+       clearTagModel,
        filterMethod,
        resetFilter,
        getTags,
