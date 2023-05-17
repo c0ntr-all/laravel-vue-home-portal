@@ -407,7 +407,7 @@ export default {
 .playlists-list {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   height: 60vh;
 
   .playlist-item {

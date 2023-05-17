@@ -245,56 +245,62 @@
      const addTag = async () => {
        await API.put('music/tags/store', {
          name: tagModel.value.name,
-         content: tagModel.value.content,
+         content: tagModel.value.tag.content,
          parent_id: tagModel.value.parentTag.id
        }).then(response => {
            $q.notify({
              type: 'positive',
              message: `Тег ${response.data.tag.label} успешно добавлен!`
            })
+
+           clearTagModel()
+           addTagDialog.value = false
        }).catch(error => {
            $q.notify({
              type: 'negative',
              message: error.response.data.message
            })
        })
-
-       clearTagModel()
      }
 
      const editTag = async () => {
        await API.patch(`music/tags/${tagModel.value.tag.id}/update`, {
-         name: tagModel.value.name,
-         content: tagModel.value.content
-       }).then(response => {
+         name: tagModel.value.tag.label,
+         content: tagModel.value.tag.content
+       }).then(() => {
            $q.notify({
              type: 'positive',
-             message: `Тег ${response.data.tag.label} успешно обновлён!`
+             message: `Тег ${tagModel.value.tag.label} успешно обновлён!`
            })
+
+           clearTagModel()
+           editTagDialog.value = false
        }).catch(error => {
            $q.notify({
              type: 'negative',
              message: error.response.data.message
            })
        })
-
-       clearTagModel()
      }
+
      const deleteTag = async () => {
        await API.post(`music/tags/${tagModel.value.tag.id}/delete`)
-         .then(response => {
-           deleteFromTree(commonTags.value, tagModel.value.tag.id)
+       .then(response => {
+         deleteFromTree(tagModel.value.tag.common ? commonTags.value : secondaryTags.value, tagModel.value.tag.id)
 
-           $q.notify({
-             type: 'positive',
-             message: `Тег ${response.data.tag} успешно удалён!`
-           })
-         }).catch(error => {
-           $q.notify({
-             type: 'negative',
-             message: error.response.data.message
-           })
+         $q.notify({
+           type: 'positive',
+           message: `Тег ${response.data.tag} успешно удалён!`
          })
+
+         clearTagModel()
+         deleteTagDialog.value = false
+       }).catch(error => {
+         $q.notify({
+           type: 'negative',
+           message: error.response.data.message
+         })
+       })
      }
 
      onMounted(() => {
