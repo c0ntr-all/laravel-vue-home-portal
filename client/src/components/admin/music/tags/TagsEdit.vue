@@ -186,6 +186,7 @@
  import { useQuasar } from "quasar"
  import API from "src/utils/api"
  import deleteFromTree from "src/utils/deleteFromTree"
+ import insertIntoTree from "src/utils/insertIntoTree"
 
  export default {
    setup() {
@@ -243,23 +244,27 @@
      }
 
      const addTag = async () => {
+       const parentTagId = tagModel.value.parentTag.id
        await API.put('music/tags/store', {
          name: tagModel.value.name,
-         content: tagModel.value.tag.content,
-         parent_id: tagModel.value.parentTag.id
+         content: tagModel.value.content,
+         parent_id: parentTagId
        }).then(response => {
-           $q.notify({
-             type: 'positive',
-             message: `Тег ${response.data.tag.label} успешно добавлен!`
-           })
 
-           clearTagModel()
-           addTagDialog.value = false
+         insertIntoTree(tagModel.value.parentTag.common ? commonTags.value : secondaryTags.value, parentTagId, response.data.tags)
+
+         $q.notify({
+           type: 'positive',
+           message: `Тег ${response.data.tags.label} успешно добавлен!`
+         })
+
+         clearTagModel()
+         addTagDialog.value = false
        }).catch(error => {
-           $q.notify({
-             type: 'negative',
-             message: error.response.data.message
-           })
+         $q.notify({
+           type: 'negative',
+           message: error.response.data.message
+         })
        })
      }
 
