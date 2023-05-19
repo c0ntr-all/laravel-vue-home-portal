@@ -1,9 +1,9 @@
 <template>
   <div
-    class="music-track row self-start items-center col-grow q-pr-sm rounded-borders"
+    class="music-track flex no-wrap self-start items-center col-grow q-pr-sm rounded-borders"
     :class="{'music-track--active': track.id === musicPlayer.track.id}"
   >
-    <div class="flex items-center col-grow" @click="$emit('play')">
+    <div class="music-track__left" @click="$emit('play')">
       <div class="music-track-cover q-mr-md">
         <q-img
           v-if="track.image"
@@ -30,12 +30,12 @@
           dense
         />
       </div>
-      <div class="q-ml-xs">
+      <div class="music-track__title">
         <div class="music-track__name">{{ track.name }}</div>
         <div class="music-track__artist">{{ track.artist }}</div>
       </div>
     </div>
-    <div class="flex justify-between items-center">
+    <div class="music-track__right">
       <div class="music-track__rate q-gutter-y-md">
         <q-rating
           v-model="rate"
@@ -306,11 +306,27 @@ export default {
 .music-track {
   position: relative;
 
+  &__left {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+  }
+
+  &__right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
   &-cover {
     display: flex;
     position: relative;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
     width: 40px;
     height: 40px;
     margin: 4px;
@@ -348,9 +364,16 @@ export default {
     line-height: 16px;
     font-weight: bold;
   }
+  &__title {
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 4px;
+  }
   &__name {
     font-size: 12.5px;
     line-height: 16px;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   &__rate {
     margin-right: 1rem;
