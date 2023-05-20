@@ -27,40 +27,42 @@
           </div>
           <div class="col-lg-10">
             <table class="settings-table q-mb-lg">
-              <tr v-for="(row, index) in settings" class="settings-table__row">
-                <td class="settings-table__col">
-                  <q-input
-                    v-model="row.name"
-                    :rules="[ val => val.length >= 3 || 'Please use minimum 3 characters' ]"
-                    class="q-pa-none"
-                    borderless
-                    dense
-                  />
-                </td>
-                <td class="settings-table__col">
-                  <div class="flex items-center">
-                    <div class="color-square q-mr-sm" :style="`background-color:${row.color}`"></div>
+              <template v-if="settings">
+                <tr v-for="(row, index) in settings" class="settings-table__row">
+                  <td class="settings-table__col">
                     <q-input
-                      v-model="row.color"
-                      :rules="['anyColor']"
+                      v-model="row.name"
+                      :rules="[ val => val.length >= 3 || 'Please use minimum 3 characters' ]"
                       class="q-pa-none"
                       borderless
                       dense
-                    >
-                      <template v-slot:append>
-                        <q-icon name="colorize" class="cursor-pointer">
-                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                            <q-color v-model="row.color" format-model="hex" />
-                          </q-popup-proxy>
-                        </q-icon>
-                      </template>
-                    </q-input>
-                  </div>
-                </td>
-                <td>
-                  <q-btn @click="removeRow(index)" class="q-ml-sm" icon="close" flat dense round />
-                </td>
-              </tr>
+                    />
+                  </td>
+                  <td class="settings-table__col">
+                    <div class="flex items-center">
+                      <div class="color-square q-mr-sm" :style="`background-color:${row.color}`"></div>
+                      <q-input
+                        v-model="row.color"
+                        :rules="['anyColor']"
+                        class="q-pa-none"
+                        borderless
+                        dense
+                      >
+                        <template v-slot:append>
+                          <q-icon name="colorize" class="cursor-pointer">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                              <q-color v-model="row.color" format-model="hex" />
+                            </q-popup-proxy>
+                          </q-icon>
+                        </template>
+                      </q-input>
+                    </div>
+                  </td>
+                  <td>
+                    <q-btn @click="removeRow(index)" class="q-ml-sm" icon="close" flat dense round />
+                  </td>
+                </tr>
+              </template>
             </table>
             <q-btn @click="addRow" label="Add" color="secondary" icon="add" />
           </div>
@@ -100,7 +102,7 @@ export default {
     const addRow = () => {
       const lastItem = settings.value[settings.value.length - 1]
 
-      if (lastItem.name && lastItem.color) {
+      if (lastItem.name && lastItem.color || settings.value.length === 0) {
         settings.value.push({name: '', color: ''})
       }
     }
@@ -111,7 +113,15 @@ export default {
 
     const getSettings = async () => {
       await API.get('user/settings').then(response => {
-        settings.value = response.data.value
+
+        if (!response.data.success) {
+          settings.value.push({name: '', color: ''})
+          $q.notify({
+            type: 'warning',
+            message: response.data.message
+          })
+        }
+        settings.value = response.data.data.value
         loading.value = false
       }).catch(error => {
         $q.notify({

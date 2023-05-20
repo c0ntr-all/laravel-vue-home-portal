@@ -15,7 +15,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:30',
-            'content' => 'required|string|max:30000',
+            'content' => 'sometimes|string|max:30000',
             'parent_id' => 'sometimes|int',
             'common' => 'sometimes|boolean',
         ];
