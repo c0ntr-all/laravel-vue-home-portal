@@ -61,7 +61,7 @@
           <div class="track-card__image flex items-center justify-center q-pa-none" />
           <div class="q-pa-none q-ml-sm col-grow">
             <div class="flex justify-between items-center">
-              <div>
+              <div style="max-width: 340px">
                 <div class="music-player__track-name">{{ musicPlayer.track.name }}</div>
                 <div class="music-player__artist-name">{{ musicPlayer.track.artist }}</div>
               </div>
@@ -218,6 +218,10 @@ export default {
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   }
   &__track-name {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 12.5px;
     line-height: 16px;
   }
