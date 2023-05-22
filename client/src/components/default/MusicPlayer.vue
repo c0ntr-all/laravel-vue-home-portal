@@ -73,7 +73,7 @@
               <div class="music-player-slider__wrapper" ref="rangeLine">
                 <div class="music-player-slider__line">
                   <div class="music-player-slider__amount" :style="`width: ${musicPlayer.rewindProgressWidth}%`"></div>
-                  <div class="music-player-slider__circle" :style="`left: ${isCircleMoving ? circlePosition : musicPlayer.rewindProgressWidth}%`"></div>
+                  <div class="music-player-slider__circle" :style="`left: ${isCircleMoving ? circlePosition : musicPlayer.rewindProgressWidth}%`" ref="rangeHandle"></div>
                 </div>
               </div>
             </div>
@@ -128,10 +128,20 @@ export default {
     const musicPlayer = useMusicPlayer()
 
     const rangeLine = ref(null)
+    const rangeHandle = ref(null)
+
     const rangeVolume = ref(null)
     const isVolumeCircleMoving = ref(false)
     const circlePosition = ref(0)
     const isCircleMoving = ref(false)
+
+    const min = 0
+    const max = 100
+    const step = 1
+    const initialValue = 0
+
+    let value = ref(null)
+    let prevValue = ref(0)
 
     const moveRewind = event => {
       musicPlayer.audio.currentTime = (event.offsetX / rangeLine.value.clientWidth) * musicPlayer.audio.duration
@@ -141,25 +151,58 @@ export default {
       circlePosition.value = (event.offsetX / rangeLine.value.clientWidth) * 100
     }
 
+    const _move = clientX => {
+      let bounds = rangeLine.value.getBoundingClientRect()
+      let relX = (clientX - bounds.left) / bounds.width
+
+      let x = Math.min(Math.max(relX, 0), 1)
+
+      let value = min + (max - min) * x
+      value = Math.round(Math.min(Math.max(value, min), max))
+      let rem = (value - initialValue) % step
+
+      if (rem >= step / 2) {
+        value += step
+      }
+      value -= rem
+
+      if (value < min || value > max)
+        return
+    }
+
     const initPlayerParams = () => {
-      rangeLine.value.addEventListener('mousedown', () => {
-        isCircleMoving.value = true
-      })
-      rangeLine.value.addEventListener('mousemove', event => {
-        if (isCircleMoving.value) {
-          moveCircle(event)
+      rangeLine.value.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        const clientX = e.clientX
+        const target = e.target
+
+        prevValue.value = value.value;
+        if (target != rangeHandle.value) {
+          _move(clientX)
         }
-      })
-      rangeLine.value.addEventListener('click', event => {
-        moveRewind(event)
-        moveCircle(event)
-      })
-      rangeLine.value.addEventListener('mouseup', () => {
-        isCircleMoving.value = false
-      })
-      rangeLine.value.addEventListener('mouseleave', () => {
-        isCircleMoving.value = false
-      })
+      });
+
+      rangeLine.value.addEventListener("touchstart", (e) => {
+      });
+
+      // rangeLine.value.addEventListener('mousedown', () => {
+      //   isCircleMoving.value = true
+      // })
+      // rangeLine.value.addEventListener('mousemove', event => {
+      //   if (isCircleMoving.value) {
+      //     moveCircle(event)
+      //   }
+      // })
+      // rangeLine.value.addEventListener('click', event => {
+      //   moveRewind(event)
+      //   moveCircle(event)
+      // })
+      // rangeLine.value.addEventListener('mouseup', () => {
+      //   isCircleMoving.value = false
+      // })
+      // rangeLine.value.addEventListener('mouseleave', () => {
+      //   isCircleMoving.value = false
+      // })
 
       rangeVolume.value.addEventListener('mousedown', () => {
         isVolumeCircleMoving.value = true
@@ -187,6 +230,7 @@ export default {
       hovered: ref(false),
       musicPlayer,
       rangeLine,
+      rangeHandle,
       rangeVolume,
       circlePosition,
       isCircleMoving,
