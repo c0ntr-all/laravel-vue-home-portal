@@ -18,7 +18,8 @@ export default {
       default: '100%'
     }
   },
-  setup() {
+  emits: ['move'],
+  setup(props, {emit}) {
 
     const rangeLine = ref(null)
     const rangeHandle = ref(null)
@@ -41,6 +42,8 @@ export default {
       if (value < min || value > max) {
         return
       }
+
+      emit('move', value)
 
       circlePosition.value = value
 

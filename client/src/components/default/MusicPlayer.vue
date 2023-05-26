@@ -31,7 +31,6 @@
       transition-show="jump-down"
       transition-hide="jump-up"
       style="width: 660px; min-height: 500px"
-      @show="initPlayerParams"
     >
       <div class="music-player__controls flex row q-pa-sm">
         <div class="music-player__buttons-group flex items-center q-mr-sm">
@@ -76,7 +75,7 @@
         </div>
 
         <div class="music-player__volume flex items-center q-mx-md">
-          <AppSlider :width="'50px'" />
+          <AppSlider :width="'50px'" @move="changeVolume" />
         </div>
 
         <div class="music-player__buttons-group flex items-center">
@@ -120,10 +119,15 @@ export default {
 
     musicPlayer.init()
 
+    const changeVolume = value => {
+      musicPlayer.audio.volume = value / 100
+    }
+
     return {
       dialog: ref(false),
       hovered: ref(false),
       musicPlayer,
+      changeVolume,
       initPlay: track => {
         musicPlayer.playTrack(track)
       },
