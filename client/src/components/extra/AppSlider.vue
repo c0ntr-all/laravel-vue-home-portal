@@ -9,26 +9,38 @@
   </div>
 </template>
 <script>
-import {ref, onMounted} from "vue"
+import {ref, onMounted, computed} from "vue"
 
 export default {
   props: {
     width: {
       type: String,
       default: '100%'
+    },
+    data: {
+      type: Number,
+      default: 0
     }
   },
   emits: ['move'],
   setup(props, {emit}) {
-
     const rangeLine = ref(null)
     const rangeHandle = ref(null)
 
     const min = 0
     const max = 100
+    const initValue = 0
 
     let newValue = ref(null)
-    let circlePosition = ref(null)
+
+    // Temporary solution for accessing pinia data by two different components
+    let circlePosition = computed({
+      get() {
+        return props.data
+      },
+      set(newValue) {
+      }
+    })
     let moving = ref(false)
 
     const _move = clientX => {

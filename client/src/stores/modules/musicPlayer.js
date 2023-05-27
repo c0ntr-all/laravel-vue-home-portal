@@ -20,13 +20,13 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       timePassed: '00:00',
       timeTotal: '00:00',
       rewindProgressWidth: 0,
+      volumeProgressWidth: 0.01,
       playlist: [],
-      volume: 0.01,
     }
   },
   actions: {
     init() {
-      this.audio.volume = this.volume
+      this.audio.volume = this.volumeProgressWidth
 
       this.audio.addEventListener('timeupdate', () => {
         if (this.status === 'paused') {
@@ -34,7 +34,7 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         }
 
         const duration = this.audio.duration,
-          currentTime = this.audio.currentTime
+           currentTime = this.audio.currentTime
 
         this.rewindProgressWidth = (currentTime / duration) * 100
 
@@ -49,7 +49,7 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       })
 
       this.audio.addEventListener('volumechange', () => {
-        this.volume = this.audio.volume
+        this.volumeProgressWidth = this.audio.volume * 100
       })
 
       this.audio.addEventListener('ended', () => {

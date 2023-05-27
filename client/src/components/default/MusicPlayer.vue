@@ -69,13 +69,19 @@
               </div>
             </div>
 
-            <AppSlider />
+            <AppSlider
+              :data="musicPlayer.rewindProgressWidth"
+              @move="changeRewind"
+            />
 
           </div>
         </div>
-
         <div class="music-player__volume flex items-center q-mx-md">
-          <AppSlider :width="'50px'" @move="changeVolume" />
+          <AppSlider
+            :width="'50px'"
+            :data="musicPlayer.volumeProgressWidth"
+            @move="changeVolume"
+          />
         </div>
 
         <div class="music-player__buttons-group flex items-center">
@@ -119,6 +125,10 @@ export default {
 
     musicPlayer.init()
 
+    const changeRewind = value => {
+      musicPlayer.audio.currentTime = value / 100 * musicPlayer.audio.duration
+    }
+
     const changeVolume = value => {
       musicPlayer.audio.volume = value / 100
     }
@@ -127,6 +137,7 @@ export default {
       dialog: ref(false),
       hovered: ref(false),
       musicPlayer,
+      changeRewind,
       changeVolume,
       initPlay: track => {
         musicPlayer.playTrack(track)
