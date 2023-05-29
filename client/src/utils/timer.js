@@ -20,23 +20,27 @@ export default class Timer {
   }
 
   resume() {
-    this.pausedSeconds += this.now() - this.pausedAt;
-    this.pausedAt = null;
+    if (this.startedAt !== null && this.pausedAt !== null) {
+      this.pausedSeconds += this.now() - this.pausedAt;
+      this.pausedAt = null;
 
-    if (!this.timerId && this.targetSeconds !== null) {
-      this.setTrigger(this.targetSeconds - this.getElapsed());
+      if (!this.timerId && this.targetSeconds !== null) {
+        this.setTrigger(this.targetSeconds - this.getElapsed());
+      }
     }
   }
 
   update(seconds) {
-    this.targetSeconds = seconds;
+    if (this.startedAt !== null) {
+      this.targetSeconds = seconds;
 
-    if (this.targetSeconds !== null) {
-      if (this.pausedAt === null) {
-        this.setTrigger(this.targetSeconds - this.getElapsed());
+      if (this.targetSeconds !== null) {
+        if (this.pausedAt === null) {
+          this.setTrigger(this.targetSeconds - this.getElapsed());
+        }
+      } else {
+        this.clearTrigger();
       }
-    } else {
-      this.clearTrigger();
     }
   }
 
@@ -57,6 +61,10 @@ export default class Timer {
   }
 
   getElapsed() {
+    if (this.startedAt === null) {
+      return null;
+    }
+
     let elapsed = this.now() - this.startedAt - this.pausedSeconds;
 
     if (this.pausedAt !== null) {
@@ -64,6 +72,10 @@ export default class Timer {
     }
 
     return elapsed;
+  }
+
+  isExpired() {
+    return this.getRemainingSeconds() !== null && remainingSeconds < 0;
   }
 
   now() {
