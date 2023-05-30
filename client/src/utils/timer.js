@@ -25,6 +25,7 @@ export default class Timer {
       this.pausedAt = null;
 
       if (!this.timerId && this.targetSeconds !== null) {
+
         this.setTrigger(this.targetSeconds - this.getElapsed());
       }
     }
@@ -75,9 +76,11 @@ export default class Timer {
   }
 
   isExpired() {
-    return this.getRemainingSeconds() !== null && remainingSeconds < 0;
+    const remainingSeconds = this.getRemainingSeconds();
+    return remainingSeconds !== null && remainingSeconds < 0;
   }
 
+  //todo: move to helper
   now() {
     return Math.round(new Date().valueOf() / 1000);
   }
