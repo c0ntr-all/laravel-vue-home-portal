@@ -11,15 +11,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Znck\Eloquent\Relations\BelongsToThrough;
 
 class Track extends Model
 {
-    use HasFactory;
-    use HasDates;
-    use HasMusicTags;
-    use HasImage;
-    use \Znck\Eloquent\Traits\BelongsToThrough;
+    use SoftDeletes,
+        HasFactory,
+        HasDates,
+        HasMusicTags,
+        HasImage,
+        \Znck\Eloquent\Traits\BelongsToThrough;
 
     protected $table = 'music_tracks';
 

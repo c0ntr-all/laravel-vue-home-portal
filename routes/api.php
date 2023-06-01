@@ -6,6 +6,7 @@ use App\Http\Controllers\FolderController;
 use App\Http\Controllers\Music\Admin\ArtistController as AdminArtistController;
 use App\Http\Controllers\Music\AlbumController;
 use App\Http\Controllers\Music\ArtistController;
+use App\Http\Controllers\Music\MusicHistoryController;
 use App\Http\Controllers\Music\PlaylistController;
 use App\Http\Controllers\Music\TagController;
 use App\Http\Controllers\Music\TrackController;
@@ -117,6 +118,10 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 // Trying to set "playlists" route as default for list of playlists for better view while requesting.
                 Route::post('/', [PlaylistController::class, 'getItems']);
                 Route::get('{playlist}/index', [PlaylistController::class, 'index']);
+            });
+            Route::prefix('history')->group(function() {
+                Route::post('/', [MusicHistoryController::class, 'getItems']);
+                Route::put('store', [MusicHistoryController::class, 'store']);
             });
         });
 
