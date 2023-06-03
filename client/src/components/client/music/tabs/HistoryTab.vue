@@ -57,11 +57,12 @@
   </template>
 </template>
 <script>
-import TrackCardRow from "components/client/music/TrackCardRow.vue";
 import {onMounted, ref} from "vue";
-import API from "src/utils/api";
 import {useQuasar} from "quasar";
+
+import API from "src/utils/api";
 import {useMusicPlayer} from "stores/modules/musicPlayer";
+import TrackCardRow from "components/client/music/TrackCardRow.vue";
 
 export default {
   components: { TrackCardRow },
@@ -112,11 +113,11 @@ export default {
       sortable: true,
       style: 'width: 130px'
     },{
-      name: "date",
+      name: "listen_date",
       required: true,
       label: 'Дата прослушивания',
       align: 'right',
-      field: row => row.date,
+      field: row => row.listen_date,
       sortable: true,
       style: 'width: 130px'
     }])
@@ -126,11 +127,9 @@ export default {
     const $q = useQuasar()
     const musicPlayer = useMusicPlayer()
 
-    const getTracks = async filters => {
-      filters = filters || {}
-
+    const getTracks = async () => {
       await API.post('music/history').then(response => {
-        tracks.value = response.data.tracks
+        tracks.value = response.data.items
         loading.value = false
       }).catch(error => {
         $q.notify({

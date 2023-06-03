@@ -159,7 +159,7 @@ export default {
       default: ['addToPlaylist']
     },
     playlist: {
-      type: String,
+      type: Number,
       required: false
     }
   },
