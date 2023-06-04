@@ -4,7 +4,8 @@ export default class Timer {
     this.startedAt = null;
     this.pausedAt = null;
     this.pausedSeconds = 0;
-    this.timerId = null
+    this.timerId = null;
+    this.isScrobbled = false;
 
     this.clearTrigger();
   }

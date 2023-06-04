@@ -1,6 +1,8 @@
-import { defineStore } from "pinia"
-import addZero from "src/utils/addzero"
-import Timer from "src/utils/timer.js"
+import { defineStore } from "pinia";
+import { useQuasar } from "quasar";
+import addZero from "src/utils/addzero";
+import Timer from "src/utils/timer";
+import API from "src/utils/api";
 
 export const useMusicPlayer = defineStore('musicPlayer', {
   state: () => {
@@ -30,6 +32,14 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       this.audio.volume = this.volumeProgressWidth
 
       this.audio.addEventListener('timeupdate', () => {
+
+        console.log(this.timer.getRemainingSeconds())
+
+        if (this.timer.isExpired() && !this.timer.isScrobbled) {
+          this.scrobbleSong()
+          this.timer.isScrobbled = true
+        }
+
         const duration = this.audio.duration,
            currentTime = this.audio.currentTime
 
@@ -87,6 +97,8 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         this.pause()
         this.track = track
         this.audio.src = `http://home-portal.local/api/music/tracks/${track.id}/play`
+
+        this.timer.update(this.getSecondsToScrobble())
       }
 
       // Initialization of current track index in playlist
@@ -157,6 +169,19 @@ export const useMusicPlayer = defineStore('musicPlayer', {
                             (arrTrackDuration[0] * 60 * 60) + (arrTrackDuration[1] * 60) + Number(arrTrackDuration[2])
 
       return Math.round(trackDuration / 2)
+    },
+    async scrobbleSong() {
+      const $q = useQuasar()
+
+      await API.post('music/history/scrobble', {
+        track_id: this.track.id
+      }).then(response => {
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+      })
     }
   }
 })
