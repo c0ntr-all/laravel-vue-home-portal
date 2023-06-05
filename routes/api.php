@@ -121,7 +121,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             });
             Route::prefix('history')->group(function() {
                 Route::post('/', [MusicHistoryController::class, 'getItems']);
-                Route::put('store', [MusicHistoryController::class, 'store']);
+                Route::put('scrobble', [MusicHistoryController::class, 'scrobble']);
             });
         });
 

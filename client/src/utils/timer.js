@@ -5,14 +5,14 @@ export default class Timer {
     this.pausedAt = null;
     this.pausedSeconds = 0;
     this.timerId = null;
-    this.isScrobbled = false;
 
     this.clearTrigger();
   }
 
-  start() {
+  start(seconds) {
     this.clearTrigger();
     this.startedAt = this.now();
+    this.update(seconds);
   }
 
   pause() {

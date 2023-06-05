@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useQuasar } from "quasar";
+import { Notify } from "quasar";
 import addZero from "src/utils/addzero";
 import Timer from "src/utils/timer";
 import API from "src/utils/api";
@@ -17,6 +17,8 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         artist: "Artist Name"
       },
       startedAt: null,
+      isScrobbled: false,
+      stopScrobble: false,
       status: 'paused',
       idx: 0,
       timePassed: '00:00',
@@ -35,9 +37,9 @@ export const useMusicPlayer = defineStore('musicPlayer', {
 
         console.log(this.timer.getRemainingSeconds())
 
-        if (this.timer.isExpired() && !this.timer.isScrobbled) {
+        if (this.timer.isExpired() && !this.stopScrobble) {
           this.scrobbleSong()
-          this.timer.isScrobbled = true
+          this.stopScrobble = true
         }
 
         const duration = this.audio.duration,
@@ -98,7 +100,9 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         this.track = track
         this.audio.src = `http://home-portal.local/api/music/tracks/${track.id}/play`
 
-        this.timer.update(this.getSecondsToScrobble())
+        this.timer.start(this.getSecondsToScrobble())
+        this.isScrobbled = false
+        this.stopScrobble = false
       }
 
       // Initialization of current track index in playlist
@@ -171,13 +175,12 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       return Math.round(trackDuration / 2)
     },
     async scrobbleSong() {
-      const $q = useQuasar()
-
-      await API.post('music/history/scrobble', {
+      await API.put('music/history/scrobble', {
         track_id: this.track.id
-      }).then(response => {
+      }).then(() => {
+        this.isScrobbled = true
       }).catch(error => {
-        $q.notify({
+        Notify.create({
           type: 'negative',
           message: `Server Error: ${error.response.data.message}`
         })
