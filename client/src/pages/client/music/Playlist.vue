@@ -30,11 +30,13 @@
     </div>
     <div class="playlist-body">
       <MusicTracksList
+        v-if="playlist.tracks.length"
         @remove="console.log(track)"
         :tracks="playlist.tracks"
         :actions="['addToPlaylist', 'deleteFromPlaylist']"
         :playlist="id"
       />
+      <div v-else>Playlist is Empty!</div>
     </div>
   </div>
 </template>
