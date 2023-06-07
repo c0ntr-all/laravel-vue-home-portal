@@ -30,7 +30,7 @@
     </div>
     <div class="playlist-body">
       <MusicTracksList
-        v-if="playlist.tracks.length"
+        v-if="playlist?.tracks?.length"
         @remove="console.log(track)"
         :tracks="playlist.tracks"
         :actions="['addToPlaylist', 'deleteFromPlaylist']"
@@ -63,7 +63,8 @@ export default {
     const playlist = ref([])
 
     const getPlaylist = async id => {
-      await API.get(`music/playlists/${id}/index`).then(response => {
+      await API.get(`music/playlists/${id}/index`)
+        .then(response => {
         playlist.value = response.data
       }).catch(error => {
 
