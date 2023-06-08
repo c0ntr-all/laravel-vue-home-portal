@@ -73,11 +73,11 @@ export default {
     }
 
     const createPlaylist = async () => {
-      await API.put('music/playlists/create', {
+      await API.put('music/playlists/store', {
         name: newPlaylistName.value
       }).then(response => {
-        items.value = response.data.items
-        total.value = response.data.total
+        items.value.push(response.data.data)
+        total.value++
       }).catch(error => {
         $q.notify({
           type: 'negative',

@@ -118,6 +118,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 // Trying to set "playlists" route as default for list of playlists for better view while requesting.
                 Route::post('/', [PlaylistController::class, 'getItems']);
                 Route::get('{playlist}/index', [PlaylistController::class, 'index']);
+                Route::put('store', [PlaylistController::class, 'store']);
             });
             Route::prefix('history')->group(function() {
                 Route::post('/', [MusicHistoryController::class, 'getItems']);
