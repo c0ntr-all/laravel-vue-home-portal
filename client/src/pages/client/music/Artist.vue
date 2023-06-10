@@ -41,10 +41,13 @@
   </template>
 </template>
 <script>
-import { ref, onMounted } from 'vue'
-import API from "src/utils/api";
-import ArtistPageSkeleton from 'src/components/client/music/skeleton/ArtistPage.vue'
-import AlbumCard from "components/client/music/AlbumCard.vue";
+import { ref, onMounted } from "vue"
+import { useRouter } from "vue-router"
+
+import API from "src/utils/api"
+
+import ArtistPageSkeleton from "src/components/client/music/skeleton/ArtistPage.vue"
+import AlbumCard from "components/client/music/AlbumCard.vue"
 
 export default {
   props: {
@@ -52,13 +55,21 @@ export default {
   },
   components: { AlbumCard, ArtistPageSkeleton },
   setup(props) {
+    const $router = useRouter()
+
     const artist = ref({})
     const loading = ref(true)
-    const getArtist = async (id) => {
-      await API.post('music/artists', {id: id}).then(response => {
-        artist.value = response.data.artists
-        loading.value = false
-      })
+
+    const getArtist = async id => {
+      await API.post('music/artists', {id: id})
+        .then(response => {
+          artist.value = response.data.artists
+          loading.value = false
+        }).catch(error => {
+          if(error.response.status === 404) {
+            $router.push('/404')
+          }
+        })
     }
 
     onMounted(() => {
