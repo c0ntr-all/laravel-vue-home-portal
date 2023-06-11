@@ -58,20 +58,20 @@ class TagController extends Controller
     {
         $existTag = MusicTag::where(['name' => $request->validated()['name']])->get();
         if ($existTag->isEmpty()) {
-            $common = $request->validated()['common'] ?? 0;
-            $parentId = $request->validated()['parent_id'];
+            $data = $request->validated();
+
+            $common = $data['common'] ?? 0;
+            $parentId = $data['parent_id'];
 
             if ($parentId) {
                 $parentTag = MusicTag::find($parentId);
                 $common = $parentTag->common;
             }
 
-            $result = MusicTag::create([
-                'name' => $request->validated()['name'],
-                'content' => $request->validated()['content'],
-                'parent_id' => $request->validated()['parent_id'] ?? 0,
-                'common' => $common
-            ]);
+            $data['common'] = $common;
+            $data['parent_id'] = $data['parent_id'] ?? 0;
+
+            $result = MusicTag::create($data);
 
             return $this->TagResponse($result);
         } else {
@@ -94,7 +94,13 @@ class TagController extends Controller
         $deleted = $tag->delete();
 
         if ($deleted) {
-            return ['success' => true, 'message' => 'Tag ' . $tagName . ' has been successfully removed!'];
+            return [
+                'success' => true,
+                'tag' => $tagName,
+                'message' => 'Tag ' . $tagName . ' has been successfully removed!'
+            ];
+        } else {
+            throw new \Exception('Something wrong with deleting tag!');
         }
     }
 
