@@ -20,37 +20,44 @@
         </h2>
         <h2 v-else class="playlist-head__name">{{ playlist.name }}</h2>
         <div class="playlist-head__description">
-          <q-skeleton v-if="loading" type="text" width="300px" />
-          <q-skeleton v-if="loading" type="text" width="300px" />
-          <q-skeleton v-if="loading" type="text" width="300px" />
-          <q-skeleton v-if="loading" type="text" width="300px" />
+          <template v-if="loading">
+            <q-skeleton type="text" width="300px" />
+            <q-skeleton type="text" width="300px" />
+            <q-skeleton type="text" width="300px" />
+            <q-skeleton type="text" width="300px" />
+          </template>
           <div v-else class="playlist-head__description-item">{{ playlist.content }}</div>
         </div>
       </div>
     </div>
     <div class="playlist-body">
-      <MusicTracksList
-        v-if="playlist?.tracks?.length"
-        @remove="console.log(track)"
-        :tracks="playlist.tracks"
-        :actions="['addToPlaylist', 'deleteFromPlaylist']"
-        :playlist="id"
-      />
-      <div v-else>Playlist is Empty!</div>
+      <template v-if="loading">
+        <TracksListSkeleton />
+      </template>
+      <template v-else>
+        <MusicTracksList
+          v-if="playlist?.tracks?.length"
+          :tracks="playlist.tracks"
+          :actions="['addToPlaylist', 'deleteFromPlaylist']"
+          :playlist="id"
+        />
+        <div v-else>Playlist is Empty!</div>
+      </template>
     </div>
   </div>
 </template>
 <script>
-import { ref, onMounted, watch } from "vue"
-import { useRoute } from "vue-router"
+import { ref, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 
-import API from "src/utils/api"
-import { useMusicPlayer } from "stores/modules/musicPlayer"
+import API from "src/utils/api";
+import { useMusicPlayer } from "stores/modules/musicPlayer";
 
-import MusicTracksList from "src/components/client/music/MusicTracksList.vue"
+import MusicTracksList from "src/components/client/music/MusicTracksList.vue";
+import TracksListSkeleton from "components/client/music/skeleton/TracksListSkeleton.vue";
 
 export default {
-  components: { MusicTracksList },
+  components: { MusicTracksList, TracksListSkeleton },
   props: {
     'id': String
   },
