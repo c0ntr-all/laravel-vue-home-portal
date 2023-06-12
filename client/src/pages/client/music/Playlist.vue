@@ -41,7 +41,15 @@
           :actions="['addToPlaylist', 'deleteFromPlaylist']"
           :playlist="id"
         />
-        <div v-else>Playlist is Empty!</div>
+        <div v-else class="bg-white q-pa-lg">
+          <div class="playlist-empty">
+            <div class="playlist-empty__content">
+              <div class="playlist-empty__icon"><q-icon size="xl" name="search" /></div>
+              <div class="playlist-empty__title">Playlist is empty</div>
+              <div class="playlist-empty__text">Add some tracks!</div>
+            </div>
+          </div>
+        </div>
       </template>
     </div>
   </div>
@@ -127,6 +135,33 @@ export default {
     &-item {
       margin-bottom: 1rem;
     }
+  }
+}
+.playlist-body {
+  background: #fff;
+}
+.playlist-empty {
+  display: flex;
+  justify-content: center;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  &__icon {
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+    background: $grey-2;
+  }
+  &__title {
+    margin: 0.5rem;
+    font-size: 20px;
+    line-height: 25px;
   }
 }
 </style>

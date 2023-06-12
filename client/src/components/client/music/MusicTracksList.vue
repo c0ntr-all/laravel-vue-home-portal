@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white q-pa-lg">
+  <div class="q-pa-lg">
     <div class="tracks-list q-gutter-xs q-pr-lg">
       <MusicTrackCard
         v-for="track in tracks"

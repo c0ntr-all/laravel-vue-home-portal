@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      <div class="album-body q-mb-lg">
+      <div class="album-body q-mb-lg bg-white">
         <MusicTracksList :tracks="album.tracks" />
       </div>
     </div>
