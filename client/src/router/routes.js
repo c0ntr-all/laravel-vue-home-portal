@@ -72,46 +72,50 @@ const routes = [{
     menu: true
   }, {
     path: '/music',
-    component: () => import('pages/client/music/Music.vue'),
-    name: 'music',
-    alias: '/music',
+    component: () => import('layouts/Music.vue'),
     menu: true,
     meta: {
       title: 'Музыка',
       icon: 'music_note'
-    }
-  }, {
-    path: '/music/tags/:slug',
-    component: () => import('pages/client/music/Tag.vue'),
-    name: 'tag',
-    props: true,
-    meta: {
-      title: 'Музыка'
-    }
-  }, {
-    path: '/music/artists/:id',
-    component: () => import('pages/client/music/Artist.vue'),
-    name: 'artist',
-    props: true,
-    meta: {
-      title: 'Музыка'
-    }
-  }, {
-    path: '/music/albums/:id',
-    component: () => import('pages/client/music/Album.vue'),
-    name: 'album',
-    props: true,
-    meta: {
-      title: 'Музыка'
-    }
-  }, {
-    path: '/music/playlists/:id',
-    component: () => import('pages/client/music/Playlist.vue'),
-    name: 'playlist',
-    props: true,
-    meta: {
-      title: 'Playlists'
-    }
+    },
+    children: [{
+      path: '/music',
+      component: () => import('pages/client/music/Music.vue'),
+      name: 'music',
+      props: true,
+    }, {
+      path: '/music/tags/:slug',
+      component: () => import('pages/client/music/Tag.vue'),
+      name: 'tag',
+      props: true,
+      meta: {
+        title: 'Музыка'
+      }
+    }, {
+      path: '/music/artists/:id',
+      component: () => import('pages/client/music/Artist.vue'),
+      name: 'artist',
+      props: true,
+      meta: {
+        title: 'Музыка'
+      }
+    }, {
+      path: '/music/albums/:id',
+      component: () => import('pages/client/music/Album.vue'),
+      name: 'album',
+      props: true,
+      meta: {
+        title: 'Музыка'
+      }
+    }, {
+      path: '/music/playlists/:id',
+      component: () => import('pages/client/music/Playlist.vue'),
+      name: 'playlist',
+      props: true,
+      meta: {
+        title: 'Playlists'
+      }
+    }]
   }, {
     path: '/video',
     component: () => import('layouts/MainLayout.vue'),
@@ -145,7 +149,6 @@ const routes = [{
 }, {
   path: '/:catchAll(.*)*',
   component: () => import('pages/404.vue')
-}
-]
+}]
 
 export default routes
