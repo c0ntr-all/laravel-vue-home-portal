@@ -1,53 +1,62 @@
 <template>
-  <q-card class="q-mb-md" flat bordered>
-    <q-card-section>
-      <div class="flex justify-between items-end">
-        <artists-filter @submitFilter="getArtists" />
+  <div class="row q-col-gutter-md q-mb-md">
+    <div class="col-lg-3 col-md-4">
+      <q-card flat bordered>
+        <q-card-section>
+          <div class="flex justify-between items-end">
+            <artists-filter @submitFilter="getArtists" />
 
-        <q-btn
-          @click="toggleCardMode"
-          color="primary"
-          :icon="cardMode === 'card' ? 'toc' : 'view_cozy'"
-          size="lg"
-          flat
-          round
-        />
-      </div>
-    </q-card-section>
-  </q-card>
+            <q-btn
+              @click="toggleCardMode"
+              color="primary"
+              :icon="cardMode === 'card' ? 'toc' : 'view_cozy'"
+              size="lg"
+              flat
+              round
+            />
+          </div>
+        </q-card-section>
+      </q-card>
+    </div>
+    <div class="col-lg-9 col-md-8">
+      <q-card flat bordered>
+        <q-card-section>
+          <template v-if="loading">
+            <div class="column q-gutter-md q-mb-lg">
+              <ArtistsCardHorizontalSkeleton v-for="n in 20" :key="n" />
+            </div>
+          </template>
+          <template v-else>
+            <div v-if="cardMode === 'card'" class="artists-list row items-start q-gutter-md q-mb-lg">
+              <artist-card
+                v-for="artist in artists"
+                :key="artist.id"
+                :artist="artist"
+              />
+            </div>
 
-  <template v-if="loading">
-    <div class="column q-gutter-md q-mb-lg">
-      <ArtistsCardHorizontalSkeleton v-for="n in 20" :key="n" />
+            <div v-if="cardMode === 'horizontal'" class="column q-gutter-md q-mb-lg">
+              <artist-card-horizontal
+                v-for="artist in artists"
+                :key="artist.id"
+                :artist="artist"
+              />
+            </div>
+            <div class="show-more-button flex justify-center">
+              <q-btn
+                v-if="pagination.hasPages"
+                color="primary"
+                label="Show more"
+                @click="loadMoreArtists"
+                :loading="paginationLoading"
+              >
+              </q-btn>
+            </div>
+          </template>
+        </q-card-section>
+      </q-card>
     </div>
-  </template>
-  <template v-else>
-    <div v-if="cardMode === 'card'" class="artists-list row items-start q-gutter-md q-mb-lg">
-      <artist-card
-        v-for="artist in artists"
-        :key="artist.id"
-        :artist="artist"
-      />
-    </div>
-
-    <div v-if="cardMode === 'horizontal'" class="column q-gutter-md q-mb-lg">
-      <artist-card-horizontal
-        v-for="artist in artists"
-        :key="artist.id"
-        :artist="artist"
-      />
-    </div>
-    <div class="show-more-button flex justify-center">
-      <q-btn
-        v-if="pagination.hasPages"
-        color="primary"
-        label="Show more"
-        @click="loadMoreArtists"
-        :loading="paginationLoading"
-      >
-      </q-btn>
-    </div>
-  </template>
+  </div>
 </template>
 <script>
 import { onMounted, ref } from "vue"

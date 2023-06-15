@@ -1,18 +1,19 @@
 <template>
-  <q-tabs
-    v-model="tab"
-    align="left"
-    class="q-mb-md"
-    no-caps
-    outside-arrows
-    mobile-arrows
-  >
-    <q-tab name="tracks" label="Tracks" />
-    <q-tab name="artists" label="Artists" />
-    <q-tab name="playlists" label="Playlists" />
-    <q-tab name="genres" label="Genres" />
-    <q-tab name="history" label="History" />
-  </q-tabs>
+  <q-card class="q-mb-md" flat bordered>
+    <q-tabs
+      v-model="tab"
+      align="left"
+      no-caps
+      outside-arrows
+      mobile-arrows
+    >
+      <q-tab name="tracks" label="Tracks" />
+      <q-tab name="artists" label="Artists" />
+      <q-tab name="playlists" label="Playlists" />
+      <q-tab name="genres" label="Genres" />
+      <q-tab name="history" label="History" />
+    </q-tabs>
+  </q-card>
   <q-tab-panels
     v-model="tab"
     animated
