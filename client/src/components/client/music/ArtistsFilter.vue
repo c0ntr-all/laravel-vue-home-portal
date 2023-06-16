@@ -5,7 +5,7 @@
       <q-btn-toggle
         v-model="type"
         @click="checkRules"
-        class="tags-toggle"
+        class="border-grey"
         no-caps
         rounded
         unelevated
@@ -17,11 +17,16 @@
           {label: 'Иерархический поиск', value: 'hierarchical'}
         ]"
       />
-      <q-toggle
-        label="Совместный"
-        v-model="union"
-        :disable="type !== 'strict'"
-      />
+      <div class="flex items-center">
+        <span>ИЛИ</span>
+        <q-toggle
+          label="И"
+          v-model="union"
+          :disable="type !== 'strict'"
+          color="primary"
+          keep-color
+        />
+      </div>
     </div>
     <div class="flex q-mb-sm q-gutter-md">
       <q-select
@@ -29,7 +34,7 @@
         :options="secondaryTags"
         :size="'xs'"
         label="Select Style"
-        style="width: 150px"
+        style="width: 100%"
         outlined
         dense
       />
@@ -38,7 +43,7 @@
         v-model="commonModel"
         input-debounce="0"
         :options="commonTags"
-        style="width: 350px"
+        style="width: 100%"
         use-input
         use-chips
         multiple

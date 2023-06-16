@@ -1,25 +1,66 @@
 <template>
   <div class="row q-col-gutter-md q-mb-md">
     <div class="col-lg-3 col-md-4">
-      <q-card flat bordered>
+      <q-card flat>
         <q-card-section>
           <div class="flex justify-between items-end">
             <artists-filter @submitFilter="getArtists" />
-
-            <q-btn
-              @click="toggleCardMode"
-              color="primary"
-              :icon="cardMode === 'card' ? 'toc' : 'view_cozy'"
-              size="lg"
-              flat
-              round
-            />
           </div>
         </q-card-section>
       </q-card>
     </div>
     <div class="col-lg-9 col-md-8">
-      <q-card flat bordered>
+      <q-card class="q-mb-md" flat>
+        <q-card-section>
+          <div class="row">
+            <div class="col-lg-4">
+              <q-input
+                v-model="artistSearch"
+                label="Search"
+                outlined
+                dense
+              >
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </div>
+            <div class="col-lg-8">
+              <div class="row justify-end">
+                <q-btn-toggle
+                  v-model="cardMode"
+                  class="border-grey"
+                  toggle-color="primary"
+                  color="white"
+                  text-color="black"
+                  :options="[
+                  {value: 'card', slot: 'card'},
+                  {value: 'row', slot: 'row'}
+                ]"
+                  no-caps
+                  unelevated
+                  rounded
+                  flat
+                  dense
+                >
+                  <template v-slot:card>
+                    <div class="row items-center no-wrap">
+                      <q-icon name="toc" size="md" right />
+                    </div>
+                  </template>
+
+                  <template v-slot:row>
+                    <div class="row items-center no-wrap">
+                      <q-icon name="view_cozy" size="md" right />
+                    </div>
+                  </template>
+                </q-btn-toggle>
+              </div>
+            </div>
+          </div>
+        </q-card-section>
+      </q-card>
+      <q-card flat>
         <q-card-section>
           <template v-if="loading">
             <div class="column q-gutter-md q-mb-lg">
@@ -35,7 +76,7 @@
               />
             </div>
 
-            <div v-if="cardMode === 'horizontal'" class="column q-gutter-md q-mb-lg">
+            <div v-if="cardMode === 'row'" class="column q-gutter-md q-mb-lg">
               <artist-card-horizontal
                 v-for="artist in artists"
                 :key="artist.id"
@@ -75,7 +116,7 @@ export default {
     const $q = useQuasar()
 
     const artists = ref([])
-    let cardMode = ref('horizontal')
+    let cardMode = ref('row')
     let loading = ref(true)
     let pagination = ref({
       perPage: 0,
@@ -84,6 +125,7 @@ export default {
       prevPageUrl: ''
     })
     let paginationLoading = ref(false)
+    const artistSearch = ref('')
 
     // todo Перенести повторяющиеся функции в одно место
     const getArtists = async filters => {
@@ -99,14 +141,6 @@ export default {
           message: `Server Error: ${error.response.data.message}`
         })
       })
-    }
-
-    const toggleCardMode = () => {
-      if (cardMode.value === 'card') {
-        cardMode.value = 'horizontal'
-      } else {
-        cardMode.value = 'card'
-      }
     }
 
     const loadMoreArtists = async () => {
@@ -142,8 +176,8 @@ export default {
       loading,
       pagination,
       paginationLoading,
+      artistSearch,
       getArtists,
-      toggleCardMode,
       loadMoreArtists
     }
   }
