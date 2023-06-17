@@ -4,7 +4,7 @@
     <div class="music-filter__params q-mb-md">
       <q-btn-toggle
         v-model="type"
-        @click="checkRules"
+        @click="setUnion"
         class="border-grey"
         no-caps
         rounded
@@ -50,7 +50,10 @@
         outlined
         dense
       />
-      <q-btn color="primary" label="Filter" @click="submitFilter" />
+      <div class="flex justify-end q-gutter-md" style="width: 100%">
+        <q-btn class="q-mt-none q-ml-none" color="grey" label="Reset" @click="resetFilter" outline />
+        <q-btn class="q-mt-none" color="primary" label="Filter" @click="submitFilter" />
+      </div>
     </div>
 
     <q-inner-loading :showing="loading">
@@ -59,13 +62,16 @@
   </div>
 </template>
 <script>
-import { ref } from "vue"
+import { ref, onMounted } from "vue"
+import { useQuasar } from "quasar"
 
 import API from "src/utils/api"
 
 export default {
-  emits: ['submitFilter'],
+  emits: ['resetFilter', 'submitFilter'],
   setup(props, {emit}) {
+    const $q = useQuasar()
+
     const type = ref('strict')
     const union = ref(true)
     const commonTags = ref([])
@@ -74,17 +80,31 @@ export default {
     const secondaryModel = ref()
     const loading = ref(true)
 
-    const checkRules = async () => {
-      union.value = type.value === 'strict'
+    const setUnion = async () => {
+      union.value = type.value === 'hierarchical' ? false : union.value
     }
 
     const getTagsSelect = async () => {
       await API.post('music/tags/select').then(response => {
         commonTags.value = Object.keys(response.data.tags.common).map(key => response.data.tags.common[key])
         secondaryTags.value = Object.keys(response.data.tags.secondary).map(key => response.data.tags.secondary[key])
-
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Something wrong with loading tags for selects: ${error.response.data.message}`
+        })
+      }).finally(() => {
         loading.value = false
       })
+    }
+
+    const resetFilter = () => {
+      commonModel.value = []
+      secondaryModel.value = []
+      type.value = 'strict'
+      union.value = true
+
+      emit('resetFilter')
     }
 
     const submitFilter = () => {
@@ -97,6 +117,10 @@ export default {
       })
     }
 
+    onMounted(() => {
+      getTagsSelect()
+    })
+
     return {
       type,
       union,
@@ -105,13 +129,11 @@ export default {
       commonModel,
       secondaryModel,
       loading,
-      checkRules,
+      setUnion,
       getTagsSelect,
+      resetFilter,
       submitFilter
     }
-  },
-  mounted() {
-    this.getTagsSelect()
   }
 }
 </script>

@@ -4,7 +4,7 @@
       <q-card flat>
         <q-card-section>
           <div class="flex justify-between items-end">
-            <artists-filter @submitFilter="getArtists" />
+            <artists-filter @submitFilter="getArtists" @resetFilter="getArtists" />
           </div>
         </q-card-section>
       </q-card>
@@ -129,17 +129,19 @@ export default {
 
     // todo Перенести повторяющиеся функции в одно место
     const getArtists = async filters => {
+      loading.value = true
       filters = filters || {}
 
       await API.post('music/artists/get', filters).then(response => {
         artists.value = response.data.artists
         pagination.value = response.data.pagination
-        loading.value = false
       }).catch(error => {
         $q.notify({
           type: 'negative',
           message: `Server Error: ${error.response.data.message}`
         })
+      }).finally(() => {
+        loading.value = false
       })
     }
 
