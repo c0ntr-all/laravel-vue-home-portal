@@ -8,6 +8,7 @@
     align="left"
     narrow-indicator
   >
+    <q-tab name="tracks" label="Треки" />
     <q-tab name="artists" label="Исполнители" />
     <q-tab name="tags" label="Теги" />
   </q-tabs>
@@ -15,6 +16,9 @@
   <q-separator />
 
   <q-tab-panels v-model="mainTabs">
+    <q-tab-panel name="tracks">
+      <TracksTab />
+    </q-tab-panel>
     <q-tab-panel name="artists">
       <div class="text-h5 q-mb-md">Исполнители</div>
       <q-splitter
@@ -57,13 +61,14 @@
   </q-tab-panels>
 </template>
 <script>
-import {ref} from 'vue'
-import ArtistsEdit from 'src/components/admin/music/artists/ArtistsEdit.vue'
-import ArtistsUpload from 'src/components/admin/music/artists/ArtistsUpload.vue'
-import TagsEdit from 'src/components/admin/music/tags/TagsEdit.vue'
+import {ref} from "vue"
+import ArtistsEdit from "src/components/admin/music/artists/ArtistsEdit.vue"
+import ArtistsUpload from "src/components/admin/music/artists/ArtistsUpload.vue"
+import TagsEdit from "src/components/admin/music/tags/TagsEdit.vue"
+import TracksTab from "src/components/admin/music/tracks/TracksTab.vue"
 
 export default {
-  components: {ArtistsEdit, ArtistsUpload, TagsEdit},
+  components: {ArtistsEdit, ArtistsUpload, TagsEdit, TracksTab},
 
   setup() {
     const mainTabs = ref('artists')

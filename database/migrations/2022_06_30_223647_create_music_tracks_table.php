@@ -23,6 +23,7 @@ class CreateMusicTracksTable extends Migration
             $table->string('image')->nullable()->default(NULL);
             $table->time('duration');
             $table->integer('bitrate');
+            $table->string('link')->nullable()->default(NULL);
 
             $table->timestamps();
 

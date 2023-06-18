@@ -33,6 +33,7 @@ class Track extends Model
         'image',
         'duration',
         'bitrate',
+        'link',
         'updated_at',
         'deleted_at'
     ];
@@ -102,6 +103,11 @@ class Track extends Model
         });
     }
 
+    public function scopeOnlyWeb($query)
+    {
+        $query->whereNotNull('link');
+    }
+
     private function getTagsHierarchy($tags)
     {
         return MusicTag::whereIn('id', $tags)->get()->map(function($item) {
@@ -121,6 +127,10 @@ class Track extends Model
 
         if (!empty($filters['rate'])) {
             $query = $query->whereRate($filters);
+        }
+
+        if (!empty($filters['tracks'])) {
+            $query = $query->onlyWeb();
         }
 
         return $query->cursorPaginate(50);
