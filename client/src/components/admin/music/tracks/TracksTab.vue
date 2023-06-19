@@ -41,6 +41,36 @@
     </q-markup-table>
   </template>
   <template v-else>
+    <q-btn
+      @click="showModal = true"
+      color="primary"
+      label="Добавить трек из интернета"
+      class="q-mb-md"
+    />
+    <q-dialog v-model="showModal">
+      <q-card style="width: 700px; max-width: 80vw;">
+        <q-card-section>
+          <div class="text-h6">Добавить трек из интернета</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          <q-form class="q-gutter-y-md column">
+            <q-input
+              v-model="trackLink"
+              label="Ссылка на трек"
+              :rules="[ val => val && val.length > 0 || 'Необходимо вставить ссылку на трек!']"
+              outlined
+            />
+          </q-form>
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white">
+          <q-btn label="Сохранить" color="primary"/>
+          <!--Todo: Need to write cancel update handler for returning previous values to model-->
+          <q-btn label="Отмена" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-table
       :rows="tracks"
       :columns="columns"
@@ -120,6 +150,8 @@ export default {
     }])
     const tracks = ref([])
     const loading = ref(true)
+    const showModal = ref(false)
+    const trackLink = ref('')
 
     const getTracks = async () => {
       await API.post('music/tracks', {
@@ -148,6 +180,8 @@ export default {
       tracks,
       musicPlayer,
       loading,
+      showModal,
+      trackLink,
       getTracks,
       initPlay: track => {
         // todo: Transfer all this constructions to one repository
