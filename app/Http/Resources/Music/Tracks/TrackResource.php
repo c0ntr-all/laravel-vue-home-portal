@@ -15,6 +15,7 @@ class TrackResource extends JsonResource
             'number' => $this->number,
             'name' => $this->name,
             'duration' => $this->duration,
+            'link' => $this->link,
             'rate' => $this->rate?->rate ?? 0,
             'artist' => $this->album->artist->name,
             'image' => $this->full_image,

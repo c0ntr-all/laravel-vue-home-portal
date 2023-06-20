@@ -21,9 +21,9 @@ class TrackController extends Controller
         return new TrackCollection(Track::filterWithCursor($filters));
     }
 
-    public function play(PlayRequest $request, Track $track): BinaryFileResponse
+    public function play(PlayRequest $request, Track $track): string|BinaryFileResponse
     {
-        return new BinaryFileResponse($track->path);
+        return $track->link ?? new BinaryFileResponse($track->path);
     }
 
     public function rate(RateRequest $request, Track $track)
