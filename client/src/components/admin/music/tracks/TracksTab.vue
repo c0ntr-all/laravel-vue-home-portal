@@ -54,18 +54,33 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-form class="q-gutter-y-md column">
+          <q-form class="q-gutter-y-xs column">
             <q-input
-              v-model="trackLink"
+              v-model="model.artist"
+              label="Имя исполнителя"
+              :rules="[ val => val && val.length > 0 || 'Необходимо ввести имя исполнителя']"
+              outlined
+              dense
+            />
+            <q-input
+              v-model="model.name"
+              label="Имя трека"
+              :rules="[ val => val && val.length > 0 || 'Необходимо ввести имя трека!']"
+              outlined
+              dense
+            />
+            <q-input
+              v-model="model.link"
               label="Ссылка на трек"
               :rules="[ val => val && val.length > 0 || 'Необходимо вставить ссылку на трек!']"
               outlined
+              dense
             />
           </q-form>
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white">
-          <q-btn label="Сохранить" color="primary"/>
+          <q-btn label="Отправить" color="primary" @click="storeTrack"/>
           <!--Todo: Need to write cancel update handler for returning previous values to model-->
           <q-btn label="Отмена" v-close-popup />
         </q-card-actions>
@@ -151,7 +166,11 @@ export default {
     const tracks = ref([])
     const loading = ref(true)
     const showModal = ref(false)
-    const trackLink = ref('')
+    const model = ref({
+      artist: '',
+      name: '',
+      link: ''
+    })
 
     const getTracks = async () => {
       await API.post('music/tracks', {
@@ -171,6 +190,28 @@ export default {
       })
     }
 
+    const storeTrack = async () => {
+      await API.put('music/tracks/store', model.value).then(response => {
+        $q.notify({
+          type: 'positive',
+          message: `Трек ${response.data.track.name} Успешно добавлен!`
+        })
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+      }).finally(() => {
+        clearModel()
+      })
+    }
+
+    const clearModel = () => {
+      model.value.artist = ''
+      model.value.name = ''
+      model.value.link = ''
+    }
+
     onMounted(() => {
       getTracks()
     })
@@ -181,8 +222,9 @@ export default {
       musicPlayer,
       loading,
       showModal,
-      trackLink,
+      model,
       getTracks,
+      storeTrack,
       initPlay: track => {
         // todo: Transfer all this constructions to one repository
         // Replacing playlist with new track

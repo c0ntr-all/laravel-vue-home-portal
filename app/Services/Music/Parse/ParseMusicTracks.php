@@ -39,7 +39,7 @@ class ParseMusicTracks extends BaseMusicParse
 
                     $info = pathinfo($item);
 
-                    if (isset($info['extension']) && in_array($info['extension'], self::EXTENSIONS)) {
+                    if (isset($info['extension']) && in_array($info['extension'], self::TRACK_EXTENSIONS)) {
                         $trackPath = $albumPath . DIRECTORY_SEPARATOR . $item;
                         $id3TrackInfo = $this->getID3->analyze($trackPath);
 

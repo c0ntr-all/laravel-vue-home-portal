@@ -15,14 +15,14 @@ class CreateMusicTracksTable extends Migration
     {
         Schema::create('music_tracks', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('album_id');
-            $table->integer('number');
+            $table->unsignedBigInteger('album_id')->nullable()->default(NULL);
+            $table->integer('number')->nullable()->default(NULL);
             $table->string('name');
-            $table->integer('cd')->nullable();
-            $table->string('path');
+            $table->integer('cd')->nullable()->default(NULL);
+            $table->string('path')->nullable()->default(NULL);
             $table->string('image')->nullable()->default(NULL);
             $table->time('duration');
-            $table->integer('bitrate');
+            $table->integer('bitrate')->nullable()->default(NULL);
             $table->string('link')->nullable()->default(NULL);
 
             $table->timestamps();
