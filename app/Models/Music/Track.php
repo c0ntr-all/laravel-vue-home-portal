@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Znck\Eloquent\Relations\BelongsToThrough;
+use App\Helpers\ArrayHelper;
 
 class Track extends Model
 {
@@ -111,7 +112,7 @@ class Track extends Model
     private function getTagsHierarchy($tags)
     {
         return MusicTag::whereIn('id', $tags)->get()->map(function($item) {
-            $tagsList = $this->normalizeArray($item->childrenCategories->toArray());
+            $tagsList = ArrayHelper::normalizeArray($item->childrenCategories->toArray());
 
             return array_column($tagsList, 'id');
         });
@@ -134,34 +135,5 @@ class Track extends Model
         }
 
         return $query->cursorPaginate(50);
-    }
-
-    /**
-     * Из рекурсивно вложенного массива делает обычный массив
-     *
-     * @param array $array
-     * @return array
-     */
-    public function normalizeArray(array $array = []): array
-    {
-        static $out = [];
-
-        foreach ($array as $subArray) {
-            if (!empty($subArray['children'])) {
-                $arrayToAdd = $subArray;
-                unset($arrayToAdd['children']);
-
-                $out[] = $arrayToAdd;
-                $this->normalizeArray($subArray['children']);
-            } else {
-                if (isset($subArray['children'])) {
-                    unset($subArray['children']);
-                }
-
-                $out[] = $subArray;
-            }
-        }
-
-        return $out;
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Helpers\ArrayHelper;
 
 /**
  * @mixin \Eloquent
@@ -76,7 +77,7 @@ class Artist extends Model
     {
         if (!empty($filters['tags']) && $filters['type'] == 'hierarchical') {
             $result = MusicTag::whereIn('id', $filters['tags'])->get()->map(function($item) {
-                $tagsList = $this->normalizeArray($item->childrenCategories->toArray());
+                $tagsList = ArrayHelper::normalizeArray($item->childrenCategories->toArray());
                 return array_column($tagsList, 'id');
             });
             $filters['tags'] = array_merge(...$result->toArray());
@@ -95,34 +96,5 @@ class Artist extends Model
                 });
             }
         });
-    }
-
-    /**
-     * Из рекурсивно вложенного массива делает обычный массив
-     *
-     * @param array $array
-     * @return array
-     */
-    public function normalizeArray(array $array = []): array
-    {
-        static $out = [];
-
-        foreach ($array as $subArray) {
-            if (!empty($subArray['children'])) {
-                $arrayToAdd = $subArray;
-                unset($arrayToAdd['children']);
-
-                $out[] = $arrayToAdd;
-                $this->normalizeArray($subArray['children']);
-            } else {
-                if (isset($subArray['children'])) {
-                    unset($subArray['children']);
-                }
-
-                $out[] = $subArray;
-            }
-        }
-
-        return $out;
     }
 }
