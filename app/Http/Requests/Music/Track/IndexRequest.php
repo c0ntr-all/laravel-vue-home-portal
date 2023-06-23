@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Music;
+namespace App\Http\Requests\Music\Track;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FilterRequest extends FormRequest
+class IndexRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

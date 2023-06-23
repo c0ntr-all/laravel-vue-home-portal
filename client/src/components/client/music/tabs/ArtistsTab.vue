@@ -132,7 +132,7 @@ export default {
       loading.value = true
       filters = filters || {}
 
-      await API.post('music/artists/get', filters).then(response => {
+      await API.post('music/artists', filters).then(response => {
         artists.value = response.data.artists
         pagination.value = response.data.pagination
       }).catch(error => {
@@ -151,7 +151,7 @@ export default {
         let obUrl = new URL(pagination.value.nextPageUrl)
         let cursor = obUrl.searchParams.get("cursor")
 
-        await API.post('music/artists/get', {'cursor': cursor})
+        await API.post('music/artists', {'cursor': cursor})
           .then(response => {
             pagination.value = response.data.pagination
             artists.value.push(...response.data.artists)

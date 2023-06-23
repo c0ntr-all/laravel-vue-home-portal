@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Music\Admin;
 
 use App\Helpers\ImageUpload;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Music\Artist\IndexRequest;
 use App\Http\Requests\Music\Artist\StoreRequest;
 use App\Http\Requests\Music\Artist\UpdateRequest;
-use App\Http\Requests\Music\FilterRequest;
 use App\Http\Resources\Music\Artists\AdminArtistCollection;
 use App\Http\Resources\Music\Artists\AdminArtistResource;
 use App\Models\Music\Artist;
@@ -20,7 +20,7 @@ class ArtistController extends Controller
         $this->artists = $artists;
     }
 
-    public function getArtists(FilterRequest $request) {
+    public function index(IndexRequest $request) {
         $requestData = $request->validated();
 
         $filters = $requestData['filters'] ?? [];

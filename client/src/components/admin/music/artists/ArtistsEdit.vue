@@ -190,7 +190,7 @@ export default {
     })
 
     const getArtists = async page => {
-      const {data} = await API.post('music/admin/artists/get', {page: page})
+      const {data} = await API.post('music/admin/artists', {page: page})
       artists.value = data.data.artists
       total.value = data.data.total
     }

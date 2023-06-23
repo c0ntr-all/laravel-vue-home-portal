@@ -61,9 +61,9 @@ export default {
     const loading = ref(true)
 
     const getArtist = async id => {
-      await API.post('music/artists', {id: id})
+      await API.post(`music/artists/${id}`)
         .then(response => {
-          artist.value = response.data.artists
+          artist.value = response.data.data
           loading.value = false
         }).catch(error => {
           if(error.response.status === 404) {

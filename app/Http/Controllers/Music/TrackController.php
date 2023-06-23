@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Music\FilterRequest;
+use App\Http\Requests\Music\Track\IndexRequest;
 use App\Http\Requests\Music\Track\DeleteFromPlaylistRequest;
+use App\Http\Requests\Music\Track\PlayRequest;
 use App\Http\Requests\Music\Track\RateRequest;
 use App\Http\Requests\Music\Track\StoreRequest;
 use App\Http\Requests\Music\Track\UpdatePlaylistsRequest;
 use App\Http\Resources\Music\Tracks\TrackCollection;
 use App\Http\Resources\Music\Tracks\TrackResource;
 use App\Models\Music\Track;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use App\Http\Requests\Music\Track\PlayRequest;
 use getID3;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class TrackController extends Controller
 {
@@ -22,7 +22,7 @@ class TrackController extends Controller
 
     }
 
-    public function getItems(FilterRequest $request)
+    public function index(IndexRequest $request)
     {
         $filters = $request->validated()['filters'] ?? [];
 

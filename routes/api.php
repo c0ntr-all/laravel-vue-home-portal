@@ -83,7 +83,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
         Route::prefix('music')->group(function() {
             Route::prefix('admin')->group(function() {
                 Route::prefix('artists')->group(function() {
-                    Route::post('get', [AdminArtistController::class, 'getArtists']);
+                    Route::post('/', [AdminArtistController::class, 'index']);
                     Route::post('store', [AdminArtistController::class, 'store']);
                     Route::post('update', [AdminArtistController::class, 'update']);
                     Route::post('search', [SearchController::class, 'search']);
@@ -94,13 +94,13 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::post('upload', [UploadController::class, 'upload']);
             Route::prefix('artists')->group(function() {
                 Route::post('/', [ArtistController::class, 'index']);
-                Route::post('get', [ArtistController::class, 'getArtists']);
+                Route::post('{artist}', [ArtistController::class, 'show']);
                 Route::post('store', [ArtistController::class, 'store']);
                 Route::post('update', [ArtistController::class, 'update']);
             });
             Route::post('albums', [AlbumController::class, 'index']);
             Route::prefix('tracks')->group(function() {
-                Route::post('/', [TrackController::class, 'getItems']);
+                Route::post('/', [TrackController::class, 'index']);
                 Route::put('store', [TrackController::class, 'store']);
                 Route::post('{track}/play', [TrackController::class, 'play']);
                 Route::post('{track}/rate', [TrackController::class, 'rate']);
