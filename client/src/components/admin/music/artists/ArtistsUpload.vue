@@ -1,7 +1,22 @@
 <template>
   <div class="text-h6 q-mb-md">Загрузка исполнителей</div>
-  <q-btn @click="uploadArtist" label="Загрузить" color="primary" class="q-mb-lg"/>
-  <q-input v-model="fullPath" label="Folder path" class="q-mb-lg" outlined dense />
+  <form @submit.prevent.stop="uploadArtist" @reset.prevent.stop="onReset" class="q-gutter-md">
+    <q-btn type="submit" label="Загрузить" color="primary" class="q-mb-lg"/>
+    <q-btn type="reset" label="Сбросить" class="q-mb-lg"/>
+    <q-input
+      v-model="fullPath"
+      ref="fullPathRef"
+      :rules="[
+        val => !!val || 'Поле не должно быть пустым!',
+        val => val.length >= 10 || 'Должно быть больше 10 символов!'
+      ]"
+      lazy-rules
+      label="Folder path"
+      class="q-mb-lg"
+      outlined
+      dense
+    />
+  </form>
   <q-tree
     :nodes="data"
     default-expand-all
@@ -24,7 +39,8 @@ export default {
 
     const data = ref([])
     const selectedNode = ref('')
-    const fullPath = ref('')
+    const fullPath = ref(null)
+    const fullPathRef = ref(null)
 
     const getFolder = async (folder) => {
       const path = folder || startFolder
@@ -80,6 +96,8 @@ export default {
     }
 
     const uploadArtist = async () => {
+      fullPathRef.value.validate()
+
       await API.post('music/upload', {'folder': fullPath.value}).then(response => {
         if(response.data.success) {
           $q.notify({
@@ -95,13 +113,20 @@ export default {
       })
     }
 
+    const onReset = () => {
+      fullPath.value = null
+      fullPathRef.value.resetValidation()
+    }
+
     return {
       data,
       selectedNode,
       fullPath,
+      fullPathRef,
       getFolder,
       onLazyLoad,
-      uploadArtist
+      uploadArtist,
+      onReset
     }
   },
   mounted() {

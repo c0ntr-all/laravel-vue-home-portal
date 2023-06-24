@@ -24,7 +24,7 @@ class UploadRequest extends FormRequest
     public function rules()
     {
         return [
-            'folder' => 'required|string'
+            'folder' => 'required|string|min:10',
         ];
     }
 }
