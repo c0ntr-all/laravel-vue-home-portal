@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use App\Models\Comment;
 use App\Models\Finances\Finances;
 use App\Models\Finances\FinancesShop;
+use App\Models\Music\MusicHistory;
 use App\Models\Reminds\Remind;
+use App\Models\Reminds\RemindGroup;
 use App\Models\Tasks\Task;
 use App\Models\Tasks\TaskList;
 use App\Models\User;
@@ -27,6 +29,7 @@ class DatabaseSeeder extends Seeder
         FinancesShop::factory()->count(10)->create();
         TaskList::factory()->count(10)->create();
         Task::factory()->count(50)->create();
+        RemindGroup::factory()->count(5)->create();
         Remind::factory()->count(15)->create();
         Comment::factory()->count(100)->create();
 
@@ -34,5 +37,6 @@ class DatabaseSeeder extends Seeder
                 ->has(MusicTag::factory()->count(3), 'children')
                 ->count(30)
                 ->create();
+        MusicHistory::factory()->count(200)->create();
     }
 }
