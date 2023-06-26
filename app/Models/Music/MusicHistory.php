@@ -3,7 +3,6 @@
 namespace App\Models\Music;
 
 use App\Models\Traits\HasDates;
-use App\Models\Traits\HasMusicTags;
 use App\Models\Traits\HasUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

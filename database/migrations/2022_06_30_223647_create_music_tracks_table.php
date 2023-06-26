@@ -26,6 +26,7 @@ class CreateMusicTracksTable extends Migration
             $table->string('link')->nullable()->default(NULL);
 
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('album_id')
                   ->references('id')

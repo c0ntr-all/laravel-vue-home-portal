@@ -33,6 +33,10 @@ class CreateMusicPlaylists extends Migration
      */
     public function down()
     {
+        Schema::table('music_playlists', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+        });
+
         Schema::dropIfExists('music_playlists');
     }
 }

@@ -2,11 +2,15 @@
 
 namespace Database\Factories\Music;
 
+use App\Models\Music\MusicHistory;
+use App\Models\Music\Track;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\DB;
 
 class MusicHistoryFactory extends Factory
 {
+    protected $model = MusicHistory::class;
+
     /**
      * Define the model's default state.
      *
@@ -14,12 +18,12 @@ class MusicHistoryFactory extends Factory
      */
     public function definition()
     {
-        $usersIds = DB::table('users')->get()->pluck('id')->toArray();
         $date = $this->faker->dateTimeBetween('-1 month', 'now');
+        $tracks = Track::all();
 
         return [
-            'user_id' => $usersIds[rand(1, count($usersIds))],
-            'track_id' => rand(1, 100),
+            'user_id' => User::all()->random()->id,
+            'track_id' => $tracks->random()->id,
             'created_at' => $date,
             'updated_at' => $date,
             'deleted_at' => NULL,

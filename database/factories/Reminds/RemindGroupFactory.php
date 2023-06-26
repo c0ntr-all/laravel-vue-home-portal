@@ -20,7 +20,7 @@ class RemindGroupFactory extends Factory
         $usersIds = DB::table('users')->get()->pluck('id')->toArray();
 
         return [
-            'user_id' => $usersIds[rand(1, count($usersIds))],
+            'user_id' => $usersIds[rand(1, count($usersIds) - 1)],
             'name' => $this->faker->word,
             'content' => $this->faker->text,
             'color' => $this->faker->colorName,
