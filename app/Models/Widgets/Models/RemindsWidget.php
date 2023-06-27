@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models\Widgets;
+namespace App\Models\Widgets\Models;
 
 use App\Models\Reminds\Remind;
+use App\Models\Widgets\Widget;
 use Illuminate\Support\Carbon;
 
 class RemindsWidget extends Widget implements WidgetInterface

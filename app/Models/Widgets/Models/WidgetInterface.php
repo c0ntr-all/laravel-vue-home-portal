@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Widgets;
+namespace App\Models\Widgets\Models;
 
 interface WidgetInterface
 {
