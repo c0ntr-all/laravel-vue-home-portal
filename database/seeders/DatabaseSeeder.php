@@ -15,6 +15,10 @@ use App\Models\Tasks\Task;
 use App\Models\Tasks\TaskList;
 use App\Models\User;
 use App\Models\Music\MusicTag;
+use App\Models\Widgets\WidgetPlacement;
+use Database\Seeders\Music\PlaylistTableSeeder;
+use Database\Seeders\Widgets\WidgetPlacementSeeder;
+use Database\Seeders\Widgets\WidgetSeeder;
 use Illuminate\Database\Seeder;
 
 
@@ -49,5 +53,11 @@ class DatabaseSeeder extends Seeder
               ->count(10)
               ->create();
         MusicHistory::factory()->count(200)->create();
+
+        $this->call([
+            PlaylistTableSeeder::class,
+            WidgetSeeder::class,
+            WidgetPlacementSeeder::class
+        ]);
     }
 }
