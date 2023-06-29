@@ -2,46 +2,42 @@
 
 namespace App\Http\Controllers\Tasks;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Tasks\TaskLists\IndexRequest;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\Tasks\TaskLists\StoreRequest;
 use App\Http\Resources\Task\TaskListCollection;
 use App\Http\Resources\Task\TaskListResource;
 use App\Models\Tasks\TaskList;
+use Illuminate\Http\Response;
 
-class TaskListController extends Controller
+class TaskListController extends BaseController
 {
-    protected $taskList;
-
-    public function __construct(TaskList $taskList)
+    public function __construct(private TaskList $taskList)
     {
-        $this->taskList = $taskList;
     }
 
-    public function index(IndexRequest $request): TaskListCollection
+    public function index(): Response
     {
-        return new TaskListCollection($this->taskList->getItems());
+        $items = $this->taskList->getItems();
+
+        return $this->sendResponse(new TaskListCollection($items), 'Task lists');
     }
 
-    public function show(TaskList $taskList): TaskListResource
+    public function show(TaskList $taskList): Response
     {
         return $this->taskListResponse($taskList);
     }
 
-    public function store(StoreRequest $request): TaskListResource
+    public function store(StoreRequest $request): Response
     {
         $taskList = auth()->user()->taskLists()->create($request->validated());
 
         return $this->taskListResponse($taskList);
     }
 
-    protected function taskListResponse(TaskList $taskList): TaskListResource
+    protected function taskListResponse(TaskList $taskList): Response
     {
-        return new TaskListResource($taskList->load('user', 'tasks'));
-    }
+        $result = new TaskListResource($taskList->load(['user', 'tasks']));
 
-    public function test(IndexRequest $request): TaskListCollection
-    {
-        return new TaskListCollection($this->taskList->getItems());
+        return $this->sendResponse($result, 'Task lists');
     }
 }

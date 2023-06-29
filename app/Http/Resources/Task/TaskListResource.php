@@ -14,7 +14,7 @@ class TaskListResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'createdAt' => $this->created_at,
-            'items' => $this->tasks,
+            'tasks' => $this->tasks,
         ];
     }
 }
