@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Reminds\Remind;
+use App\Models\Reminds\RemindGroup;
 use App\Models\Tasks\TaskList;
 use App\Models\Traits\HasDates;
 use App\Models\Widgets\WidgetPlacement;
@@ -37,7 +38,12 @@ class User extends Authenticatable implements JWTSubject
 
     public function reminds(): HasMany
     {
-        return $this->hasMany(Remind::class);
+        return $this->hasMany(Remind::class, 'user_id', 'id');
+    }
+
+    public function remindsGroups(): HasMany
+    {
+        return $this->hasMany(RemindGroup::class, 'user_id', 'id');
     }
 
     public function widgets(): HasMany

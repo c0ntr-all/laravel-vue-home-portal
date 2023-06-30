@@ -22,6 +22,6 @@ class RemindGroup extends Model
 
     public function reminds(): HasMany
     {
-        return $this->hasMany(Remind::class);
+        return $this->hasMany(Remind::class, 'group_id', 'id');
     }
 }

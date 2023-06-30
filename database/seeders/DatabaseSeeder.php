@@ -31,13 +31,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory()->count(10)->create();
+        User::factory()->count(10)->create()->each(function ($user) {
+            $remindsGroups = RemindGroup::factory()->count(5)->create();
+            $reminds = Remind::factory()->count(15)->create();
+            $reminds->each(function ($remind) use ($remindsGroups) {
+                $remind->group_id = $remindsGroups->random()->id;
+                $remind->save();
+            });
+            $user->remindsGroups()->saveMany($remindsGroups);
+            $user->reminds()->saveMany($reminds);
+        });
+
         Finances::factory()->count(100)->create();
         FinancesShop::factory()->count(10)->create();
         TaskList::factory()->count(10)->create();
         Task::factory()->count(50)->create();
-        RemindGroup::factory()->count(5)->create();
-        Remind::factory()->count(15)->create();
+
         Comment::factory()->count(100)->create();
 
         MusicTag::factory()

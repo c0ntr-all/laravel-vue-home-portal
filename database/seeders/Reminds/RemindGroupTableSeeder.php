@@ -1,10 +1,12 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Reminds;
 
+use App\Models\Reminds\RemindGroup;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
-class RemindTableSeeder extends Seeder
+class RemindGroupTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

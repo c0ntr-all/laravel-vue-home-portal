@@ -290,18 +290,18 @@ export default {
             reminds.value[key] = response.data.data
           }
         }
-        updateRemindLoading.value = false
         $q.notify({
           type: 'positive',
           message: `Remind has been updated!`
         })
         updateRemindModal.value = false
       }).catch(error => {
-        updateRemindLoading.value = false
         $q.notify({
           type: 'negative',
           message: `Server Error: ${error.response.data.message}`
         })
+      }).finally(() => {
+        updateRemindLoading.value = false
       })
     }
 
@@ -319,7 +319,7 @@ export default {
         getGroupsLoading.value = true
 
         await API.get('user/settings').then(response => {
-          groups.value = response.data.value
+          groups.value = response.data.data.value
         }).catch(error => {
           $q.notify({
             type: 'negative',
