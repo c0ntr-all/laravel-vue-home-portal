@@ -26,8 +26,11 @@ export const useUserStore = defineStore({
             token: response.data.access_token,
             user: data.email
           })
+
+          return response
         }).catch(error => {
           localStorage.removeItem('access_token')
+          throw error
         })
     },
     async logout() {

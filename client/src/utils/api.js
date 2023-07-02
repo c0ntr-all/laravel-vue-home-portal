@@ -1,5 +1,5 @@
-import axios from "axios";
-import router from "../router/index"
+import axios from "axios"
+import route from "../router/index"
 
 const api = axios.create()
 
@@ -32,7 +32,7 @@ api.interceptors.response.use(response => {
   }
 
   if(error.response.status === 401) {
-    router.push('/login')
+    //todo: redirect to login page if 401 code
   }
 
   return Promise.reject(error);
