@@ -45,12 +45,12 @@
   </q-card>
 </template>
 <script>
-import {ref,onMounted} from "vue";
-import {useQuasar} from "quasar";
+import { ref, onMounted } from "vue"
+import { useQuasar } from "quasar"
 
-import API from "src/utils/api";
+import { api } from "src/boot/axios"
 
-import PlaylistCard from "components/client/music/playlists/PlaylistCard.vue";
+import PlaylistCard from "components/client/music/playlists/PlaylistCard.vue"
 
 export default {
   components: {PlaylistCard},
@@ -64,7 +64,7 @@ export default {
     const total = ref(0)
 
     const getItems = async () => {
-      await API.post('music/playlists').then(response => {
+      await api.post('music/playlists').then(response => {
         items.value = response.data.items
         total.value = response.data.total
       }).catch(error => {
@@ -73,7 +73,7 @@ export default {
     }
 
     const createPlaylist = async () => {
-      await API.put('music/playlists/store', {
+      await api.put('music/playlists/store', {
         name: newPlaylistName.value
       }).then(response => {
         items.value.push(response.data.data)

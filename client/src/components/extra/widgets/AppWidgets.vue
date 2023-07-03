@@ -6,10 +6,10 @@
   </div>
 </template>
 <script>
-import {ref, onMounted} from 'vue'
-import {useQuasar} from "quasar"
+import { ref, onMounted } from 'vue'
+import { useQuasar } from "quasar"
 
-import API from "src/utils/api"
+import { api } from "src/boot/axios"
 
 /* For now, we will load all available widgets. */
 import MusicWidget from 'src/components/extra/widgets/MusicWidget.vue'
@@ -26,7 +26,7 @@ export default {
     const widgets = ref([])
 
     const getWidgets = async () => {
-      await API.get('widgets/get').then(response => {
+      await api.get('widgets/get').then(response => {
         widgets.value = response.data
       }).catch(error => {
         $q.notify({

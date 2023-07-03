@@ -10,9 +10,9 @@
   </div>
 </template>
 <script>
-import {ref} from 'vue'
+import { ref } from "vue";
 import AlbumCard from "components/client/music/AlbumCard.vue";
-import API from "src/utils/api";
+import { api } from "src/boot/axios";
 
 export default {
   props: {
@@ -26,7 +26,7 @@ export default {
     const loading = ref(true)
     const albums = ref([])
     const getArtist = async (artistId) => {
-      const {data} = await API.post('music/artists', {id: artistId})
+      const {data} = await api.post('music/artists', {id: artistId})
 
       albums.value = data.artists?.albums
     }

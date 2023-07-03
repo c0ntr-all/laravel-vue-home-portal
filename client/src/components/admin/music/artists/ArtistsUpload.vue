@@ -27,9 +27,9 @@
   />
 </template>
 <script>
-import { ref } from "vue";
-import { useQuasar } from "quasar";
-import API from "src/utils/api";
+import { ref } from "vue"
+import { useQuasar } from "quasar"
+import { api } from "src/boot/axios"
 
 export default {
   setup() {
@@ -44,7 +44,7 @@ export default {
 
     const getFolder = async (folder) => {
       const path = folder || startFolder
-      await API.post('folders', {'folder': path})
+      await api.post('folders', {'folder': path})
         .then(response => {
           const nodes = Object.values(response.data).map(value => {
             return {
@@ -80,7 +80,7 @@ export default {
     const onLazyLoad = async ({ node, key, done, fail }) => {
       const path = startFolder + getFullPath(node)
 
-      await API.post('folders', {'folder': path})
+      await api.post('folders', {'folder': path})
         .then(response => {
           const nodes = Object.values(response.data).map(value => {
             return {
@@ -98,7 +98,7 @@ export default {
     const uploadArtist = async () => {
       fullPathRef.value.validate()
 
-      await API.post('music/upload', {'folder': fullPath.value}).then(response => {
+      await api.post('music/upload', {'folder': fullPath.value}).then(response => {
         if(response.data.success) {
           $q.notify({
             type: 'positive',

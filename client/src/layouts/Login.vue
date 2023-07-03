@@ -8,7 +8,6 @@
       <q-card-section>
         <q-form
           @submit="login()"
-          @reset="onReset"
           class="q-gutter-md"
         >
           <q-input
@@ -38,10 +37,10 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useQuasar } from 'quasar'
-import { useUserStore } from 'stores/modules/user'
+import { ref } from "vue"
+import { useRouter } from "vue-router"
+import { useQuasar } from "quasar"
+import { useUserStore } from "stores/modules/user"
 
 export default {
   setup() {
@@ -52,19 +51,17 @@ export default {
     const email = ref('')
     const password = ref('')
 
-    function login() {
+    const login = () => {
       user.login({
         email: email.value,
         password: password.value
       }).then(response => {
-        console.log(response)
         $q.notify({
           type: 'positive',
           message: 'Вы успешно вошли в систему!'
         });
-        // $router.push('/')
+        $router.push('/')
       }).catch(error => {
-        console.log(error)
         $q.notify({
           type: 'negative',
           message: error

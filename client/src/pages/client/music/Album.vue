@@ -58,10 +58,10 @@
   </template>
 </template>
 <script>
-import {ref, onMounted, watch} from "vue"
+import { ref, onMounted, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
-import API from "src/utils/api"
+import { api } from "src/boot/axios"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
 
 import AlbumPageSkeleton from "src/components/client/music/skeleton/AlbumPage.vue"
@@ -83,7 +83,7 @@ export default {
     const album = ref({})
 
     const getAlbum = async id => {
-      await API.post('music/albums', {id: id})
+      await api.post('music/albums', {id: id})
       .then(response => {
         album.value = response.data.data
         loading.value = false

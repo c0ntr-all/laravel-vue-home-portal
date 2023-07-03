@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import API from '../../../utils/api'
+import { api } from "src/boot/axios"
 
 export default {
   data() {
@@ -16,7 +16,7 @@ export default {
     async getProfile() {
       this.loading = true
 
-      const {data} = await API.get('user')
+      const {data} = await api.get('user')
       if(!data) {
         throw new Error('Нет данных!')
       }

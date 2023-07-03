@@ -103,13 +103,13 @@
 </template>
 <script>
 
-import { onMounted, ref } from "vue";
-import { useQuasar } from "quasar";
+import { onMounted, ref } from "vue"
+import { useQuasar } from "quasar"
 
-import { useMusicPlayer } from "stores/modules/musicPlayer";
-import API from "src/utils/api";
+import { useMusicPlayer } from "stores/modules/musicPlayer"
+import { api } from "src/boot/axios"
 
-import TrackCardRow from "src/components/client/music/TrackCardRow.vue";
+import TrackCardRow from "src/components/client/music/TrackCardRow.vue"
 
 export default {
   components: { TrackCardRow },
@@ -173,7 +173,7 @@ export default {
     })
 
     const getTracks = async () => {
-      await API.post('music/tracks', {
+      await api.post('music/tracks', {
         filters: {
           tracks: 'web'
         },
@@ -191,7 +191,7 @@ export default {
     }
 
     const storeTrack = async () => {
-      await API.put('music/tracks/store', model.value).then(response => {
+      await api.put('music/tracks/store', model.value).then(response => {
         $q.notify({
           type: 'positive',
           message: `Трек ${response.data.track.name} Успешно добавлен!`

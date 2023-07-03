@@ -68,7 +68,7 @@
 import { ref, onMounted } from "vue"
 import { useQuasar } from "quasar"
 
-import API from "src/utils/api"
+import { api } from "src/boot/axios"
 
 export default {
   emits: ['resetFilter', 'submitFilter'],
@@ -88,7 +88,7 @@ export default {
     }
 
     const getTagsSelect = async () => {
-      await API.post('music/tags/select').then(response => {
+      await api.post('music/tags/select').then(response => {
         commonTagsSelect.value = Object.keys(response.data.tags.common).map(key => response.data.tags.common[key])
         secondaryTagsSelect.value = Object.keys(response.data.tags.secondary).map(key => response.data.tags.secondary[key])
       }).catch(error => {

@@ -184,7 +184,8 @@
 <script>
  import { ref, onMounted } from "vue"
  import { useQuasar } from "quasar"
- import API from "src/utils/api"
+ import { api } from "src/boot/axios"
+
  import deleteFromTree from "src/utils/deleteFromTree"
  import insertIntoTree from "src/utils/insertIntoTree"
 
@@ -231,7 +232,7 @@
      }
 
      const getTags = async () => {
-       await API.post('music/tags/tree')
+       await api.post('music/tags/tree')
          .then(response => {
            commonTags.value = response.data.tags.common
            secondaryTags.value = response.data.tags.secondary
@@ -245,7 +246,7 @@
 
      const addTag = async () => {
        const parentTagId = tagModel.value.parentTag.id
-       await API.put('music/tags/store', {
+       await api.put('music/tags/store', {
          name: tagModel.value.name,
          content: tagModel.value.content,
          parent_id: parentTagId
@@ -269,7 +270,7 @@
      }
 
      const editTag = async () => {
-       await API.patch(`music/tags/${tagModel.value.tag.id}/update`, {
+       await api.patch(`music/tags/${tagModel.value.tag.id}/update`, {
          name: tagModel.value.tag.label,
          content: tagModel.value.tag.content
        }).then(() => {
@@ -289,7 +290,7 @@
      }
 
      const deleteTag = async () => {
-       await API.post(`music/tags/${tagModel.value.tag.id}/delete`)
+       await api.post(`music/tags/${tagModel.value.tag.id}/delete`)
        .then(response => {
          deleteFromTree(tagModel.value.tag.common ? commonTags.value : secondaryTags.value, tagModel.value.tag.id)
 

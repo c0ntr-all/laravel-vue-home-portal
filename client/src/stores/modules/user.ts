@@ -1,5 +1,5 @@
-import {defineStore} from 'pinia'
-import API from "../../utils/api";
+import { defineStore } from 'pinia'
+import { api } from "src/boot/axios"
 
 interface Data {
   email: string,
@@ -17,7 +17,7 @@ export const useUserStore = defineStore({
   }),
   actions: {
     async login(data: Data) {
-      await API.post('login', data)
+      await api.post('login', data)
         .then(response => {
           localStorage.setItem('access_token', response.data.access_token)
 
@@ -34,7 +34,7 @@ export const useUserStore = defineStore({
         })
     },
     async logout() {
-      await API.post('logout')
+      await api.post('logout')
         .then(() => {
           localStorage.removeItem('access_token')
 
@@ -49,15 +49,6 @@ export const useUserStore = defineStore({
   getters: {
     isLoggedIn(state) {
       return !!state.token
-    },
-    status(state) {
-      return state.status
-    },
-    user(state) {
-      return state.user
-    },
-    message(state) {
-      return state.message
     }
   }
 })

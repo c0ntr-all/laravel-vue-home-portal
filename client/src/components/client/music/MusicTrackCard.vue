@@ -144,7 +144,7 @@
 import { ref, computed, watch } from "vue"
 import { useQuasar } from "quasar"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
-import API from "src/utils/api"
+import { api } from "src/boot/axios"
 
 export default {
   emits: ['play', 'remove'],
@@ -196,7 +196,7 @@ export default {
     const changeRate = async (value) => {
       const previousRate = props.track.rate
 
-      await API.post(`music/tracks/${props.track.id}/rate`, {
+      await api.post(`music/tracks/${props.track.id}/rate`, {
         rate: value
       }).catch(error => {
         $q.notify({
@@ -210,7 +210,7 @@ export default {
     const initPlaylistDialog = async () => {
       playlistsLoading.value = true
 
-      await API.post('music/playlists', {with_tracks: true}).then(response => {
+      await api.post('music/playlists', {with_tracks: true}).then(response => {
         playlists.value = response.data.items
         filteredPlaylists.value = response.data.items
 
@@ -243,7 +243,7 @@ export default {
     }
 
     const updatePlaylists = async () => {
-      await API.patch(`music/tracks/${props.track.id}/playlists/update`, {
+      await api.patch(`music/tracks/${props.track.id}/playlists/update`, {
         playlists: selectedPlaylists.value
       }).then(response => {
         $q.notify({
@@ -261,7 +261,7 @@ export default {
     }
 
     const deleteFromPlaylist = async () => {
-      await API.post(`music/tracks/${props.track.id}/playlists/delete`, {
+      await api.post(`music/tracks/${props.track.id}/playlists/delete`, {
         playlist: props.playlist
       }).then(response => {
         emit('remove', props.track.id)

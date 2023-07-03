@@ -55,14 +55,14 @@
   </div>
 </template>
 <script>
-import { ref, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
+import { ref, onMounted, watch } from "vue"
+import { useRoute } from "vue-router"
 
-import API from "src/utils/api";
-import { useMusicPlayer } from "stores/modules/musicPlayer";
+import { api } from "src/boot/axios"
+import { useMusicPlayer } from "stores/modules/musicPlayer"
 
-import MusicTracksList from "src/components/client/music/MusicTracksList.vue";
-import TracksListSkeleton from "components/client/music/skeleton/TracksListSkeleton.vue";
+import MusicTracksList from "src/components/client/music/MusicTracksList.vue"
+import TracksListSkeleton from "components/client/music/skeleton/TracksListSkeleton.vue"
 
 export default {
   components: { MusicTracksList, TracksListSkeleton },
@@ -78,7 +78,7 @@ export default {
     const playlist = ref([])
 
     const getPlaylist = async id => {
-      await API.get(`music/playlists/${id}/index`)
+      await api.get(`music/playlists/${id}/index`)
         .then(response => {
         playlist.value = response.data
       }).catch(error => {

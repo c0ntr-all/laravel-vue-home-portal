@@ -48,7 +48,7 @@
 
                 <q-separator />
 
-                <q-item clickable>
+                <q-item @click="logout" clickable>
                   <q-item-section side><q-icon name="logout" /></q-item-section>
                   <q-item-section>Logout</q-item-section>
                 </q-item>
@@ -113,22 +113,43 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
-import MusicPlayer from 'src/components/default/MusicPlayer.vue'
+import { defineComponent, ref } from "vue"
+import { useRouter } from "vue-router"
+import { useQuasar } from "quasar"
+import { useUserStore } from "stores/modules/user"
+
+import MusicPlayer from "src/components/default/MusicPlayer.vue"
 
 export default defineComponent({
   name: 'MainLayout',
 
-  components: {MusicPlayer},
+  components: { MusicPlayer },
 
   setup () {
+    const $q = useQuasar()
+    const $router = useRouter()
+    const user = useUserStore()
+
     const leftDrawerOpen = ref(false)
+
+    const logout = () => {
+      user.logout().then(response => {
+        $q.notify({
+          type: 'positive',
+          message: 'Вы успешно вышли из системы!'
+        });
+        $router.push('/login')
+      })
+    }
+
+    const toggleLeftDrawer = () => {
+      leftDrawerOpen.value = !leftDrawerOpen.value
+    }
 
     return {
       leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+      logout,
+      toggleLeftDrawer
     }
   }
 })

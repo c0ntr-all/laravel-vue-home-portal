@@ -10,15 +10,15 @@
   </div>
 </template>
 <script>
-import {ref} from 'vue'
-import API from "src/utils/api"
+import {ref} from "vue"
+import { api } from "src/boot/axios"
 
 export default {
   setup() {
     const loading = ref(true)
     const tag = ref([])
     const getTag = async (slug) => {
-      const {data} = await API.post('music/tags', {slug: slug})
+      const {data} = await api.post('music/tags', {slug: slug})
       tag.value = data.tags
     }
 

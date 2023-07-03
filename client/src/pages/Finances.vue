@@ -28,13 +28,13 @@
 <script>
 import { ref } from 'vue'
 
-import API from '../utils/api'
+import { api } from "src/boot/axios"
 
 export default {
   setup() {
     const finances = ref([])
     const getFinances = async () => {
-      const {data} = await API.get('finances')
+      const {data} = await api.get('finances')
       finances.value = data.finances
     }
 

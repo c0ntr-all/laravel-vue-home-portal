@@ -82,10 +82,10 @@
 </template>
 
 <script>
-import {ref, onMounted} from 'vue'
-import {useQuasar} from "quasar"
+import { ref, onMounted } from "vue"
+import { useQuasar } from "quasar"
 
-import API from '../../../utils/api'
+import { api } from "src/boot/axios"
 
 export default {
   setup() {
@@ -112,7 +112,7 @@ export default {
     }
 
     const getSettings = async () => {
-      await API.get('user/settings').then(response => {
+      await api.get('user/settings').then(response => {
 
         if (!response.data.success) {
           settings.value.push({name: '', color: ''})
@@ -138,7 +138,7 @@ export default {
         key: 'groups',
         value: settings.value
       }
-      await API.patch('user/settings/update', {
+      await api.patch('user/settings/update', {
         'settings': remindsSettings
       }).then(response => {
         $q.notify({

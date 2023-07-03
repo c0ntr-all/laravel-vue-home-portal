@@ -65,13 +65,13 @@
   </q-tab-panels>
 </template>
 <script>
-import TracksTab from 'src/components/client/music/tabs/TracksTab.vue'
-import ArtistsTab from 'src/components/client/music/tabs/ArtistsTab.vue'
-import PlaylistsTab from 'src/components/client/music/tabs/PlaylistsTab.vue'
-import HistoryTab from 'src/components/client/music/tabs/HistoryTab.vue'
+import { ref, onMounted } from "vue"
+import { api } from "src/boot/axios"
 
-import { ref, onMounted } from "vue";
-import API from "src/utils/api";
+import TracksTab from "src/components/client/music/tabs/TracksTab.vue"
+import ArtistsTab from "src/components/client/music/tabs/ArtistsTab.vue"
+import PlaylistsTab from "src/components/client/music/tabs/PlaylistsTab.vue"
+import HistoryTab from "src/components/client/music/tabs/HistoryTab.vue"
 
 export default {
   components: { TracksTab, ArtistsTab, PlaylistsTab, HistoryTab },
@@ -80,7 +80,7 @@ export default {
     let tagsLoading = ref(true)
 
     const getTags = async () => {
-      await API.post('music/tags/tree').then(response => {
+      await api.post('music/tags/tree').then(response => {
         tags.value = response.data.tags
         tagsLoading.value = false
       })

@@ -30,10 +30,10 @@
   </q-card>
 </template>
 <script>
-import {ref, nextTick} from 'vue'
-import {useQuasar} from "quasar"
+import { ref, nextTick } from "vue"
+import { useQuasar } from "quasar"
 
-import API from "src/utils/api"
+import { api } from "src/boot/axios"
 
 import TaskItem from 'src/components/client/tasks/TaskItem.vue'
 
@@ -61,7 +61,7 @@ export default {
       const cardName = model.value.newCardName
       model.value.newCardName = ''
 
-      await API.put('tasks/store/' + props.list.id, {
+      await api.put('tasks/store/' + props.list.id, {
         'title': cardName
       }).then(response => {
         $q.notify({

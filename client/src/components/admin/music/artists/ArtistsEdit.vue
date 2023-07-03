@@ -119,8 +119,8 @@
 </template>
 <script>
 import { computed, ref } from "vue"
-import API from "src/utils/api"
 import { useQuasar } from "quasar"
+import { api } from "src/boot/axios"
 
 export default {
   setup() {
@@ -190,17 +190,17 @@ export default {
     })
 
     const getArtists = async page => {
-      const {data} = await API.post('music/admin/artists', {page: page})
+      const {data} = await api.post('music/admin/artists', {page: page})
       artists.value = data.data.artists
       total.value = data.data.total
     }
     const getTagsSelect = async () => {
-      const {data} = await API.post('music/tags/select')
+      const {data} = await api.post('music/tags/select')
       commonTags.value = Object.keys(data.tags.common).map(key => data.tags.common[key])
       secondaryTags.value = Object.keys(data.tags.secondary).map(key => data.tags.secondary[key])
     }
     const searchArtists = async search => {
-      const {data} = await API.post('music/admin/artists/search', {name: search})
+      const {data} = await api.post('music/admin/artists/search', {name: search})
       artists.value = data.data.artists
     }
     const initArtistEdit = artist => {
@@ -258,7 +258,7 @@ export default {
         formData.append('tags[]', val)
       });
 
-      await API.post('music/admin/artists/update', formData)
+      await api.post('music/admin/artists/update', formData)
         .then(response => {
           for(let key in artists.value) {
             if(artists.value[key].id === response.data.data.id) {

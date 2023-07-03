@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
-import { Notify } from "quasar";
-import addZero from "src/utils/addzero";
-import Timer from "src/utils/timer";
-import API from "src/utils/api";
+import { defineStore } from "pinia"
+import { Notify } from "quasar"
+import addZero from "src/utils/addzero"
+import Timer from "src/utils/timer"
+import { api } from "src/boot/axios"
 
 export const useMusicPlayer = defineStore('musicPlayer', {
   state: () => {
@@ -175,7 +175,7 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       return Math.round(trackDuration / 2)
     },
     async scrobbleSong() {
-      await API.put('music/history/scrobble', {
+      await api.put('music/history/scrobble', {
         track_id: this.track.id
       }).then(() => {
         this.isScrobbled = true
