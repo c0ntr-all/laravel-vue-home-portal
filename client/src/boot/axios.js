@@ -7,7 +7,7 @@ import axios from 'axios'
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: 'http://localhost/api/auth/' })
+const api = axios.create({ baseURL: process.env.API })
 
 export default boot(({ app, router }) => {
   api.interceptors.request.use(config => {

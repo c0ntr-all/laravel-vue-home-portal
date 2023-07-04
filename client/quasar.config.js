@@ -12,10 +12,8 @@
 const { configure } = require('quasar/wrappers');
 const path = require('path');
 
-module.exports = configure(function (/* ctx */) {
+module.exports = configure(function (ctx) {
   return {
-
-
     // https://v2.quasar.dev/quasar-cli/prefetch-feature
     // preFetch: true,
 
@@ -62,7 +60,11 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: {
+        API: ctx.dev
+          ? 'http://localhost/api/auth/'
+          : 'http://api.home-portal.prod/api/auth/',
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
