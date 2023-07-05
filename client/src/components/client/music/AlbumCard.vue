@@ -7,7 +7,7 @@
 
     <q-card-section class="album-card__info">
       <div class="text-h6">
-        <router-link :to="'/music/albums/' + album.id" class="album-card__link">
+        <router-link :to="`/music/albums/${album.id}/show`" class="album-card__link">
           <p class="album-card__title" :title="album.name">{{ album.name }}</p>
         </router-link>
       </div>

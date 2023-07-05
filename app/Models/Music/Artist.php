@@ -12,9 +12,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Helpers\ArrayHelper;
 
-/**
- * @mixin \Eloquent
- */
 class Artist extends Model
 {
     use HasFactory;

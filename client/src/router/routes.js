@@ -92,7 +92,7 @@ const routes = [{
         title: 'Музыка'
       }
     }, {
-      path: '/music/artists/:id',
+      path: '/music/artists/:id/show',
       component: () => import('pages/client/music/Artist.vue'),
       name: 'artist',
       props: true,
@@ -100,7 +100,7 @@ const routes = [{
         title: 'Музыка'
       }
     }, {
-      path: '/music/albums/:id',
+      path: '/music/albums/:id/show',
       component: () => import('pages/client/music/Album.vue'),
       name: 'album',
       props: true,
@@ -108,7 +108,7 @@ const routes = [{
         title: 'Музыка'
       }
     }, {
-      path: '/music/playlists/:id',
+      path: '/music/playlists/:id/show',
       component: () => import('pages/client/music/Playlist.vue'),
       name: 'playlist',
       props: true,

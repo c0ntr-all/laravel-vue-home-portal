@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Music\Upload;
+namespace App\Http\Requests\Music\Artist;
 
 use Illuminate\Foundation\Http\FormRequest;
 

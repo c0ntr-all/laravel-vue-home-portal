@@ -7,7 +7,7 @@ use getID3;
 
 class ParseMusicTracks extends BaseMusicParse
 {
-    public function __construct(private getID3 $getID3)
+    public function __construct(protected getID3 $getID3)
     {
         parent::__construct($getID3);
     }

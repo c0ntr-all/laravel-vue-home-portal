@@ -95,11 +95,13 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             Route::post('upload', [UploadController::class, 'upload']);
             Route::prefix('artists')->group(function() {
                 Route::post('/', [ArtistController::class, 'index']);
-                Route::post('{artist}', [ArtistController::class, 'show']);
+                Route::post('{artist}/show', [ArtistController::class, 'show']);
                 Route::post('store', [ArtistController::class, 'store']);
                 Route::post('update', [ArtistController::class, 'update']);
             });
-            Route::post('albums', [AlbumController::class, 'index']);
+            Route::prefix('albums')->group(function() {
+                Route::post('/{album}/show', [AlbumController::class, 'show']);
+            });
             Route::prefix('tracks')->group(function() {
                 Route::post('/', [TrackController::class, 'index']);
                 Route::put('store', [TrackController::class, 'store']);

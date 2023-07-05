@@ -5,7 +5,7 @@
       <q-btn
         icon="arrow_back"
         color="primary"
-        :to="'/music/artists/' + album.artist.id"
+        :to="`/music/artists/${album.artist.id}/show`"
       ><div class="q-ml-xs">Вернуться к исполнителю</div></q-btn>
     </div>
     <div class="album">
@@ -52,7 +52,7 @@
     <div class="related-albums">
       <div>
         <!-- v-if="loading === false" чтобы компонент дождался загрузки основного альбома -->
-        <related-albums v-if="loading === false" :artistId="album.artist.id" :albumId="parseInt(id)" />
+        <relatedAlbums v-if="loading === false" :artistId="album.artist.id" :albumId="parseInt(id)" />
       </div>
     </div>
   </template>
@@ -83,14 +83,15 @@ export default {
     const album = ref({})
 
     const getAlbum = async id => {
-      await api.post('music/albums', {id: id})
+      await api.post(`music/albums/${id}/show`)
       .then(response => {
         album.value = response.data.data
-        loading.value = false
       }).catch(error => {
-          if(error.response.status === 404) {
-            $router.push('/404')
-          }
+        if(error.response.status === 404) {
+          $router.push('/404')
+        }
+      }).finally(() => {
+        loading.value = false
       })
     }
 

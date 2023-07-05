@@ -69,7 +69,7 @@
           </template>
           <template v-else>
             <div v-if="cardMode === 'card'" class="artists-list row items-start q-gutter-md q-mb-lg">
-              <artist-card
+              <artistCard
                 v-for="artist in artists"
                 :key="artist.id"
                 :artist="artist"
@@ -77,7 +77,7 @@
             </div>
 
             <div v-if="cardMode === 'row'" class="column q-gutter-md q-mb-lg">
-              <artist-card-horizontal
+              <artistCardHorizontal
                 v-for="artist in artists"
                 :key="artist.id"
                 :artist="artist"
