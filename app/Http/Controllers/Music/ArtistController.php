@@ -8,11 +8,16 @@ use App\Http\Requests\Music\Artist\UploadRequest;
 use App\Http\Resources\Music\Artists\ArtistCollection;
 use App\Http\Resources\Music\Artists\ArtistResource;
 use App\Models\Music\Artist;
+use App\Repositories\ArtistRepository;
 use App\Services\Music\Parse\ParseMusicTracks;
 use Illuminate\Http\Response;
 
 class ArtistController extends BaseController
 {
+    public function __construct(private ArtistRepository $artistRepository)
+    {
+    }
+
     /**
      * @param IndexRequest $request
      * @return ArtistCollection
@@ -21,7 +26,9 @@ class ArtistController extends BaseController
     {
         $filters = $request->validated()['filters'] ?? [];
 
-        return new ArtistCollection(Artist::getWithCursor($filters));
+        $out = $this->artistRepository->getWithCursor($filters);
+
+        return new ArtistCollection($out);
     }
 
     /**

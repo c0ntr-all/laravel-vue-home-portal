@@ -42,20 +42,6 @@ class Artist extends Model
         return $this->hasManyThrough(Track::class, Album::class);
     }
 
-    public static function getWithCursor(array $filters = [])
-    {
-        return static::filter($filters, 'tags', 'tags', 'id')
-                     ->orderByDesc('created_at')
-                     ->cursorPaginate(12);
-    }
-
-    public static function getWithPaginate(array $filters = [])
-    {
-        return static::filter($filters, 'tags', 'tags', 'id')
-                     ->orderByDesc('created_at')
-                     ->paginate(100);
-    }
-
     /**
      * Формирует запрос фиьтрации по параметрам в рамках конкретного отношения
      * Фильтры:

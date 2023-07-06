@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Music;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\Music\Track\IndexRequest;
 use App\Http\Requests\Music\Track\DeleteFromPlaylistRequest;
 use App\Http\Requests\Music\Track\PlayRequest;
@@ -12,14 +12,17 @@ use App\Http\Requests\Music\Track\UpdatePlaylistsRequest;
 use App\Http\Resources\Music\Tracks\TrackCollection;
 use App\Http\Resources\Music\Tracks\TrackResource;
 use App\Models\Music\Track;
+use App\Services\Music\TrackService;
 use getID3;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class TrackController extends Controller
+class TrackController extends BaseController
 {
-    public function __construct(private getID3 $getID3)
+    public function __construct(
+        private getID3 $getID3,
+        private TrackService $trackService
+    )
     {
-
     }
 
     public function index(IndexRequest $request)
@@ -31,45 +34,27 @@ class TrackController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $data = $request->validated();
-        $data['name'] = $data['artist'] . ' - ' . $data['name'];
-        unset($data['artist']);
-        $data['bitrate'] = '320000';
-        $data['duration'] = '00:03:00';
+        try {
+            $out = $this->trackService->storeTrack($request->validated());
 
-        $track = Track::create($data);
-        if ($track) {
-            $resource = new TrackResource($track);
-
-            return response(['success' => true, 'artists' => $resource], 200);
-        } else {
-            return response(['success' => false, 'message' => 'Error with creating web track!'], 500);
+            return $this->sendResponse(new TrackResource($out), 'Track Stored Successfully!');
+        } catch (\Exception $exception) {
+            return $this->sendError($exception->getMessage());
         }
     }
 
-    public function play(PlayRequest $request, Track $track): string|BinaryFileResponse
+    public function rate(Track $track, RateRequest $request)
     {
-        return $track->link ?? new BinaryFileResponse($track->path);
-    }
+        try {
+            $out = $this->trackService->rateTrack($track, $request->validated());
 
-    public function rate(RateRequest $request, Track $track)
-    {
-        $condition = [
-            'user_id' => auth()->user()->id,
-            'track_id' => $track->id
-        ];
-
-        $data = array_merge(
-            ['user_id' => auth()->user()->id],
-            $request->validated()
-        );
-
-        $result = $track->rate()->updateOrCreate($condition, $data);
-
-        return [
-            'track_id' => $result['track_id'],
-            'rate' => $result['rate']
-        ];
+            return $this->sendResponse([
+                'track_id' => $out['track_id'],
+                'rate' => $out['rate']
+            ], 'Track rated successfully!');
+        } catch (\Exception $exception) {
+            $this->sendError($exception->getMessage());
+        }
     }
 
     public function updatePlaylists(Track $track, UpdatePlaylistsRequest $request)
@@ -93,6 +78,11 @@ class TrackController extends Controller
         if ($track->playlists()->detach($playlistId)) {
             return ['track_id' => $track->id];
         }
+    }
+
+    public function play(PlayRequest $request, Track $track): string|BinaryFileResponse
+    {
+        return $track->link ?? new BinaryFileResponse($track->path);
     }
 
     /**
