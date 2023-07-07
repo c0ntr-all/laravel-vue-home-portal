@@ -86,7 +86,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 Route::prefix('artists')->group(function() {
                     Route::post('/', [AdminArtistController::class, 'index']);
                     Route::post('store', [AdminArtistController::class, 'store']);
-                    Route::post('update', [AdminArtistController::class, 'update']);
+                    Route::post('{artist}/update', [AdminArtistController::class, 'update']);
                     Route::post('search', [SearchController::class, 'search']);
                 });
                 Route::post('/', [ArtistController::class, 'index']);

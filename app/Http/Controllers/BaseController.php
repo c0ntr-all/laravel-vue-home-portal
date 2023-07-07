@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller as Controller;
 
 abstract class BaseController extends Controller
 {
-    public function sendResponse($data, $message): Response
+    public function sendResponse($data, $message = 'Data loaded successfully!'): Response
     {
         $response = [
             'success' => true,
