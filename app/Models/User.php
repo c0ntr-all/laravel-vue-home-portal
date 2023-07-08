@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Music\Playlist;
 use App\Models\Reminds\Remind;
 use App\Models\Reminds\RemindGroup;
 use App\Models\Tasks\TaskList;
@@ -49,6 +50,11 @@ class User extends Authenticatable implements JWTSubject
     public function widgets(): HasMany
     {
         return $this->hasMany(WidgetPlacement::class);
+    }
+
+    public function playlists(): HasMany
+    {
+        return $this->hasMany(Playlist::class);
     }
 
     public function setPasswordAttribute(string $password): void
