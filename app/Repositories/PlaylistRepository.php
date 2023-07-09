@@ -6,9 +6,9 @@ use App\Models\Music\Playlist;
 
 class PlaylistRepository
 {
-    public function getPlaylists($requestData)
+    public function getPlaylists()
     {
-        return auth()->user()->playlists()->get($requestData);
+        return auth()->user()->playlists()->get();
     }
 
     public function store($requestData)

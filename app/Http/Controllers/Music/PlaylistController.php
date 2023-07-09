@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\Music\Playlist\GetItemsRequest;
 use App\Http\Requests\Music\Playlist\StoreRequest;
 use App\Http\Resources\Music\Playlists\PlaylistResource;
 use App\Models\Music\Playlist;
@@ -16,9 +15,9 @@ class PlaylistController extends BaseController
     {
     }
 
-    public function index(GetItemsRequest $request): PlaylistsCollection
+    public function index(): PlaylistsCollection
     {
-        $out = $this->repository->getPlaylists($request->validated());
+        $out = $this->repository->getPlaylists();
 
         return new PlaylistsCollection($out);
     }

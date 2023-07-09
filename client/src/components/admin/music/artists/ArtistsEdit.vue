@@ -196,6 +196,7 @@ export default {
     }
     const getTagsSelect = async () => {
       const {data} = await api.post('music/tags/select')
+
       commonTags.value = Object.keys(data.tags.common).map(key => data.tags.common[key])
       secondaryTags.value = Object.keys(data.tags.secondary).map(key => data.tags.secondary[key])
     }
@@ -209,23 +210,15 @@ export default {
       showModal.value = true
     }
     const commonTagsFilter = (val, update) => {
-      const params = commonTags.value.map(item => {
-        return item.label
-      })
-
       update(() => {
         const needle = val.toLowerCase()
-        commonOptions.value = params.filter(tag => tag.toLowerCase().indexOf(needle) > -1)
+        commonOptions.value = commonTags.value.filter(tag => tag.label.toLowerCase().indexOf(needle) > -1)
       })
     }
     const secondaryTagsFilter = (val, update) => {
-      const params = secondaryTags.value.map(item => {
-        return item.label
-      })
-
       update(() => {
         const needle = val.toLowerCase()
-        secondaryOptions.value = params.filter(tag => tag.toLowerCase().indexOf(needle) > -1)
+        secondaryOptions.value = commonTags.value.filter(tag => tag.label.toLowerCase().indexOf(needle) > -1)
       })
     }
     const deleteArtist = (artist) => {
@@ -241,9 +234,7 @@ export default {
     const updateArtist = async () => {
       updateButtonLoading.value = true
 
-      // Делаем через formData для удобства отправки бинарного файла на бэк
       const formData = new FormData();
-      formData.append('id', model.value.id)
       formData.append('name', model.value.name)
       formData.append('content', model.value.content)
 
@@ -258,7 +249,7 @@ export default {
         formData.append('tags[]', val)
       });
 
-      await api.post('music/admin/artists/update', formData)
+      await api.post(`music/admin/artists/${model.value.id}/update`, formData)
         .then(response => {
           for(let key in artists.value) {
             if(artists.value[key].id === response.data.data.id) {
@@ -271,18 +262,13 @@ export default {
             message: response.data.message
           })
 
-          updateButtonLoading.value = false
         }).catch(error => {
-          const {data} = error.response
-            for (let key in data.errors) {
-              data.errors[key].forEach((item) => {
-                $q.notify({
-                  type: 'negative',
-                  message: `${key}: ${item}`
-                })
-              })
-            }
-            updateButtonLoading.value = false
+          $q.notify({
+            type: 'negative',
+            message: 'Something goes wrong while saving artist'
+          })
+        }).finally(() => {
+          updateButtonLoading.value = false
         })
     }
 

@@ -78,7 +78,7 @@ export default {
     const playlist = ref([])
 
     const getPlaylist = async id => {
-      await api.get(`music/playlists/${id}/index`)
+      await api.get(`music/playlists/${id}/show`)
         .then(response => {
         playlist.value = response.data
       }).catch(error => {

@@ -17,6 +17,7 @@ class CreateMusicPlaylists extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('name');
+            $table->string('image');
             $table->text('content')->nullable();
             $table->timestamps();
 
