@@ -1,7 +1,8 @@
 <template>
   <div class="q-mb-md">
-    <div class="text-h6 q-mb-xs">Основные теги</div>
+    <AddTagButton />
     <q-input
+      class="q-mb-md"
       ref="filterRef"
       v-model="filter"
       label="Search tags"
@@ -13,6 +14,7 @@
       </template>
     </q-input>
 
+    <div class="text-h6 q-mb-xs">Основные теги</div>
     <q-tree
       :nodes="commonTags"
       node-key="label"
@@ -189,7 +191,12 @@
  import deleteFromTree from "src/utils/deleteFromTree"
  import insertIntoTree from "src/utils/insertIntoTree"
 
+ import AddTagButton from "components/admin/music/tags/AddTagButton.vue";
+
  export default {
+   components: {
+     AddTagButton
+   },
    setup() {
      const $q = useQuasar()
 

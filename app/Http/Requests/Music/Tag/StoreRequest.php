@@ -14,7 +14,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:30',
+            'name' => 'required|string|unique:music_tags|max:30',
             'content' => 'sometimes|string|max:30000',
             'parent_id' => 'sometimes|int',
             'common' => 'sometimes|boolean',

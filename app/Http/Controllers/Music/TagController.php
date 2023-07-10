@@ -15,13 +15,12 @@ use App\Services\Music\TagService;
 
 class TagController extends Controller
 {
-    public MusicTag $tag;
-    public TagService $tagService;
-
-    public function __construct(MusicTag $tag, TagService $service)
+    public function __construct(
+        MusicTag $tag,
+        private TagService $service
+    )
     {
         $this->tag = $tag;
-        $this->tagService = $service;
     }
 
     /**
@@ -56,27 +55,9 @@ class TagController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $existTag = MusicTag::where(['name' => $request->validated()['name']])->get();
-        if ($existTag->isEmpty()) {
-            $data = $request->validated();
+        $result = $this->service->storeTag($request->validated());
 
-            $common = $data['common'] ?? 0;
-            $parentId = $data['parent_id'];
-
-            if ($parentId) {
-                $parentTag = MusicTag::find($parentId);
-                $common = $parentTag->common;
-            }
-
-            $data['common'] = $common;
-            $data['parent_id'] = $data['parent_id'] ?? 0;
-
-            $result = MusicTag::create($data);
-
-            return $this->TagResponse($result);
-        } else {
-            return ['success' => false, 'error' => ['Такой тег уже существует!']];
-        }
+        return new TagResource($result);
     }
 
     public function update(MusicTag $tag, UpdateRequest $request)
