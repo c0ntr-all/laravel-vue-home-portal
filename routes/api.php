@@ -1,10 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\Music\ArtistController as AdminArtistController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Finances\FinancesController;
 use App\Http\Controllers\FolderController;
-use App\Http\Controllers\Music\Admin\ArtistController as AdminArtistController;
 use App\Http\Controllers\Music\AlbumController;
 use App\Http\Controllers\Music\ArtistController;
 use App\Http\Controllers\Music\MusicHistoryController;
@@ -23,6 +22,7 @@ use App\Http\Controllers\Users\UserSettingsController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\WidgetController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -125,7 +125,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 Route::put('store', [PlaylistController::class, 'store']);
             });
             Route::prefix('history')->group(function() {
-                Route::post('/', [MusicHistoryController::class, 'getItems']);
+                Route::post('/', [MusicHistoryController::class, 'index']);
                 Route::put('scrobble', [MusicHistoryController::class, 'scrobble']);
             });
         });

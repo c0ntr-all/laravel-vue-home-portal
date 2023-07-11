@@ -2,6 +2,7 @@
 
 namespace App\Services\Music;
 
+use App\Models\Music\MusicHistory;
 use App\Models\Music\Track;
 
 class TrackService
@@ -25,5 +26,15 @@ class TrackService
             ['user_id' => auth()->user()->id],
             $requestData
         ));
+    }
+
+    public function scrobbleTrack(array $requestData)
+    {
+        return MusicHistory::create(array_merge($requestData, ['user_id' => auth()->user()->id]));
+    }
+
+    public function getHistory()
+    {
+        return auth()->user()->musicHistory()->get();
     }
 }

@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\Music;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\Music\MusicHistory\StoreRequest;
 use App\Models\Music\MusicHistory;
 use App\Http\Resources\Music\MusicHistory\MusicHistoryCollection;
+use App\Services\Music\TrackService;
 
-class MusicHistoryController extends Controller
+class MusicHistoryController extends BaseController
 {
-    public function getItems(): MusicHistoryCollection
+    public function __construct(private TrackService $service)
     {
-        $historyItems = MusicHistory::getHistory(auth()->user()->id);
+    }
+
+    public function index(): MusicHistoryCollection
+    {
+        $historyItems = $this->service->getHistory();
 
         return new MusicHistoryCollection($historyItems);
     }
@@ -20,17 +25,6 @@ class MusicHistoryController extends Controller
     {
         $historyItem = MusicHistory::create(array_merge($request->validated(), ['user_id' => auth()->user()->id]));
 
-        if ($historyItem) {
-            return response([
-                'success' => true,
-                'message' => 'Track successfully scrobbled!',
-                'data' => $historyItem
-            ], 200);
-        } else {
-            return response([
-                'success' => false,
-                'message' => 'Something went wrong during storing scrobble!'
-            ], 500);
-        }
+        return $this->sendResponse($historyItem, 'Track successfully scrobbled!');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Music\Admin;
+namespace App\Http\Controllers\Admin\Music;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Music\Artist\IndexRequest;

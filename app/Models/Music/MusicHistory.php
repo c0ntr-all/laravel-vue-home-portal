@@ -31,9 +31,4 @@ class MusicHistory extends Model
     {
         return $this->belongsTo(Track::class);
     }
-
-    public static function getHistory($user): Collection
-    {
-        return MusicHistory::whereUser($user)->with('track.tags')->get();
-    }
 }
