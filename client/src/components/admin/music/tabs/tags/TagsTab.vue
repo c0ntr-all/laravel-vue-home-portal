@@ -186,12 +186,12 @@
 <script>
  import { ref, onMounted } from "vue"
  import { useQuasar } from "quasar"
- import { api } from "src/boot/axios"
+ import { api } from "boot/axios"
 
  import deleteFromTree from "src/utils/deleteFromTree"
  import insertIntoTree from "src/utils/insertIntoTree"
 
- import AddTagButton from "components/admin/music/tags/AddTagButton.vue";
+ import AddTagButton from "components/admin/music/tabs/tags/AddTagButton.vue";
 
  export default {
    components: {

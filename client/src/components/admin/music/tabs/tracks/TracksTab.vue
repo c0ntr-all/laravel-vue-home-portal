@@ -107,9 +107,9 @@ import { onMounted, ref } from "vue"
 import { useQuasar } from "quasar"
 
 import { useMusicPlayer } from "stores/modules/musicPlayer"
-import { api } from "src/boot/axios"
+import { api } from "boot/axios"
 
-import TrackCardRow from "src/components/client/music/TrackCardRow.vue"
+import TrackCardRow from "components/client/music/TrackCardRow.vue"
 
 export default {
   components: { TrackCardRow },

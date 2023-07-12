@@ -24,7 +24,7 @@ export default boot(({ app, router }) => {
     return response
   }, error => {
     if(error.response.data.message === 'Token has expired') {
-      axios.post('http://localhost/api/auth/refresh', {}, {
+      axios.post(`${process.env.API}/refresh`, {}, {
         headers: {
           'authorization': `Bearer ${localStorage.access_token}`
         }
