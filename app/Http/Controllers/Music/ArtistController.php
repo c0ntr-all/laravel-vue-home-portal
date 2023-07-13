@@ -41,9 +41,4 @@ class ArtistController extends BaseController
 
         return $this->sendResponse(new ArtistResource($artist), 'Artist successfully loaded!');
     }
-
-    public function upload(UploadRequest $request)
-    {
-        return (new ParseMusicTracks())->upload($request->validated()['path']);
-    }
 }

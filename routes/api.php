@@ -88,11 +88,11 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                     Route::post('store', [AdminArtistController::class, 'store']);
                     Route::post('{artist}/update', [AdminArtistController::class, 'update']);
                     Route::post('search', [SearchController::class, 'search']);
+                    Route::post('upload', [UploadController::class, 'upload']);
                 });
                 Route::post('/', [ArtistController::class, 'index']);
                 Route::post('get', [ArtistController::class, 'getArtists']);
             });
-            Route::post('upload', [UploadController::class, 'upload']);
             Route::prefix('artists')->group(function() {
                 Route::post('/', [ArtistController::class, 'index']);
                 Route::post('{artist}/show', [ArtistController::class, 'show']);

@@ -2,6 +2,8 @@
 
 namespace App\Services\Music;
 
+use App\Filters\Classes\SearchFilter;
+use App\Filters\Filter;
 use App\Helpers\ImageUpload;
 use App\Models\Music\Artist;
 use App\Repositories\ArtistRepository;
@@ -13,9 +15,13 @@ class ArtistService {
 
     public function getWithPaginate(array $requestData)
     {
-        $filters = $requestData['filters'] ?? [];
+        $filters = [];
+        if (array_key_exists('filter', $requestData)) {
+            $filters[] = new SearchFilter($requestData['filter']['search']);
+        }
+        $filter = new Filter($filters);
 
-        return $this->artistRepository->getWithPaginate($filters);
+        return $this->artistRepository->getWithPaginate($filter);
     }
 
     public function storeArtist(array $requestData)
