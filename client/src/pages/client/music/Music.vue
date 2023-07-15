@@ -11,6 +11,7 @@
     <q-tab name="artists" label="Artists" />
     <q-tab name="playlists" label="Playlists" />
     <q-tab name="genres" label="Genres" />
+    <q-tab name="history" label="History" />
   </q-tabs>
   <q-tab-panels
     v-model="tab"
@@ -56,18 +57,23 @@
         </q-card-section>
       </q-card>
     </q-tab-panel>
+
+    <q-tab-panel name="history" class="q-pa-none">
+      <HistoryTab />
+    </q-tab-panel>
   </q-tab-panels>
 </template>
 <script>
 import TracksTab from 'src/components/client/music/tabs/TracksTab.vue'
 import ArtistsTab from 'src/components/client/music/tabs/ArtistsTab.vue'
 import PlaylistsTab from 'src/components/client/music/tabs/PlaylistsTab.vue'
+import HistoryTab from 'src/components/client/music/tabs/HistoryTab.vue'
 
 import { ref, onMounted } from "vue";
 import API from "src/utils/api";
 
 export default {
-  components: { TracksTab, ArtistsTab, PlaylistsTab },
+  components: { TracksTab, ArtistsTab, PlaylistsTab, HistoryTab },
   setup() {
     const tags = ref([])
     let tagsLoading = ref(true)

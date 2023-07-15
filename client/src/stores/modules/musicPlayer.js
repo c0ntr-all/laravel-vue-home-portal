@@ -1,5 +1,8 @@
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
+import { Notify } from "quasar";
 import addZero from "src/utils/addzero";
+import Timer from "src/utils/timer";
+import API from "src/utils/api";
 
 export const useMusicPlayer = defineStore('musicPlayer', {
   state: () => {
@@ -13,28 +16,34 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         duration: "00:03:00",
         artist: "Artist Name"
       },
+      startedAt: null,
+      isScrobbled: false,
+      stopScrobble: false,
       status: 'paused',
       idx: 0,
-      checkPlaying: () => {},
-      timePlayed: 0,
       timePassed: '00:00',
       timeTotal: '00:00',
       rewindProgressWidth: 0,
+      volumeProgressWidth: 0.01,
+      timer: new Timer(),
       playlist: [],
-      volume: 0.01,
     }
   },
   actions: {
     init() {
-      this.audio.volume = this.volume
+      this.audio.volume = this.volumeProgressWidth
 
       this.audio.addEventListener('timeupdate', () => {
-        if (this.status === 'paused') {
-          clearInterval(this.checkPlaying)
+
+        console.log(this.timer.getRemainingSeconds())
+
+        if (this.timer.isExpired() && !this.stopScrobble) {
+          this.scrobbleSong()
+          this.stopScrobble = true
         }
 
         const duration = this.audio.duration,
-          currentTime = this.audio.currentTime
+           currentTime = this.audio.currentTime
 
         this.rewindProgressWidth = (currentTime / duration) * 100
 
@@ -49,26 +58,33 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       })
 
       this.audio.addEventListener('volumechange', () => {
-        this.volume = this.audio.volume
+        this.volumeProgressWidth = this.audio.volume * 100
       })
 
       this.audio.addEventListener('ended', () => {
+        this.startedAt = null
         this.nextTrack()
       });
     },
     run() {
-      if (this.status === 'playing') {
-        this.pause()
-      } else {
+      if (this.startedAt === null) {
+        this.startedAt = this.timer.now()
+        this.timer.start()
+        this.timer.update(this.getSecondsToScrobble())
         this.play()
+      } else {
+        if (this.status === 'playing') {
+          this.pause()
+          this.timer.pause()
+        } else {
+          this.play()
+          this.timer.resume()
+        }
       }
     },
     play() {
       this.status = 'playing'
       this.audio.play()
-      this.checkPlaying = setInterval(() => {
-        this.timePlayed++
-      }, 1000)
     },
     pause() {
       this.status = 'paused'
@@ -83,6 +99,10 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         this.pause()
         this.track = track
         this.audio.src = `http://home-portal.local/api/music/tracks/${track.id}/play`
+
+        this.timer.start(this.getSecondsToScrobble())
+        this.isScrobbled = false
+        this.stopScrobble = false
       }
 
       // Initialization of current track index in playlist
@@ -112,15 +132,22 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       }
     },
     nextTrack() {
-      if (this.playlist.length) {
+      if (this.playlist.length && this.playlist.length > 1) {
         if (this.idx === this.playlist.length - 1) {
-          this.setTrack(this.playlist[0])
+          this.stop()
           return
         }
 
         this.setTrack(this.playlist[this.idx + 1])
         this.run()
+      } else {
+        this.stop()
       }
+    },
+    stop() {
+      this.pause()
+      this.setTrack(this.playlist[0])
+      this.audio.currentTime = 0
     },
     shuffle() {
       let currentIndex = this.playlist.length,
@@ -134,6 +161,30 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         [this.playlist[currentIndex], this.playlist[randomIndex]] = [
           this.playlist[randomIndex], this.playlist[currentIndex]];
       }
+    },
+    getSecondsToScrobble() {
+      const arrTrackDuration = this.track.duration.split(':')
+
+      // Формат строки для разбиения может иметь только 2 формы:
+      // 1. Минуты, секунды - 05:34. Если трек меньше минуты то так: 00:35
+      // 2. Часы, минуты, секунды 02:32:20. Если в треке больше 24 часов то так: 36:48:23
+      const trackDuration = arrTrackDuration.length === 2 ?
+                            (arrTrackDuration[0] * 60) + Number(arrTrackDuration[1]) :
+                            (arrTrackDuration[0] * 60 * 60) + (arrTrackDuration[1] * 60) + Number(arrTrackDuration[2])
+
+      return Math.round(trackDuration / 2)
+    },
+    async scrobbleSong() {
+      await API.put('music/history/scrobble', {
+        track_id: this.track.id
+      }).then(() => {
+        this.isScrobbled = true
+      }).catch(error => {
+        Notify.create({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+      })
     }
   }
 })

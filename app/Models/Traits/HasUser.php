@@ -4,7 +4,7 @@ namespace App\Models\Traits;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 trait HasUser
 {
@@ -13,7 +13,7 @@ trait HasUser
         return $this->belongsTo(User::class);
     }
 
-    public function scopeUser(Builder $query, string $userId): void
+    public static function scopeWhereUser(Builder $query, string $userId): void
     {
         $query->where('user_id', $userId);
     }

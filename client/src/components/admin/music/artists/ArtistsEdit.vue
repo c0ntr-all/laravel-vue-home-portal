@@ -86,8 +86,9 @@
             <q-select
               label="Основные жанры"
               v-model="model.tags.common"
+              @filter="commonTagsFilter"
               input-debounce="0"
-              :options="commonTags"
+              :options="commonOptions"
               use-input
               use-chips
               multiple
@@ -96,8 +97,9 @@
             <q-select
               label="Дополнительные жанры"
               v-model="model.tags.secondary"
+              @filter="secondaryTagsFilter"
               input-debounce="0"
-              :options="secondaryTags"
+              :options="secondaryOptions"
               use-input
               use-chips
               multiple
@@ -116,17 +118,16 @@
   </div>
 </template>
 <script>
-import {computed, ref} from 'vue'
-import API from "src/utils/api";
-import { useQuasar } from 'quasar'
+import { computed, ref } from "vue"
+import API from "src/utils/api"
+import { useQuasar } from "quasar"
 
 export default {
   setup() {
     const $q = useQuasar()
-    const total = ref(0)
-    const search = ref('')
+
     const columns = ref([{
-      name: "id",
+      name: 'id',
       required: true,
       label: 'ID',
       align: 'left',
@@ -134,7 +135,7 @@ export default {
       sortable: true,
       style: 'width: 40px'
     }, {
-      name: "image",
+      name: 'image',
       required: true,
       label: 'Изображение',
       align: 'center',
@@ -142,31 +143,41 @@ export default {
       sortable: false,
       style: 'width: 60px'
     }, {
-      name: "name",
+      name: 'name',
       required: true,
       label: 'Имя',
       align: 'left',
       field: row => row.name,
       sortable: true
     }, {
-      name: "tags",
+      name: 'tags',
       required: true,
       label: 'Теги',
       align: 'center',
       field: row => row.tags,
       sortable: false,
     }, {
-      name: "createdAt",
+      name: 'createdAt',
       required: true,
       label: 'Дата добавления',
       align: 'left',
       field: row => row.createdAt,
       sortable: true
     }])
+    const total = ref(0)
+    const search = ref('')
     const artists = ref([])
-    let showModal = ref(false)
     const commonTags = ref([])
     const secondaryTags = ref([])
+    const commonOptions = ref(commonTags.value)
+    const secondaryOptions = ref(secondaryTags.value)
+    const newImage = ref(null)
+    let showModal = ref(false)
+    let updateButtonLoading = ref(false)
+    const newImagePreview = computed(() => {
+      model.value.image = newImage.value
+      return URL.createObjectURL(newImage.value)
+    })
     let model = ref({
       id: 0,
       name: null,
@@ -177,13 +188,8 @@ export default {
         secondary: []
       }
     })
-    const newImage = ref(null)
-    const newImagePreview = computed(() => {
-      model.value.image = newImage.value
-      return URL.createObjectURL(newImage.value)
-    })
-    let updateButtonLoading = ref(false)
-    const getArtists = async (page) => {
+
+    const getArtists = async page => {
       const {data} = await API.post('music/admin/artists/get', {page: page})
       artists.value = data.data.artists
       total.value = data.data.total
@@ -201,6 +207,26 @@ export default {
       model.value = artist
 
       showModal.value = true
+    }
+    const commonTagsFilter = (val, update) => {
+      const params = commonTags.value.map(item => {
+        return item.label
+      })
+
+      update(() => {
+        const needle = val.toLowerCase()
+        commonOptions.value = params.filter(tag => tag.toLowerCase().indexOf(needle) > -1)
+      })
+    }
+    const secondaryTagsFilter = (val, update) => {
+      const params = secondaryTags.value.map(item => {
+        return item.label
+      })
+
+      update(() => {
+        const needle = val.toLowerCase()
+        secondaryOptions.value = params.filter(tag => tag.toLowerCase().indexOf(needle) > -1)
+      })
     }
     const deleteArtist = (artist) => {
       $q.dialog({
@@ -227,8 +253,9 @@ export default {
 
       let commonTagsValues = model.value.tags.common.map(item => item.value)
       let secondaryTagsValues = model.value.tags.secondary.map(item => item.value)
+
       commonTagsValues.concat(secondaryTagsValues).forEach(val => {
-        formData.append('tags[]', val);
+        formData.append('tags[]', val)
       });
 
       await API.post('music/admin/artists/update', formData)
@@ -242,7 +269,7 @@ export default {
           $q.notify({
             type: 'positive',
             message: response.data.message
-          });
+          })
 
           updateButtonLoading.value = false
         }).catch(error => {
@@ -269,8 +296,12 @@ export default {
       newImage,
       commonTags,
       secondaryTags,
+      commonOptions,
+      secondaryOptions,
       updateButtonLoading,
       newImagePreview,
+      commonTagsFilter,
+      secondaryTagsFilter,
       getArtists,
       getTagsSelect,
       searchArtists,

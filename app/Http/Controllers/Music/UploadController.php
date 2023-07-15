@@ -4,22 +4,16 @@ namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Music\Upload\UploadRequest;
-use App\Services\Music\ParseArtistService;
+use App\Jobs\MusicParseArtistJob;
 
 class UploadController extends Controller
 {
-    /**
-     * @var ParseArtistService
-     */
-    private $parseArtistService;
-
-    public function __construct(ParseArtistService $parseArtistService)
+    public function __construct()
     {
-        $this->parseArtistService = $parseArtistService;
     }
 
     public function upload(UploadRequest $request)
     {
-        return $this->parseArtistService->upload($request->validated()['folder']);
+        dispatch(new MusicParseArtistJob($request->validated()['folder']));
     }
 }

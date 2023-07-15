@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMusicPlaylistsItemsTable extends Migration
+class CreateMusicPlaylistsTracksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateMusicPlaylistsItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('music_playlists_items', function (Blueprint $table) {
+        Schema::create('music_playlists_tracks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('track_id');
@@ -30,7 +30,8 @@ class CreateMusicPlaylistsItemsTable extends Migration
 
             $table->foreign('playlist_id')
                   ->references('id')
-                  ->on('music_playlists');
+                  ->on('music_playlists')
+                  ->onDelete('cascade');
         });
     }
 

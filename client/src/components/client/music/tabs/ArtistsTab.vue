@@ -1,7 +1,7 @@
 <template>
   <q-card class="q-mb-md" flat bordered>
     <q-card-section>
-      <div class="flex justify-between items-end q-mb-lg">
+      <div class="flex justify-between items-end">
         <artists-filter @submitFilter="getArtists" />
 
         <q-btn

@@ -2,7 +2,7 @@
 
 namespace App\Models\Traits;
 
-use App\Models\Music\Tag;
+use App\Models\Music\MusicTag;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait HasMusicTags
@@ -17,6 +17,6 @@ trait HasMusicTags
 
     public function tags(): MorphToMany
     {
-        return $this->morphToMany(Tag::class, 'tagable', 'music_tagables');
+        return $this->morphToMany(MusicTag::class, 'tagable', 'music_tagables', 'tagable_id', 'tag_id');
     }
 }

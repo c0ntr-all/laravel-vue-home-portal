@@ -59,7 +59,7 @@
 </template>
 <script>
 import {ref, onMounted, watch} from "vue"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 
 import API from "src/utils/api"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
@@ -75,17 +75,23 @@ export default {
   },
   components: { AlbumPageSkeleton, AlbumCard, RelatedAlbums, MusicTracksList },
   setup(props) {
+    const $router = useRouter()
     const route = useRoute()
 
     const loading = ref(true)
     const showImage = ref(false)
     const album = ref({})
 
-    const getAlbum = async (id) => {
-      const {data} = await API.post('music/albums', {id: id})
-
-      album.value = data.data
-      loading.value = false
+    const getAlbum = async id => {
+      await API.post('music/albums', {id: id})
+      .then(response => {
+        album.value = response.data.data
+        loading.value = false
+      }).catch(error => {
+          if(error.response.status === 404) {
+            $router.push('/404')
+          }
+      })
     }
 
     const addToPlaylist = () => {

@@ -31,7 +31,6 @@
       transition-show="jump-down"
       transition-hide="jump-up"
       style="width: 660px; min-height: 500px"
-      @show="initPlayerParams"
     >
       <div class="music-player__controls flex row q-pa-sm">
         <div class="music-player__buttons-group flex items-center q-mr-sm">
@@ -61,7 +60,7 @@
           <div class="track-card__image flex items-center justify-center q-pa-none" />
           <div class="q-pa-none q-ml-sm col-grow">
             <div class="flex justify-between items-center">
-              <div>
+              <div style="max-width: 340px">
                 <div class="music-player__track-name">{{ musicPlayer.track.name }}</div>
                 <div class="music-player__artist-name">{{ musicPlayer.track.artist }}</div>
               </div>
@@ -69,26 +68,22 @@
                 {{ musicPlayer.timePassed }}
               </div>
             </div>
-            <div class="music-player-slider col-grow">
-              <div class="music-player-slider__wrapper" ref="rangeLine">
-                <div class="music-player-slider__line">
-                  <div class="music-player-slider__amount" :style="`width: ${musicPlayer.rewindProgressWidth}%`"></div>
-                  <div class="music-player-slider__circle" :style="`left: ${isCircleMoving ? circlePosition : musicPlayer.rewindProgressWidth}%`"></div>
-                </div>
-              </div>
-            </div>
+
+            <AppSlider
+              :data="musicPlayer.rewindProgressWidth"
+              @move="changeRewind"
+            />
+
           </div>
         </div>
         <div class="music-player__volume flex items-center q-mx-md">
-          <div class="music-player-slider col-grow">
-            <div class="music-player-slider__wrapper" ref="rangeVolume">
-              <div class="music-player-slider__line">
-                <div class="music-player-slider__amount" :style="`width: ${musicPlayer.volume * 100}%`"></div>
-                <div class="music-player-slider__circle" :style="`left: ${musicPlayer.volume * 100}%`"></div>
-              </div>
-            </div>
-          </div>
+          <AppSlider
+            :width="'50px'"
+            :data="musicPlayer.volumeProgressWidth"
+            @move="changeVolume"
+          />
         </div>
+
         <div class="music-player__buttons-group flex items-center">
           <q-btn
             @click="musicPlayer.shuffle()"
@@ -117,81 +112,33 @@
   </div>
 </template>
 <script>
-import {ref} from 'vue'
-import {useMusicPlayer} from "src/stores/modules/musicPlayer";
+import {ref} from "vue"
+import {useMusicPlayer} from "src/stores/modules/musicPlayer"
 
-import MusicTrackCard from "src/components/client/music/MusicTrackCard.vue";
+import AppSlider from "src/components/extra/AppSlider.vue"
+import MusicTrackCard from "src/components/client/music/MusicTrackCard.vue"
 
 export default {
-  components: { MusicTrackCard },
+  components: { AppSlider, MusicTrackCard },
   setup() {
     const musicPlayer = useMusicPlayer()
 
-    const rangeLine = ref(null)
-    const rangeVolume = ref(null)
-    const isVolumeCircleMoving = ref(false)
-    const circlePosition = ref(0)
-    const isCircleMoving = ref(false)
-
-    const moveRewind = event => {
-      musicPlayer.audio.currentTime = (event.offsetX / rangeLine.value.clientWidth) * musicPlayer.audio.duration
-    }
-
-    const moveCircle = event => {
-      circlePosition.value = (event.offsetX / rangeLine.value.clientWidth) * 100
-    }
-
-    const initPlayerParams = () => {
-      rangeLine.value.addEventListener('mousedown', () => {
-        isCircleMoving.value = true
-      })
-      rangeLine.value.addEventListener('mousemove', event => {
-        if (isCircleMoving.value) {
-          moveCircle(event)
-        }
-      })
-      rangeLine.value.addEventListener('click', event => {
-        moveRewind(event)
-        moveCircle(event)
-      })
-      rangeLine.value.addEventListener('mouseup', () => {
-        isCircleMoving.value = false
-      })
-      rangeLine.value.addEventListener('mouseleave', () => {
-        isCircleMoving.value = false
-      })
-
-      rangeVolume.value.addEventListener('mousedown', () => {
-        isVolumeCircleMoving.value = true
-      })
-      rangeVolume.value.addEventListener('mousemove', event => {
-        if (isVolumeCircleMoving.value) {
-          musicPlayer.audio.volume = (event.offsetX / rangeVolume.value.clientWidth)
-        }
-      })
-      rangeVolume.value.addEventListener('click', event => {
-        musicPlayer.audio.volume = (event.offsetX / rangeVolume.value.clientWidth)
-      })
-      rangeVolume.value.addEventListener('mouseup', () => {
-        isVolumeCircleMoving.value = false
-      })
-      rangeVolume.value.addEventListener('mouseleave', () => {
-        isVolumeCircleMoving.value = false
-      })
-    }
-
     musicPlayer.init()
+
+    const changeRewind = value => {
+      musicPlayer.audio.currentTime = value / 100 * musicPlayer.audio.duration
+    }
+
+    const changeVolume = value => {
+      musicPlayer.audio.volume = value / 100
+    }
 
     return {
       dialog: ref(false),
       hovered: ref(false),
       musicPlayer,
-      rangeLine,
-      rangeVolume,
-      circlePosition,
-      isCircleMoving,
-      isVolumeCircleMoving,
-      initPlayerParams,
+      changeRewind,
+      changeVolume,
       initPlay: track => {
         musicPlayer.playTrack(track)
       },
@@ -218,6 +165,10 @@ export default {
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   }
   &__track-name {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 12.5px;
     line-height: 16px;
   }
@@ -225,50 +176,6 @@ export default {
     font-size: 12.5px;
     line-height: 16px;
     font-weight: bold;
-  }
-  &__volume {
-    width: 50px;
-  }
-  &-slider {
-    &__wrapper {
-      padding: 7px 0;
-
-      &:hover {
-        .music-player-slider__circle {
-          opacity: 1;
-        }
-      }
-    }
-    &__line {
-      position: relative;
-      width: 100%;
-      height: 2px;
-      background: $primary-light;
-      z-index: -1;
-    }
-    &__amount {
-      width: 0;
-      top: auto;
-      bottom: 0;
-      height: 2px;
-      background: $primary;
-    }
-    &__circle {
-      position: absolute;
-      top: -2px;
-      width: 6px;
-      height: 6px;
-      margin-left: -3px;
-      border-radius: 50%;
-      background: $primary;
-      opacity: 0;
-      -webkit-transition: top 80ms linear,width 80ms linear,height 80ms linear,margin-left 80ms linear,opacity 160ms linear;
-      transition: top 80ms linear,width 80ms linear,height 80ms linear,margin-left 80ms linear,opacity 160ms linear;
-    }
-
-    &:hover {
-      cursor: pointer;
-    }
   }
 }
 </style>

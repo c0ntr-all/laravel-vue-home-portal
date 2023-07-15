@@ -4,20 +4,24 @@ namespace App\Models\Music;
 
 use App\Casts\TrackDurationCast;
 use App\Models\Traits\HasDates;
+use App\Models\Traits\HasImage;
 use App\Models\Traits\HasMusicTags;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Znck\Eloquent\Relations\BelongsToThrough;
 
 class Track extends Model
 {
-    use HasFactory;
-    use HasDates;
-    use HasMusicTags;
-    use \Znck\Eloquent\Traits\BelongsToThrough;
+    use SoftDeletes,
+        HasFactory,
+        HasDates,
+        HasMusicTags,
+        HasImage,
+        \Znck\Eloquent\Traits\BelongsToThrough;
 
     protected $table = 'music_tracks';
 
@@ -25,7 +29,8 @@ class Track extends Model
         'album_id',
         'number',
         'name',
-        'path_windows',
+        'path',
+        'image',
         'duration',
         'bitrate',
         'updated_at',
@@ -99,7 +104,7 @@ class Track extends Model
 
     private function getTagsHierarchy($tags)
     {
-        return Tag::whereIn('id', $tags)->get()->map(function($item) {
+        return MusicTag::whereIn('id', $tags)->get()->map(function($item) {
             $tagsList = $this->normalizeArray($item->childrenCategories->toArray());
 
             return array_column($tagsList, 'id');

@@ -19,7 +19,8 @@ class CreateMusicTracksTable extends Migration
             $table->integer('number');
             $table->string('name');
             $table->integer('cd')->nullable();
-            $table->string('path_windows');
+            $table->string('path');
+            $table->string('image')->nullable()->default(NULL);
             $table->time('duration');
             $table->integer('bitrate');
 

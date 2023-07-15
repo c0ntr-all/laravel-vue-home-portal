@@ -20,7 +20,7 @@ class CreateRemindsTable extends Migration
             $table->string('title');
             $table->text('content')->nullable()->default(NULL);
             $table->timestamp('datetime')->nullable();
-            $table->string('interval');
+            $table->string('interval')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();

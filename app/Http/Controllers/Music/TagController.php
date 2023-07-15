@@ -10,15 +10,15 @@ use App\Http\Resources\Music\Tag\TagCollection;
 use App\Http\Resources\Music\Tag\TagResource;
 use App\Http\Resources\Music\Tag\TagSelectCollection;
 use App\Http\Resources\Music\Tag\TagTreeCollection;
-use App\Models\Music\Tag;
+use App\Models\Music\MusicTag;
 use App\Services\Music\TagService;
 
 class TagController extends Controller
 {
-    public Tag $tag;
+    public MusicTag $tag;
     public TagService $tagService;
 
-    public function __construct(Tag $tag, TagService $service)
+    public function __construct(MusicTag $tag, TagService $service)
     {
         $this->tag = $tag;
         $this->tagService = $service;
@@ -31,7 +31,7 @@ class TagController extends Controller
     public function index(IndexRequest $request)
     {
         if (array_key_exists('slug', $request->validated())) {
-            return new TagResource(Tag::where('slug', $request->validated()['slug'])->first());
+            return new TagResource(MusicTag::where('slug', $request->validated()['slug'])->first());
         } else {
             return new TagCollection($this->tag->getItems());
         }
@@ -56,13 +56,22 @@ class TagController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $existTag = Tag::where(['name' => $request->validated()['tag']])->get();
+        $existTag = MusicTag::where(['name' => $request->validated()['name']])->get();
         if ($existTag->isEmpty()) {
-            $result = Tag::create([
-                'name' => $request->validated()['tag'],
-                'parent_id' => $request->validated()['parent_id'] ?? 0,
-                'common' => $request->validated()['common']
-            ]);
+            $data = $request->validated();
+
+            $common = $data['common'] ?? 0;
+            $parentId = $data['parent_id'];
+
+            if ($parentId) {
+                $parentTag = MusicTag::find($parentId);
+                $common = $parentTag->common;
+            }
+
+            $data['common'] = $common;
+            $data['parent_id'] = $data['parent_id'] ?? 0;
+
+            $result = MusicTag::create($data);
 
             return $this->TagResponse($result);
         } else {
@@ -70,16 +79,32 @@ class TagController extends Controller
         }
     }
 
-    public function update(UpdateRequest $request)
+    public function update(MusicTag $tag, UpdateRequest $request)
     {
-        $updated = Tag::where(['id' => $request->validated()['id']])->update($request->validated());
+        $updated = $tag->update($request->validated());
 
         if ($updated) {
-            return $request->validated();
+            return $this->tagResponse($tag);
         }
     }
 
-    public function tagResponse(Tag $tag): array
+    public function delete(MusicTag $tag)
+    {
+        $tagName = $tag->name;
+        $deleted = $tag->delete();
+
+        if ($deleted) {
+            return [
+                'success' => true,
+                'tag' => $tagName,
+                'message' => 'Tag ' . $tagName . ' has been successfully removed!'
+            ];
+        } else {
+            throw new \Exception('Something wrong with deleting tag!');
+        }
+    }
+
+    public function tagResponse(MusicTag $tag): array
     {
         $resource = new TagResource($tag);
 

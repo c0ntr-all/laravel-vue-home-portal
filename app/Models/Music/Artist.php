@@ -7,6 +7,7 @@ use App\Models\Traits\HasMusicTags;
 use App\Models\Traits\HasImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -28,18 +29,19 @@ class Artist extends Model
         'name',
         'content',
         'image',
+        'path',
         'updated_at',
         'deleted_at'
     ];
 
-    /**
-     * Получает все альбомы исполнителя
-     *
-     * @return HasMany
-     */
     public function albums(): HasMany
     {
         return $this->hasMany(Album::class, 'artist_id', 'id');
+    }
+
+    public function tracks(): HasManyThrough
+    {
+        return $this->hasManyThrough(Track::class, Album::class);
     }
 
     public static function getWithCursor(array $filters = [])
@@ -73,7 +75,7 @@ class Artist extends Model
     public function scopeFilter($query, array $filters, string $key, string $relation, string $column)
     {
         if (!empty($filters['tags']) && $filters['type'] == 'hierarchical') {
-            $result = Tag::whereIn('id', $filters['tags'])->get()->map(function($item) {
+            $result = MusicTag::whereIn('id', $filters['tags'])->get()->map(function($item) {
                 $tagsList = $this->normalizeArray($item->childrenCategories->toArray());
                 return array_column($tagsList, 'id');
             });

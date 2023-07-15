@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Music\FilterRequest;
+use App\Http\Requests\Music\Track\DeleteFromPlaylistRequest;
 use App\Http\Requests\Music\Track\RateRequest;
 use App\Http\Requests\Music\Track\UpdatePlaylistsRequest;
 use App\Http\Resources\Music\Tracks\TrackCollection;
@@ -13,7 +14,7 @@ use App\Http\Requests\Music\Track\PlayRequest;
 
 class TrackController extends Controller
 {
-    public function get(FilterRequest $request)
+    public function getItems(FilterRequest $request)
     {
         $filters = $request->validated()['filters'] ?? [];
 
@@ -22,7 +23,7 @@ class TrackController extends Controller
 
     public function play(PlayRequest $request, Track $track): BinaryFileResponse
     {
-        return new BinaryFileResponse($track->path_windows);
+        return new BinaryFileResponse($track->path);
     }
 
     public function rate(RateRequest $request, Track $track)
@@ -57,5 +58,14 @@ class TrackController extends Controller
         ];
 
         $track->playlists()->syncWithPivotValues($playlists, $pivotValues);
+    }
+
+    public function deleteFromPlaylist(Track $track, DeleteFromPlaylistRequest $request)
+    {
+        $playlistId = $request->validated()['playlist'];
+
+        if ($track->playlists()->detach($playlistId)) {
+            return ['track_id' => $track->id];
+        }
     }
 }

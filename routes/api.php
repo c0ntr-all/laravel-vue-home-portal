@@ -6,6 +6,7 @@ use App\Http\Controllers\FolderController;
 use App\Http\Controllers\Music\Admin\ArtistController as AdminArtistController;
 use App\Http\Controllers\Music\AlbumController;
 use App\Http\Controllers\Music\ArtistController;
+use App\Http\Controllers\Music\MusicHistoryController;
 use App\Http\Controllers\Music\PlaylistController;
 use App\Http\Controllers\Music\TagController;
 use App\Http\Controllers\Music\TrackController;
@@ -99,15 +100,17 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             });
             Route::post('albums', [AlbumController::class, 'index']);
             Route::prefix('tracks')->group(function() {
-                Route::post('get', [TrackController::class, 'get']);
+                Route::post('/', [TrackController::class, 'getItems']);
                 Route::post('{track}/play', [TrackController::class, 'play']);
                 Route::post('{track}/rate', [TrackController::class, 'rate']);
                 Route::patch('{track}/playlists/update', [TrackController::class, 'updatePlaylists']);
+                Route::post('{track}/playlists/delete', [TrackController::class, 'deleteFromPlaylist']);
             });
             Route::prefix('tags')->group(function() {
                 Route::post('/', [TagController::class, 'index']);
-                Route::post('store', [TagController::class, 'store']);
-                Route::post('update', [TagController::class, 'update']);
+                Route::put('store', [TagController::class, 'store']);
+                Route::patch('{tag}/update', [TagController::class, 'update']);
+                Route::post('{tag}/delete', [TagController::class, 'delete']);
                 Route::post('select', [TagController::class, 'tagsSelect']);
                 Route::post('tree', [TagController::class, 'tagsTree']);
             });
@@ -115,6 +118,11 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 // Trying to set "playlists" route as default for list of playlists for better view while requesting.
                 Route::post('/', [PlaylistController::class, 'getItems']);
                 Route::get('{playlist}/index', [PlaylistController::class, 'index']);
+                Route::put('store', [PlaylistController::class, 'store']);
+            });
+            Route::prefix('history')->group(function() {
+                Route::post('/', [MusicHistoryController::class, 'getItems']);
+                Route::put('scrobble', [MusicHistoryController::class, 'scrobble']);
             });
         });
 

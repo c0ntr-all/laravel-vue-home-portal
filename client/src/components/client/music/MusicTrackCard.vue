@@ -1,20 +1,28 @@
 <template>
   <div
-    class="music-track row self-start items-center col-grow q-pr-sm rounded-borders"
+    class="music-track flex no-wrap self-start items-center col-grow q-pr-sm rounded-borders"
     :class="{'music-track--active': track.id === musicPlayer.track.id}"
   >
-    <div class="flex items-center col-grow" @click="$emit('play')">
-      <div class="music-track__image q-mr-md">
-        <template v-if="track.id === musicPlayer.track.id">
-          <q-spinner-audio
-            v-if="musicPlayer.status === 'playing'"
-            size="1rem"
-            color="white"
-          />
-          <div class="text-white" v-else>....</div>
-        </template>
+    <div class="music-track__left" @click="$emit('play')">
+      <div class="music-track-cover q-mr-md">
+        <q-img
+          v-if="track.image"
+          :src="track.image"
+          class="music-track-cover__image"
+          :alt="track.name"
+        />
+        <div class="music-track-cover__overlay">
+          <div class="music-track-cover__play-icon">
+            <q-spinner-audio
+              v-if="musicPlayer.status === 'playing'"
+              size="1rem"
+              color="white"
+            />
+            <div class="text-white" v-else>....</div>
+          </div>
+        </div>
         <q-icon
-          class="music-track__status-icon"
+          class="music-track-cover__status-icon"
           size="xs"
           :name="musicPlayer.status === 'paused' || (musicPlayer.status === 'playing' && musicPlayer.track.id !== track.id) ? 'play_arrow' : 'pause'"
           flat
@@ -22,12 +30,12 @@
           dense
         />
       </div>
-      <div class="q-ml-xs">
+      <div class="music-track__title">
         <div class="music-track__name">{{ track.name }}</div>
         <div class="music-track__artist">{{ track.artist }}</div>
       </div>
     </div>
-    <div class="flex justify-between items-center">
+    <div class="music-track__right">
       <div class="music-track__rate q-gutter-y-md">
         <q-rating
           v-model="rate"
@@ -51,31 +59,17 @@
           <q-btn color="grey-7" icon="more_horiz" round flat>
             <q-menu cover auto-close>
               <q-list>
-                <q-item @click="showPlaylistModal = true" clickable>
+                <q-item v-for="action in filteredActions" @click="handleFunction(action.name)" clickable>
                   <q-item-section>
                     <div class="flex items-center">
                       <q-icon
                         size="xs"
-                        name="add"
+                        :name="action.icon"
                         flat
                         round
                         dense
                       />
-                      <div class="q-ml-xs">Add to playlist</div>
-                    </div>
-                  </q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>
-                    <div class="flex items-center">
-                      <q-icon
-                        size="xs"
-                        name="delete"
-                        flat
-                        round
-                        dense
-                      />
-                      <div class="q-ml-xs">Remove</div>
+                      <div class="q-ml-xs">{{ action.label }}</div>
                     </div>
                   </q-item-section>
                 </q-item>
@@ -136,12 +130,6 @@
 
       <q-separator />
 
-      <q-card-section>
-        Selected playlists - {{ selectedPlaylists }}
-      </q-card-section>
-
-      <q-separator />
-
       <q-card-section class="flex justify-end">
         <q-btn class="q-px-sm q-mr-md" @click="showPlaylistModal = false" dense flat>Cancel</q-btn>
         <q-btn @click="updatePlaylists" class="q-px-md" color="primary" dense>Save</q-btn>
@@ -159,7 +147,7 @@ import { useMusicPlayer } from "stores/modules/musicPlayer"
 import API from "src/utils/api"
 
 export default {
-  emits: ['play'],
+  emits: ['play', 'remove'],
   props: {
     track: {
       type: Object,
@@ -167,12 +155,27 @@ export default {
     },
     actions: {
       type: Array,
+      required: false,
+      default: ['addToPlaylist']
+    },
+    playlist: {
+      type: Number,
       required: false
     }
   },
-  setup(props) {
+  setup(props, {emit}) {
     const $q = useQuasar()
     const musicPlayer = useMusicPlayer()
+
+    const availableActions = [{
+      name: 'addToPlaylist',
+      label: 'Add to playlist',
+      icon: 'add'
+    },{
+      name: 'deleteFromPlaylist',
+      label: 'Remove from playlist',
+      icon: 'delete'
+    }]
 
     const showPlaylistModal = ref(false)
     const playlists = ref([])
@@ -184,6 +187,10 @@ export default {
     let rate = computed({
       get: () => props.track.rate,
       set: value => props.track.rate = value
+    })
+
+    const filteredActions = computed(() => {
+      return availableActions.filter(item => props.actions.includes(item.name))
     })
 
     const changeRate = async (value) => {
@@ -213,6 +220,7 @@ export default {
           }
         })
       }).catch(error => {
+        console.log(error)
         $q.notify({
           type: 'negative',
           message: `Server Error: ${error.response.data.message}`
@@ -222,12 +230,50 @@ export default {
       })
     }
 
+    const handleFunction = actionName => {
+      switch(actionName) {
+        case 'addToPlaylist':
+          showPlaylistModal.value = true
+          break;
+
+        case 'deleteFromPlaylist':
+          deleteFromPlaylist()
+          break;
+      }
+    }
+
     const updatePlaylists = async () => {
-      await API.patch(`music/tracks/${props.track.id}/playlists/update`, {playlists: selectedPlaylists.value})
-      .then(response => {
+      await API.patch(`music/tracks/${props.track.id}/playlists/update`, {
+        playlists: selectedPlaylists.value
+      }).then(response => {
         $q.notify({
           type: 'positive',
           message: 'Playlists updated!'
+        })
+      }).catch(error => {
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
+        })
+      }).finally(() => {
+        showPlaylistModal.value = false
+      })
+    }
+
+    const deleteFromPlaylist = async () => {
+      await API.post(`music/tracks/${props.track.id}/playlists/delete`, {
+        playlist: props.playlist
+      }).then(response => {
+        emit('remove', props.track.id)
+        $q.notify({
+          type: 'positive',
+          message: 'Track has been removed from playlist!'
+        })
+      }).catch(error => {
+        console.log(error)
+        $q.notify({
+          type: 'negative',
+          message: `Server Error: ${error.response.data.message}`
         })
       })
     }
@@ -247,6 +293,8 @@ export default {
       playlistsLoading,
       filteredPlaylists,
       selectedPlaylists,
+      filteredActions,
+      handleFunction,
       initPlaylistDialog,
       updatePlaylists,
       changeRate
@@ -258,31 +306,74 @@ export default {
 .music-track {
   position: relative;
 
-  &__image {
+  &__left {
     display: flex;
+    align-items: center;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: hidden;
+  }
+
+  &__right {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  &-cover {
+    display: flex;
+    position: relative;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
     width: 40px;
     height: 40px;
     margin: 4px;
     border-radius: 8px;
     background: #ccc;
-  }
-  &__status-icon {
-    display: none;
-    position: absolute;
-    padding: 4px;
-    background: #fff;
-    border-radius: 50%;
+
+    &__image {
+      border-radius: 8px;
+    }
+    &__status-icon {
+      display: none;
+      position: absolute;
+      padding: 4px;
+      background: #fff;
+      border-radius: 50%;
+    }
+    &__play-icon {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    &__overlay {
+      display: none;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      background-color: rgba(0,0,0,.5);
+    }
   }
   &__artist {
     font-size: 12.5px;
     line-height: 16px;
     font-weight: bold;
   }
+  &__title {
+    white-space: nowrap;
+    overflow: hidden;
+    margin-left: 4px;
+  }
   &__name {
     font-size: 12.5px;
     line-height: 16px;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   &__rate {
     margin-right: 1rem;
@@ -316,12 +407,12 @@ export default {
     cursor: pointer;
     background-color: rgba(174,183,194,0.12);
 
-    .music-track__image {
-      background-color: rgba(0,0,0,.5);
+    .music-track-cover__overlay {
+      display: block;
     }
   }
   &:hover {
-    .music-track__status-icon {
+    .music-track-cover__status-icon {
       display: flex;
     }
     .music-track__more {
@@ -339,7 +430,7 @@ export default {
 .playlists-list {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   height: 60vh;
 
   .playlist-item {

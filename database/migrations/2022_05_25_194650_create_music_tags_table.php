@@ -15,14 +15,17 @@ class CreateMusicTagsTable extends Migration
     {
         Schema::create('music_tags', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('parent_id')->default(0);
+            $table->unsignedBigInteger('parent_id')->nullable()->default(NULL);
             $table->string('name')->unique();
             $table->string('slug')->unique();
             $table->text('content')->nullable();
             $table->boolean('common')->default(1);
             $table->timestamps();
 
-            $table->foreign('parent_id')->references('id')->on('music_tags');
+            $table->foreign('parent_id')
+                  ->references('id')
+                  ->on('music_tags')
+                  ->onDelete('cascade');
         });
     }
 

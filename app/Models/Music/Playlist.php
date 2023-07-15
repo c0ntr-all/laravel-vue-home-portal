@@ -13,6 +13,11 @@ class Playlist extends Model
     use HasFactory,
         HasDates;
 
+    public $fillable = [
+        'user_id',
+        'name'
+    ];
+
     public $table = 'music_playlists';
 
     public function tracks(): belongsToMany

@@ -16,7 +16,6 @@ class Setting extends Model
         'user_id',
         'model',
         'key',
-        'label',
         'value'
     ];
     public $casts = [

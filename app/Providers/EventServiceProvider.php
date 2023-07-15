@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Music\Tag;
+use App\Models\Music\MusicTag;
 use App\Observers\TagObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -28,6 +28,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Tag::observe(TagObserver::class);
+        MusicTag::observe(TagObserver::class);
     }
 }

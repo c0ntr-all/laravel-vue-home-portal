@@ -8,6 +8,7 @@ use App\Http\Requests\Music\FilterRequest;
 use App\Http\Resources\Music\Artists\ArtistCollection;
 use App\Http\Resources\Music\Artists\ArtistResource;
 use App\Models\Music\Artist;
+use Illuminate\Http\Response;
 
 class ArtistController extends Controller
 {
@@ -29,10 +30,14 @@ class ArtistController extends Controller
         return new ArtistCollection(Artist::getWithCursor($filters));
     }
 
-    protected function artistResponse(Artist $artist): array
+    protected function artistResponse($artist): array|Response
     {
-        $resource = new ArtistResource($artist);
+        if ($artist) {
+            $resource = new ArtistResource($artist);
 
-        return ['success' => true, 'artists' => $resource];
+            return response(['success' => true, 'artists' => $resource], 200);
+        } else {
+            return response(['success' => false, 'message' => 'Artist not Found!'], 404);
+        }
     }
 }

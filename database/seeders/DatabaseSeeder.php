@@ -9,6 +9,7 @@ use App\Models\Reminds\Remind;
 use App\Models\Tasks\Task;
 use App\Models\Tasks\TaskList;
 use App\Models\User;
+use App\Models\Music\MusicTag;
 use Illuminate\Database\Seeder;
 
 
@@ -28,5 +29,10 @@ class DatabaseSeeder extends Seeder
         Task::factory()->count(50)->create();
         Remind::factory()->count(15)->create();
         Comment::factory()->count(100)->create();
+
+        MusicTag::factory()
+                ->has(MusicTag::factory()->count(3), 'children')
+                ->count(30)
+                ->create();
     }
 }

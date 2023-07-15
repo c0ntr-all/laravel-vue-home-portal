@@ -6,6 +6,9 @@
         @play="initPlay(track)"
         :key="track.id"
         :track="track"
+        :actions="actions"
+        :playlist="playlist || 0"
+        @remove="removeTrackFromList"
       />
     </div>
   </div>
@@ -16,7 +19,19 @@ import MusicTrackCard from "src/components/client/music/MusicTrackCard.vue"
 
 export default {
   components: { MusicTrackCard },
-  props: ['tracks'],
+  props: {
+    tracks: {
+      type: Array
+    },
+    actions: {
+      type: Array,
+      required: false
+    },
+    playlist: {
+      type: String,
+      required: false
+    }
+  },
   setup(props) {
     const musicPlayer = useMusicPlayer()
 
@@ -27,8 +42,15 @@ export default {
       }
       musicPlayer.playTrack(track)
     }
+    const removeTrackFromList = trackId => {
+      const index = props.tracks.indexOf(props.tracks.filter(item => item.id === trackId)[0])
+
+      props.tracks.splice(index, 1)
+    }
+
     return {
-      initPlay
+      initPlay,
+      removeTrackFromList
     }
   }
 }

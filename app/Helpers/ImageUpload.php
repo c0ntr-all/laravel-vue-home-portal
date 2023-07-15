@@ -73,6 +73,7 @@ class ImageUpload
      * Сохраняет изображение, полученное по URL, в Storage
      *
      * @param string $url
+     * @return false|string
      */
     public function uploadFromUrl(string $url)
     {
