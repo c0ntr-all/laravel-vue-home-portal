@@ -10,7 +10,7 @@ class ArrayHelper {
      * @param array $array
      * @return array
      */
-    public static function normalizeArray(array $array = []): array
+    public static function flattenArray(array $array = []): array
     {
         static $out = [];
 
@@ -20,7 +20,7 @@ class ArrayHelper {
                 unset($arrayToAdd['children']);
 
                 $out[] = $arrayToAdd;
-                self::normalizeArray($subArray['children']);
+                self::flattenArray($subArray['children']);
             } else {
                 if (isset($subArray['children'])) {
                     unset($subArray['children']);

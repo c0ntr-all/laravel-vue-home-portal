@@ -56,22 +56,22 @@ class MusicTag extends Model
     }
 
     /**
-     * Получение дочерних тегов
+     * Getting only 1 level of child tags
      *
      * @return HasMany
      */
     public function children(): HasMany
     {
-        return $this->hasMany(__CLASS__, 'parent_id', 'id') ;
+        return $this->hasMany(__CLASS__, 'parent_id', 'id');
     }
 
     /**
-     * Получение неограниченной вложенности дочерних тегов
+     * Getting unlimited nesting of child tags
      *
      * @return HasMany
      */
-    public function childrenCategories(): HasMany
+    public function descendants(): HasMany
     {
-        return $this->hasMany(__CLASS__, 'parent_id', 'id')->with('children');
+        return $this->hasMany(__CLASS__, 'parent_id', 'id')->with('descendants');
     }
 }
