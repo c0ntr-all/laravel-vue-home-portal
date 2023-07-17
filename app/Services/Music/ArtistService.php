@@ -15,9 +15,14 @@ class ArtistService {
 
     public function getWithPaginate(array $requestData)
     {
-        $filters = $this->collectFilter($requestData);
-        
-        $filter = new Filter($filters);
+        $filter = $this->prepareFilters($requestData);
+
+        return $this->artistRepository->getWithPaginate($filter);
+    }
+
+    public function getWithCursor(array $requestData)
+    {
+        $filter = $this->prepareFilters($requestData);
 
         return $this->artistRepository->getWithPaginate($filter);
     }
@@ -57,21 +62,29 @@ class ArtistService {
         return $requestData;
     }
 
-    private function collectFilter(array $requestData)
+    private function prepareFilters(array $requestData): ?Filter
     {
-        $filters = [];
+        if (array_key_exists('filters', $requestData)) {
+            $filters = $this->collectFilterClasses($requestData['filters']);
+            return new Filter($filters);
+        } else {
+            return null;
+        }
+    }
 
-        if (array_key_exists('filter', $requestData)) {
-            $namespace = 'App\Filters\Classes';
-            foreach ($requestData['filter'] as $filter => $value) {
-                $filterName = Str::studly($filter) . 'Filter';
-                $class = $namespace . '\\' . $filterName;
-                if (class_exists($class)) {
-                    $filters[] = new ($namespace . '\\' . $filterName)($value);
-                }
+    private function collectFilterClasses($filters): array
+    {
+        $filterClasses = [];
+        $namespace = 'App\Filters\Classes';
+
+        foreach ($filters as $filter => $value) {
+            $filterName = Str::studly($filter) . 'Filter';
+            $class = $namespace . '\\' . $filterName;
+            if (class_exists($class)) {
+                $filterClasses[] = new $class($value);
             }
         }
 
-        return $filters;
+        return $filterClasses;
     }
 }

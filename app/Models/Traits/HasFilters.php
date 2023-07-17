@@ -11,8 +11,8 @@ trait HasFilters
      * @param $filters
      * @return Builder
      */
-    public function scopeFilter(Builder $query, $filters): Builder
+    public function scopeFilter(Builder $query, $filter): Builder
     {
-        return $filters->apply($query);
+        return $filter !== null ? $filter->apply($query) : $query;
     }
 }

@@ -4,31 +4,30 @@ namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Music\Artist\IndexRequest;
-use App\Http\Requests\Music\Artist\UploadRequest;
+use App\Http\Resources\Music\Artists\AdminArtistCollection;
 use App\Http\Resources\Music\Artists\ArtistCollection;
 use App\Http\Resources\Music\Artists\ArtistResource;
 use App\Models\Music\Artist;
-use App\Repositories\ArtistRepository;
-use App\Services\Music\Parse\ParseMusicTracks;
+use App\Services\Music\ArtistService;
 use Illuminate\Http\Response;
 
 class ArtistController extends BaseController
 {
-    public function __construct(private ArtistRepository $artistRepository)
+    public function __construct(
+        private ArtistService $service
+    )
     {
     }
 
     /**
      * @param IndexRequest $request
-     * @return ArtistCollection
+     * @return Response
      */
-    public function index(IndexRequest $request): ArtistCollection
+    public function index(IndexRequest $request): Response
     {
-        $filters = $request->validated()['filters'] ?? [];
+        $out = $this->service->getWithCursor($request->validated());
 
-        $out = $this->artistRepository->getWithCursor($filters);
-
-        return new ArtistCollection($out);
+        return $this->sendResponse(new ArtistCollection($out));
     }
 
     /**

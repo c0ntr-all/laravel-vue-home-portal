@@ -15,13 +15,12 @@ use App\Services\Music\Parse\ParseMusicTracks;
 
 class ArtistController extends BaseController
 {
-    protected $artists;
-
     public function __construct(private ArtistService $artistService)
     {
     }
 
-    public function index(IndexRequest $request) {
+    public function index(IndexRequest $request)
+    {
         $out = $this->artistService->getWithPaginate($request->validated());
 
         return $this->sendResponse(new AdminArtistCollection($out));

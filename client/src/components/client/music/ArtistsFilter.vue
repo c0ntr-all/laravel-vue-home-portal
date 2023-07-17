@@ -112,7 +112,6 @@ export default {
       })
     }
 
-
     const resetFilter = () => {
       commonTagsModel.value = []
       secondaryTagsModel.value = []
@@ -130,9 +129,11 @@ export default {
       }
 
       const filters =  {
-        tags: tags,
-        type: type.value,
-        union: union.value
+        music_tags: {
+          tags: tags,
+          type: type.value,
+          union: union.value
+        },
       }
       emit('submitFilter', {
         filters

@@ -7,14 +7,14 @@ use App\Models\Music\Artist;
 
 class ArtistRepository
 {
-    public static function getWithCursor(array $filters = [])
+    public static function getWithCursor(Filter|null $filter)
     {
-        return Artist::filter($filters, 'tags', 'tags', 'id')
+        return Artist::filter($filter)
                      ->orderByDesc('created_at')
                      ->cursorPaginate(12);
     }
 
-    public static function getWithPaginate(Filter $filter)
+    public static function getWithPaginate(Filter|null $filter)
     {
         return Artist::filter($filter)
                      ->orderByDesc('created_at')

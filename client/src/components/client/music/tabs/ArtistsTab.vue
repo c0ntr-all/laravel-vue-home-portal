@@ -133,8 +133,8 @@ export default {
       filters = filters || {}
 
       await api.post('music/artists', filters).then(response => {
-        artists.value = response.data.artists
-        pagination.value = response.data.pagination
+        artists.value = response.data.data.items
+        pagination.value = response.data.data.pagination
       }).catch(error => {
         $q.notify({
           type: 'negative',
@@ -153,8 +153,8 @@ export default {
 
         await api.post('music/artists', {'cursor': cursor})
           .then(response => {
-            pagination.value = response.data.pagination
-            artists.value.push(...response.data.artists)
+            pagination.value = response.data.data.pagination
+            artists.value.push(...response.data.data.items)
             paginationLoading.value = false
           })
       }

@@ -15,8 +15,9 @@ class MusicTagsFilter implements FilterInterface
 
     public function apply(Builder $query): Builder
     {
-        $type = $this->tags['type'] ?? false;
-        $tags = explode(',', $this->tags['tags']);
+        $type = $this->tags['type'] ?? 'strict';
+        $union = $this->tags['union'] ?? false;
+        $tags = $this->tags['tags'];
 
         // If hierarchy mode is selected, we'll take all children tags
         if ($type == 'hierarchical') {
@@ -40,7 +41,7 @@ class MusicTagsFilter implements FilterInterface
                             ->toArray();
         }
 
-        if ($type == 'union') {
+        if ($union && $type == 'strict') {
             foreach ($tags as $tag) {
                 $query->whereRelation('tags', 'id', $tag);
             }
