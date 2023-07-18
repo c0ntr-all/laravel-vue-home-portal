@@ -24,7 +24,7 @@ class ArtistService {
     {
         $filter = $this->prepareFilters($requestData);
 
-        return $this->artistRepository->getWithPaginate($filter);
+        return $this->artistRepository->getWithCursor($filter);
     }
 
     public function storeArtist(array $requestData)

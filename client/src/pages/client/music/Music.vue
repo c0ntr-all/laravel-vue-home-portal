@@ -69,7 +69,7 @@ import { ref, onMounted } from "vue"
 import { api } from "src/boot/axios"
 
 import TracksTab from "src/components/client/music/tabs/TracksTab.vue"
-import ArtistsTab from "src/components/client/music/tabs/ArtistsTab.vue"
+import ArtistsTab from "components/client/music/tabs/artists/ArtistsTab.vue"
 import PlaylistsTab from "src/components/client/music/tabs/PlaylistsTab.vue"
 import HistoryTab from "src/components/client/music/tabs/HistoryTab.vue"
 
