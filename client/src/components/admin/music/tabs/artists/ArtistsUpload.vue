@@ -98,7 +98,7 @@ export default {
     const uploadArtist = async () => {
       fullPathRef.value.validate()
 
-      await api.post('music/upload', {'folder': fullPath.value}).then(response => {
+      await api.post('music/admin/artists/upload', {'folder': fullPath.value}).then(response => {
         if(response.data.success) {
           $q.notify({
             type: 'positive',

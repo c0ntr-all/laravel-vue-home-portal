@@ -100,6 +100,8 @@ export const useMusicPlayer = defineStore('musicPlayer', {
         this.track = track
         this.audio.src = track.link ? track.link : `http://home-portal.test/api/music/tracks/${track.id}/play`
 
+        console.log(process.env)
+
         this.timer.start(this.getSecondsToScrobble())
         this.isScrobbled = false
         this.stopScrobble = false

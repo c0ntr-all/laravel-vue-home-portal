@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Music\Artist\IndexRequest;
-use App\Http\Resources\Music\Artists\AdminArtistCollection;
 use App\Http\Resources\Music\Artists\ArtistCollection;
 use App\Http\Resources\Music\Artists\ArtistResource;
 use App\Models\Music\Artist;

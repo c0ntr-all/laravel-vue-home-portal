@@ -1,6 +1,6 @@
 <template>
   <div class="q-mb-md">
-    <AddTagButton />
+    <AddTagButton @tagCreate="addTag" />
     <q-input
       class="q-mb-md"
       ref="filterRef"
@@ -239,10 +239,12 @@
      }
 
      const getTags = async () => {
-       await api.post('music/tags/tree')
+       await api.post('music/admin/tags')
          .then(response => {
-           commonTags.value = response.data.tags.common
-           secondaryTags.value = response.data.tags.secondary
+           const {data: {data}} = response
+
+           commonTags.value = data.items.common
+           secondaryTags.value = data.items.secondary
          }).catch(error => {
            $q.notify({
              type: 'negative',
@@ -251,13 +253,14 @@
          })
      }
 
-     const addTag = async () => {
-       const parentTagId = tagModel.value.parentTag.id
-       await api.put('music/tags/store', {
+     const addTag = async data => {
+       data = data || {
          name: tagModel.value.name,
          content: tagModel.value.content,
          parent_id: parentTagId
-       }).then(response => {
+       }
+       const parentTagId = tagModel.value.parentTag.id
+       await api.put('music/admin/tags/store', data).then(response => {
 
          insertIntoTree(tagModel.value.parentTag.common ? commonTags.value : secondaryTags.value, parentTagId, response.data.tags)
 

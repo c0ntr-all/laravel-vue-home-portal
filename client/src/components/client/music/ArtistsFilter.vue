@@ -88,9 +88,9 @@ export default {
     }
 
     const getTagsSelect = async () => {
-      await api.post('music/tags/select').then(response => {
-        commonTagsSelect.value = Object.keys(response.data.tags.common).map(key => response.data.tags.common[key])
-        secondaryTagsSelect.value = Object.keys(response.data.tags.secondary).map(key => response.data.tags.secondary[key])
+      await api.post('music/admin/tags/select').then(response => {
+        commonTagsSelect.value = Object.keys(response.data.data.items.common).map(key => response.data.data.items.common[key])
+        secondaryTagsSelect.value = Object.keys(response.data.data.items.secondary).map(key => response.data.data.items.tags.secondary[key])
       }).catch(error => {
         $q.notify({
           type: 'negative',

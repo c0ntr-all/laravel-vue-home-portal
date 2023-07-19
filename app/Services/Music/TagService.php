@@ -3,11 +3,17 @@
 namespace App\Services\Music;
 
 use App\Models\Music\MusicTag;
+use Illuminate\Support\Collection;
 
 class TagService
 {
     public function __construct()
     {
+    }
+
+    public function getTags(): Collection
+    {
+        return MusicTag::orderBy('name')->get();
     }
 
     public function storeTag($requestData)

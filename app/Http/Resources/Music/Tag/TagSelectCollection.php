@@ -11,24 +11,23 @@ class TagSelectCollection extends ResourceCollection
 
     public function toArray($request): array
     {
+        Collection::macro('prepareTags', function (bool $common) {
+            return $this->where('common', $common)
+                        ->map(function ($item) {
+                            return [
+                                'label' => $item->name,
+                                'value' => $item->id
+                            ];
+                        });
+        });
+
         return [
             'success' => true,
-            'tags' => [
-                'common' => $this->prepareTags(),
-                'secondary' => $this->prepareTags(false)
+            'items' => [
+                'common' => $this->collection->prepareTags(true),
+                'secondary' => $this->collection->prepareTags(false)
             ],
-            'tagsCount' => $this->count()
+            'count' => $this->count()
         ];
-    }
-
-    private function prepareTags($common = true): Collection
-    {
-        return $this->collection->where('common', $common)
-                                ->map(function ($item) {
-                                    return [
-                                        'label' => $item->name,
-                                        'value' => $item->id
-                                    ];
-                                });
     }
 }

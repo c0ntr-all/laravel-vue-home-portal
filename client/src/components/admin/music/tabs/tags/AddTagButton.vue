@@ -48,56 +48,52 @@
   </q-dialog>
 </template>
 
-<script>
-import { ref } from "vue";
+<script setup>
+import { ref, defineEmits } from "vue";
 import { useQuasar } from "quasar";
-
 import { api } from "boot/axios";
 
-export default {
-  name: "AddTagButton",
-  setup() {
-    const $q = useQuasar()
+const $q = useQuasar()
+const emit = defineEmits(['tagCreated']);
 
-    const dialog = ref(false)
-    const model = ref({common: true})
+const dialog = ref(false)
+const model = ref({common: true})
 
-    const storeTag = async () => {
-      await api.put("music/tags/store", {
-        name: model.value.name,
-        content: model.value.content,
-        common: model.value.common
-      }).then(response => {
-        $q.notify({
-          type: 'positive',
-          message: `Тег ${response.data.tags.label} успешно добавлен!`
-        })
-      }).catch(error => {
-        if (error.response.status === 422) {
-          const errors = error.response.data.errors
-          Object.keys(errors).map(key => {
-            $q.notify({
-              type: 'negative',
-              message: errors[key]
-            })
-          })
-        } else {
-          $q.notify({
-            type: 'negative',
-            message: error
-          })
-        }
-      }).finally(() => {
-        model.value = {common: true}
-      })
-    }
-
-    return {
-      model,
-      dialog,
-      storeTag
-    }
-  }
+const storeTag = async () => {
+  emit('tagCreate', {
+    name: model.value.name,
+    content: model.value.content,
+    common: model.value.common
+  })
+  // await api.put("music/admin/tags/store", {
+  //   name: model.value.name,
+  //   content: model.value.content,
+  //   common: model.value.common
+  // }).then(response => {
+  //   const {data: {data}} = response
+  //   // emit('tagCreated', data)
+  //   $q.notify({
+  //     type: 'positive',
+  //     message: `Тег ${response.data.data.label} успешно добавлен!`
+  //   })
+  // }).catch(error => {
+  //   if (error.response.status === 422) {
+  //     const errors = error.response.data.errors
+  //     Object.keys(errors).map(key => {
+  //       $q.notify({
+  //         type: 'negative',
+  //         message: errors[key]
+  //       })
+  //     })
+  //   } else {
+  //     $q.notify({
+  //       type: 'negative',
+  //       message: error
+  //     })
+  //   }
+  // }).finally(() => {
+  //   model.value = {common: true}
+  // })
 }
 </script>
 

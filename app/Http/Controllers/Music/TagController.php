@@ -36,30 +36,6 @@ class TagController extends Controller
         }
     }
 
-    /**
-     * @return TagSelectCollection
-     */
-    public function tagsSelect(): TagSelectCollection
-    {
-        return new TagSelectCollection($this->tag->getItems());
-    }
-
-    /**
-     * @return TagTreeCollection
-     */
-    public function tagsTree(): TagTreeCollection
-    {
-        //todo возможно, тут надо сделать отдельный метод на получение сразу всех тегов с parent_id = 0 вместо getItems
-        return new TagTreeCollection($this->tag->getItems());
-    }
-
-    public function store(StoreRequest $request)
-    {
-        $result = $this->service->storeTag($request->validated());
-
-        return new TagResource($result);
-    }
-
     public function update(MusicTag $tag, UpdateRequest $request)
     {
         $updated = $tag->update($request->validated());
