@@ -49,12 +49,8 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
-import { useQuasar } from "quasar";
-import { api } from "boot/axios";
-
-const $q = useQuasar()
-const emit = defineEmits(['tagCreated']);
+import { ref } from "vue";
+const emit = defineEmits(['tagCreate']);
 
 const dialog = ref(false)
 const model = ref({common: true})
@@ -65,35 +61,6 @@ const storeTag = async () => {
     content: model.value.content,
     common: model.value.common
   })
-  // await api.put("music/admin/tags/store", {
-  //   name: model.value.name,
-  //   content: model.value.content,
-  //   common: model.value.common
-  // }).then(response => {
-  //   const {data: {data}} = response
-  //   // emit('tagCreated', data)
-  //   $q.notify({
-  //     type: 'positive',
-  //     message: `Тег ${response.data.data.label} успешно добавлен!`
-  //   })
-  // }).catch(error => {
-  //   if (error.response.status === 422) {
-  //     const errors = error.response.data.errors
-  //     Object.keys(errors).map(key => {
-  //       $q.notify({
-  //         type: 'negative',
-  //         message: errors[key]
-  //       })
-  //     })
-  //   } else {
-  //     $q.notify({
-  //       type: 'negative',
-  //       message: error
-  //     })
-  //   }
-  // }).finally(() => {
-  //   model.value = {common: true}
-  // })
 }
 </script>
 

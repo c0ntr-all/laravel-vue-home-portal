@@ -257,16 +257,29 @@
        data = data || {
          name: tagModel.value.name,
          content: tagModel.value.content,
-         parent_id: parentTagId
+         parent_id: tagModel.value.parentTag.id
        }
-       const parentTagId = tagModel.value.parentTag.id
        await api.put('music/admin/tags/store', data).then(response => {
-
-         insertIntoTree(tagModel.value.parentTag.common ? commonTags.value : secondaryTags.value, parentTagId, response.data.tags)
+         const {data: {data}} = response
+         if (Object.keys(tagModel.value).length !== 0) {
+           insertIntoTree(
+             tagModel.value.parentTag.common ? commonTags.value : secondaryTags.value,
+             tagModel.value.parentTag.id,
+             data
+           )
+         } else {
+           if (data.common) {
+             commonTags.value.push(data)
+             commonTags.value.sort((a, b) => a.label.localeCompare(b.label));
+           } else {
+             secondaryTags.value.push(data)
+             secondaryTags.value.sort((a, b) => a.label.localeCompare(b.label));
+           }
+         }
 
          $q.notify({
            type: 'positive',
-           message: `Тег ${response.data.tags.label} успешно добавлен!`
+           message: `Тег ${data.label} успешно добавлен!`
          })
 
          clearTagModel()
