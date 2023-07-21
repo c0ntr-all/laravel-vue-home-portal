@@ -96,7 +96,6 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 });
                 Route::prefix('tags')->group(function() {
                     Route::post('/', [AdminTagController::class, 'index']);
-                    Route::post('select', [AdminTagController::class, 'select']);
                     Route::put('store', [AdminTagController::class, 'store']);
                 });
             });
@@ -119,6 +118,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             });
             Route::prefix('tags')->group(function() {
                 Route::post('/', [TagController::class, 'index']);
+                Route::post('select', [TagController::class, 'select']);
                 Route::patch('{tag}/update', [TagController::class, 'update']);
                 Route::post('{tag}/delete', [TagController::class, 'delete']);
             });

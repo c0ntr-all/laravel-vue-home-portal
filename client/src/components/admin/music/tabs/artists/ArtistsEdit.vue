@@ -195,7 +195,7 @@ export default {
       total.value = data.data.total
     }
     const getTagsSelect = async () => {
-      const {data: {data}} = await api.post('music/admin/tags/select')
+      const {data: {data}} = await api.post('music/tags/select')
 
       commonTags.value = Object.keys(data.items.common).map(key => data.items.common[key])
       secondaryTags.value = Object.keys(data.items.secondary).map(key => data.items.secondary[key])

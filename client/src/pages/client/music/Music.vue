@@ -80,8 +80,8 @@ export default {
     let tagsLoading = ref(true)
 
     const getTags = async () => {
-      await api.post('music/tags/tree').then(response => {
-        tags.value = response.data.tags
+      await api.post('music/tags/select').then(response => {
+        tags.value = response.data.data.items
         tagsLoading.value = false
       })
     }

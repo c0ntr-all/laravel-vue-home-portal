@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\Music;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Music\Tag\StoreRequest;
 use App\Http\Resources\Music\Tag\TagResource;
-use App\Http\Resources\Music\Tag\TagSelectCollection;
 use App\Http\Resources\Music\Tag\TagTreeCollection;
 use App\Services\Music\TagService;
 use Illuminate\Http\Response;
@@ -23,13 +22,6 @@ class TagController extends BaseController
         $out = $this->service->getTags();
 
         return $this->sendResponse(new TagTreeCollection($out));
-    }
-
-    public function select(): Response
-    {
-        $out = $this->service->getTags();
-
-        return $this->sendResponse(new TagSelectCollection($out));
     }
 
     public function store(StoreRequest $request)
