@@ -1,4 +1,14 @@
 <template>
+  <q-card class="q-mb-md" flat bordered>
+    <q-card-section>
+      <!--  I've tried to make a skeleton component with name TracksTabSkeleton for it, but it fired and error:
+            Internal server error: Cannot read property 'url' of undefined
+            Interesting, that it works with name like ArtistsTabSkeleton or another.
+            It seems that the word "Tracks" is unacceptable for this component.
+      -->
+      <tracks-filter @submitFilter="getTracks" />
+    </q-card-section>
+  </q-card>
   <template v-if="loading">
     <q-markup-table>
       <thead>
@@ -59,9 +69,11 @@
 <script setup>
 import { onMounted, ref } from "vue"
 import { useQuasar } from "quasar"
-import { api } from "src/boot/axios"
-import { useMusicPlayer } from "stores/modules/musicPlayer"
 
+import { useMusicPlayer } from "stores/modules/musicPlayer"
+import { api } from "boot/axios"
+
+import TracksFilter from "components/client/music/tabs/tracks/TracksFilter.vue"
 import TrackCardRow from "components/client/music/tabs/tracks/TrackCardRow.vue"
 
 const columns = ref([{
@@ -109,25 +121,31 @@ const columns = ref([{
   field: row => row.duration,
   sortable: true,
   style: 'width: 130px'
-},{
-  name: "listen_date",
-  required: true,
-  label: 'Дата прослушивания',
-  align: 'right',
-  field: row => row.listen_date,
-  sortable: true,
-  style: 'width: 130px'
 }])
 const tracks = ref([])
 const loading = ref(true)
+let pagination = ref({
+  perPage: 0,
+  hasPages: false,
+  nextPageUrl: '',
+  prevPageUrl: ''
+})
+let paginationLoading = ref(false)
 
 const $q = useQuasar()
 const musicPlayer = useMusicPlayer()
 
-const getTracks = async () => {
-  await api.post('music/history').then(response => {
-    tracks.value = response.data.items
-    loading.value = false
+const getTracks = async filters => {
+  filters = filters || {}
+
+  await api.post('music/tracks', {
+    filters: filters,
+    with_tags: true
+  }).then(response => {
+      tracks.value = response.data.tracks
+      pagination.value = response.data.pagination
+
+      loading.value = false
   }).catch(error => {
     $q.notify({
       type: 'negative',
@@ -136,10 +154,26 @@ const getTracks = async () => {
   })
 }
 
+const loadMoreTracks = async () => {
+  if (pagination.value.hasPages) {
+    paginationLoading.value = true
+    let obUrl = new URL(pagination.value.nextPageUrl)
+    let cursor = obUrl.searchParams.get("cursor")
+
+    await api.post('music/tracks', {'cursor': cursor})
+      .then(response => {
+        pagination.value = response.data.pagination
+        tracks.value.push(...response.data.tracks)
+        paginationLoading.value = false
+      })
+  }
+}
+
 onMounted(() => {
   getTracks()
 })
 </script>
 <style lang="scss" scoped>
-
+.tracks {
+}
 </style>

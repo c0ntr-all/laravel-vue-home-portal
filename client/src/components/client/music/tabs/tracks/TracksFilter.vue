@@ -25,8 +25,8 @@
     </div>
     <div class="flex q-mb-sm q-gutter-md">
       <q-select
-        v-model="secondaryModel"
-        :options="secondaryTags"
+        v-model="secondaryTagsModel"
+        :options="secondaryTagsSelect"
         :size="'xs'"
         label="Select Style"
         style="width: 150px"
@@ -35,9 +35,9 @@
       />
       <q-select
         label="Select Genre"
-        v-model="commonModel"
+        v-model="commonTagsModel"
         input-debounce="0"
-        :options="commonTags"
+        :options="commonTagsSelect"
         style="width: 350px"
         use-input
         use-chips
@@ -81,63 +81,64 @@
     </q-inner-loading>
   </div>
 </template>
-<script>
-import { ref } from "vue"
+<script setup>
+import { ref, onMounted } from "vue"
+import { useQuasar } from "quasar"
+import { api } from "boot/axios"
 
-import { api } from "src/boot/axios"
+const emit = defineEmits(['resetFilter', 'submitFilter'])
+const $q = useQuasar()
 
-export default {
-  emits: ['submitFilter'],
-  setup(props, {emit}) {
-    const type = ref('strict')
-    const union = ref(true)
-    const rate = ref([])
-    const commonTags = ref([])
-    const secondaryTags = ref([])
-    const commonModel = ref()
-    const secondaryModel = ref()
-    const loading = ref(true)
+const type = ref('strict')
+const union = ref(true)
+const rate = ref([])
+const commonTagsSelect = ref([])
+const secondaryTagsSelect = ref([])
+const commonTagsModel = ref()
+const secondaryTagsModel = ref()
+const loading = ref(true)
 
-    const checkRules = async () => {
-      union.value = type.value === 'strict'
-    }
-
-    const getTagsSelect = async () => {
-      await api.post('music/tags/select').then(response => {
-        commonTags.value = Object.keys(response.data.tags.common).map(key => response.data.tags.common[key])
-        secondaryTags.value = Object.keys(response.data.tags.secondary).map(key => response.data.tags.secondary[key])
-
-        loading.value = false
-      })
-    }
-
-    const submitFilter = () => {
-      emit('submitFilter', {
-        tags: secondaryModel.value ? commonModel.value.concat(secondaryModel.value) : commonModel.value,
-        type: type.value,
-        union: union.value,
-        rate: rate.value
-      })
-    }
-
-    return {
-      type,
-      union,
-      rate,
-      commonTags,
-      secondaryTags,
-      commonModel,
-      secondaryModel,
-      loading,
-      checkRules,
-      getTagsSelect,
-      submitFilter
-    }
-  },
-  mounted() {
-    this.getTagsSelect()
-  }
+const checkRules = async () => {
+  union.value = type.value === 'strict'
 }
+
+const getTagsSelect = async () => {
+  await api.post('music/tags/select').then(response => {
+    const {data: {data}} = response
+
+    commonTagsSelect.value = Object.keys(data.items.common).map(key => data.items.common[key])
+    secondaryTagsSelect.value = Object.keys(data.items.secondary).map(key => data.items.secondary[key])
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: `Server Error: ${error.response.data.message}`
+    })
+  }).finally(() => {
+    loading.value = false
+  })
+}
+
+const submitFilter = () => {
+  emit('submitFilter', {
+    tags: secondaryTagsModel.value ? commonTagsModel.value.concat(secondaryTagsModel.value) : commonTagsModel.value,
+    type: type.value,
+    union: union.value,
+    rate: rate.value
+  })
+}
+
+const resetFilter = () => {
+  commonTagsModel.value = []
+  secondaryTagsModel.value = []
+  type.value = 'strict'
+  union.value = true
+
+  emit('resetFilter')
+}
+
+onMounted(() => {
+  getTagsSelect()
+})
 </script>
 <style lang="scss">
 .tracks-filter {

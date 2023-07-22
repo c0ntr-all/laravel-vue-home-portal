@@ -22,7 +22,6 @@ class TagSelectCollection extends ResourceCollection
         });
 
         return [
-            'success' => true,
             'items' => [
                 'common' => $this->collection->prepareTags(true),
                 'secondary' => $this->collection->prepareTags(false)

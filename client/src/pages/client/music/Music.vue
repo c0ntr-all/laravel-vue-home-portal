@@ -35,28 +35,7 @@
     </q-tab-panel>
 
     <q-tab-panel name="genres" class="q-pa-none">
-      <q-card>
-        <q-card-section>
-          <div class="text-h4 q-mb-md">Genres</div>
-          <div class="tags q-mb-lg">
-            <div class="tags-list q-gutter-sm">
-              <q-btn
-                v-for="tag in tags.common"
-                :key="tag.id"
-                :label="tag.label"
-                :to="'/music/tags/' + tag.slug"
-                color="primary"
-                size="sm"
-                rounded
-                unelevated
-              />
-              <q-inner-loading :showing="tagsLoading">
-                <q-spinner-gears size="50px" color="primary" />
-              </q-inner-loading>
-            </div>
-          </div>
-        </q-card-section>
-      </q-card>
+      <TagsTab />
     </q-tab-panel>
 
     <q-tab-panel name="history" class="q-pa-none">
@@ -64,40 +43,16 @@
     </q-tab-panel>
   </q-tab-panels>
 </template>
-<script>
-import { ref, onMounted } from "vue"
-import { api } from "src/boot/axios"
+<script setup>
+import { ref } from "vue"
 
-import TracksTab from "src/components/client/music/tabs/TracksTab.vue"
+import TracksTab from "components/client/music/tabs/tracks/TracksTab.vue"
 import ArtistsTab from "components/client/music/tabs/artists/ArtistsTab.vue"
 import PlaylistsTab from "src/components/client/music/tabs/PlaylistsTab.vue"
+import TagsTab from "src/components/client/music/tabs/tags/TagsTab.vue"
 import HistoryTab from "src/components/client/music/tabs/HistoryTab.vue"
 
-export default {
-  components: { TracksTab, ArtistsTab, PlaylistsTab, HistoryTab },
-  setup() {
-    const tags = ref([])
-    let tagsLoading = ref(true)
-
-    const getTags = async () => {
-      await api.post('music/tags/select').then(response => {
-        tags.value = response.data.data.items
-        tagsLoading.value = false
-      })
-    }
-
-    onMounted(() => {
-      getTags()
-    })
-
-    return {
-      tab: ref('artists'),
-      tags,
-      tagsLoading,
-      getTags
-    }
-  }
-}
+const tab = ref('artists')
 </script>
 
 <style lang="scss" scoped>

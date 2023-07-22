@@ -61,7 +61,7 @@ import { ref, computed } from "vue"
 import { useQuasar } from "quasar"
 
 import { useMusicPlayer } from "stores/modules/musicPlayer"
-import { api } from "src/boot/axios"
+import { api } from "boot/axios"
 
 export default {
   props: ['props'],
