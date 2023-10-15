@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
-import { Notify } from "quasar";
-import addZero from "src/utils/addzero";
-import Timer from "src/utils/timer";
-import API from "src/utils/api";
+import { defineStore } from "pinia"
+import { Notify } from "quasar"
+import addZero from "src/utils/addzero"
+import Timer from "src/utils/timer"
+import { api } from "src/boot/axios"
 
 export const useMusicPlayer = defineStore('musicPlayer', {
   state: () => {
@@ -98,7 +98,7 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       if (this.track?.id !== track.id) {
         this.pause()
         this.track = track
-        this.audio.src = `http://home-portal.local/api/music/tracks/${track.id}/play`
+        this.audio.src = track.link ? track.link : `http://home-portal.test/api/music/tracks/${track.id}/play`
 
         this.timer.start(this.getSecondsToScrobble())
         this.isScrobbled = false
@@ -175,7 +175,7 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       return Math.round(trackDuration / 2)
     },
     async scrobbleSong() {
-      await API.put('music/history/scrobble', {
+      await api.put('music/history/scrobble', {
         track_id: this.track.id
       }).then(() => {
         this.isScrobbled = true

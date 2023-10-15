@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Music\MusicHistory;
+use App\Models\Music\Playlist;
 use App\Models\Reminds\Remind;
+use App\Models\Reminds\RemindGroup;
 use App\Models\Tasks\TaskList;
 use App\Models\Traits\HasDates;
 use App\Models\Widgets\WidgetPlacement;
@@ -37,12 +40,27 @@ class User extends Authenticatable implements JWTSubject
 
     public function reminds(): HasMany
     {
-        return $this->hasMany(Remind::class);
+        return $this->hasMany(Remind::class, 'user_id', 'id');
+    }
+
+    public function remindsGroups(): HasMany
+    {
+        return $this->hasMany(RemindGroup::class, 'user_id', 'id');
     }
 
     public function widgets(): HasMany
     {
         return $this->hasMany(WidgetPlacement::class);
+    }
+
+    public function playlists(): HasMany
+    {
+        return $this->hasMany(Playlist::class);
+    }
+
+    public function musicHistory(): HasMany
+    {
+        return $this->hasMany(MusicHistory::class)->with('track.tags');
     }
 
     public function setPasswordAttribute(string $password): void

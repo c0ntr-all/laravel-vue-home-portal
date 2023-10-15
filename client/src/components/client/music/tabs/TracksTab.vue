@@ -67,11 +67,11 @@
   </template>
 </template>
 <script>
-import { onMounted, ref } from "vue";
-import { useQuasar } from "quasar";
+import { onMounted, ref } from "vue"
+import { useQuasar } from "quasar"
 
-import { useMusicPlayer } from "stores/modules/musicPlayer";
-import API from "src/utils/api";
+import { useMusicPlayer } from "stores/modules/musicPlayer"
+import { api } from "src/boot/axios"
 
 import TracksFilter from "src/components/client/music/TracksFilter.vue"
 import TrackCardRow from "src/components/client/music/TrackCardRow.vue"
@@ -141,7 +141,7 @@ export default {
     const getTracks = async filters => {
       filters = filters || {}
 
-      await API.post('music/tracks', {
+      await api.post('music/tracks', {
         filters: filters,
         with_tags: true
       }).then(response => {
@@ -163,7 +163,7 @@ export default {
         let obUrl = new URL(pagination.value.nextPageUrl)
         let cursor = obUrl.searchParams.get("cursor")
 
-        await API.post('music/tracks', {'cursor': cursor})
+        await api.post('music/tracks', {'cursor': cursor})
           .then(response => {
             pagination.value = response.data.pagination
             tracks.value.push(...response.data.tracks)

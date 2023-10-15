@@ -19,7 +19,7 @@ class ArtistResource extends JsonResource
             'content' => $this->content,
             'image' => $this->full_image,
             'createdAt' => $this->created_at,
-            'albums' => $this->albums,
+            'albums' => AlbumResource::collection($this->albums),
             'tags' => [
                 'common' => $commonTags->pluck('id'),
                 'secondary' => $secondaryTags->pluck('id')

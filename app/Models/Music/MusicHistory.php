@@ -3,7 +3,6 @@
 namespace App\Models\Music;
 
 use App\Models\Traits\HasDates;
-use App\Models\Traits\HasMusicTags;
 use App\Models\Traits\HasUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,10 +30,5 @@ class MusicHistory extends Model
     public function track(): BelongsTo
     {
         return $this->belongsTo(Track::class);
-    }
-
-    public static function getHistory($user): Collection
-    {
-        return MusicHistory::whereUser($user)->with('track.tags')->get();
     }
 }

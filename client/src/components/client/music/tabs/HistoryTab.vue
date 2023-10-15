@@ -57,12 +57,12 @@
   </template>
 </template>
 <script>
-import {onMounted, ref} from "vue";
-import {useQuasar} from "quasar";
+import { onMounted, ref } from "vue"
+import { useQuasar } from "quasar"
 
-import API from "src/utils/api";
-import {useMusicPlayer} from "stores/modules/musicPlayer";
-import TrackCardRow from "components/client/music/TrackCardRow.vue";
+import { api } from "src/boot/axios"
+import { useMusicPlayer } from "stores/modules/musicPlayer"
+import TrackCardRow from "components/client/music/TrackCardRow.vue"
 
 export default {
   components: { TrackCardRow },
@@ -128,7 +128,7 @@ export default {
     const musicPlayer = useMusicPlayer()
 
     const getTracks = async () => {
-      await API.post('music/history').then(response => {
+      await api.post('music/history').then(response => {
         tracks.value = response.data.items
         loading.value = false
       }).catch(error => {

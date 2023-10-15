@@ -10,6 +10,7 @@
       class="q-mb-lg"
       no-caps
     />
+    <p>Всего списков: {{ listsCount }}</p>
     <div v-if="showAddForm === true" class="list__add-form q-mb-lg">
       <q-input
         @keyup.enter="addNewList"
@@ -26,7 +27,7 @@
       <TaskList
         v-for="(list, index) in taskLists"
         :list="list"
-        :items="list.items"
+        :items="list.tasks"
         :key="list.id"
         :ref="'list-ref-' + index"
       />
@@ -34,12 +35,12 @@
   </template>
 </template>
 <script>
-import {ref, onMounted, nextTick} from 'vue'
-import {useQuasar} from "quasar"
+import { ref, onMounted, nextTick } from "vue"
+import { useQuasar } from "quasar"
 
-import API from "src/utils/api"
+import { api } from "src/boot/axios"
 
-import TasksPageSkeleton from 'src/components/client/tasks/skeleton/TasksPage.vue'
+import TasksPageSkeleton from "src/components/client/tasks/skeleton/TasksPage.vue"
 import TaskList from "components/client/tasks/TaskList.vue"
 
 export default {
@@ -49,6 +50,7 @@ export default {
 
     const showAddForm = ref(false)
     const taskLists = ref([])
+    const listsCount = ref(0)
     let loading = ref(true)
     const listAddTextarea = ref(null)
     const model = ref({
@@ -65,7 +67,7 @@ export default {
       const listName = model.value.newListName
       model.value.newListName = ''
 
-      await API.put('tasks/list/store', {
+      await api.put('tasks/list/store', {
         'title': listName
       }).then(response => {
         $q.notify({
@@ -80,26 +82,31 @@ export default {
         })
       })
     }
+
     const getTaskLists = async () => {
-      await API.get('tasks').then(response => {
-        taskLists.value = response.data.lists
-        loading.value = false
+      await api.get('tasks').then(response => {
+        taskLists.value = response.data.data.lists
+        listsCount.value = response.data.data.listsCount
       }).catch(error => {
         $q.notify({
           type: 'negative',
           message: `Server Error: ${error}`
         })
+      }).finally(() => {
         loading.value = false
       })
     }
+
     onMounted(() => {
       getTaskLists()
     })
+
     return {
       showAddForm,
       model,
       loading,
       taskLists,
+      listsCount,
       listAddTextarea,
       openAddForm,
       addNewList

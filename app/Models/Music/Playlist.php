@@ -15,7 +15,9 @@ class Playlist extends Model
 
     public $fillable = [
         'user_id',
-        'name'
+        'image',
+        'name',
+        'content'
     ];
 
     public $table = 'music_playlists';

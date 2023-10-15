@@ -7,7 +7,7 @@ use getID3;
 
 class ParseMusicTracks extends BaseMusicParse
 {
-    public function __construct(private getID3 $getID3)
+    public function __construct(protected getID3 $getID3)
     {
         parent::__construct($getID3);
     }
@@ -39,7 +39,7 @@ class ParseMusicTracks extends BaseMusicParse
 
                     $info = pathinfo($item);
 
-                    if (isset($info['extension']) && in_array($info['extension'], self::EXTENSIONS)) {
+                    if (isset($info['extension']) && in_array($info['extension'], self::TRACK_EXTENSIONS)) {
                         $trackPath = $albumPath . DIRECTORY_SEPARATOR . $item;
                         $id3TrackInfo = $this->getID3->analyze($trackPath);
 

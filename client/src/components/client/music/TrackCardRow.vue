@@ -57,11 +57,11 @@
   </q-tr>
 </template>
 <script>
-import { ref, computed } from 'vue'
-import { useQuasar } from "quasar";
+import { ref, computed } from "vue"
+import { useQuasar } from "quasar"
 
-import { useMusicPlayer } from 'stores/modules/musicPlayer'
-import API from "src/utils/api";
+import { useMusicPlayer } from "stores/modules/musicPlayer"
+import { api } from "src/boot/axios"
 
 export default {
   props: ['props'],
@@ -83,7 +83,7 @@ export default {
     const handleRate = async (value) => {
       const previousRate = props.props.row.rate
 
-      await API.post(`music/tracks/${props.props.row.id}/rate`, {
+      await api.post(`music/tracks/${props.props.row.id}/rate`, {
         rate: value
       }).catch(error => {
         $q.notify({

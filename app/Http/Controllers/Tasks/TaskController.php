@@ -2,31 +2,17 @@
 
 namespace App\Http\Controllers\Tasks;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\Tasks\Tasks\StoreRequest;
 use App\Http\Requests\Tasks\Tasks\UpdateRequest;
 use App\Http\Resources\Task\TaskResource;
 use App\Models\Tasks\Task;
 use App\Models\Tasks\TaskList;
-use App\Models\User;
-use App\Services\TaskService;
 
-class TaskController extends Controller
+class TaskController extends BaseController
 {
-    protected Task $task;
-    protected TaskList $taskList;
-    protected TaskService $taskService;
-    protected User $user;
-
-    public function __construct(Task $task, TaskList $taskList, User $user)
+    public function __construct()
     {
-        $this->task = $task;
-        $this->taskList = $taskList;
-        $this->user = $user;
-    }
-    protected function taskResponse(Task $task): TaskResource
-    {
-        return new TaskResource($task);
     }
 
     public function store(StoreRequest $request, TaskList $taskList): TaskResource
@@ -41,5 +27,10 @@ class TaskController extends Controller
         $task->update($request->validated());
 
         return $this->taskResponse($task);
+    }
+
+    protected function taskResponse(Task $task): TaskResource
+    {
+        return new TaskResource($task->load(['comments']));
     }
 }

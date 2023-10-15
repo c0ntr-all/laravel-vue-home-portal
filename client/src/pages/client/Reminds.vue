@@ -205,10 +205,10 @@
   </template>
 </template>
 <script>
-import {ref, onMounted} from 'vue'
-import {useQuasar} from "quasar"
+import { ref, onMounted } from "vue"
+import { useQuasar } from "quasar"
 
-import API from "src/utils/api"
+import { api } from "src/boot/axios"
 
 import RemindsTableSkeleton from 'src/components/client/reminds/skeleton/RemindsPage.vue'
 import TableCol from 'src/components/client/reminds/RemindsTableCol.vue'
@@ -245,7 +245,7 @@ export default {
     const groups = ref([])
 
     const getReminds = async () => {
-      await API.get('reminds').then(response => {
+      await api.get('reminds').then(response => {
         reminds.value = response.data.reminds
         loading.value = false
       }).catch(error => {
@@ -260,7 +260,7 @@ export default {
     const createRemind = async () => {
       createRemindLoading.value = true
 
-      await API.put('reminds/store', {
+      await api.put('reminds/store', {
         ...model.value
       }).then(response => {
         createRemindLoading.value = false
@@ -282,7 +282,7 @@ export default {
     const updateRemind = async () => {
       updateRemindLoading.value = true
 
-      await API.patch(`reminds/${model.value.id}/update`, {
+      await api.patch(`reminds/${model.value.id}/update`, {
         ...model.value
       }).then(response => {
         for(let key in reminds.value) {
@@ -290,18 +290,18 @@ export default {
             reminds.value[key] = response.data.data
           }
         }
-        updateRemindLoading.value = false
         $q.notify({
           type: 'positive',
           message: `Remind has been updated!`
         })
         updateRemindModal.value = false
       }).catch(error => {
-        updateRemindLoading.value = false
         $q.notify({
           type: 'negative',
           message: `Server Error: ${error.response.data.message}`
         })
+      }).finally(() => {
+        updateRemindLoading.value = false
       })
     }
 
@@ -318,8 +318,8 @@ export default {
       if (!groups.value.length) {
         getGroupsLoading.value = true
 
-        await API.get('user/settings').then(response => {
-          groups.value = response.data.value
+        await api.get('user/settings').then(response => {
+          groups.value = response.data.data.value
         }).catch(error => {
           $q.notify({
             type: 'negative',

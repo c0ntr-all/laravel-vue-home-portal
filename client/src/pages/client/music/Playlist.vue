@@ -20,23 +20,37 @@
         </h2>
         <h2 v-else class="playlist-head__name">{{ playlist.name }}</h2>
         <div class="playlist-head__description">
-          <q-skeleton v-if="loading" type="text" width="300px" />
-          <q-skeleton v-if="loading" type="text" width="300px" />
-          <q-skeleton v-if="loading" type="text" width="300px" />
-          <q-skeleton v-if="loading" type="text" width="300px" />
+          <template v-if="loading">
+            <q-skeleton type="text" width="300px" />
+            <q-skeleton type="text" width="300px" />
+            <q-skeleton type="text" width="300px" />
+            <q-skeleton type="text" width="300px" />
+          </template>
           <div v-else class="playlist-head__description-item">{{ playlist.content }}</div>
         </div>
       </div>
     </div>
     <div class="playlist-body">
-      <MusicTracksList
-        v-if="playlist?.tracks?.length"
-        @remove="console.log(track)"
-        :tracks="playlist.tracks"
-        :actions="['addToPlaylist', 'deleteFromPlaylist']"
-        :playlist="id"
-      />
-      <div v-else>Playlist is Empty!</div>
+      <template v-if="loading">
+        <TracksListSkeleton />
+      </template>
+      <template v-else>
+        <MusicTracksList
+          v-if="playlist?.tracks?.length"
+          :tracks="playlist.tracks"
+          :actions="['addToPlaylist', 'deleteFromPlaylist']"
+          :playlist="id"
+        />
+        <div v-else class="bg-white q-pa-lg">
+          <div class="playlist-empty">
+            <div class="playlist-empty__content">
+              <div class="playlist-empty__icon"><q-icon size="xl" name="search" /></div>
+              <div class="playlist-empty__title">Playlist is empty</div>
+              <div class="playlist-empty__text">Add some tracks!</div>
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -44,13 +58,14 @@
 import { ref, onMounted, watch } from "vue"
 import { useRoute } from "vue-router"
 
-import API from "src/utils/api"
+import { api } from "src/boot/axios"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
 
 import MusicTracksList from "src/components/client/music/MusicTracksList.vue"
+import TracksListSkeleton from "components/client/music/skeleton/TracksListSkeleton.vue"
 
 export default {
-  components: { MusicTracksList },
+  components: { MusicTracksList, TracksListSkeleton },
   props: {
     'id': String
   },
@@ -63,7 +78,7 @@ export default {
     const playlist = ref([])
 
     const getPlaylist = async id => {
-      await API.get(`music/playlists/${id}/index`)
+      await api.get(`music/playlists/${id}/show`)
         .then(response => {
         playlist.value = response.data
       }).catch(error => {
@@ -120,6 +135,33 @@ export default {
     &-item {
       margin-bottom: 1rem;
     }
+  }
+}
+.playlist-body {
+  background: #fff;
+}
+.playlist-empty {
+  display: flex;
+  justify-content: center;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  &__icon {
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+    background: $grey-2;
+  }
+  &__title {
+    margin: 0.5rem;
+    font-size: 20px;
+    line-height: 25px;
   }
 }
 </style>

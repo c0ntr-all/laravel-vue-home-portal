@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Music\Upload\UploadRequest;
-use App\Jobs\MusicParseArtistJob;
+use App\Http\Requests\Music\Artist\UploadRequest;
+use App\Services\Music\Parse\ParseMusicFolders;
 
 class UploadController extends Controller
 {
@@ -14,6 +14,6 @@ class UploadController extends Controller
 
     public function upload(UploadRequest $request)
     {
-        dispatch(new MusicParseArtistJob($request->validated()['folder']));
+        return (new ParseMusicFolders())->upload($request->validated()['folder']);
     }
 }

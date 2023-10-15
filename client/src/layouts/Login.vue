@@ -8,7 +8,6 @@
       <q-card-section>
         <q-form
           @submit="login()"
-          @reset="onReset"
           class="q-gutter-md"
         >
           <q-input
@@ -38,10 +37,10 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useQuasar } from 'quasar'
-import { useUserStore } from 'stores/modules/user'
+import { ref } from "vue"
+import { useRouter } from "vue-router"
+import { useQuasar } from "quasar"
+import { useUserStore } from "stores/modules/user"
 
 export default {
   setup() {
@@ -52,22 +51,21 @@ export default {
     const email = ref('')
     const password = ref('')
 
-    function login() {
+    const login = () => {
       user.login({
         email: email.value,
         password: password.value
-      }).then(() => {
-          $q.notify({
-            type: 'positive',
-            message: 'Вы успешно вошли в систему!'
-          });
-          $router.push('/')
+      }).then(response => {
+        $q.notify({
+          type: 'positive',
+          message: 'Вы успешно вошли в систему!'
+        });
+        $router.push('/')
       }).catch(error => {
         $q.notify({
           type: 'negative',
           message: error
         });
-        console.log(error)
       })
     }
 
@@ -77,29 +75,6 @@ export default {
       user,
       login
     }
-  },
-  methods: {
-    // login() {
-    //   this.$patch('login', {
-    //     email: this.model.email,
-    //     password: this.model.password
-    //   }).then(() => {
-    //     if (this.status === 'success') {
-    //       this.$q.notify({
-    //         type: 'positive',
-    //         message: 'Вы успешно вошли в систему!'
-    //       });
-    //       this.$router.push('/')
-    //     } else {
-    //       this.$q.notify({
-    //         type: 'negative',
-    //         message: this.message
-    //       });
-    //     }
-    //   }).catch(error => {
-    //       console.log(error)
-    //     })
-    // }
   }
 }
 </script>

@@ -2,12 +2,12 @@
   <q-card class="album-card">
     <!--todo Поправить формирование полного урла в будущем (с бека)          -->
     <div class="album-card__image">
-      <img :src="'http://home-portal.local/storage/' + album.image">
+      <img :src="album.image">
     </div>
 
     <q-card-section class="album-card__info">
       <div class="text-h6">
-        <router-link :to="'/music/albums/' + album.id" class="album-card__link">
+        <router-link :to="`/music/albums/${album.id}/show`" class="album-card__link">
           <p class="album-card__title" :title="album.name">{{ album.name }}</p>
         </router-link>
       </div>

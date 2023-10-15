@@ -1,18 +1,19 @@
 <template>
-  <q-tabs
-    v-model="tab"
-    align="left"
-    class="q-mb-md"
-    no-caps
-    outside-arrows
-    mobile-arrows
-  >
-    <q-tab name="tracks" label="Tracks" />
-    <q-tab name="artists" label="Artists" />
-    <q-tab name="playlists" label="Playlists" />
-    <q-tab name="genres" label="Genres" />
-    <q-tab name="history" label="History" />
-  </q-tabs>
+  <q-card class="q-mb-md" flat>
+    <q-tabs
+      v-model="tab"
+      align="left"
+      no-caps
+      outside-arrows
+      mobile-arrows
+    >
+      <q-tab name="tracks" label="Tracks" />
+      <q-tab name="artists" label="Artists" />
+      <q-tab name="playlists" label="Playlists" />
+      <q-tab name="genres" label="Genres" />
+      <q-tab name="history" label="History" />
+    </q-tabs>
+  </q-card>
   <q-tab-panels
     v-model="tab"
     animated
@@ -64,13 +65,13 @@
   </q-tab-panels>
 </template>
 <script>
-import TracksTab from 'src/components/client/music/tabs/TracksTab.vue'
-import ArtistsTab from 'src/components/client/music/tabs/ArtistsTab.vue'
-import PlaylistsTab from 'src/components/client/music/tabs/PlaylistsTab.vue'
-import HistoryTab from 'src/components/client/music/tabs/HistoryTab.vue'
+import { ref, onMounted } from "vue"
+import { api } from "src/boot/axios"
 
-import { ref, onMounted } from "vue";
-import API from "src/utils/api";
+import TracksTab from "src/components/client/music/tabs/TracksTab.vue"
+import ArtistsTab from "components/client/music/tabs/artists/ArtistsTab.vue"
+import PlaylistsTab from "src/components/client/music/tabs/PlaylistsTab.vue"
+import HistoryTab from "src/components/client/music/tabs/HistoryTab.vue"
 
 export default {
   components: { TracksTab, ArtistsTab, PlaylistsTab, HistoryTab },
@@ -79,7 +80,7 @@ export default {
     let tagsLoading = ref(true)
 
     const getTags = async () => {
-      await API.post('music/tags/tree').then(response => {
+      await api.post('music/tags/tree').then(response => {
         tags.value = response.data.tags
         tagsLoading.value = false
       })

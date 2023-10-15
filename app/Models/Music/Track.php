@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Znck\Eloquent\Relations\BelongsToThrough;
+use App\Helpers\ArrayHelper;
 
 class Track extends Model
 {
@@ -33,6 +34,7 @@ class Track extends Model
         'image',
         'duration',
         'bitrate',
+        'link',
         'updated_at',
         'deleted_at'
     ];
@@ -102,10 +104,15 @@ class Track extends Model
         });
     }
 
+    public function scopeOnlyWeb($query)
+    {
+        $query->whereNotNull('link');
+    }
+
     private function getTagsHierarchy($tags)
     {
         return MusicTag::whereIn('id', $tags)->get()->map(function($item) {
-            $tagsList = $this->normalizeArray($item->childrenCategories->toArray());
+            $tagsList = ArrayHelper::flattenArray($item->childrenCategories->toArray());
 
             return array_column($tagsList, 'id');
         });
@@ -123,35 +130,10 @@ class Track extends Model
             $query = $query->whereRate($filters);
         }
 
-        return $query->cursorPaginate(50);
-    }
-
-    /**
-     * Из рекурсивно вложенного массива делает обычный массив
-     *
-     * @param array $array
-     * @return array
-     */
-    public function normalizeArray(array $array = []): array
-    {
-        static $out = [];
-
-        foreach ($array as $subArray) {
-            if (!empty($subArray['children'])) {
-                $arrayToAdd = $subArray;
-                unset($arrayToAdd['children']);
-
-                $out[] = $arrayToAdd;
-                $this->normalizeArray($subArray['children']);
-            } else {
-                if (isset($subArray['children'])) {
-                    unset($subArray['children']);
-                }
-
-                $out[] = $subArray;
-            }
+        if (!empty($filters['tracks'])) {
+            $query = $query->onlyWeb();
         }
 
-        return $out;
+        return $query->cursorPaginate(50);
     }
 }

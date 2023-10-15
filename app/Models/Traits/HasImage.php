@@ -13,6 +13,10 @@ trait HasImage
     {
         $rootPath = url('') . '/storage/';
 
-        return !empty($this->image) ? $rootPath . $this->image : $rootPath . 'no-image.gif';
+        if (str_contains($this->image, 'http')) {
+            return $this->image;
+        } else {
+            return !empty($this->image) ? $rootPath . $this->image : $rootPath . 'no-image.gif';
+        }
     }
 }

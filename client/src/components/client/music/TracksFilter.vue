@@ -84,7 +84,7 @@
 <script>
 import { ref } from "vue"
 
-import API from "src/utils/api"
+import { api } from "src/boot/axios"
 
 export default {
   emits: ['submitFilter'],
@@ -103,7 +103,7 @@ export default {
     }
 
     const getTagsSelect = async () => {
-      await API.post('music/tags/select').then(response => {
+      await api.post('music/tags/select').then(response => {
         commonTags.value = Object.keys(response.data.tags.common).map(key => response.data.tags.common[key])
         secondaryTags.value = Object.keys(response.data.tags.secondary).map(key => response.data.tags.secondary[key])
 

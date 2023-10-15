@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\Music\ArtistController as AdminArtistController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Finances\FinancesController;
 use App\Http\Controllers\FolderController;
-use App\Http\Controllers\Music\Admin\ArtistController as AdminArtistController;
 use App\Http\Controllers\Music\AlbumController;
 use App\Http\Controllers\Music\ArtistController;
 use App\Http\Controllers\Music\MusicHistoryController;
@@ -22,6 +22,7 @@ use App\Http\Controllers\Users\UserSettingsController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\WidgetController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,24 +84,27 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
         Route::prefix('music')->group(function() {
             Route::prefix('admin')->group(function() {
                 Route::prefix('artists')->group(function() {
-                    Route::post('get', [AdminArtistController::class, 'getArtists']);
+                    Route::post('/', [AdminArtistController::class, 'index']);
                     Route::post('store', [AdminArtistController::class, 'store']);
-                    Route::post('update', [AdminArtistController::class, 'update']);
+                    Route::post('{artist}/update', [AdminArtistController::class, 'update']);
                     Route::post('search', [SearchController::class, 'search']);
+                    Route::post('upload', [UploadController::class, 'upload']);
                 });
                 Route::post('/', [ArtistController::class, 'index']);
                 Route::post('get', [ArtistController::class, 'getArtists']);
             });
-            Route::post('upload', [UploadController::class, 'upload']);
             Route::prefix('artists')->group(function() {
                 Route::post('/', [ArtistController::class, 'index']);
-                Route::post('get', [ArtistController::class, 'getArtists']);
+                Route::post('{artist}/show', [ArtistController::class, 'show']);
                 Route::post('store', [ArtistController::class, 'store']);
                 Route::post('update', [ArtistController::class, 'update']);
             });
-            Route::post('albums', [AlbumController::class, 'index']);
+            Route::prefix('albums')->group(function() {
+                Route::post('/{album}/show', [AlbumController::class, 'show']);
+            });
             Route::prefix('tracks')->group(function() {
-                Route::post('/', [TrackController::class, 'getItems']);
+                Route::post('/', [TrackController::class, 'index']);
+                Route::put('store', [TrackController::class, 'store']);
                 Route::post('{track}/play', [TrackController::class, 'play']);
                 Route::post('{track}/rate', [TrackController::class, 'rate']);
                 Route::patch('{track}/playlists/update', [TrackController::class, 'updatePlaylists']);
@@ -116,12 +120,12 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             });
             Route::prefix('playlists')->group(function() {
                 // Trying to set "playlists" route as default for list of playlists for better view while requesting.
-                Route::post('/', [PlaylistController::class, 'getItems']);
-                Route::get('{playlist}/index', [PlaylistController::class, 'index']);
+                Route::post('/', [PlaylistController::class, 'index']);
+                Route::get('{playlist}/show', [PlaylistController::class, 'show']);
                 Route::put('store', [PlaylistController::class, 'store']);
             });
             Route::prefix('history')->group(function() {
-                Route::post('/', [MusicHistoryController::class, 'getItems']);
+                Route::post('/', [MusicHistoryController::class, 'index']);
                 Route::put('scrobble', [MusicHistoryController::class, 'scrobble']);
             });
         });

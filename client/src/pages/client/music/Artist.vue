@@ -44,7 +44,7 @@
 import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 
-import API from "src/utils/api"
+import { api } from "src/boot/axios"
 
 import ArtistPageSkeleton from "src/components/client/music/skeleton/ArtistPage.vue"
 import AlbumCard from "components/client/music/AlbumCard.vue"
@@ -61,9 +61,9 @@ export default {
     const loading = ref(true)
 
     const getArtist = async id => {
-      await API.post('music/artists', {id: id})
+      await api.post(`music/artists/${id}/show`)
         .then(response => {
-          artist.value = response.data.artists
+          artist.value = response.data.data
           loading.value = false
         }).catch(error => {
           if(error.response.status === 404) {

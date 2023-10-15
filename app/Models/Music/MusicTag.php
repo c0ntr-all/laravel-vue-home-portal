@@ -6,6 +6,7 @@ use App\Models\Traits\HasDates;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
@@ -49,23 +50,28 @@ class MusicTag extends Model
         return $this->orderBy('name')->get();
     }
 
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(__CLASS__, 'id', 'parent_id');
+    }
+
     /**
-     * Получение дочерних тегов
+     * Getting only 1 level of child tags
      *
      * @return HasMany
      */
     public function children(): HasMany
     {
-        return $this->hasMany(__CLASS__, 'parent_id', 'id') ;
+        return $this->hasMany(__CLASS__, 'parent_id', 'id');
     }
 
     /**
-     * Получение неограниченной вложенности дочерних тегов
+     * Getting unlimited nesting of child tags
      *
      * @return HasMany
      */
-    public function childrenCategories(): HasMany
+    public function descendants(): HasMany
     {
-        return $this->hasMany(__CLASS__, 'parent_id', 'id')->with('children');
+        return $this->hasMany(__CLASS__, 'parent_id', 'id')->with('descendants');
     }
 }

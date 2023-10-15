@@ -88,10 +88,10 @@
   </q-dialog>
 </template>
 <script>
-import {ref} from 'vue'
-import {useQuasar} from "quasar"
+import { ref } from 'vue'
+import { useQuasar } from "quasar"
 
-import API from "src/utils/api"
+import { api } from "src/boot/axios"
 
 export default {
   props: ['item'],
@@ -104,7 +104,7 @@ export default {
     const comment = ref('')
 
     const updateTitle = value => {
-      API.patch(`tasks/${props.item.id}/update`, {
+      api.patch(`tasks/${props.item.id}/update`, {
         title: value
       }).then(response => {
         $q.notify({
@@ -121,7 +121,7 @@ export default {
       })
     }
     const updateContent = value => {
-      API.patch(`tasks/${props.item.id}/update`, {
+      api.patch(`tasks/${props.item.id}/update`, {
         content: value
       }).then(response => {
         $q.notify({
@@ -138,7 +138,7 @@ export default {
       })
     }
     const createComment = () => {
-      API.post(`comments/store`, {
+      api.post(`comments/store`, {
         commentable_id: props.item.id,
         commentable_type: 'task',
         content: comment.value
