@@ -55,7 +55,7 @@ class ArtistService {
 
         $artist->update($requestData);
 
-        if (is_array($requestData['tags'])) {
+        if (isset($requestData['tags'])) {
             $artist->tags()->sync($requestData['tags']);
         }
 

@@ -92,7 +92,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                     Route::post('store', [AdminArtistController::class, 'store']);
                     Route::post('{artist}/update', [AdminArtistController::class, 'update']);
                     Route::post('search', [SearchController::class, 'search']);
-                    Route::post('upload', [UploadController::class, 'upload']);
+                    Route::post('upload', [AdminArtistController::class, 'upload']);
                 });
                 Route::prefix('tags')->group(function() {
                     Route::post('/', [AdminTagController::class, 'index']);

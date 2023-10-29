@@ -6,7 +6,7 @@ use App\Helpers\ImageUpload;
 use getID3;
 use Illuminate\Http\File;
 
-abstract class BaseMusicParse
+abstract class BaseMusicParseService
 {
     protected getID3 $getID3;
 
@@ -38,7 +38,7 @@ abstract class BaseMusicParse
      * @param string $duration
      * @return string
      */
-    protected function formatDuration(string $duration)
+    protected function formatDuration(string $duration): string
     {
         $durationParts = explode(':', $duration);
 
@@ -83,11 +83,7 @@ abstract class BaseMusicParse
     {
         $defaultCover = $albumPath . DIRECTORY_SEPARATOR . 'Cover.jpg';
 
-        if (file_exists($defaultCover)) {
-            return $defaultCover;
-        } else {
-            return $this->findAnotherImageAsCover($albumPath);
-        }
+        return file_exists($defaultCover) ? $defaultCover : $this->findAnotherImageAsCover($albumPath);
     }
 
     /**
@@ -114,7 +110,7 @@ abstract class BaseMusicParse
      * @param string $path
      * @return string
      */
-    protected function getCover(string $path): string
+    protected function createCover(string $path): string
     {
         $coverOriginalPath = $this->getCoverFromFolder($path);
 

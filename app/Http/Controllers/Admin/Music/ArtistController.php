@@ -11,7 +11,7 @@ use App\Http\Resources\Music\Artists\AdminArtistCollection;
 use App\Http\Resources\Music\Artists\AdminArtistResource;
 use App\Models\Music\Artist;
 use App\Services\Music\ArtistService;
-use App\Services\Music\Parse\ParseMusicTracks;
+use App\Services\Music\Parse\TrackIdParser;
 
 class ArtistController extends BaseController
 {
@@ -43,6 +43,10 @@ class ArtistController extends BaseController
 
     public function upload(UploadRequest $request)
     {
-        return (new ParseMusicTracks())->upload($request->validated()['path']);
+        $result = TrackIdParser::make($request->validated()['path'])->upload();
+
+        if ($result) {
+            return $this->sendResponse($result, 'Artist uploaded successfully!');
+        }
     }
 }
