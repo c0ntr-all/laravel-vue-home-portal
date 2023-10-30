@@ -57,3 +57,16 @@ Route::get('/test3', function() {
 
     dd($value);
 })->name('test3');
+
+Route::get('/sockets-test', function () {
+    return view('sockets');
+});
+Route::get('/sockets-send', function () {
+    $localsocket = 'tcp://127.0.0.1:1234';
+    $user = 'tester01';
+    $message = 'Ебаный рот этого казино!';
+
+    // соединяемся с локальным tcp-сервером
+    $instance = stream_socket_client($localsocket);
+    fwrite($instance, json_encode(['user' => $user, 'message' => $message])  . "\n");
+});
