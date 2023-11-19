@@ -32,57 +32,95 @@
       </div>
     </div>
 
-    <div class="artist-albums q-mb-lg" v-if="this.artist.albums">
-      <div class="text-h5 q-mb-sm">Альбомы</div>
-      <div class="row items-start q-gutter-md">
-        <album-card v-for="album in this.artist.albums" :key="album.id" :album="album"></album-card>
-      </div>
-    </div>
+    <q-card class="q-mb-md" flat>
+      <q-tabs
+        v-model="tab"
+        align="left"
+        no-caps
+        outside-arrows
+        mobile-arrows
+      >
+        <q-route-tab
+          name="tracks"
+          label="Tracks"
+          :to="{ name: 'artist-tracks', params: { id: artist.id } }"
+          exact
+        />
+        <q-route-tab
+          name="albums"
+          label="Albums"
+          :to="{ name: 'artist-albums', params: { id: artist.id } }"
+          exact
+        />
+        <q-route-tab
+          name="similar"
+          label="Similar"
+          :to="{ name: 'artist-similar', params: { id: artist.id } }"
+          exact
+        />
+      </q-tabs>
+    </q-card>
+    <q-tab-panels
+      v-model="tab"
+      animated
+      swipeable
+      vertical
+      transition-prev="jump-up"
+      transition-next="jump-up"
+    >
+      <q-tab-panel name="tracks" class="q-pa-none">
+        <TracksTab />
+      </q-tab-panel>
+
+      <q-tab-panel name="albums" class="q-pa-none">
+        <AlbumsTab :artistId="props.id" />
+      </q-tab-panel>
+
+      <q-tab-panel name="similar" class="q-pa-none">
+        <SimilarTab />
+      </q-tab-panel>
+    </q-tab-panels>
   </template>
 </template>
-<script>
-import { ref, onMounted } from "vue"
+<script setup>
+import { ref, defineProps, onMounted } from "vue"
 import { useRouter } from "vue-router"
+import { useQuasar } from "quasar"
 
 import { api } from "src/boot/axios"
 
+import TracksTab from "components/client/music/pages/artist/tabs/TracksTab.vue"
+import AlbumsTab from "components/client/music/pages/artist/tabs/AlbumsTab.vue"
+import SimilarTab from "components/client/music/pages/artist/tabs/SimilarTab.vue"
 import ArtistPageSkeleton from "src/components/client/music/skeleton/ArtistPage.vue"
-import AlbumCard from "components/client/music/AlbumCard.vue"
 
-export default {
-  props: {
-    'id': String
-  },
-  components: { AlbumCard, ArtistPageSkeleton },
-  setup(props) {
-    const $router = useRouter()
+const props = defineProps({
+  id: String,
+})
 
-    const artist = ref({})
-    const loading = ref(true)
+const $router = useRouter()
+const $q = useQuasar()
 
-    const getArtist = async id => {
-      await api.post(`music/artists/${id}/show`)
-        .then(response => {
-          artist.value = response.data.data
-          loading.value = false
-        }).catch(error => {
-          if(error.response.status === 404) {
-            $router.push('/404')
-          }
-        })
-    }
+const tab = ref("albums")
+const artist = ref({})
+const loading = ref(true)
 
-    onMounted(() => {
-      getArtist(props.id)
+const getArtist = async id => {
+  await api.post(`music/artists/${id}/show`)
+    .then(response => {
+      artist.value = response.data.data
+      loading.value = false
+    }).catch(error => {
+      $q.notify({
+        type: 'negative',
+        message: 'Something goes wrong while loading albums for artist'
+      })
     })
-
-    return {
-      artist,
-      loading,
-      getArtist
-    }
-  },
 }
+
+onMounted(() => {
+  getArtist(props.id)
+})
 </script>
 
 <style lang="scss" scoped>

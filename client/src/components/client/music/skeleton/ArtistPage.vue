@@ -34,22 +34,8 @@
       </div>
     </div>
   </div>
-
-  <div class="artist-albums q-mb-lg">
-    <div class="text-h5 q-mb-sm">
-      <q-skeleton type="text" width="200px" />
-    </div>
-    <div class="row items-start q-gutter-md">
-      <album-card-skeleton v-for="item in [1,2,3,4,5]" />
-    </div>
-  </div>
 </template>
 <script>
-import AlbumCardSkeleton from 'src/components/client/music/skeleton/AlbumCard.vue'
-
-export default {
-  components: { AlbumCardSkeleton }
-}
 </script>
 <style lang="scss" scoped>
 .artist-head {

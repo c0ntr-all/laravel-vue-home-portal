@@ -98,7 +98,23 @@ const routes = [{
       props: true,
       meta: {
         title: 'Музыка'
-      }
+      },
+      children: [{
+        path: '/music/artists/:id/tracks',
+        component: () => import('pages/client/music/Artist.vue'),
+        name: 'artist-tracks',
+        props: true,
+      }, {
+        path: '/music/artists/:id/albums',
+        component: () => import('pages/client/music/Artist.vue'),
+        name: 'artist-albums',
+        props: true,
+      }, {
+        path: '/music/artists/:id/similar',
+        component: () => import('pages/client/music/Artist.vue'),
+        name: 'artist-similar',
+        props: true,
+      }]
     }, {
       path: '/music/albums/:id/show',
       component: () => import('pages/client/music/Album.vue'),

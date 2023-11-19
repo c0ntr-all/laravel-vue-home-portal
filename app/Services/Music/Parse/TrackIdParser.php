@@ -70,7 +70,7 @@ class TrackIdParser extends BaseMusicParseService
                         $artist = [
                             'name' => $artistName,
                             'image' => $cover,
-                            'path' => $albumPath . '\\' . $item,
+                            'path' => $this->path,
                         ];
                         if (!in_array($artistName, array_column($this->data, 'name'))) {
                             $this->data[] = $artist;
