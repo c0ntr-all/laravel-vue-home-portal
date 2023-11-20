@@ -46,11 +46,11 @@
 <script setup>
 import { ref } from "vue"
 
-import TracksTab from "components/client/music/tabs/tracks/TracksTab.vue"
-import ArtistsTab from "components/client/music/tabs/artists/ArtistsTab.vue"
-import PlaylistsTab from "src/components/client/music/tabs/PlaylistsTab.vue"
-import TagsTab from "src/components/client/music/tabs/tags/TagsTab.vue"
-import HistoryTab from "src/components/client/music/tabs/HistoryTab.vue"
+import TracksTab from "components/client/music/music/tabs/tracks/TracksTab.vue"
+import ArtistsTab from "components/client/music/music/tabs/artists/ArtistsTab.vue"
+import PlaylistsTab from "src/components/client/music/music/tabs/PlaylistsTab.vue"
+import TagsTab from "src/components/client/music/music/tabs/tags/TagsTab.vue"
+import HistoryTab from "src/components/client/music/music/tabs/HistoryTab.vue"
 
 const tab = ref('artists')
 </script>

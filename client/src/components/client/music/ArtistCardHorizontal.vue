@@ -8,7 +8,7 @@
       />
       <q-card-section class="flex column justify-between">
         <div class="text-h6 q-mb-sm">
-          <router-link :to="`/music/artists/${artist.id}/show`" class="artist-card__link">{{ artist.name }}</router-link>
+          <router-link :to="`/music/artists/${artist.id}/albums`" class="artist-card__link">{{ artist.name }}</router-link>
         </div>
         <div class="q-gutter-xs">
           <q-chip

@@ -59,10 +59,10 @@
 <script setup>
 import { onMounted, ref } from "vue"
 import { useQuasar } from "quasar"
-import { api } from "src/boot/axios"
+import { api } from "boot/axios"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
 
-import TrackCardRow from "components/client/music/tabs/tracks/TrackCardRow.vue"
+import TrackCardRow from "components/client/music/music/tabs/tracks/TrackCardRow.vue"
 
 const columns = ref([{
   name: "number",

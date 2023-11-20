@@ -5,7 +5,7 @@
       <q-btn
         icon="arrow_back"
         color="primary"
-        :to="`/music/artists/${album.artist.id}/show`"
+        :to="`/music/artists/${album.artist.id}/albums`"
       ><div class="q-ml-xs">Вернуться к исполнителю</div></q-btn>
     </div>
     <div class="album">

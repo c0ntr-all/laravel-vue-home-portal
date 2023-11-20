@@ -15,8 +15,8 @@
 <script setup>
 import AlbumCard from "components/client/music/AlbumCard.vue"
 import { api } from "boot/axios"
-import { defineProps, onMounted, ref } from "vue"
-import AlbumsTabSkeleton from "components/client/music/pages/artist/tabs/AlbumsTabSkeleton.vue"
+import { onMounted, ref } from "vue"
+import AlbumsTabSkeleton from "components/client/music/artist/tabs/AlbumsTabSkeleton.vue"
 
 const loading = ref(true)
 const albums = ref({})

@@ -2,10 +2,7 @@
 Tracks components
 </template>
 
-<script>
-export default {
-  name: "AlbumsTab.vue"
-}
+<script setup>
 </script>
 
 <style scoped>

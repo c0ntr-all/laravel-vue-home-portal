@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import AlbumCardSkeleton from 'src/components/client/music/skeleton/AlbumCard.vue'
+import AlbumCardSkeleton from 'components/client/music/skeleton/AlbumCard.vue'
 
 </script>
 

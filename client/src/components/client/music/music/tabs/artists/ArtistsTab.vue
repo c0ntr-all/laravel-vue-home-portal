@@ -60,8 +60,8 @@ import { useQuasar } from "quasar"
 
 import { api } from "boot/axios"
 
-import ArtistsFilter from "components/client/music/tabs/artists/ArtistsFilter.vue"
-import ArtistsSearch from "components/client/music/tabs/artists/ArtistsSearch.vue"
+import ArtistsFilter from "components/client/music/music/tabs/artists/ArtistsFilter.vue"
+import ArtistsSearch from "components/client/music/music/tabs/artists/ArtistsSearch.vue"
 import ArtistCard from "components/client/music/ArtistCard.vue"
 import ArtistCardHorizontal from "components/client/music/ArtistCardHorizontal.vue"
 import ArtistsCardHorizontalSkeleton from "components/client/music/skeleton/ArtistsCardHorizontal.vue"

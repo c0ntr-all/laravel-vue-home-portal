@@ -6,50 +6,12 @@
             Interesting, that it works with name like ArtistsTabSkeleton or another.
             It seems that the word "Tracks" is unacceptable for this component.
       -->
-      <tracks-filter @submitFilter="getTracks" />
+      <TracksFilter @submitFilter="getTracks" />
     </q-card-section>
   </q-card>
-  <template v-if="loading">
-    <q-markup-table>
-      <thead>
-      <tr>
-        <th class="text-left">
-          <q-skeleton type="text" width="15px" />
-        </th>
-        <th class="text-right">
-        </th>
-        <th class="text-right">
-          <q-skeleton type="text" width="65px" />
-        </th>
-        <th class="text-right">
-          <q-skeleton type="text" width="65px" />
-        </th>
-        <th class="text-right">
-          <q-skeleton type="text" width="65px" />
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="n in 30" :key="n">
-        <td class="text-left">
-          <q-skeleton type="text" width="15px" />
-        </td>
-        <td class="text-right">
-          <q-skeleton type="text" width="100px" />
-        </td>
-        <td class="text-right">
-          <q-skeleton type="text" width="200px" />
-        </td>
-        <td class="text-left">
-          <q-skeleton type="text" width="200px" />
-        </td>
-        <td class="text-right">
-          <q-skeleton type="text" width="100px" />
-        </td>
-      </tr>
-      </tbody>
-    </q-markup-table>
-  </template>
+
+  <TracksTabSkeleton v-if="loading" />
+
   <template v-else>
     <q-table
       :rows="tracks"
@@ -73,8 +35,9 @@ import { useQuasar } from "quasar"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
 import { api } from "boot/axios"
 
-import TracksFilter from "components/client/music/tabs/tracks/TracksFilter.vue"
-import TrackCardRow from "components/client/music/tabs/tracks/TrackCardRow.vue"
+import TracksTabSkeleton from "components/client/music/music/tabs/tracks/TracksTabSkeleton.vue"
+import TracksFilter from "components/client/music/music/tabs/tracks/TracksFilter.vue"
+import TrackCardRow from "components/client/music/music/tabs/tracks/TrackCardRow.vue"
 
 const columns = ref([{
   name: "number",
