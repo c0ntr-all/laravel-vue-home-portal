@@ -6,10 +6,11 @@ use App\Filters\Filter;
 use App\Helpers\ImageUpload;
 use App\Models\Music\Artist;
 use App\Repositories\ArtistRepository;
+use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Support\Str;
 
 class ArtistService {
-    public function __construct(private ArtistRepository $artistRepository)
+    public function __construct(private ArtistRepository $repository)
     {
     }
 
@@ -17,14 +18,14 @@ class ArtistService {
     {
         $filter = $this->prepareFilters($requestData);
 
-        return $this->artistRepository->getWithPaginate($filter);
+        return $this->repository->getWithPaginate($filter);
     }
 
     public function getWithCursor(array $requestData)
     {
         $filter = $this->prepareFilters($requestData);
 
-        return $this->artistRepository->getWithCursor($filter);
+        return $this->repository->getWithCursor($filter);
     }
 
     public function storeArtist(array $requestData)
@@ -86,5 +87,14 @@ class ArtistService {
         }
 
         return $filterClasses;
+    }
+
+    /**
+     * @param Artist $artist
+     * @return CursorPaginator
+     */
+    public function getTracks(Artist $artist): CursorPaginator
+    {
+        return $artist->tracks()->cursorPaginate(50);
     }
 }
