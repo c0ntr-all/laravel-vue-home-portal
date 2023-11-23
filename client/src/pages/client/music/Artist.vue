@@ -69,7 +69,7 @@
       transition-next="jump-up"
     >
       <q-tab-panel name="tracks" class="q-pa-none">
-        <TracksTab />
+        <TracksTab :artistId="props.id" />
       </q-tab-panel>
 
       <q-tab-panel name="albums" class="q-pa-none">
@@ -83,7 +83,7 @@
   </template>
 </template>
 <script setup>
-import { ref, defineProps, onMounted } from "vue"
+import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import { useQuasar } from "quasar"
 
