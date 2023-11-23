@@ -4,7 +4,7 @@ namespace App\Http\Requests\Music\Artist;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UploadRequest extends FormRequest
+class TracksRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class UploadRequest extends FormRequest
     public function rules()
     {
         return [
-            'path' => 'required|string|min:10',
+            //
         ];
     }
 }

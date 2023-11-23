@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Music;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\Music\Tag\IndexRequest;
-use App\Http\Requests\Music\Tag\StoreRequest;
 use App\Http\Requests\Music\Tag\UpdateRequest;
 use App\Http\Resources\Music\Tag\TagCollection;
 use App\Http\Resources\Music\Tag\TagResource;
 use App\Http\Resources\Music\Tag\TagSelectCollection;
-use App\Http\Resources\Music\Tag\TagTreeCollection;
 use App\Models\Music\MusicTag;
 use App\Services\Music\TagService;
+use Illuminate\Http\Response;
 
-class TagController extends Controller
+class TagController extends BaseController
 {
     public function __construct(
         MusicTag $tag,
@@ -34,30 +33,6 @@ class TagController extends Controller
         } else {
             return new TagCollection($this->tag->getItems());
         }
-    }
-
-    /**
-     * @return TagSelectCollection
-     */
-    public function tagsSelect(): TagSelectCollection
-    {
-        return new TagSelectCollection($this->tag->getItems());
-    }
-
-    /**
-     * @return TagTreeCollection
-     */
-    public function tagsTree(): TagTreeCollection
-    {
-        //todo возможно, тут надо сделать отдельный метод на получение сразу всех тегов с parent_id = 0 вместо getItems
-        return new TagTreeCollection($this->tag->getItems());
-    }
-
-    public function store(StoreRequest $request)
-    {
-        $result = $this->service->storeTag($request->validated());
-
-        return new TagResource($result);
     }
 
     public function update(MusicTag $tag, UpdateRequest $request)
@@ -83,6 +58,13 @@ class TagController extends Controller
         } else {
             throw new \Exception('Something wrong with deleting tag!');
         }
+    }
+
+    public function select(): Response
+    {
+        $out = $this->service->getTags();
+
+        return $this->sendResponse(new TagSelectCollection($out));
     }
 
     public function tagResponse(MusicTag $tag): array

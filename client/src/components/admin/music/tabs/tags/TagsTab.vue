@@ -1,6 +1,6 @@
 <template>
   <div class="q-mb-md">
-    <AddTagButton />
+    <AddTagButton @tagCreate="addTag" />
     <q-input
       class="q-mb-md"
       ref="filterRef"
@@ -239,10 +239,12 @@
      }
 
      const getTags = async () => {
-       await api.post('music/tags/tree')
+       await api.post('music/admin/tags')
          .then(response => {
-           commonTags.value = response.data.tags.common
-           secondaryTags.value = response.data.tags.secondary
+           const {data: {data}} = response
+
+           commonTags.value = data.items.common
+           secondaryTags.value = data.items.secondary
          }).catch(error => {
            $q.notify({
              type: 'negative',
@@ -251,19 +253,33 @@
          })
      }
 
-     const addTag = async () => {
-       const parentTagId = tagModel.value.parentTag.id
-       await api.put('music/tags/store', {
+     const addTag = async data => {
+       data = data || {
          name: tagModel.value.name,
          content: tagModel.value.content,
-         parent_id: parentTagId
-       }).then(response => {
-
-         insertIntoTree(tagModel.value.parentTag.common ? commonTags.value : secondaryTags.value, parentTagId, response.data.tags)
+         parent_id: tagModel.value.parentTag.id
+       }
+       await api.put('music/admin/tags/store', data).then(response => {
+         const {data: {data}} = response
+         if (Object.keys(tagModel.value).length !== 0) {
+           insertIntoTree(
+             tagModel.value.parentTag.common ? commonTags.value : secondaryTags.value,
+             tagModel.value.parentTag.id,
+             data
+           )
+         } else {
+           if (data.common) {
+             commonTags.value.push(data)
+             commonTags.value.sort((a, b) => a.label.localeCompare(b.label));
+           } else {
+             secondaryTags.value.push(data)
+             secondaryTags.value.sort((a, b) => a.label.localeCompare(b.label));
+           }
+         }
 
          $q.notify({
            type: 'positive',
-           message: `Тег ${response.data.tags.label} успешно добавлен!`
+           message: `Тег ${data.label} успешно добавлен!`
          })
 
          clearTagModel()

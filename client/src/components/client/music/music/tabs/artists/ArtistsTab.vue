@@ -54,110 +54,95 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { onMounted, ref } from "vue"
 import { useQuasar } from "quasar"
 
 import { api } from "boot/axios"
 
-import ArtistsFilter from "components/client/music/ArtistsFilter.vue"
-import ArtistsSearch from "components/client/music/tabs/artists/ArtistsSearch.vue"
+import ArtistsFilter from "components/client/music/music/tabs/artists/ArtistsFilter.vue"
+import ArtistsSearch from "components/client/music/music/tabs/artists/ArtistsSearch.vue"
 import ArtistCard from "components/client/music/ArtistCard.vue"
 import ArtistCardHorizontal from "components/client/music/ArtistCardHorizontal.vue"
 import ArtistsCardHorizontalSkeleton from "components/client/music/skeleton/ArtistsCardHorizontal.vue"
 
-export default {
-  components: {
-    ArtistsCardHorizontalSkeleton,
-    ArtistsFilter,
-    ArtistsSearch,
-    ArtistCard,
-    ArtistCardHorizontal
-  },
-  setup() {
-    const $q = useQuasar()
+const $q = useQuasar()
 
-    const artists = ref([])
-    let cardMode = ref('row')
-    let loading = ref(true)
-    let pagination = ref({
-      perPage: 0,
-      hasPages: false,
-      nextPageUrl: '',
-      prevPageUrl: ''
-    })
-    let paginationLoading = ref(false)
+const artists = ref([])
+let cardMode = ref('row')
+let loading = ref(true)
+let pagination = ref({
+  perPage: 0,
+  hasPages: false,
+  nextPageUrl: '',
+  prevPageUrl: ''
+})
+let paginationLoading = ref(false)
 
-    const getArtists = async filters => {
-      loading.value = true
-      filters = filters || {}
+const handleApiError = (error) => {
+  $q.notify({
+    type: 'negative',
+    message: error.response.data.message
+  })
+}
 
-      await api.post('music/artists', filters).then(response => {
-        artists.value = response.data.data.items
+const getArtists = async filters => {
+  loading.value = true
+  filters = filters || {}
+
+  await api.post('music/artists', filters).then(response => {
+    const {data: {data}} = response
+
+    artists.value = data.items
+    pagination.value = data.pagination
+  }).catch(error => {
+    handleApiError(error)
+  }).finally(() => {
+    loading.value = false
+  })
+}
+
+const loadMoreArtists = async () => {
+  if (pagination.value.hasPages) {
+    paginationLoading.value = true
+    let obUrl = new URL(pagination.value.nextPageUrl)
+    let cursor = obUrl.searchParams.get("cursor")
+
+    await api.post('music/artists', {'cursor': cursor})
+      .then(response => {
         pagination.value = response.data.data.pagination
+        artists.value.push(...response.data.data.items)
       }).catch(error => {
-        $q.notify({
-          type: 'negative',
-          message: `Server Error: ${error.response.data.message}`
-        })
+        handleApiError(error)
       }).finally(() => {
-        loading.value = false
+        paginationLoading.value = false
       })
-    }
-
-    const loadMoreArtists = async () => {
-      if (pagination.value.hasPages) {
-        paginationLoading.value = true
-        let obUrl = new URL(pagination.value.nextPageUrl)
-        let cursor = obUrl.searchParams.get("cursor")
-
-        await api.post('music/artists', {'cursor': cursor})
-          .then(response => {
-            pagination.value = response.data.data.pagination
-            artists.value.push(...response.data.data.items)
-            paginationLoading.value = false
-          })
-      }
-    }
-
-    const search = searchText => {
-      getArtists({filters: {search: searchText}})
-    }
-
-    const switchCardMode = mode => {
-      cardMode.value = mode
-    }
-
-    const resetSearch = () => {
-      getArtists()
-    }
-
-    onMounted(() => {
-      window.onscroll = () => {
-        let bottomWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
-
-        if (bottomWindow) {
-          loadMoreArtists()
-        }
-      }
-
-      getArtists()
-    })
-
-    return {
-      artists,
-      cardMode,
-      loading,
-      pagination,
-      paginationLoading,
-      switchCardMode,
-      search,
-      resetSearch,
-      getArtists,
-      loadMoreArtists
-    }
   }
 }
+
+const search = searchText => {
+  getArtists({filters: {search: searchText}})
+}
+
+const switchCardMode = mode => {
+  cardMode.value = mode
+}
+
+const resetSearch = () => {
+  getArtists()
+}
+
+onMounted(() => {
+  window.onscroll = () => {
+    let bottomWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight
+
+    if (bottomWindow) {
+      loadMoreArtists()
+    }
+  }
+
+  getArtists()
+})
 </script>
 <style lang="scss" scoped>
 

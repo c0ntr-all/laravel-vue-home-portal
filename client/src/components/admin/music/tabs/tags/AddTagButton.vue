@@ -48,56 +48,19 @@
   </q-dialog>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue";
-import { useQuasar } from "quasar";
+const emit = defineEmits(['tagCreate']);
 
-import { api } from "boot/axios";
+const dialog = ref(false)
+const model = ref({common: true})
 
-export default {
-  name: "AddTagButton",
-  setup() {
-    const $q = useQuasar()
-
-    const dialog = ref(false)
-    const model = ref({common: true})
-
-    const storeTag = async () => {
-      await api.put("music/tags/store", {
-        name: model.value.name,
-        content: model.value.content,
-        common: model.value.common
-      }).then(response => {
-        $q.notify({
-          type: 'positive',
-          message: `Тег ${response.data.tags.label} успешно добавлен!`
-        })
-      }).catch(error => {
-        if (error.response.status === 422) {
-          const errors = error.response.data.errors
-          Object.keys(errors).map(key => {
-            $q.notify({
-              type: 'negative',
-              message: errors[key]
-            })
-          })
-        } else {
-          $q.notify({
-            type: 'negative',
-            message: error
-          })
-        }
-      }).finally(() => {
-        model.value = {common: true}
-      })
-    }
-
-    return {
-      model,
-      dialog,
-      storeTag
-    }
-  }
+const storeTag = async () => {
+  emit('tagCreate', {
+    name: model.value.name,
+    content: model.value.content,
+    common: model.value.common
+  })
 }
 </script>
 

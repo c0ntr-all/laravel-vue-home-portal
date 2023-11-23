@@ -9,6 +9,7 @@ use App\Http\Controllers\Music\ArtistController;
 use App\Http\Controllers\Music\MusicHistoryController;
 use App\Http\Controllers\Music\PlaylistController;
 use App\Http\Controllers\Music\TagController;
+use App\Http\Controllers\Admin\Music\TagController as AdminTagController;
 use App\Http\Controllers\Music\TrackController;
 use App\Http\Controllers\Music\UploadController;
 use App\Http\Controllers\Reminds\RemindController;
@@ -83,19 +84,25 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
 
         Route::prefix('music')->group(function() {
             Route::prefix('admin')->group(function() {
+                Route::post('/', [ArtistController::class, 'index']);
+                Route::post('get', [ArtistController::class, 'getArtists']);
+
                 Route::prefix('artists')->group(function() {
                     Route::post('/', [AdminArtistController::class, 'index']);
                     Route::post('store', [AdminArtistController::class, 'store']);
                     Route::post('{artist}/update', [AdminArtistController::class, 'update']);
                     Route::post('search', [SearchController::class, 'search']);
-                    Route::post('upload', [UploadController::class, 'upload']);
+                    Route::post('upload', [AdminArtistController::class, 'upload']);
                 });
-                Route::post('/', [ArtistController::class, 'index']);
-                Route::post('get', [ArtistController::class, 'getArtists']);
+                Route::prefix('tags')->group(function() {
+                    Route::post('/', [AdminTagController::class, 'index']);
+                    Route::put('store', [AdminTagController::class, 'store']);
+                });
             });
             Route::prefix('artists')->group(function() {
                 Route::post('/', [ArtistController::class, 'index']);
                 Route::post('{artist}/show', [ArtistController::class, 'show']);
+                Route::get('{artist}/tracks', [ArtistController::class, 'tracks']);
                 Route::post('store', [ArtistController::class, 'store']);
                 Route::post('update', [ArtistController::class, 'update']);
             });
@@ -112,11 +119,9 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
             });
             Route::prefix('tags')->group(function() {
                 Route::post('/', [TagController::class, 'index']);
-                Route::put('store', [TagController::class, 'store']);
+                Route::post('select', [TagController::class, 'select']);
                 Route::patch('{tag}/update', [TagController::class, 'update']);
                 Route::post('{tag}/delete', [TagController::class, 'delete']);
-                Route::post('select', [TagController::class, 'tagsSelect']);
-                Route::post('tree', [TagController::class, 'tagsTree']);
             });
             Route::prefix('playlists')->group(function() {
                 // Trying to set "playlists" route as default for list of playlists for better view while requesting.

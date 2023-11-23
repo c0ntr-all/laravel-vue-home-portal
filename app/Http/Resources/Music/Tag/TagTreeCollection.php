@@ -13,11 +13,11 @@ class TagTreeCollection extends ResourceCollection
     public function toArray($request): array
     {
         return [
-            'tags' => [
+            'items' => [
                 'common' => $this->prepareTags(),
                 'secondary' => $this->prepareTags(false)
             ],
-            'tagsCount' => $this->count()
+            'count' => $this->count()
         ];
     }
 

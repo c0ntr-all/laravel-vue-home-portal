@@ -4,6 +4,7 @@ namespace App\Models\Music;
 
 use App\Casts\TrackDurationCast;
 use App\Models\Traits\HasDates;
+use App\Models\Traits\HasFilters;
 use App\Models\Traits\HasImage;
 use App\Models\Traits\HasMusicTags;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,6 +23,7 @@ class Track extends Model
         HasDates,
         HasMusicTags,
         HasImage,
+        HasFilters,
         \Znck\Eloquent\Traits\BelongsToThrough;
 
     protected $table = 'music_tracks';

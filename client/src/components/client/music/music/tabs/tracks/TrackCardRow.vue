@@ -46,8 +46,8 @@
       </template>
       <template v-else-if="col.name === 'tags'">
         <div class="table-track__tags">
-          <p v-if="col.value.common.length" class="q-ma-none">{{ col.value.common.join(', ') }}</p>
-          <p v-if="col.value.secondary.length" class="q-ma-none">{{ col.value.secondary.join(', ') }}</p>
+          <p v-if="col.value?.common.length" class="q-ma-none">{{ col.value.common.join(', ') }}</p>
+          <p v-if="col.value?.secondary.length" class="q-ma-none">{{ col.value.secondary.join(', ') }}</p>
         </div>
       </template>
       <template v-else>
@@ -61,7 +61,7 @@ import { ref, computed } from "vue"
 import { useQuasar } from "quasar"
 
 import { useMusicPlayer } from "stores/modules/musicPlayer"
-import { api } from "src/boot/axios"
+import { api } from "boot/axios"
 
 export default {
   props: ['props'],

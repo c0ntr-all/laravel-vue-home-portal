@@ -44,61 +44,49 @@
     </q-card-section>
   </q-card>
 </template>
-<script>
+<script setup>
 import { ref, onMounted } from "vue"
 import { useQuasar } from "quasar"
-
-import { api } from "src/boot/axios"
+import { api } from "boot/axios"
 
 import PlaylistCard from "components/client/music/playlists/PlaylistCard.vue"
 
-export default {
-  components: {PlaylistCard},
-  setup() {
-    const $q = useQuasar()
+const $q = useQuasar()
 
-    const createPlaylistModal = ref(false)
-    const newPlaylistName = ref('')
+const createPlaylistModal = ref(false)
+const newPlaylistName = ref('')
+const items = ref([])
+const total = ref(0)
 
-    const items = ref([])
-    const total = ref(0)
-
-    const getItems = async () => {
-      await api.post('music/playlists').then(response => {
-        items.value = response.data.items
-        total.value = response.data.total
-      }).catch(error => {
-
-      })
-    }
-
-    const createPlaylist = async () => {
-      await api.put('music/playlists/store', {
-        name: newPlaylistName.value
-      }).then(response => {
-        items.value.push(response.data.data)
-        total.value++
-      }).catch(error => {
-        $q.notify({
-          type: 'negative',
-          message: `Server Error: ${error.response.data.message}`
-        })
-      })
-    }
-
-    onMounted(() => {
-      getItems()
+const getItems = async () => {
+  await api.post('music/playlists').then(response => {
+    items.value = response.data.items
+    total.value = response.data.total
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: error.response.data.message
     })
-
-    return {
-      createPlaylistModal,
-      newPlaylistName,
-      total,
-      items,
-      createPlaylist
-    }
-  }
+  })
 }
+
+const createPlaylist = async () => {
+  await api.put('music/playlists/store', {
+    name: newPlaylistName.value
+  }).then(response => {
+    items.value.push(response.data.data)
+    total.value++
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: `Server Error: ${error.response.data.message}`
+    })
+  })
+}
+
+onMounted(() => {
+  getItems()
+})
 </script>
 <style lang="scss" scoped>
 

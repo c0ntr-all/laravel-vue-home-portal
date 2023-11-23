@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\Music\Artist\TracksRequest;
 use App\Http\Requests\Music\Track\IndexRequest;
 use App\Http\Requests\Music\Track\DeleteFromPlaylistRequest;
 use App\Http\Requests\Music\Track\PlayRequest;
