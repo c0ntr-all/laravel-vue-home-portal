@@ -28,6 +28,7 @@
     </q-table>
   </template>
 </template>
+
 <script setup>
 import { onMounted, ref } from "vue"
 import { useQuasar } from "quasar"
@@ -35,9 +36,19 @@ import { useQuasar } from "quasar"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
 import { api } from "boot/axios"
 
-import TracksTabSkeleton from "components/client/music/music/tabs/tracks/TracksTabSkeleton.vue"
-import TracksFilter from "components/client/music/music/tabs/tracks/TracksFilter.vue"
-import TrackCardRow from "components/client/music/music/tabs/tracks/TrackCardRow.vue"
+import TracksTabSkeleton from "components/client/music/default/tracksTab/TracksTabSkeleton.vue"
+import TracksFilter from "components/client/music/default/tracksTab/TracksFilter.vue"
+import TrackCardRow from "components/client/music/default/tracksTab/TrackCardRow.vue"
+
+const props = defineProps({
+  tracksUrl: {
+    type: String,
+    default: "music/tracks",
+  },
+})
+
+const $q = useQuasar()
+const musicPlayer = useMusicPlayer()
 
 const columns = ref([{
   name: "number",
@@ -87,21 +98,22 @@ const columns = ref([{
 }])
 const tracks = ref([])
 const loading = ref(true)
+let paginationLoading = ref(false)
+
 let pagination = ref({
   perPage: 0,
   hasPages: false,
   nextPageUrl: '',
   prevPageUrl: ''
 })
-let paginationLoading = ref(false)
-
-const $q = useQuasar()
-const musicPlayer = useMusicPlayer()
 
 const getTracks = async filters => {
   filters = filters || {}
 
-  await api.post('music/tracks', {
+  const data = new FormData()
+  data.append('filters', JSON.stringify(filters))
+
+  await api.post(props.tracksUrl, {
     filters: filters,
     with_tags: true
   }).then(response => {
@@ -132,11 +144,18 @@ const loadMoreTracks = async () => {
   }
 }
 
+const initPlay = track => {
+  // Replacing playlist with new track
+  if (!musicPlayer.playlist.includes(track)) {
+    musicPlayer.setPlaylist(tracks.value)
+  }
+  musicPlayer.playTrack(track)
+}
+
 onMounted(() => {
   getTracks()
 })
 </script>
 <style lang="scss" scoped>
-.tracks {
-}
+
 </style>
