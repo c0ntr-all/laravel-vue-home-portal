@@ -18,119 +18,147 @@
     />
   </form>
   <q-tree
-    :nodes="data"
+    :nodes="foldersTree"
     default-expand-all
     node-key="key"
     v-model:selected="selectedNode"
     @lazy-load="onLazyLoad"
     class="q-mb-lg"
   />
+
+  <AppModal v-model="showArtistDataModal">
+    <template #header>
+      Загрузка исполнителей
+    </template>
+    <template #body>
+      <div v-for="artist in artistData">
+        <p class="text-h4 q-pb-md">{{ artist.name }}</p>
+        <div v-for="album in artist.albums">
+          <div class="q-pb-md q-gutter-md">
+            <q-list class="rounded-borders" bordered padding>
+              <q-item-label header>{{ album.year }} - {{ album.name }}</q-item-label>
+              <q-item v-for="track in album.tracks" clickable v-ripple>
+                <q-item-section avatar top>
+                  <q-avatar icon="music_note" size="lg" color="primary" text-color="white" />
+                </q-item-section>
+
+                <q-item-section>
+                  <q-item-label lines="1">{{ track.name }}</q-item-label>
+                  <q-item-label caption>{{ track.duration }}</q-item-label>
+                </q-item-section>
+
+                <q-item-section side>
+                  <q-icon name="info" color="green" />
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </div>
+        </div>
+      </div>
+    </template>
+    <template #footer>
+      <q-btn>Загрузить</q-btn>
+    </template>
+  </AppModal>
 </template>
-<script>
-import { ref } from "vue"
+<script setup>
+import { ref, onMounted } from "vue"
 import { useQuasar } from "quasar"
 import { api } from "boot/axios"
+import AppModal from "src/components/extra/AppModal.vue"
 
-export default {
-  setup() {
-    const $q = useQuasar()
+const $q = useQuasar()
 
-    let startFolder = 'F:\\Music\\'
+let startFolder = 'F:\\Music\\'
 
-    const data = ref([])
-    const selectedNode = ref('')
-    const fullPath = ref(null)
-    const fullPathRef = ref(null)
+const foldersTree = ref([])
+const selectedNode = ref('')
+const fullPath = ref(null)
+const fullPathRef = ref(null)
 
-    const getFolder = async (folder) => {
-      const path = folder || startFolder
-      await api.post('folders', {'folder': path})
-        .then(response => {
-          const nodes = Object.values(response.data).map(value => {
-            return {
-              label: value,
-              lazy: true,
-              level: 1,
-              key: `${value}-1`
-            }
-          })
-          if (folder) {
-            return new Promise((resolve, reject) => {
-              resolve(nodes)
-            })
-          } else {
-            data.value = nodes
-          }
-        }).catch(error => {
-          return false
-        })
-    }
-    const getFullPath = (node, path = '') => {
-      if(node.level > 1) {
-        let nextPath = node.label + '\\' + path
-        if(startFolder && node.level === 2) {
-          nextPath = '\\' + nextPath
-        }
-        return getFullPath(node.parent, nextPath)
-      }else{
-        return node.label + path
-      }
-    }
+const showArtistDataModal = ref(false)
+const artistData = ref([])
 
-    const onLazyLoad = async ({ node, key, done, fail }) => {
-      const path = startFolder + getFullPath(node)
-
-      await api.post('folders', {'folder': path})
-        .then(response => {
-          const nodes = Object.values(response.data).map(value => {
-            return {
-              label: value,
-              lazy: true,
-              parent: node,
-              level: node.level + 1,
-              key: `${value}-${node.level}`
-            }
-          })
-          done(nodes)
-        })
-    }
-
-    const uploadArtist = async () => {
-      fullPathRef.value.validate()
-
-      await api.post('music/admin/artists/upload', {path: fullPath.value}).then(response => {
-        if(response.data.success) {
-          $q.notify({
-            type: 'positive',
-            message: `Исполнитель ${response.data.artist} успешно загружен!`
-          })
-        }else{
-          $q.notify({
-            type: 'negative',
-            message: response.data.message
-          })
+const getFolder = async (folder) => {
+  const path = folder || startFolder
+  await api.post('folders', {'folder': path})
+    .then(response => {
+      const nodes = Object.values(response.data).map(value => {
+        return {
+          label: value,
+          lazy: true,
+          level: 1,
+          key: `${value}-1`
         }
       })
-    }
+      if (folder) {
+        return new Promise((resolve, reject) => {
+          resolve(nodes)
+        })
+      } else {
+        foldersTree.value = nodes
+      }
+    }).catch(error => {
+      return false
+    })
+}
 
-    const onReset = () => {
-      fullPath.value = null
-      fullPathRef.value.resetValidation()
+const getFullPath = (node, path = '') => {
+  if(node.level > 1) {
+    let nextPath = node.label + '\\' + path
+    if(startFolder && node.level === 2) {
+      nextPath = '\\' + nextPath
     }
-
-    return {
-      data,
-      selectedNode,
-      fullPath,
-      fullPathRef,
-      getFolder,
-      onLazyLoad,
-      uploadArtist,
-      onReset
-    }
-  },
-  mounted() {
-    this.getFolder()
+    return getFullPath(node.parent, nextPath)
+  }else{
+    return node.label + path
   }
 }
+
+const onLazyLoad = async ({ node, key, done, fail }) => {
+  const path = startFolder + getFullPath(node)
+
+  await api.post('folders', {'folder': path})
+    .then(response => {
+      const nodes = Object.values(response.data).map(value => {
+        return {
+          label: value,
+          lazy: true,
+          parent: node,
+          level: node.level + 1,
+          key: `${value}-${node.level}`
+        }
+      })
+      done(nodes)
+    })
+}
+
+const uploadArtist = async () => {
+  fullPathRef.value.validate()
+
+  await api.post('music/admin/artists/upload', {path: fullPath.value}).then(response => {
+    if (response.data.success) {
+      artistData.value = response.data.data
+      showArtistDataModal.value = true
+
+      // $q.notify({
+      //   type: 'positive',
+      //   message: `Исполнитель ${response.data.artist} успешно загружен!`
+      // })
+    } else {
+      $q.notify({
+        type: 'negative',
+        message: response.data.message
+      })
+    }
+  })
+}
+
+const onReset = () => {
+  fullPath.value = null
+  fullPathRef.value.resetValidation()
+}
+onMounted(() => {
+  getFolder()
+})
 </script>
