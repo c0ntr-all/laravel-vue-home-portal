@@ -16,6 +16,56 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Znck\Eloquent\Relations\BelongsToThrough;
 use App\Helpers\ArrayHelper;
 
+/**
+ * App\Models\Music\Track
+ *
+ * @property int $id
+ * @property int|null $album_id
+ * @property int|null $number
+ * @property string $name
+ * @property int|null $cd
+ * @property string|null $path
+ * @property string|null $image
+ * @property mixed $duration
+ * @property int|null $bitrate
+ * @property string|null $link
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \App\Models\Music\Album|null $album
+ * @property-read string $full_image
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Music\Playlist> $playlists
+ * @property-read int|null $playlists_count
+ * @property-read \App\Models\Music\Rate|null $rate
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Music\MusicTag> $tags
+ * @property-read int|null $tags_count
+ * @method static \Database\Factories\Music\TrackFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Track filter($filter)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track onlyWeb()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track user($userId)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereAlbumId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereBitrate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereCd($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereDuration($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track wherePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereRate($filters)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereTags($filters)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Track withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Track withoutTrashed()
+ * @mixin \Eloquent
+ */
 class Track extends Model
 {
     use SoftDeletes,

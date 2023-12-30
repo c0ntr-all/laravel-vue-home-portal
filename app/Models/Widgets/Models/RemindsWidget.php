@@ -6,6 +6,15 @@ use App\Models\Reminds\Remind;
 use App\Models\Widgets\Widget;
 use Illuminate\Support\Carbon;
 
+/**
+ * App\Models\Widgets\Models\RemindsWidget
+ *
+ * @property-read \App\Models\Widgets\WidgetPlacement|null $placement
+ * @method static \Illuminate\Database\Eloquent\Builder|RemindsWidget newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RemindsWidget newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RemindsWidget query()
+ * @mixin \Eloquent
+ */
 class RemindsWidget extends Widget implements WidgetInterface
 {
     public function getWidget(): array
