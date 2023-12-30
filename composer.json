@@ -11,6 +11,7 @@
         "james-heinrich/getid3": "^1.9",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.0",
+        "laravel/telescope": "^4.17",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^4.0",
         "predis/predis": "^2.0",
