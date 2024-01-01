@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Music\Artist\UploadRequest;
+use App\Http\Requests\Admin\Music\Artist\UploadRequest;
 use App\Services\Music\Parse\ParseMusicFolders;
 
 class UploadController extends Controller

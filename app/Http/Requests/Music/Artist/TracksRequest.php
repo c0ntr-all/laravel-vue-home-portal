@@ -24,11 +24,11 @@ class TracksRequest extends FormRequest
     public function rules()
     {
         return [
-            'filters' => 'required|array',
-            'filters.type' => 'required|string',
-            'filters.union' => 'required|boolean',
-            'filters.rate' => 'required|array',
-            'filters.rate.*' => 'required|string'
+            'filters' => 'sometimes|array',
+            'filters.type' => 'sometimes|string',
+            'filters.union' => 'sometimes|boolean',
+            'filters.rate' => 'sometimes|array',
+            'filters.rate.*' => 'sometimes|string'
         ];
     }
 }

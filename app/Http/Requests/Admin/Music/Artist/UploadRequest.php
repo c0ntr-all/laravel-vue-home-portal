@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Music\Artist;
+namespace App\Http\Requests\Admin\Music\Artist;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,7 +24,16 @@ class UploadRequest extends FormRequest
     public function rules()
     {
         return [
-            'path' => 'required|string|min:10',
+            'path' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    if (!file_exists($value)) {
+                        $fail('The chosen catalog doesn\'t exists!');
+                    }
+                }
+            ],
+            'preview' => 'sometimes|boolean',
         ];
     }
 }

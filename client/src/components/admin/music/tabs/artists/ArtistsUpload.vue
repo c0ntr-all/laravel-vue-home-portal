@@ -1,7 +1,13 @@
 <template>
   <div class="text-h6 q-mb-md">Загрузка исполнителей</div>
   <form @submit.prevent.stop="uploadArtist" @reset.prevent.stop="onReset" class="q-gutter-md">
-    <q-btn type="submit" label="Загрузить" color="primary" class="q-mb-lg"/>
+    <q-btn
+      type="submit"
+      :loading="processLoading"
+      label="Загрузить"
+      color="primary"
+      class="q-mb-lg"
+    />
     <q-btn type="reset" label="Сбросить" class="q-mb-lg"/>
     <q-input
       v-model="fullPath"
@@ -38,8 +44,9 @@
             <q-list class="rounded-borders" bordered padding>
               <q-item-label header>{{ album.year }} - {{ album.name }}</q-item-label>
               <q-item v-for="track in album.tracks" clickable v-ripple>
-                <q-item-section avatar top>
-                  <q-avatar icon="music_note" size="lg" color="primary" text-color="white" />
+                <q-item-section avatar>
+                  <q-icon v-if="track.uploaded" name="check_circle_outline" size="md" color="green" />
+                  <q-icon v-else name="highlight_off" size="md" />
                 </q-item-section>
 
                 <q-item-section>
@@ -57,7 +64,13 @@
       </div>
     </template>
     <template #footer>
-      <q-btn>Загрузить</q-btn>
+      <q-btn
+        :loading="processLoading"
+        @click="processUploadArtist"
+        label="Загрузить"
+        color="primary"
+        class="q-mb-lg"
+      />
     </template>
   </AppModal>
 </template>
@@ -78,6 +91,8 @@ const fullPathRef = ref(null)
 
 const showArtistDataModal = ref(false)
 const artistData = ref([])
+
+const processLoading = ref(false)
 
 const getFolder = async (folder) => {
   const path = folder || startFolder
@@ -134,23 +149,47 @@ const onLazyLoad = async ({ node, key, done, fail }) => {
 }
 
 const uploadArtist = async () => {
+  processLoading.value = true
+
   fullPathRef.value.validate()
 
-  await api.post('music/admin/artists/upload', {path: fullPath.value}).then(response => {
+  await api.post('music/admin/artists/upload', {
+    path: fullPath.value,
+    preview: true
+  }).then(response => {
     if (response.data.success) {
       artistData.value = response.data.data
       showArtistDataModal.value = true
-
-      // $q.notify({
-      //   type: 'positive',
-      //   message: `Исполнитель ${response.data.artist} успешно загружен!`
-      // })
     } else {
       $q.notify({
         type: 'negative',
         message: response.data.message
       })
     }
+  }).finally(() => {
+    processLoading.value = false
+  })
+}
+
+const processUploadArtist = async () => {
+  showArtistDataModal.value = true
+  processLoading.value = true
+
+  await api.post('music/admin/artists/upload', {
+    path: fullPath.value,
+    preview: false
+  }).then(response => {
+    $q.notify({
+      type: 'positive',
+      message: `Исполнители "${response.data.data.artists.join(', ')}" успешно загружены!`
+    })
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: `Ошибка загрузки исполнителей`
+    })
+  }).finally(() => {
+    processLoading.value = false
   })
 }
 

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin\Music;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Admin\Music\Artist\IndexRequest;
+use App\Http\Requests\Admin\Music\Artist\UploadRequest;
 use App\Http\Requests\Music\Artist\StoreRequest;
 use App\Http\Requests\Music\Artist\UpdateRequest;
-use App\Http\Requests\Music\Artist\UploadRequest;
 use App\Http\Resources\Music\Artists\AdminArtistCollection;
 use App\Http\Resources\Music\Artists\AdminArtistResource;
 use App\Models\Music\Artist;
@@ -43,7 +43,7 @@ class ArtistController extends BaseController
 
     public function upload(UploadRequest $request)
     {
-        $result = ArtistParseService::make($request->validated()['path'])->upload();
+        $result = ArtistParseService::make($request->validated())->process();
 
         if ($result) {
             return $this->sendResponse($result, 'Artist uploaded successfully!');

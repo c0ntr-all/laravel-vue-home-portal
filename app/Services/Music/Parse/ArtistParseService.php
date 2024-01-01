@@ -2,17 +2,19 @@
 
 namespace App\Services\Music\Parse;
 
+use App\Models\Music\Artist;
 use getID3;
 use App\Helpers\ImageUpload;
-use App\Models\Music\MusicTag;
 use App\Traits\Makeable;
 use Illuminate\Http\File;
+use Illuminate\Support\Facades\DB;
 
 class ArtistParseService
 {
     use Makeable;
 
     private string $path;
+    private bool $preview;
     private array $data;
     protected getID3 $getID3;
 
@@ -21,23 +23,90 @@ class ArtistParseService
     protected const COVER_EXTENSIONS = ['jpg','jpeg','png','gif'];
     protected const TRACK_EXTENSIONS = ['mp3'];
 
-    public function __construct(string $path)
+    public function __construct(array $requestData)
     {
         $this->getID3 = new getID3();
 
-        $this->path = $path;
+        $this->path = $requestData['path'];
+        $this->preview = !empty($requestData['preview']);
         $this->data = [];
     }
 
-    public function upload(): array
+    /**
+     * @throws \Throwable
+     */
+    public function process()
     {
-        if (file_exists($this->path)) {
-            return $this->parseFolder();
+        if ($this->preview) {
+            return $this->preview();
         } else {
-            throw new \Exception('The chosen catalog doesn\'t exists!');
+            return $this->upload();
         }
     }
 
+    /**
+     * @throws \Exception
+     */
+    public function preview(): array
+    {
+        return $this->parseFolder();
+    }
+
+    /**
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function upload()
+    {
+        $data = $this->parseFolder();
+
+        return DB::transaction(function () use ($data) {
+            foreach ($data as $artistData) {
+                $artistCover = $this->createCover($artistData['path']);
+
+                $artist = Artist::updateOrCreate([
+                    'name' => $artistData['name'],
+                ], [
+                    'path' => $artistData['path'],
+                    'image' => $artistCover,
+                ]);
+
+                foreach($artistData['albums'] as $albumData) {
+                    $albumCover = $this->createCover($artistData['path']);
+
+                    $album = $artist->albums()->updateOrCreate([
+                        'artist_id' => $artist->id,
+                        'name' => $albumData['name']
+                    ], [
+                        'path' => $albumData['path'],
+                        'image' => $albumCover,
+                        'year' => $albumData['year'],
+                    ]);
+
+                    foreach($albumData['tracks'] as $trackData) {
+                        $trackCover = $this->createCover($artistData['path']);
+
+                        $album->tracks()->updateOrCreate([
+                            'album_id' => $album->id,
+                            'name' => $trackData['name']
+                        ],[
+                            'number' => $trackData['number'],
+                            'duration' => $trackData['duration'],
+                            'bitrate' => $trackData['bitrate'],
+                            'path' => $trackData['path'],
+                            'image' => $trackCover,
+                        ]);
+                    }
+                }
+            }
+
+            return ['artists' => collect($data)->pluck('name')];
+        });
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function parseFolder(): array
     {
         $albums = $this->findAlbums($this->path);
@@ -81,6 +150,7 @@ class ArtistParseService
                             'bitrate' => $id3TrackInfo['bitrate'],
                             'path' => $trackPath,
                             'image' => $cover,
+                            'uploaded' => false
                         ];
                         $album = [
                             'name' => $albumName,
