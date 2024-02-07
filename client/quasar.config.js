@@ -23,6 +23,7 @@ module.exports = configure(function (ctx) {
     boot: [
       'axios',
       'i18n',
+      'echo',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css

@@ -31,54 +31,18 @@
     @lazy-load="onLazyLoad"
     class="q-mb-lg"
   />
-
-  <AppModal v-model="showArtistDataModal">
-    <template #header>
-      Загрузка исполнителей
-    </template>
-    <template #body>
-      <div v-for="artist in artistData">
-        <p class="text-h4 q-pb-md">{{ artist.name }}</p>
-        <div v-for="album in artist.albums">
-          <div class="q-pb-md q-gutter-md">
-            <q-list class="rounded-borders" bordered padding>
-              <q-item-label header>{{ album.year }} - {{ album.name }}</q-item-label>
-              <q-item v-for="track in album.tracks" clickable v-ripple>
-                <q-item-section avatar>
-                  <q-icon v-if="track.uploaded" name="check_circle_outline" size="md" color="green" />
-                  <q-icon v-else name="highlight_off" size="md" />
-                </q-item-section>
-
-                <q-item-section>
-                  <q-item-label lines="1">{{ track.name }}</q-item-label>
-                  <q-item-label caption>{{ track.duration }}</q-item-label>
-                </q-item-section>
-
-                <q-item-section side>
-                  <q-icon name="info" color="green" />
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </div>
-        </div>
-      </div>
-    </template>
-    <template #footer>
-      <q-btn
-        :loading="processLoading"
-        @click="processUploadArtist"
-        label="Загрузить"
-        color="primary"
-        class="q-mb-lg"
-      />
-    </template>
-  </AppModal>
+  <ArtistUploadModal
+    :artistData=artistData
+    :fullPath=fullPath
+    :processLoading=processLoading
+    :show=showArtistDataModal
+  />
 </template>
 <script setup>
 import { ref, onMounted } from "vue"
 import { useQuasar } from "quasar"
 import { api } from "boot/axios"
-import AppModal from "src/components/extra/AppModal.vue"
+import ArtistUploadModal from "components/admin/music/tabs/artists/ArtistsUploadModal.vue"
 
 const $q = useQuasar()
 
@@ -88,10 +52,8 @@ const foldersTree = ref([])
 const selectedNode = ref('')
 const fullPath = ref(null)
 const fullPathRef = ref(null)
-
-const showArtistDataModal = ref(false)
 const artistData = ref([])
-
+const showArtistDataModal = ref(false)
 const processLoading = ref(false)
 
 const getFolder = async (folder) => {
@@ -150,7 +112,6 @@ const onLazyLoad = async ({ node, key, done, fail }) => {
 
 const uploadArtist = async () => {
   processLoading.value = true
-
   fullPathRef.value.validate()
 
   await api.post('music/admin/artists/upload', {
@@ -171,32 +132,11 @@ const uploadArtist = async () => {
   })
 }
 
-const processUploadArtist = async () => {
-  showArtistDataModal.value = true
-  processLoading.value = true
-
-  await api.post('music/admin/artists/upload', {
-    path: fullPath.value,
-    preview: false
-  }).then(response => {
-    $q.notify({
-      type: 'positive',
-      message: `Исполнители "${response.data.data.artists.join(', ')}" успешно загружены!`
-    })
-  }).catch(error => {
-    $q.notify({
-      type: 'negative',
-      message: `Ошибка загрузки исполнителей`
-    })
-  }).finally(() => {
-    processLoading.value = false
-  })
-}
-
 const onReset = () => {
   fullPath.value = null
   fullPathRef.value.resetValidation()
 }
+
 onMounted(() => {
   getFolder()
 })

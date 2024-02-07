@@ -2,11 +2,13 @@
 
 namespace App\Services\Music\Parse;
 
-use App\Models\Music\Artist;
-use getID3;
+use App\Events\TrackParsed;
 use App\Helpers\ImageUpload;
+use App\Models\Music\Artist;
 use App\Traits\Makeable;
+use getID3;
 use Illuminate\Http\File;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\DB;
 
 class ArtistParseService
@@ -40,6 +42,9 @@ class ArtistParseService
         if ($this->preview) {
             return $this->preview();
         } else {
+            Broadcast::event(new TrackParsed('test folder name'));
+//            WebSocketsRouter::broadcastToOthers(new TrackParsed('test track'));
+            return;
             return $this->upload();
         }
     }
