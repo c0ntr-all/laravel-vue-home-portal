@@ -42,9 +42,6 @@ class ArtistParseService
         if ($this->preview) {
             return $this->preview();
         } else {
-            Broadcast::event(new TrackParsed('test folder name'));
-//            WebSocketsRouter::broadcastToOthers(new TrackParsed('test track'));
-            return;
             return $this->upload();
         }
     }
@@ -101,6 +98,14 @@ class ArtistParseService
                             'path' => $trackData['path'],
                             'image' => $trackCover,
                         ]);
+
+                        $socketData = [
+                            'artist' => $artist->name,
+                            'album' => $album->name,
+                            'track' => $trackData['name']
+                        ];
+
+                        broadcast(new TrackParsed($socketData));
                     }
                 }
             }

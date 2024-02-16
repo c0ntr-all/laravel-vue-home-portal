@@ -34,8 +34,9 @@
   <ArtistUploadModal
     :artistData=artistData
     :fullPath=fullPath
+    @trackParsed="processTrackParsed"
     :processLoading=processLoading
-    :show=showArtistDataModal
+    v-model=showArtistDataModal
   />
 </template>
 <script setup>
@@ -135,6 +136,22 @@ const uploadArtist = async () => {
 const onReset = () => {
   fullPath.value = null
   fullPathRef.value.resetValidation()
+}
+
+const processTrackParsed = data => {
+  artistData.value.forEach(artist => {
+    if(artist.name === data.artist) {
+      artist.albums.forEach(album => {
+        if(album.name === data.album) {
+          album.tracks.forEach(track => {
+            if(track.name === data.track) {
+              track.uploaded = true
+            }
+          })
+        }
+      })
+    }
+  })
 }
 
 onMounted(() => {

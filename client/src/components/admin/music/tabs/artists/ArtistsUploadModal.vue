@@ -1,5 +1,5 @@
 <template>
-  <AppModal v-model="props.show">
+  <AppModal v-model="show">
     <template #header>
       Загрузка исполнителей
     </template>
@@ -43,22 +43,18 @@
 </template>
 
 <script setup>
-import Echo from "laravel-echo";
-import { onMounted } from "vue";
+import {onMounted, ref, watch, watchEffect} from "vue";
 import { useQuasar } from "quasar";
 import { api } from "boot/axios";
-import useWebSocket from "src/composables/useWebSocket";
 import AppModal from "src/components/extra/AppModal.vue";
 
-const props = defineProps(['artistData', 'fullPath', 'processLoading', 'show']);
-const show = props.show
+const props = defineProps(['artistData', 'fullPath', 'processLoading', 'show', 'modelValue']);
+const emit = defineEmits(['trackParsed', 'update:modelValue'])
 
 const $q = useQuasar()
-
-// const { socket, connect, disconnect } = useWebSocket();
-
 let connection = null
-const processLoading = props.processLoading
+const processLoading = ref(props.processLoading)
+const show = ref(props.modelValue)
 
 const processUploadArtist = async () => {
   // show.value = true
@@ -82,38 +78,22 @@ const processUploadArtist = async () => {
   })
 }
 
+watchEffect(() => {
+  show.value = props.modelValue;
+});
+
+watch(show, (newVal) => {
+  if (newVal !== props.modelValue) {
+    emit('update:modelValue', newVal);
+  }
+});
+
 onMounted(() => {
-  Pusher.logToConsole = true;
+  // Pusher.logToConsole = true;
   window.Echo.channel('artist-parsing')
     .on(`track-parsed`, (data) => {
-      console.log(data.message)
+      emit('trackParsed', data.message)
     })
-
-
-
-  // connect();
-
-// Отправляем сообщение, когда соединение установлено
-//   socket.value.onopen = function(event) {
-//     console.log('WebSocket connection established:', event);
-//
-//     // Подписываемся на канал
-//     socket.value.send(JSON.stringify({
-//       action: 'subscribe',
-//       channel: 'artist-parsing'
-//     }));
-//   };
-//
-//   socket.value.onmessage = function(event) {
-//     const data = JSON.parse(event.data);
-//     console.log('Message received:', data);
-//
-//     // Проверяем, что сообщение пришло из нужного канала
-//     if (data.channel === 'artist-parsing') {
-//       console.log('Folder parsed:', data.folderName);
-//       // Обновите ваш интерфейс или выполните другие действия
-//     }
-//   };
 })
 </script>
 
