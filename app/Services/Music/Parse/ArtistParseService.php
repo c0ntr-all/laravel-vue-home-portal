@@ -5,6 +5,7 @@ namespace App\Services\Music\Parse;
 use App\Events\TrackParsed;
 use App\Helpers\ImageUpload;
 use App\Models\Music\Artist;
+use App\Models\Music\MusicTag;
 use App\Traits\Makeable;
 use getID3;
 use Illuminate\Http\File;
@@ -64,30 +65,29 @@ class ArtistParseService
 
         return DB::transaction(function () use ($data) {
             foreach ($data as $artistData) {
-                $artistCover = $this->createCover($artistData['path']);
+                $albumCover = null;
 
                 $artist = Artist::updateOrCreate([
                     'name' => $artistData['name'],
                 ], [
-                    'path' => $artistData['path'],
-                    'image' => $artistCover,
+                    'path' => $artistData['path']
                 ]);
 
                 foreach($artistData['albums'] as $albumData) {
-                    $albumCover = $this->createCover($artistData['path']);
+                    $albumCover = $this->saveCover($albumData['image'], $albumData['name']);
 
                     $album = $artist->albums()->updateOrCreate([
                         'artist_id' => $artist->id,
-                        'name' => $albumData['name']
+                        'name' => $albumData['name'],
+                        'cd' => $albumData['cd'],
                     ], [
                         'path' => $albumData['path'],
                         'image' => $albumCover,
                         'year' => $albumData['year'],
+                        'cd' => $albumData['cd']
                     ]);
 
                     foreach($albumData['tracks'] as $trackData) {
-                        $trackCover = $this->createCover($artistData['path']);
-
                         $album->tracks()->updateOrCreate([
                             'album_id' => $album->id,
                             'name' => $trackData['name']
@@ -96,7 +96,7 @@ class ArtistParseService
                             'duration' => $trackData['duration'],
                             'bitrate' => $trackData['bitrate'],
                             'path' => $trackData['path'],
-                            'image' => $trackCover,
+                            'image' => $albumCover,
                         ]);
 
                         $socketData = [
@@ -108,6 +108,8 @@ class ArtistParseService
                         broadcast(new TrackParsed($socketData));
                     }
                 }
+
+                $artist->update(['image' => $albumCover]);
             }
 
             return ['artists' => collect($data)->pluck('name')];
@@ -127,76 +129,83 @@ class ArtistParseService
 
                 $albumItems = scandir($albumPath);
 
-                foreach ($albumItems as $key => $item) {
+                foreach ($albumItems as $item) {
                     if ($item === '.' || $item === '..') {
                         continue;
                     }
 
-                    $info = pathinfo($item);
+                    $itemPath = $albumPath . DIRECTORY_SEPARATOR . $item;
+                    $itemInfo = pathinfo($item);
 
-                    if (isset($info['extension']) && in_array($info['extension'], self::TRACK_EXTENSIONS)) {
-                        $trackPath = $albumPath . DIRECTORY_SEPARATOR . $item;
-                        $id3TrackInfo = $this->getId3Tags($trackPath);
-
-                        $artistName = $id3TrackInfo['artist'] ?? basename($this->path);
-                        $albumName = $id3TrackInfo['album'] ?? basename($albumPath);
-
-                        if (empty($artistName)) {
-                            throw new \Exception('Track has no artist info! Path: ' . $trackPath);
-                        }
-
-                        if (empty($albumName)) {
-                            throw new \Exception('Track has no album info! Path: ' . $trackPath);
-                        }
-
-                        if (empty($id3TrackInfo['title'])) {
-                            throw new \Exception('Track has no title! Path: ' . $trackPath);
-                        }
-
-                        $track = [
-                            'name' => $id3TrackInfo['title'],
-                            'number' => $id3TrackInfo['track_number'] ?? NULL,
-                            'duration' => $this->formatDuration($id3TrackInfo['playtime_string']),
-                            'bitrate' => $id3TrackInfo['bitrate'],
-                            'path' => $trackPath,
-                            'image' => $cover,
-                            'uploaded' => false
-                        ];
-                        $album = [
-                            'name' => $albumName,
-                            'image' => $cover,
-                            'year' => $id3TrackInfo['year'],
-                            'path' => $albumPath,
-                        ];
-                        $artist = [
-                            'name' => $artistName,
-                            'image' => $cover,
-                            'path' => $this->path,
-                        ];
-                        if (!in_array($artistName, array_column($this->data, 'name'))) {
-                            $this->data[] = $artist;
-                        }
-                        foreach ($this->data as $artistKey => $artistValue) {
-                            if ($artistValue['name'] == $artistName) {
-                                if (!isset($this->data[$artistKey]['albums'])) {
-                                    $this->data[$artistKey]['albums'] = [];
-                                }
-                                if (!in_array($albumName, array_column($this->data[$artistKey]['albums'], 'name'))) {
-                                    $this->data[$artistKey]['albums'][] = $album;
-                                }
-                                foreach ($this->data[$artistKey]['albums'] as $albumKey => $albumValue) {
-                                    if ($albumValue['name'] == $albumName) {
-                                        $this->data[$artistKey]['albums'][$albumKey]['tracks'][] = $track;
-                                    }
-                                }
-                            }
-                        }
+                    if (isset($itemInfo['extension']) && in_array($itemInfo['extension'], self::TRACK_EXTENSIONS)) {
+                        $this->addDataByTrack($itemPath, $albumPath, $cover);
                     }
                 }
             }
         }
 
         return $this->data;
+    }
+
+    private function addDataByTrack($trackPath, $albumPath, $cover = null): void
+    {
+        $id3TrackInfo = $this->getId3Tags($trackPath);
+
+        $artistName = $id3TrackInfo['artist'] ?? basename($this->path);
+        $albumName = $id3TrackInfo['album'];
+        $albumCd = $id3TrackInfo['cd'];
+
+        if (empty($artistName)) {
+            throw new \Exception('Track has no artist info! Path: ' . $trackPath);
+        }
+
+        if (empty($albumName)) {
+            throw new \Exception('Track has no album info! Path: ' . $trackPath);
+        }
+
+        if (empty($id3TrackInfo['title'])) {
+            throw new \Exception('Track has no title! Path: ' . $trackPath);
+        }
+
+        $track = [
+            'name' => $id3TrackInfo['title'],
+            'number' => $id3TrackInfo['track_number'] ?? null,
+            'duration' => $this->formatDuration($id3TrackInfo['playtime_string']),
+            'bitrate' => $id3TrackInfo['bitrate'],
+            'path' => $trackPath,
+            'uploaded' => false
+        ];
+        $album = [
+            'name' => $albumName,
+            'cd' => $albumCd,
+            'image' => $cover,
+            'year' => $id3TrackInfo['year'],
+            'path' => $albumPath,
+        ];
+        $artist = [
+            'name' => $artistName,
+            'path' => $this->path,
+        ];
+        if (!in_array($artistName, array_column($this->data, 'name'))) {
+            $this->data[] = $artist;
+        }
+        foreach ($this->data as $artistKey => $artistValue) {
+            if ($artistValue['name'] == $artistName) {
+                if (!isset($this->data[$artistKey]['albums'])) {
+                    $this->data[$artistKey]['albums'] = [];
+                }
+                if (!array_reduce($this->data[$artistKey]['albums'], function($carry, $album) use ($albumName, $albumCd) {
+                    return $carry || ($album['name'] === $albumName && $album['cd'] === $albumCd);
+                }, false)) {
+                    $this->data[$artistKey]['albums'][] = $album;
+                }
+                foreach ($this->data[$artistKey]['albums'] as $albumKey => $albumValue) {
+                    if ($albumValue['name'] == $albumName && $id3TrackInfo['cd'] == $albumValue['cd']) {
+                        $this->data[$artistKey]['albums'][$albumKey]['tracks'][] = $track;
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -221,7 +230,18 @@ class ArtistParseService
                 $dirItem = $dirCanonical . DIRECTORY_SEPARATOR . $fileName;
 
                 if (preg_match('/[0-9]{4} - .*/i', basename($fileName))) {
-                    $items[] = $dirItem;
+                    // Ищем папки CD 1, CD 2 и т.д. если есть
+                    $subFolders = scandir($dirItem);
+                    $cdFolders = array_filter($subFolders, function ($subFolder) {
+                        return preg_match('/^CD \d+$/', $subFolder);
+                    });
+                    if (!empty($cdFolders)) {
+                        foreach ($cdFolders as $cd) {
+                            $items[] = $dirItem . DIRECTORY_SEPARATOR . $cd;
+                        }
+                    } else {
+                        $items[] = $dirItem;
+                    }
                 } else if(is_dir($dirItem)) {
                     $this->findAlbums($dirItem);
                 }
@@ -251,30 +271,19 @@ class ArtistParseService
      */
     private function getId3Tags(string $path): array
     {
-        $out = [];
-
         $id3TrackInfo = $this->getID3->analyze($path);
 
-        $out['artist'] = array_key_exists('artist', $id3TrackInfo['id3v2']['comments']) ?
-            $id3TrackInfo['id3v2']['comments']['artist'][0] :
-            null;
-        $out['album'] = array_key_exists('album', $id3TrackInfo['id3v2']['comments']) ?
-            $id3TrackInfo['id3v2']['comments']['album'][0] :
-            null;
-        $out['title'] = array_key_exists('title', $id3TrackInfo['id3v2']['comments']) ?
-            $id3TrackInfo['id3v2']['comments']['title'][0] :
-            null;
-        $out['genre'] = array_key_exists('genre', $id3TrackInfo['id3v2']['comments']) ?
-            $id3TrackInfo['id3v2']['comments']['genre'][0] :
-            null;
-        $out['year'] = array_key_exists('year', $id3TrackInfo['id3v2']['comments']) ?
-            $id3TrackInfo['id3v2']['comments']['year'][0] :
-            null;
-        $out['playtime_string'] = $id3TrackInfo['playtime_string'];
-        $out['bitrate'] = $id3TrackInfo['audio']['bitrate'];
-        $out['track_number'] = (int)$id3TrackInfo['id3v2']['comments']['track_number'][0];
-
-        return $out;
+        return [
+            'artist' => $id3TrackInfo['id3v2']['comments']['artist'][0] ?? null,
+            'album' => $id3TrackInfo['id3v2']['comments']['album'][0] ?? null,
+            'title' => $id3TrackInfo['id3v2']['comments']['title'][0] ?? null,
+            'genre' => $id3TrackInfo['id3v2']['comments']['genre'][0] ?? null,
+            'year' => $id3TrackInfo['id3v2']['comments']['year'][0] ?? null,
+            'cd' => $id3TrackInfo['id3v2']['comments']['part_of_a_set'][0] ?? null,
+            'playtime_string' => $id3TrackInfo['playtime_string'],
+            'bitrate' => $id3TrackInfo['audio']['bitrate'],
+            'track_number' => (int) ($id3TrackInfo['id3v2']['comments']['track_number'][0] ?? 0),
+        ];
     }
 
     /**
@@ -340,24 +349,11 @@ class ArtistParseService
      * @param string $albumPath
      * @return string|null
      */
-    protected function getCoverFromFolder(string $albumPath): string|null
+    protected function getCoverFromFolder(string $albumPath): ?string
     {
         $defaultCover = $albumPath . DIRECTORY_SEPARATOR . 'Cover.jpg';
 
         return file_exists($defaultCover) ? $defaultCover : $this->findAnotherImageAsCover($albumPath);
-    }
-
-    /**
-     * Получает изображение по переданному пути. Варианты: Cover,jpg, иное изображение в формате jpg,jpeg,png,gif, no-image.gif
-     *
-     * @param string $path
-     * @return string
-     */
-    protected function createCover(string $path): string
-    {
-        $coverOriginalPath = $this->getCoverFromFolder($path);
-
-        return $coverOriginalPath ? $this->saveCover($coverOriginalPath, basename($path)) : self::NO_IMAGE;
     }
 
     /**
@@ -373,7 +369,7 @@ class ArtistParseService
 
         return ImageUpload::make()
                           ->setDiskName('public')
-                          ->setFolder('music/albums/posters')
+                          ->setFolder('music/albums/covers')
                           ->setSourceName($name)
                           ->upload($image);
     }

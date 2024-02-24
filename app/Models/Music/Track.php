@@ -78,18 +78,7 @@ class Track extends Model
 
     protected $table = 'music_tracks';
 
-    protected $fillable = [
-        'album_id',
-        'number',
-        'name',
-        'path',
-        'image',
-        'duration',
-        'bitrate',
-        'link',
-        'updated_at',
-        'deleted_at'
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'duration' => TrackDurationCast::class

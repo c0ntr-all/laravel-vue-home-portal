@@ -17,16 +17,17 @@ class CreateMusicAlbumsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('artist_id');
             $table->integer('year');
+            $table->integer('cd')->nullable()->default(NULL);
             $table->string('name');
             $table->string('attributes')->nullable();
             $table->string('edition')->nullable();
             $table->text('content')->nullable();
             $table->string('image')->nullable()->default(NULL);
             $table->string('path');
-
             $table->timestamps();
             $table->softDeletes();
 
+            $table->unique(['artist_id', 'name', 'cd'], 'idx_name_cd_unique');
             $table->foreign('artist_id')
                   ->references('id')
                   ->on('music_artists')

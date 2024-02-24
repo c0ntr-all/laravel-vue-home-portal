@@ -18,13 +18,11 @@ class CreateMusicTracksTable extends Migration
             $table->unsignedBigInteger('album_id')->nullable()->default(NULL);
             $table->integer('number')->nullable()->default(NULL);
             $table->string('name');
-            $table->integer('cd')->nullable()->default(NULL);
             $table->string('path')->nullable()->default(NULL);
             $table->string('image')->nullable()->default(NULL);
             $table->time('duration');
             $table->integer('bitrate')->nullable()->default(NULL);
             $table->string('link')->nullable()->default(NULL);
-
             $table->timestamps();
             $table->softDeletes();
 

@@ -32,7 +32,7 @@ class ArtistService {
     {
         $imagePath = ImageUpload::make()
                                 ->setDiskName('public')
-                                ->setFolder('music/artists/posters')
+                                ->setFolder('music/artists/covers')
                                 ->setSourceName($requestData['name'])
                                 ->upload($requestData['image']);
 
@@ -49,7 +49,7 @@ class ArtistService {
         if (isset($requestData['image'])) {
             $requestData['image'] = ImageUpload::make()
                                           ->setDiskName('public')
-                                          ->setFolder('music/artists/posters')
+                                          ->setFolder('music/artists/covers')
                                           ->setSourceName($requestData['name'])
                                           ->upload($requestData['image']);
         }

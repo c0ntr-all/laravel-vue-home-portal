@@ -63,20 +63,7 @@ class Album extends Model
 
     protected $table = 'music_albums';
 
-    protected $fillable = [
-        'user_id',
-        'artist_id',
-        'name',
-        'type',
-        'version',
-        'edition',
-        'year',
-        'content',
-        'image',
-        'path',
-        'updated_at',
-        'deleted_at'
-    ];
+    protected $guarded = [];
 
     public function artist(): BelongsTo
     {

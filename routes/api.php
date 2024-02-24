@@ -11,7 +11,6 @@ use App\Http\Controllers\Music\PlaylistController;
 use App\Http\Controllers\Music\TagController;
 use App\Http\Controllers\Admin\Music\TagController as AdminTagController;
 use App\Http\Controllers\Music\TrackController;
-use App\Http\Controllers\Music\UploadController;
 use App\Http\Controllers\Reminds\RemindController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SearchController;

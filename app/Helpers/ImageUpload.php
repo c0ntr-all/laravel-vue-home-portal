@@ -14,6 +14,8 @@ class ImageUpload
     private string $diskName;
     private string $sourceName;
 
+    private const BAD_SYMBOLS = [' ', '.'];
+
     public function __construct($sourceName = 'none', string $folder = 'unsorted', string $diskName = 'public')
     {
         $this->setDiskName($diskName)
@@ -58,8 +60,6 @@ class ImageUpload
      * Сохраняет изображение, полученное из формы, в Storage
      *
      * @param $image
-     * @param string $name
-     * @param string $folder
      * @return string
      */
     public function upload($image): string
@@ -75,7 +75,7 @@ class ImageUpload
      * @param string $url
      * @return false|string
      */
-    public function uploadFromUrl(string $url)
+    public function uploadFromUrl(string $url): bool|string
     {
         $extension = pathinfo($url, PATHINFO_EXTENSION);
         $fileName = $this->generateFileName($this->sourceName, $extension);
@@ -94,6 +94,6 @@ class ImageUpload
 
     private function generateFileName(string $sourceName, string $extension): string
     {
-        return str_replace(' ', '_', strtolower($sourceName)) . '_' . uniqid() . '.' . $extension;
+        return str_replace(static::BAD_SYMBOLS, '_', strtolower($sourceName)) . '_' . uniqid() . '.' . $extension;
     }
 }
