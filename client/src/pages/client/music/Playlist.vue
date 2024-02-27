@@ -41,72 +41,57 @@
           :actions="['addToPlaylist', 'deleteFromPlaylist']"
           :playlist="id"
         />
-        <div v-else class="bg-white q-pa-lg">
-          <div class="playlist-empty">
-            <div class="playlist-empty__content">
-              <div class="playlist-empty__icon"><q-icon size="xl" name="search" /></div>
-              <div class="playlist-empty__title">Playlist is empty</div>
-              <div class="playlist-empty__text">Add some tracks!</div>
-            </div>
-          </div>
-        </div>
+        <AppNoResultsPlug
+          v-else
+          title="Playlist is empty"
+          body="Add some tracks!"
+        />
       </template>
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { ref, onMounted, watch } from "vue"
 import { useRoute } from "vue-router"
 
-import { api } from "src/boot/axios"
+import { api } from "boot/axios"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
 
-import MusicTracksList from "src/components/client/music/MusicTracksList.vue"
+import MusicTracksList from "components/client/music/MusicTracksList.vue"
 import TracksListSkeleton from "components/client/music/skeleton/TracksListSkeleton.vue"
+import AppNoResultsPlug from "components/default/AppNoResultsPlug.vue"
 
-export default {
-  components: { MusicTracksList, TracksListSkeleton },
-  props: {
-    'id': String
-  },
-  setup(props) {
-    const route = useRoute()
+const props = defineProps( {
+  'id': String
+})
 
-    const musicPlayer = useMusicPlayer()
+const route = useRoute()
+const musicPlayer = useMusicPlayer()
 
-    const loading = ref(true)
-    const playlist = ref([])
+const loading = ref(true)
+const playlist = ref([])
 
-    const getPlaylist = async id => {
-      await api.get(`music/playlists/${id}/show`)
-        .then(response => {
-        playlist.value = response.data
-      }).catch(error => {
+const getPlaylist = async id => {
+  await api.get(`music/playlists/${id}/show`)
+    .then(response => {
+    playlist.value = response.data
+  }).catch(error => {
 
-      }).finally(() => {
-        loading.value = false
-      })
-    }
-
-    onMounted(() => {
-      getPlaylist(props.id)
-    })
-
-    watch(() => route.params, (toParams, previousParams) => {
-        getPlaylist(toParams.id)
-      }
-    )
-
-    musicPlayer.init()
-
-    return {
-      loading,
-      playlist,
-      musicPlayer,
-      getPlaylist
-    }
-  },
+  }).finally(() => {
+    loading.value = false
+  })
 }
+
+onMounted(() => {
+  getPlaylist(props.id)
+})
+
+watch(() => route.params, (toParams, previousParams) => {
+    getPlaylist(toParams.id)
+  }
+)
+
+musicPlayer.init()
 </script>
 
 <style lang="scss" scoped>
@@ -139,29 +124,5 @@ export default {
 }
 .playlist-body {
   background: #fff;
-}
-.playlist-empty {
-  display: flex;
-  justify-content: center;
-
-  &__content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  &__icon {
-    display: flex;
-    justify-content: center;
-    width: fit-content;
-    margin: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 50%;
-    background: $grey-2;
-  }
-  &__title {
-    margin: 0.5rem;
-    font-size: 20px;
-    line-height: 25px;
-  }
 }
 </style>

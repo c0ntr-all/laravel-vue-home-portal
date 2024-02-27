@@ -18,7 +18,8 @@ class ArtistParseService
 
     private string $path;
     private bool $preview;
-    private array $data;
+    private array $data = [];
+    private array $tags = [];
     protected getID3 $getID3;
 
     protected const NO_IMAGE = 'no-image.gif';
@@ -32,7 +33,6 @@ class ArtistParseService
 
         $this->path = $requestData['path'];
         $this->preview = !empty($requestData['preview']);
-        $this->data = [];
     }
 
     /**
@@ -63,6 +63,8 @@ class ArtistParseService
     {
         $data = $this->parseFolder();
 
+        $this->prepareTagsIds();
+
         return DB::transaction(function () use ($data) {
             foreach ($data as $artistData) {
                 $albumCover = null;
@@ -88,7 +90,7 @@ class ArtistParseService
                     ]);
 
                     foreach($albumData['tracks'] as $trackData) {
-                        $album->tracks()->updateOrCreate([
+                        $track = $album->tracks()->updateOrCreate([
                             'album_id' => $album->id,
                             'name' => $trackData['name']
                         ],[
@@ -104,6 +106,12 @@ class ArtistParseService
                             'album' => $album->name,
                             'track' => $trackData['name']
                         ];
+
+                        if ($trackData['genre'] && array_key_exists($trackData['genre'], $this->tags)) {
+                            $track->tags()->syncWithoutDetaching($this->tags[$trackData['genre']]);
+                            $album->tags()->syncWithoutDetaching($this->tags[$trackData['genre']]);
+                            $artist->tags()->syncWithoutDetaching($this->tags[$trackData['genre']]);
+                        }
 
                         broadcast(new TrackParsed($socketData));
                     }
@@ -167,9 +175,15 @@ class ArtistParseService
             throw new \Exception('Track has no title! Path: ' . $trackPath);
         }
 
+        // Adding tags to the general array
+        if (!in_array($id3TrackInfo['genre'], $this->tags)) {
+            $this->tags[] = $id3TrackInfo['genre'];
+        }
+
         $track = [
             'name' => $id3TrackInfo['title'],
-            'number' => $id3TrackInfo['track_number'] ?? null,
+            'number' => $id3TrackInfo['track_number'],
+            'genre' => $id3TrackInfo['genre'],
             'duration' => $this->formatDuration($id3TrackInfo['playtime_string']),
             'bitrate' => $id3TrackInfo['bitrate'],
             'path' => $trackPath,
@@ -251,16 +265,14 @@ class ArtistParseService
         return $items;
     }
 
-    private function getTagsIds(array $tagsNames): array
+    /**
+     * Converting only tags names to tags names and ids
+     *
+     * @return void
+     */
+    private function prepareTagsIds(): void
     {
-        $ids = [];
-        foreach($tagsNames as $name) {
-            if ($musicTag = MusicTag::where(['name' => $name])->first()) {
-                $ids[] = $musicTag->id;
-            }
-        }
-
-        return $ids;
+        $this->tags = MusicTag::whereIn('name', $this->tags)->get()?->pluck('id', 'name')->toArray();
     }
 
     /**

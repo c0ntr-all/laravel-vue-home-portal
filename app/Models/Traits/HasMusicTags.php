@@ -10,7 +10,7 @@ trait HasMusicTags
     /**
      * Удаляет связь между моделью и тегом, если модель была удалена
      */
-    protected static function bootHasMusicTags()
+    protected static function bootHasMusicTags(): void
     {
         static::deleting(fn($item) => $item->tags()->detach());
     }

@@ -22,7 +22,7 @@ class AlbumResource extends JsonResource
             'createdAt' => $this->created_at,
             'artist' => ['id' => $this->artist->id, 'name' => $this->artist->name],
             'tracks' => TrackResource::collection($this->tracks),
-            'tags' => $this->tags->pluck('tag')
+            'tags' => $this->tags->pluck('name')
         ];
     }
 }

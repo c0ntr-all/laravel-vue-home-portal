@@ -23,31 +23,34 @@
             </div>
           </template>
           <template v-else>
-            <div v-if="cardMode === 'card'" class="artists-list row items-start q-gutter-md q-mb-lg">
-              <ArtistCard
-                v-for="artist in artists"
-                :key="artist.id"
-                :artist="artist"
-              />
-            </div>
+            <template v-if="artists.length">
+              <div v-if="cardMode === 'card'" class="artists-list row items-start q-gutter-md q-mb-lg">
+                <ArtistCard
+                  v-for="artist in artists"
+                  :key="artist.id"
+                  :artist="artist"
+                />
+              </div>
 
-            <div v-if="cardMode === 'row'" class="column q-gutter-md q-mb-lg">
-              <artistCardHorizontal
-                v-for="artist in artists"
-                :key="artist.id"
-                :artist="artist"
-              />
-            </div>
-            <div class="show-more-button flex justify-center">
-              <q-btn
-                v-if="pagination.hasPages"
-                color="primary"
-                label="Show more"
-                @click="loadMoreArtists"
-                :loading="paginationLoading"
-              >
-              </q-btn>
-            </div>
+              <div v-if="cardMode === 'row'" class="column q-gutter-md q-mb-lg">
+                <artistCardHorizontal
+                  v-for="artist in artists"
+                  :key="artist.id"
+                  :artist="artist"
+                />
+              </div>
+              <div class="show-more-button flex justify-center">
+                <q-btn
+                  v-if="pagination.hasPages"
+                  color="primary"
+                  label="Show more"
+                  @click="loadMoreArtists"
+                  :loading="paginationLoading"
+                >
+                </q-btn>
+              </div>
+            </template>
+            <AppNoResultsPlug v-else/>
           </template>
         </q-card-section>
       </q-card>
@@ -65,6 +68,7 @@ import ArtistsSearch from "components/client/music/music/tabs/artists/ArtistsSea
 import ArtistCard from "components/client/music/ArtistCard.vue"
 import ArtistCardHorizontal from "components/client/music/ArtistCardHorizontal.vue"
 import ArtistsCardHorizontalSkeleton from "components/client/music/skeleton/ArtistsCardHorizontal.vue"
+import AppNoResultsPlug from "components/default/AppNoResultsPlug.vue"
 
 const $q = useQuasar()
 

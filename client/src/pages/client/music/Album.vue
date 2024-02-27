@@ -37,8 +37,8 @@
             </div>
           </div>
           <div class="album-head__tags">
-            <div class="tags-list">
-              <q-btn v-for="tag in album.tags" class="mx-1">{{ tag }}</q-btn>
+            <div class="tags-list q-gutter-sm">
+              <q-chip v-for="tag in album.tags" color="primary" text-color="white">{{ tag }}</q-chip>
             </div>
           </div>
         </div>
