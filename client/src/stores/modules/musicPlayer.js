@@ -13,7 +13,7 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       id: 0,
       number: 0,
       name: "Track Name",
-      image: "http://localhost/storage/no-image.gif",
+      image: `${process.env.API}/storage/no-image.gif`,
       duration: "00:03:00",
       artist: "Artist Name"
     },
@@ -69,7 +69,7 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       if (this.track?.id !== track.id) {
         this.pause()
         this.track = track
-        this.audio.src = track.link ? track.link : `http://home-portal.test/api/music/tracks/${track.id}/play`
+        this.audio.src = track.link ? track.link : `http://api.home-portal.prod/api/music/tracks/${track.id}/play`
 
         this.timer.start(this.getSecondsToScrobble())
         this.isScrobbled = false

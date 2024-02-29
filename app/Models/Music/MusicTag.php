@@ -27,8 +27,6 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property-read int|null $artists_count
  * @property-read Collection<int, MusicTag> $children
  * @property-read int|null $children_count
- * @property-read Collection<int, MusicTag> $descendants
- * @property-read int|null $descendants_count
  * @property-read MusicTag|null $parent
  * @property-read Collection<int, \App\Models\Music\Track> $tracks
  * @property-read int|null $tracks_count
@@ -92,22 +90,12 @@ class MusicTag extends Model
     }
 
     /**
-     * Getting only 1 level of child tags
+     * Getting unlimited nesting of child tags
      *
      * @return HasMany
      */
     public function children(): HasMany
     {
-        return $this->hasMany(__CLASS__, 'parent_id', 'id');
-    }
-
-    /**
-     * Getting unlimited nesting of child tags
-     *
-     * @return HasMany
-     */
-    public function descendants(): HasMany
-    {
-        return $this->hasMany(__CLASS__, 'parent_id', 'id')->with('descendants');
+        return $this->hasMany(__CLASS__, 'parent_id', 'id')->with('children');
     }
 }

@@ -9,32 +9,33 @@
     {{ tag.content }}
   </div>
 </template>
-<script>
-import {ref} from "vue"
+<script setup>
+import { ref, onMounted} from "vue"
 import { api } from "src/boot/axios"
 
-export default {
-  setup() {
-    const loading = ref(true)
-    const tag = ref([])
-    const getTag = async (slug) => {
-      const {data} = await api.post('music/tags', {slug: slug})
-      tag.value = data.tags
-    }
+const props = defineProps({
+  'slug': String
+})
 
-    return {
-      loading,
-      tag,
-      getTag
-    }
-  },
-  props: {
-    'slug': String
-  },
-  mounted() {
-    this.getTag(this.slug);
-  }
+const loading = ref(true)
+const tag = ref([])
+
+const getTag = async (slug) => {
+  await api.get(`music/tags/${slug}`).then(response => {
+    tag.value = response.data
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: error.response.data.message
+    })
+  }).finally(() => {
+    loading.value = false
+  })
 }
+
+onMounted(() => {
+  getTag(props.slug);
+})
 </script>
 
 <style lang="scss" scoped>

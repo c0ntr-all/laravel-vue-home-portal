@@ -22,18 +22,18 @@ class MusicTagsFilter implements FilterInterface
         // If hierarchy mode is selected, we'll take all children tags
         if ($type == 'hierarchical') {
             // Adding a method to collections to flatten all nested child collections
-            Collection::macro('flattenDescendants', function () {
+            Collection::macro('flattenChildren', function () {
                 return $this->flatMap(function ($item) {
-                    $children = $item['descendants'] ?? [];
-                    unset($item['descendants']);
+                    $children = $item['children'] ?? [];
+                    unset($item['children']);
 
-                    return collect([$item])->concat(collect($children)->flattenDescendants());
+                    return collect([$item])->concat(collect($children)->flattenChildren());
                 });
             });
             $tags = MusicTag::whereIn('id', $tags)
-                            ->with('descendants')
+                            ->with('children')
                             ->get()
-                            ->flattenDescendants()
+                            ->flattenChildren()
                             ->pluck('id')
                             ->flatten()
                             ->sort()

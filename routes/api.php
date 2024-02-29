@@ -94,7 +94,7 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                     Route::post('upload', [AdminArtistController::class, 'upload']);
                 });
                 Route::prefix('tags')->group(function() {
-                    Route::post('/', [AdminTagController::class, 'index']);
+                    Route::get('/', [AdminTagController::class, 'index']);
                     Route::put('store', [AdminTagController::class, 'store']);
                 });
             });
@@ -117,10 +117,11 @@ Route::prefix('auth')->middleware('api')->group(function($router) {
                 Route::post('{track}/playlists/delete', [TrackController::class, 'deleteFromPlaylist']);
             });
             Route::prefix('tags')->group(function() {
-                Route::post('/', [TagController::class, 'index']);
+                Route::get('/', [TagController::class, 'index']);
                 Route::post('select', [TagController::class, 'select']);
-                Route::patch('{tag}/update', [TagController::class, 'update']);
-                Route::post('{tag}/delete', [TagController::class, 'delete']);
+                Route::get('{tag:slug}', [TagController::class, 'show']);
+                Route::patch('{tag}', [TagController::class, 'update']);
+                Route::delete('{tag}', [TagController::class, 'delete']);
             });
             Route::prefix('playlists')->group(function() {
                 // Trying to set "playlists" route as default for list of playlists for better view while requesting.

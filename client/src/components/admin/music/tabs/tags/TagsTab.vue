@@ -1,6 +1,6 @@
 <template>
   <div class="q-mb-md">
-    <AddTagButton @tagCreate="addTag" />
+    <AddTagButton @tagCreate="addTag"/>
     <q-input
       class="q-mb-md"
       ref="filterRef"
@@ -10,20 +10,20 @@
       filled
     >
       <template v-slot:append>
-        <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
+        <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter"/>
       </template>
     </q-input>
 
     <div class="text-h6 q-mb-xs">Основные теги</div>
     <q-tree
       :nodes="commonTags"
-      node-key="label"
+      node-key="name"
       :filter="filter"
       :filter-method="filterMethod"
     >
       <template v-slot:default-header="scope">
         <div class="flex items-center">
-          <div>{{ scope.node.label }}</div>
+          <div>{{ scope.node.name }}</div>
           <div class="flex q-ml-xs">
             <q-btn
               @click.stop="addTagHandler(scope)"
@@ -63,13 +63,13 @@
 
     <q-tree
       :nodes="secondaryTags"
-      node-key="label"
+      node-key="name"
       :filter="filter"
       :filter-method="filterMethod"
     >
       <template v-slot:default-header="scope">
         <div class="flex items-center">
-          <div>{{ scope.node.label }}</div>
+          <div>{{ scope.node.name }}</div>
           <div class="flex q-ml-xs">
             <q-btn
               @click.stop="addTagHandler(scope)"
@@ -104,9 +104,9 @@
   <q-dialog v-model="addTagDialog" @hide="clearTagModel">
     <q-card class="tag-dialog">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">Create new child tag for <b>{{ tagModel.parentTag.label }}</b></div>
-        <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
+        <div class="text-h6">Create new child tag for <b>{{ tagModel.parentTag.name }}</b></div>
+        <q-space/>
+        <q-btn icon="close" flat round dense v-close-popup/>
       </q-card-section>
 
       <q-card-section>
@@ -136,15 +136,15 @@
   <q-dialog v-model="editTagDialog" @hide="clearTagModel">
     <q-card class="tag-dialog">
       <q-card-section class="row items-center q-pb-none">
-        <div class="text-h6">Edit tag <b>{{ tagModel.tag.label }}</b></div>
-        <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
+        <div class="text-h6">Edit tag <b>{{ tagModel.tag.name }}</b></div>
+        <q-space/>
+        <q-btn icon="close" flat round dense v-close-popup/>
       </q-card-section>
 
       <q-card-section>
         <div class="q-gutter-md">
           <q-input
-            v-model="tagModel.tag.label"
+            v-model="tagModel.tag.name"
             placeholder="Name"
             dense
             filled
@@ -169,12 +169,12 @@
     <q-card class="tag-dialog">
       <q-card-section class="row items-center q-pb-none">
         <div class="text-h6">Are you sure?</div>
-        <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
+        <q-space/>
+        <q-btn icon="close" flat round dense v-close-popup/>
       </q-card-section>
 
       <q-card-section>
-        <p>Delete tag <b>{{ tagModel.tag.label }}</b></p>
+        <p>Delete tag <b>{{ tagModel.tag.name }}</b></p>
       </q-card-section>
 
       <q-card-section>
@@ -183,189 +183,161 @@
     </q-card>
   </q-dialog>
 </template>
-<script>
- import { ref, onMounted } from "vue"
- import { useQuasar } from "quasar"
- import { api } from "boot/axios"
+<script setup>
+import {ref, onMounted} from "vue"
+import {useQuasar} from "quasar"
+import {api} from "boot/axios"
 
- import deleteFromTree from "src/utils/deleteFromTree"
- import insertIntoTree from "src/utils/insertIntoTree"
+import deleteFromTree from "src/utils/deleteFromTree"
+import insertIntoTree from "src/utils/insertIntoTree"
 
- import AddTagButton from "components/admin/music/tabs/tags/AddTagButton.vue";
+import AddTagButton from "components/admin/music/tabs/tags/AddTagButton.vue";
 
- export default {
-   components: {
-     AddTagButton
-   },
-   setup() {
-     const $q = useQuasar()
+const $q = useQuasar()
 
-     const commonTags = ref([])
-     const secondaryTags = ref([])
-     const filter = ref('')
-     const filterRef = ref(null)
-     const addTagDialog = ref(false)
-     const editTagDialog = ref(false)
-     const deleteTagDialog = ref(false)
+const commonTags = ref([])
+const secondaryTags = ref([])
+const filter = ref('')
+const filterRef = ref(null)
+const addTagDialog = ref(false)
+const editTagDialog = ref(false)
+const deleteTagDialog = ref(false)
 
-     const tagModel = ref({})
+const tagModel = ref({})
 
-     const addTagHandler = scope => {
-       addTagDialog.value = true
-       tagModel.value.parentTag = scope.node
-     }
+const addTagHandler = scope => {
+  addTagDialog.value = true
+  tagModel.value.parentTag = scope.node
+}
 
-     const editTagHandler = scope => {
-       editTagDialog.value = true
-       tagModel.value.tag = scope.node
-     }
+const editTagHandler = scope => {
+  editTagDialog.value = true
+  tagModel.value.tag = scope.node
+}
 
-     const deleteTagHandler = scope => {
-       deleteTagDialog.value = true
-       tagModel.value.tag = scope.node
-     }
+const deleteTagHandler = scope => {
+  deleteTagDialog.value = true
+  tagModel.value.tag = scope.node
+}
 
-     const clearTagModel = () => {
-       tagModel.value = {}
-     }
+const clearTagModel = () => {
+  tagModel.value = {}
+}
 
-     const filterMethod = (node, text) => {
-       return node.label && node.label.toLowerCase().indexOf(text.toLowerCase()) > -1
-     }
+const filterMethod = (node, text) => {
+  return node.name && node.name.toLowerCase().indexOf(text.toLowerCase()) > -1
+}
 
-     const resetFilter = () => {
-       filter.value = ''
-       filterRef.value.focus()
-     }
+const resetFilter = () => {
+  filter.value = ''
+  filterRef.value.focus()
+}
 
-     const getTags = async () => {
-       await api.post('music/admin/tags')
-         .then(response => {
-           const {data: {data}} = response
+const getTags = async () => {
+  await api.get('music/admin/tags')
+    .then(response => {
+      const {data} = response
 
-           commonTags.value = data.items.common
-           secondaryTags.value = data.items.secondary
-         }).catch(error => {
-           $q.notify({
-             type: 'negative',
-             message: error.response.data.message
-           })
-         })
-     }
+      commonTags.value = data.items.common
+      secondaryTags.value = data.items.secondary
+    }).catch(error => {
+      $q.notify({
+        type: 'negative',
+        message: error.response.data.message
+      })
+    })
+}
 
-     const addTag = async data => {
-       data = data || {
-         name: tagModel.value.name,
-         content: tagModel.value.content,
-         parent_id: tagModel.value.parentTag.id
-       }
-       await api.put('music/admin/tags/store', data).then(response => {
-         const {data: {data}} = response
-         if (Object.keys(tagModel.value).length !== 0) {
-           insertIntoTree(
-             tagModel.value.parentTag.common ? commonTags.value : secondaryTags.value,
-             tagModel.value.parentTag.id,
-             data
-           )
-         } else {
-           if (data.common) {
-             commonTags.value.push(data)
-             commonTags.value.sort((a, b) => a.label.localeCompare(b.label));
-           } else {
-             secondaryTags.value.push(data)
-             secondaryTags.value.sort((a, b) => a.label.localeCompare(b.label));
-           }
-         }
+const addTag = async (event, tagData) => {
+  tagData = tagData || {
+    name: tagModel.value.name,
+    content: tagModel.value.content,
+    parent_id: tagModel.value.parentTag.id
+  }
+  await api.put('music/admin/tags/store', tagData).then(response => {
+    const {data} = response
+    if (Object.keys(tagModel.value).length !== 0) {
+      insertIntoTree(
+        tagModel.value.parentTag.common ? commonTags.value : secondaryTags.value,
+        tagModel.value.parentTag.id,
+        tagData
+      )
+    } else {
+      if (data.common) {
+        commonTags.value.push(data)
+        commonTags.value.sort((a, b) => a.name.localeCompare(b.name));
+      } else {
+        secondaryTags.value.push(data)
+        secondaryTags.value.sort((a, b) => a.name.localeCompare(b.name));
+      }
+    }
 
-         $q.notify({
-           type: 'positive',
-           message: `Тег ${data.label} успешно добавлен!`
-         })
+    $q.notify({
+      type: 'positive',
+      message: `Тег ${tagData.name} успешно добавлен!`
+    })
 
-         clearTagModel()
-         addTagDialog.value = false
-       }).catch(error => {
-         $q.notify({
-           type: 'negative',
-           message: error.response.data.message
-         })
-       })
-     }
+    clearTagModel()
+    addTagDialog.value = false
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: error.response.data.message
+    })
+  })
+}
 
-     const editTag = async () => {
-       await api.patch(`music/tags/${tagModel.value.tag.id}/update`, {
-         name: tagModel.value.tag.label,
-         content: tagModel.value.tag.content
-       }).then(() => {
-           $q.notify({
-             type: 'positive',
-             message: `Тег ${tagModel.value.tag.label} успешно обновлён!`
-           })
+const editTag = async () => {
+  await api.patch(`music/tags/${tagModel.value.tag.id}/update`, {
+    name: tagModel.value.tag.name,
+    content: tagModel.value.tag.content
+  }).then(() => {
+    $q.notify({
+      type: 'positive',
+      message: `Тег ${tagModel.value.tag.name} успешно обновлён!`
+    })
 
-           clearTagModel()
-           editTagDialog.value = false
-       }).catch(error => {
-           $q.notify({
-             type: 'negative',
-             message: error.response.data.message
-           })
-       })
-     }
+    clearTagModel()
+    editTagDialog.value = false
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: error.response.data.message
+    })
+  })
+}
 
-     const deleteTag = async () => {
-       await api.post(`music/tags/${tagModel.value.tag.id}/delete`)
-       .then(response => {
-         deleteFromTree(tagModel.value.tag.common ? commonTags.value : secondaryTags.value, tagModel.value.tag.id)
+const deleteTag = async () => {
+  await api.post(`music/tags/${tagModel.value.tag.id}/delete`).then(response => {
+    deleteFromTree(tagModel.value.tag.common ? commonTags.value : secondaryTags.value, tagModel.value.tag.id)
 
-         $q.notify({
-           type: 'positive',
-           message: `Тег ${response.data.tag} успешно удалён!`
-         })
+    $q.notify({
+      type: 'positive',
+      message: `Тег ${response.data.tag} успешно удалён!`
+    })
 
-         clearTagModel()
-         deleteTagDialog.value = false
-       }).catch(error => {
-         $q.notify({
-           type: 'negative',
-           message: error.response.data.message
-         })
-       })
-     }
+    clearTagModel()
+    deleteTagDialog.value = false
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: error.response.data.message
+    })
+  })
+}
 
-     onMounted(() => {
-       getTags()
-     })
-     return {
-       commonTags,
-       secondaryTags,
-       filter,
-       filterRef,
-       addTagDialog,
-       editTagDialog,
-       deleteTagDialog,
-       tagModel,
-       addTagHandler,
-       editTagHandler,
-       deleteTagHandler,
-       clearTagModel,
-       filterMethod,
-       resetFilter,
-       getTags,
-       addTag,
-       editTag,
-       deleteTag
-     }
-   }
- }
+onMounted(() => {
+  getTags()
+})
 </script>
 <style lang="scss" scoped>
-  .tag {
-    &__actions {
-      margin-left: 5px;
-    }
-
-    &-dialog {
-      min-width: 500px;
-    }
+.tag {
+  &__actions {
+    margin-left: 5px;
   }
+
+  &-dialog {
+    min-width: 500px;
+  }
+}
 </style>

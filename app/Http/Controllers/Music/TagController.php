@@ -3,36 +3,37 @@
 namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\Music\Tag\IndexRequest;
 use App\Http\Requests\Music\Tag\UpdateRequest;
-use App\Http\Resources\Music\Tag\TagCollection;
-use App\Http\Resources\Music\Tag\TagResource;
+use App\Http\Resources\Client\Music\Tag\TagResource;
 use App\Http\Resources\Music\Tag\TagSelectCollection;
 use App\Models\Music\MusicTag;
-use App\Services\Music\TagService;
+use App\Services\Client\Music\TagService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class TagController extends BaseController
 {
     public function __construct(
         MusicTag $tag,
-        private TagService $service
+        private TagService $tagService
     )
     {
         $this->tag = $tag;
     }
 
     /**
-     * @param IndexRequest $request
-     * @return TagCollection|TagResource
+     * @return JsonResponse|Response
      */
-    public function index(IndexRequest $request)
+    public function index(): JsonResponse|Response
     {
-        if (array_key_exists('slug', $request->validated())) {
-            return new TagResource(MusicTag::where('slug', $request->validated()['slug'])->first());
-        } else {
-            return new TagCollection($this->tag->getItems());
-        }
+        $tags = $this->tagService->getTags();
+
+        return $this->response($tags);
+    }
+
+    public function show(MusicTag $tag): TagResource
+    {
+        return new TagResource($tag);
     }
 
     public function update(MusicTag $tag, UpdateRequest $request)
@@ -62,7 +63,7 @@ class TagController extends BaseController
 
     public function select(): Response
     {
-        $out = $this->service->getTags();
+        $out = $this->tagService->getTags();
 
         return $this->sendResponse(new TagSelectCollection($out));
     }

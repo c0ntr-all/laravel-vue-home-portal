@@ -1,8 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace App\Services\Music;
+namespace App\Services\Client\Music;
 
-use App\Http\Resources\Admin\Music\Tag\TagTreeCollection;
+use App\Http\Resources\Client\Music\Tag\TagCollection;
 use App\Models\Music\MusicTag;
 use App\Repositories\TagRepository;
 
@@ -14,14 +14,14 @@ class TagService
     {
     }
 
-    public function getTagsTree(): TagTreeCollection
+    public function getTags(): TagCollection
     {
-        $tags = $this->tagRepository->getTagsTree();
+        $tags = $this->tagRepository->getTags();
 
-        return new TagTreeCollection($tags);
+        return new TagCollection($tags);
     }
 
-    public function store($requestData)
+    public function storeTag($requestData)
     {
         $requestData['parent_id'] = array_key_exists('parent_id', $requestData) ? $requestData['parent_id'] : NULL;
 

@@ -5,7 +5,7 @@
       <div class="tags q-mb-lg">
         <div class="tags-list q-gutter-sm">
           <q-btn
-            v-for="tag in tags.common"
+            v-for="tag in tags"
             :key="tag.id"
             :label="tag.label"
             :to="'/music/tags/' + tag.slug"
@@ -34,8 +34,8 @@ const tags = ref([])
 let loading = ref(true)
 
 const getTags = async () => {
-  await api.post('music/tags/select').then(response => {
-    tags.value = response.data.data.items
+  await api.get('music/tags').then(response => {
+    tags.value = response.data.items
   }).catch(error => {
     $q.notify({
       type: 'negative',
