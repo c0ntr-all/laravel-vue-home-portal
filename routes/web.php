@@ -20,8 +20,6 @@ use Iman\Streamer\VideoStreamer;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'test'])->name('test');
 
-Auth::routes();
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 /*Для тестирования*/
