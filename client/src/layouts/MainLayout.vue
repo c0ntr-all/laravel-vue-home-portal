@@ -112,47 +112,32 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, ref } from "vue"
+<script setup>
+import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useQuasar } from "quasar"
 import { useUserStore } from "stores/modules/user"
 
 import MusicPlayer from "src/components/default/MusicPlayer.vue"
 
-export default defineComponent({
-  name: 'MainLayout',
+const $q = useQuasar()
+const $router = useRouter()
+const user = useUserStore()
+const leftDrawerOpen = ref(false)
 
-  components: { MusicPlayer },
+const logout = () => {
+  user.logout().then(response => {
+    $q.notify({
+      type: 'positive',
+      message: 'Вы успешно вышли из системы!'
+    });
+    $router.push('/login')
+  })
+}
 
-  setup () {
-    const $q = useQuasar()
-    const $router = useRouter()
-    const user = useUserStore()
-
-    const leftDrawerOpen = ref(false)
-
-    const logout = () => {
-      user.logout().then(response => {
-        $q.notify({
-          type: 'positive',
-          message: 'Вы успешно вышли из системы!'
-        });
-        $router.push('/login')
-      })
-    }
-
-    const toggleLeftDrawer = () => {
-      leftDrawerOpen.value = !leftDrawerOpen.value
-    }
-
-    return {
-      leftDrawerOpen,
-      logout,
-      toggleLeftDrawer
-    }
-  }
-})
+const toggleLeftDrawer = () => {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
 </script>
 <style lang="scss" scoped>
   .q-page {

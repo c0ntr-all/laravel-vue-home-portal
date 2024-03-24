@@ -32,13 +32,13 @@ export default route(function ({/* store, ssrContext */}) {
   Router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title}`
     if(to.name !== 'login') {
-      if(!user.isLoggedIn && to.name !== 'video') {
+      if(!localStorage.getItem('access_token') && to.name !== 'video') {
         return next({
           name: 'login'
         })
       }
     }
-    if(to.name === 'login' && user.isLoggedIn) {
+    if(to.name === 'login' && localStorage.getItem('access_token')) {
       return next({
         name: 'home'
       })

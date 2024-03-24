@@ -36,46 +36,35 @@
   </q-layout>
 </template>
 
-<script>
+<script setup>
 import { ref } from "vue"
 import { useRouter } from "vue-router"
 import { useQuasar } from "quasar"
 import { useUserStore } from "stores/modules/user"
 
-export default {
-  setup() {
-    const $q = useQuasar()
-    const $router = useRouter()
-    const user = useUserStore()
+const $q = useQuasar()
+const $router = useRouter()
+const user = useUserStore()
 
-    const email = ref('')
-    const password = ref('')
+const email = ref('')
+const password = ref('')
 
-    const login = () => {
-      user.login({
-        email: email.value,
-        password: password.value
-      }).then(response => {
-        $q.notify({
-          type: 'positive',
-          message: 'Вы успешно вошли в систему!'
-        });
-        $router.push('/')
-      }).catch(error => {
-        $q.notify({
-          type: 'negative',
-          message: error
-        });
-      })
-    }
-
-    return {
-      email,
-      password,
-      user,
-      login
-    }
-  }
+const login = () => {
+  user.login({
+    email: email.value,
+    password: password.value
+  }).then(() => {
+    $q.notify({
+      type: 'positive',
+      message: 'Вы успешно вошли в систему!'
+    });
+    $router.push('/')
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: error
+    });
+  })
 }
 </script>
 <style lang="scss">

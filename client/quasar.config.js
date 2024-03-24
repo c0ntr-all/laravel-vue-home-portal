@@ -63,8 +63,8 @@ module.exports = configure(function (ctx) {
       // analyze: true,
       env: {
         API: ctx.dev
-          ? 'http://localhost/api/auth/'
-          : 'http://api.home-portal.prod/api/auth/',
+          ? 'http://localhost/api/'
+          : 'http://api.home-portal.prod/api/',
       },
       // rawDefine: {}
       // ignorePublicFolder: true,

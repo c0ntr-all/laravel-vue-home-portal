@@ -23,22 +23,8 @@ export default boot(({ app, router }) => {
   api.interceptors.response.use(response => {
     return response
   }, error => {
-    if(error.response.data.message === 'Token has expired') {
-      axios.post(`${process.env.API}/refresh`, {}, {
-        headers: {
-          'authorization': `Bearer ${localStorage.access_token}`,
-          'Accept': 'application/json'
-        }
-      }).then(response => {
-        localStorage.access_token = response.data.access_token
-
-        error.config.headers.authorization = `Bearer ${response.data.access_token}`
-
-        return api.request(error.config)
-      })
-    }
-
     if(error.response.status === 401) {
+      localStorage.removeItem('access_token')
       router.push('/login')
     }
 

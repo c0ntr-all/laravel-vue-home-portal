@@ -12,7 +12,6 @@ export const useUserStore = defineStore({
     isAdmin: false,
     status: '',
     message: '',
-    token: localStorage.getItem('access_token') || '',
     user: {}
   }),
   actions: {
@@ -23,7 +22,6 @@ export const useUserStore = defineStore({
 
           this.$patch({
             status: 'success',
-            token: response.data.access_token,
             user: data.email
           })
 
@@ -34,21 +32,20 @@ export const useUserStore = defineStore({
         })
     },
     async logout() {
-      await api.post('logout')
+      await api.post('user/logout')
         .then(() => {
           localStorage.removeItem('access_token')
 
           this.$patch({
             status: '',
-            token: '',
             user: ''
           })
         })
-    }
+    },
   },
   getters: {
-    isLoggedIn(state) {
-      return !!state.token
+    isLoggedIn() {
+      return !!localStorage.getItem('access_token')
     }
   }
 })

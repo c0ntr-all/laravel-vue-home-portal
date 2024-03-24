@@ -32,7 +32,7 @@ class AuthController extends Controller
         }
         $token = $user->createToken('token');
 
-        return response(['token' => $token->plainTextToken]);
+        return response(['access_token' => $token->plainTextToken]);
     }
 
     /**
@@ -42,7 +42,7 @@ class AuthController extends Controller
      */
     public function logout(): \Illuminate\Foundation\Application|Response
     {
-        auth()->logout();
+        request()->user()->currentAccessToken()->delete();
 
         return response(['message' => 'Successfully logged out']);
     }

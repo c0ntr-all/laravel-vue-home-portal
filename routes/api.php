@@ -12,7 +12,6 @@ use App\Http\Controllers\Music\TagController;
 use App\Http\Controllers\Admin\Music\TagController as AdminTagController;
 use App\Http\Controllers\Music\TrackController;
 use App\Http\Controllers\Reminds\RemindController;
-use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Tasks\TaskListController;
@@ -21,7 +20,6 @@ use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\Users\UserSettingsController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\WidgetController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,14 +33,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout']);
-Route::post('refresh', [AuthController::class, 'refresh']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index']);
         Route::get('settings', [UserSettingsController::class, 'index']);
         Route::patch('settings/update', [UserSettingsController::class, 'update']);
+        Route::post('logout', [AuthController::class, 'logout']);
     });
     Route::prefix('widgets')->group(function () {
         Route::get('get', [WidgetController::class, 'getWidgets']);
