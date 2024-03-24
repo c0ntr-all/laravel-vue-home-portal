@@ -7,12 +7,11 @@ use App\Models\Music\Playlist;
 use App\Models\Reminds\Remind;
 use App\Models\Reminds\RemindGroup;
 use App\Models\Tasks\TaskList;
-use App\Models\Traits\HasDates;
 use App\Models\Widgets\WidgetPlacement;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * App\Models\User
@@ -53,12 +52,11 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
- * @mixin \Eloquent
  */
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable
 {
-    use HasFactory;
-    use HasDates;
+    use HasApiTokens,
+        Notifiable;
 
     protected $fillable = ['username', 'email', 'password', 'bio', 'images'];
 
@@ -102,20 +100,5 @@ class User extends Authenticatable implements JWTSubject
     public function musicHistory(): HasMany
     {
         return $this->hasMany(MusicHistory::class)->with('track.tags');
-    }
-
-    public function setPasswordAttribute(string $password): void
-    {
-        $this->attributes['password'] = bcrypt($password);
-    }
-
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
     }
 }

@@ -34,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
             'album' => 'App\Models\Music\Album',
             'track' => 'App\Models\Music\Track',
             'task' => 'App\Models\Tasks\Task',
+            'user' => 'App\Models\User',
         ]);
     }
 }
