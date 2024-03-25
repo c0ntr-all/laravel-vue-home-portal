@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Remind;
+namespace App\Http\Resources\Reminds;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -11,8 +11,8 @@ class RemindCollection extends ResourceCollection
     public function toArray($request): array
     {
         return [
-            'reminds' => $this->collection,
-            'remindsCount' => $this->count()
+            'count' => $this->count(),
+            'items' => $this->collection,
         ];
     }
 }

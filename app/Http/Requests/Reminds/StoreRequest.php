@@ -24,10 +24,10 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'group_id' => 'sometimes|numeric|exists:reminds_groups,id',
             'title' => 'required|string|max:70',
             'content' => 'sometimes|string|max:1000',
-            'group' => 'sometimes|string|max:50',
-            'datetime' => 'required|string',
+            'datetime' => 'required|date_format:Y-m-d H:i',
             'is_active' => 'sometimes|bool'
         ];
     }

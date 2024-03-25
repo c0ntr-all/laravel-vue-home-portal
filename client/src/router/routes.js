@@ -61,16 +61,6 @@ const routes = [{
     alias: '/reminder',
     menu: true
   }, {
-    path: '/restaurants',
-    component: () => import('layouts/MainLayout.vue'),
-    meta: {
-      title: 'Рестораны',
-      icon: 'emoji_food_beverage'
-    },
-    name: 'restaurants',
-    alias: '/restaurants',
-    menu: true
-  }, {
     path: '/music',
     component: () => import('layouts/Music.vue'),
     menu: true,

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRemindsGroupsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -19,6 +19,7 @@ class CreateRemindsGroupsTable extends Migration
             $table->string('name');
             $table->text('content')->nullable()->default(NULL);
             $table->string('color')->nullable()->default(NULL);
+            $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
         });
@@ -33,4 +34,4 @@ class CreateRemindsGroupsTable extends Migration
     {
         Schema::dropIfExists('reminds_groups');
     }
-}
+};

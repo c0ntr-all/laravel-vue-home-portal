@@ -3,26 +3,37 @@
 namespace App\Services;
 
 use App\Models\Reminds\Remind;
-use App\Models\Reminds\RemindGroup;
 
 class RemindService
 {
-    protected $remindGroup;
-
-    public function __construct(RemindGroup $remindGroup)
+    public function __construct()
     {
-        $this->remindGroup = $remindGroup;
     }
 
-    public function syncGroup(Remind $remind, string $group): void
+    /**
+     * @param array $data
+     * @return Remind
+     */
+    public function createRemind(array $data): Remind
     {
-        $groupId = $this->remindGroup->firstOrCreate([
-            'name' => $group,
-            'user_id' => auth()->user()->id,
-            'color' => $group
-        ])->id;
+        return Remind::create(array_merge($data, [
+            'user_id' => auth()->id(),
+            'group_id' => $data['group_id'] ?? null
+        ]));
+    }
 
-        $remind->group()->associate($groupId);
-        $remind->save();
+    /**
+     * @param Remind $remind
+     * @param array $data
+     * @return Remind
+     */
+    public function updateRemind(Remind $remind, array $data): Remind
+    {
+        $remind->update(array_merge($data, [
+            'user_id' => auth()->id(),
+            'group_id' => $data['group_id'] ?? null
+        ]));
+
+        return $remind;
     }
 }

@@ -1,17 +1,18 @@
 <?php
 
 use App\Http\Controllers\Admin\Music\ArtistController as AdminArtistController;
+use App\Http\Controllers\Admin\Music\TagController as AdminTagController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\Finances\FinancesController;
+use App\Http\Controllers\FinancesController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\Music\AlbumController;
 use App\Http\Controllers\Music\ArtistController;
 use App\Http\Controllers\Music\MusicHistoryController;
 use App\Http\Controllers\Music\PlaylistController;
 use App\Http\Controllers\Music\TagController;
-use App\Http\Controllers\Admin\Music\TagController as AdminTagController;
 use App\Http\Controllers\Music\TrackController;
 use App\Http\Controllers\Reminds\RemindController;
+use App\Http\Controllers\Reminds\RemindGroupController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Tasks\TaskListController;
@@ -61,8 +62,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('reminds')->group(function () {
         Route::get('/', [RemindController::class, 'index']);
-        Route::put('store', [RemindController::class, 'store']);
-        Route::patch('/{remind}/update', [RemindController::class, 'update']);
+        Route::post('/', [RemindController::class, 'store']);
+        Route::patch('/{remind}', [RemindController::class, 'update']);
+        Route::get('/groups', [RemindGroupController::class, 'index']);
     });
 
     Route::prefix('music')->group(function () {

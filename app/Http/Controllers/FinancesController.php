@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Finances;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Finances\IndexRequest;
 use App\Http\Resources\Finances\FinancesCollection;
 use App\Http\Resources\Finances\FinancesResource;

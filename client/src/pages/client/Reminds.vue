@@ -204,161 +204,132 @@
     </q-dialog>
   </template>
 </template>
-<script>
+<script setup>
 import { ref, onMounted } from "vue"
 import { useQuasar } from "quasar"
-
 import { api } from "src/boot/axios"
+import RemindsTableSkeleton from "src/components/client/reminds/skeleton/RemindsPage.vue"
+import TableCol from "src/components/client/reminds/RemindsTableCol.vue"
 
-import RemindsTableSkeleton from 'src/components/client/reminds/skeleton/RemindsPage.vue'
-import TableCol from 'src/components/client/reminds/RemindsTableCol.vue'
+const $q = useQuasar()
 
-export default {
-  components: {
-    RemindsTableSkeleton,
-    TableCol
-  },
-  setup() {
-    const $q = useQuasar()
+let loading = ref(true)
+const remindTable = ref(null)
+const columns = [
+  { name: 'title', label: 'Title', field: 'title', align: 'left', sortable: true },
+  { name: 'time_left', label: 'Time left', field: 'time_left', align: 'center' },
+  { name: 'date', label: 'Date', field: 'datetime', align: 'center', sortable: true },
+  { name: 'active', label: 'Active', field: 'is_active', align: 'center', }
+]
+const reminds = ref([])
+const createRemindModal = ref(false)
+const updateRemindModal = ref(false)
+const model = ref({
+  title: '',
+  content: '',
+  group: '',
+  datetime: '',
+  is_active: true
+})
+const createRemindLoading = ref(false)
+const updateRemindLoading = ref(false)
+const getGroupsLoading = ref(false)
+const groups = ref([])
 
-    let loading = ref(true)
-    const remindTable = ref(null)
-    const columns = [
-      { name: 'title', label: 'Title', field: 'title', align: 'left', sortable: true },
-      { name: 'time_left', label: 'Time left', field: 'time_left', align: 'center' },
-      { name: 'date', label: 'Date', field: 'datetime', align: 'center', sortable: true },
-      { name: 'active', label: 'Active', field: 'is_active', align: 'center', }
-    ]
-    const reminds = ref([])
-    const createRemindModal = ref(false)
-    const updateRemindModal = ref(false)
-    const model = ref({
-      title: '',
-      content: '',
-      group: '',
-      datetime: '',
-      is_active: true
+const getReminds = async () => {
+  await api.get('reminds').then(response => {
+    reminds.value = response.data.reminds
+    loading.value = false
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: `Server Error: ${error.response.data.message}`
     })
-    const createRemindLoading = ref(false)
-    const updateRemindLoading = ref(false)
-    const getGroupsLoading = ref(false)
-    const groups = ref([])
+    loading.value = false
+  })
+}
 
-    const getReminds = async () => {
-      await api.get('reminds').then(response => {
-        reminds.value = response.data.reminds
-        loading.value = false
-      }).catch(error => {
-        $q.notify({
-          type: 'negative',
-          message: `Server Error: ${error.response.data.message}`
-        })
-        loading.value = false
-      })
-    }
+const createRemind = async () => {
+  createRemindLoading.value = true
 
-    const createRemind = async () => {
-      createRemindLoading.value = true
+  await api.post('reminds/store', {
+    ...model.value
+  }).then(response => {
+    createRemindLoading.value = false
+    reminds.value.unshift(response.data.reminds)
+    $q.notify({
+      type: 'positive',
+      message: `Remind has been created`
+    })
+    createRemindModal.value = false
+  }).catch(error => {
+    createRemindLoading.value = false
+    $q.notify({
+      type: 'negative',
+      message: `Server Error: ${error.response.data.message}`
+    })
+  })
+}
 
-      await api.put('reminds/store', {
-        ...model.value
-      }).then(response => {
-        createRemindLoading.value = false
-        reminds.value.unshift(response.data.reminds)
-        $q.notify({
-          type: 'positive',
-          message: `Remind has been created`
-        })
-        createRemindModal.value = false
-      }).catch(error => {
-        createRemindLoading.value = false
-        $q.notify({
-          type: 'negative',
-          message: `Server Error: ${error.response.data.message}`
-        })
-      })
-    }
+const updateRemind = async () => {
+  updateRemindLoading.value = true
 
-    const updateRemind = async () => {
-      updateRemindLoading.value = true
-
-      await api.patch(`reminds/${model.value.id}/update`, {
-        ...model.value
-      }).then(response => {
-        for(let key in reminds.value) {
-          if(reminds.value[key].id === response.data.data.id) {
-            reminds.value[key] = response.data.data
-          }
-        }
-        $q.notify({
-          type: 'positive',
-          message: `Remind has been updated!`
-        })
-        updateRemindModal.value = false
-      }).catch(error => {
-        $q.notify({
-          type: 'negative',
-          message: `Server Error: ${error.response.data.message}`
-        })
-      }).finally(() => {
-        updateRemindLoading.value = false
-      })
-    }
-
-    const sortReminds = () => {
-      setTimeout(() => {
-        reminds.value.sort((a, b) => b.group > a.group ? 1 : -1)
-      }, 500)
-    }
-
-    const initRemindUpdate = async remind => {
-      updateRemindModal.value = true
-
-      model.value = remind
-      if (!groups.value.length) {
-        getGroupsLoading.value = true
-
-        await api.get('user/settings').then(response => {
-          groups.value = response.data.data.value
-        }).catch(error => {
-          $q.notify({
-            type: 'negative',
-            message: 'There is a problem with loading groups!'
-          })
-        })
-
-        getGroupsLoading.value = false
+  await api.patch(`reminds/${model.value.id}`, {
+    ...model.value
+  }).then(response => {
+    for(let key in reminds.value) {
+      if(reminds.value[key].id === response.data.data.id) {
+        reminds.value[key] = response.data.data
       }
     }
+    $q.notify({
+      type: 'positive',
+      message: `Remind has been updated!`
+    })
+    updateRemindModal.value = false
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: `Server Error: ${error.response.data.message}`
+    })
+  }).finally(() => {
+    updateRemindLoading.value = false
+  })
+}
 
-    const onHideModal = () => {
-      model.value = {}
-    }
+const sortReminds = () => {
+  setTimeout(() => {
+    reminds.value.sort((a, b) => b.group > a.group ? 1 : -1)
+  }, 500)
+}
 
-    onMounted(() => {
-      getReminds()
+const initRemindUpdate = async remind => {
+  updateRemindModal.value = true
+
+  model.value = remind
+  if (!groups.value.length) {
+    getGroupsLoading.value = true
+
+    await api.get('user/settings').then(response => {
+      groups.value = response.data.data.value
+    }).catch(error => {
+      $q.notify({
+        type: 'negative',
+        message: 'There is a problem with loading groups!'
+      })
     })
 
-    return {
-      loading,
-      columns,
-      reminds,
-      remindTable,
-      createRemindModal,
-      updateRemindModal,
-      model,
-      createRemindLoading,
-      updateRemindLoading,
-      getGroupsLoading,
-      groups,
-      createRemind,
-      sortReminds,
-      initRemindUpdate,
-      updateRemind,
-      onHideModal
-    }
+    getGroupsLoading.value = false
   }
 }
+
+const onHideModal = () => {
+  model.value = {}
+}
+
+onMounted(() => {
+  getReminds()
+})
 </script>
 <style lang="scss" scoped>
   .remind {

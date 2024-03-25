@@ -26,8 +26,8 @@ class UpdateRequest extends FormRequest
         return [
             'title' => 'sometimes|string',
             'content' => 'sometimes|string',
-            'group' => 'sometimes|string|nullable|max:50',
-            'datetime' => 'sometimes',
+            'group_id' => 'sometimes|numeric|exists:reminds_groups,id',
+            'datetime' => 'sometimes|date_format:Y-m-d H:i',
             'is_active' => 'sometimes|bool'
         ];
     }
