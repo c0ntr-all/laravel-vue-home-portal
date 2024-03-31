@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch, watchEffect} from "vue";
+import { onMounted, ref, watch, watchEffect } from "vue";
 import { useQuasar } from "quasar";
 import { api } from "boot/axios";
 import AppModal from "src/components/extra/AppModal.vue";
@@ -89,9 +89,11 @@ watch(show, (newVal) => {
 });
 
 onMounted(() => {
-  // Pusher.logToConsole = true;
-  window.Echo.channel('artist-parsing')
-    .on(`track-parsed`, (data) => {
+  Pusher.logToConsole = true;
+  console.log(window.Echo)
+
+  window.Echo.private('artist-parsing')
+    .listen('.track-parsed', data => {
       emit('trackParsed', data.message)
     })
 })

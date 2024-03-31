@@ -22,7 +22,7 @@ class TrackParsed implements ShouldBroadcastNow
         $this->message = $message;
     }
 
-    public function broadcastAs()
+    public function broadcastAs(): string
     {
         return 'track-parsed'; // Имя события, которое будет использоваться при трансляции
     }

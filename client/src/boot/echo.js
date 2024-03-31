@@ -4,11 +4,17 @@ import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 
 window.Echo = new Echo({
-  broadcaster: 'pusher',
-  key: 'any_app_key',
+  broadcaster: 'reverb',
+  key: 'c3stozeuvxljelzhhakf',
   wsHost: window.location.hostname,
-  wsPort: 6001,
+  wsPort: 8080,
+  wssPort: 8080,
   forceTLS: false,
-  disableStats: true,
-  cluster: 'mt1'
+  enabledTransports: ['ws'],
+  authEndpoint: `http://home-portal.${process.env.mode}/api/broadcasting/auth`,
+  auth: {
+    headers: {
+      Authorization: `Bearer ${localStorage.token}`
+    }
+  }
 });

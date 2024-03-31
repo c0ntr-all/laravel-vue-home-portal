@@ -9,7 +9,6 @@ use App\Models\Music\MusicTag;
 use App\Traits\Makeable;
 use getID3;
 use Illuminate\Http\File;
-use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\DB;
 
 class ArtistParseService
@@ -113,7 +112,7 @@ class ArtistParseService
                             $artist->tags()->syncWithoutDetaching($this->tags[$trackData['genre']]);
                         }
 
-                        broadcast(new TrackParsed($socketData));
+                        TrackParsed::dispatch($socketData);
                     }
                 }
 

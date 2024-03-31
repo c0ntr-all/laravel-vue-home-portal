@@ -62,9 +62,10 @@ module.exports = configure(function (ctx) {
       // publicPath: '/',
       // analyze: true,
       env: {
-        API: ctx.dev
-          ? 'http://localhost/api/'
-          : 'http://api.home-portal.prod/api/',
+        mode: ctx.dev ? 'test' : 'prod',
+        host: ctx.dev
+          ? 'http://home-portal.test'
+          : 'http://api.home-portal.prod',
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
