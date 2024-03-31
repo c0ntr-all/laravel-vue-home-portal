@@ -80,7 +80,6 @@ const columns = [
   { name: 'active', label: 'Active', field: 'is_active', align: 'center', }
 ]
 const reminds = ref([])
-const groups = ref([])
 const showEditModal = ref(false)
 const remindToUpdate = ref(null)
 
@@ -109,12 +108,6 @@ const initUpdateModal = remind => {
 
 const updateRemindInList = remind => {
   reminds.value.filter(r => r.id === remind.id).map(item => item = remind)
-
-  // for(let key in reminds.value) {
-  //   if(reminds.value[key].id === response.data.data.id) {
-  //     reminds.value[key] = response.data.data
-  //   }
-  // }
 }
 
 const sortReminds = () => {

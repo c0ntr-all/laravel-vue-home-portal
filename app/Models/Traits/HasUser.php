@@ -8,6 +8,20 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait HasUser
 {
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::addGlobalScope('user', function ($builder) {
+            $builder->where('user_id', '=', auth()->user()->id);
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

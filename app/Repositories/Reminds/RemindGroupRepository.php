@@ -14,6 +14,7 @@ class RemindGroupRepository
         $select = [
             'id',
             'name',
+            'color',
         ];
 
         return RemindGroup::select($select)

@@ -2,6 +2,7 @@
 
 namespace App\Models\Reminds;
 
+use App\Models\Traits\HasUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -29,7 +30,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class RemindGroup extends Model
 {
-    use HasFactory;
+    use HasFactory,
+        HasUser;
 
     public $table = 'reminds_groups';
 

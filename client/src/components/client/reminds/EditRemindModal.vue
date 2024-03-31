@@ -39,15 +39,15 @@
           </template>
         </q-input>
         <div class="relative-position q-gutter-sm" style="height: 48px">
-<!--          <q-radio-->
-<!--            v-for="group in groups"-->
-<!--            :key="group.color"-->
-<!--            v-model="model.group"-->
-<!--            :val="group.color"-->
-<!--            :label="group.name"-->
-<!--            :color="group.color"-->
-<!--          />-->
-<!--          <q-inner-loading :showing="getGroupsLoading" />-->
+          <q-radio
+            v-for="group in groups"
+            :key="group.color"
+            v-model="model.group"
+            :val="group.color"
+            :label="group.name"
+            :color="group.color"
+          />
+          <q-inner-loading :showing="getGroupsLoading" />
         </div>
         <div class="justify-start">
           <q-toggle
@@ -84,6 +84,7 @@ const emit = defineEmits(['update:modelValue', 'updated']);
 const mode = props.remindToUpdate ? 'update' : 'create'
 const text = mode === 'create' ? 'Создать' : 'Редактировать'
 const loading = ref(false)
+const groups = ref([])
 const groupsLoading = ref(false)
 const model = ref(props.remindToUpdate ? props.remindToUpdate : {
   title: '',
@@ -94,21 +95,21 @@ const model = ref(props.remindToUpdate ? props.remindToUpdate : {
 })
 
 const show = ref(props.modelValue)
-const initialize = async () => {
-  // if (!groups.value.length) {
-  //   groupsLoading.value = true
-  //
-  //   await api.get('user/settings').then(response => {
-  //     groups.value = response.data.data.value
-  //   }).catch(error => {
-  //     $q.notify({
-  //       type: 'negative',
-  //       message: 'There is a problem with loading groups!'
-  //     })
-  //   }).finally(() => {
-  //     groupsLoading.value = false
-  //   })
-  // }
+const getGroups = async () => {
+  if (!groups.value.length) {
+    groupsLoading.value = true
+
+    await api.get('reminds/groups').then(response => {
+      groups.value = response.data.items
+    }).catch(error => {
+      $q.notify({
+        type: 'negative',
+        message: 'There is a problem with loading groups!'
+      })
+    }).finally(() => {
+      groupsLoading.value = false
+    })
+  }
 }
 
 const updateRemind = async () => {
@@ -146,7 +147,7 @@ watch(show, (newVal) => {
 });
 
 onMounted(() => {
-  initialize()
+  getGroups()
 })
 </script>
 

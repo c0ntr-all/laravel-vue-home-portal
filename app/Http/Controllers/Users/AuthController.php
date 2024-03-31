@@ -13,8 +13,6 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     /**
-     * Get a JWT via given credentials.
-     *
      * @param LoginRequest $request
      * @return Response
      * @throws ValidationException
