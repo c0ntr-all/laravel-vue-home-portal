@@ -48,6 +48,10 @@ class Remind extends Model
     use HasFactory;
     use HasDates;
 
+    protected $casts = [
+        'datetime' => 'datetime',
+    ];
+
     protected $guarded = [];
 
     public function user(): BelongsTo

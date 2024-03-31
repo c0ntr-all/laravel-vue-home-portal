@@ -13,7 +13,7 @@ class RemindResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'time_left' => $this->time_left,
-            'datetime' => $this->datetime,
+            'datetime' => $this->datetime->format('Y-m-d H:i'),
             'is_active' => (bool)$this->is_active
         ];
     }

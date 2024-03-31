@@ -38,8 +38,8 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index']);
-        Route::get('settings', [UserSettingsController::class, 'index']);
-        Route::patch('settings/update', [UserSettingsController::class, 'update']);
+        Route::get('settings', [UserSettingsController::class, 'index']); //todo: remove
+        Route::patch('settings/update', [UserSettingsController::class, 'update']); //todo: remove
         Route::post('logout', [AuthController::class, 'logout']);
     });
     Route::prefix('widgets')->group(function () {
