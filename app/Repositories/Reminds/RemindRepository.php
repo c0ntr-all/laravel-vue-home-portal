@@ -12,23 +12,22 @@ class RemindRepository
     public function getList(): mixed
     {
         $select = [
-            'id',
-            'title',
-            'content',
-            'group_id',
-            'datetime',
-            'is_active'
+            'reminds.id',
+            'reminds.title',
+            'reminds.content',
+            'reminds.group_id',
+            'reminds.datetime',
+            'reminds.is_active',
+            'reminds_groups.id as g_id',
+            'reminds_groups.sort',
         ];
 
-        return Remind::select($select)
-                     ->orderByDesc('group_id')
-                     ->orderByDesc('is_active')
-                     ->orderByDesc('datetime')
+        return Remind::leftJoin('reminds_groups', 'reminds.group_id', '=', 'reminds_groups.id')
+                     ->with(['group'])
+                     ->select($select)
+                     ->orderByRaw('CASE WHEN reminds_groups.sort IS NOT NULL THEN 0 ELSE 1 END ASC')
+                     ->orderBy('reminds_groups.sort')
+                     ->orderByRaw('CASE WHEN reminds_groups.sort IS NULL THEN reminds_groups.id END DESC')
                      ->get();
-    }
-
-    public function store($requestData)
-    {
-        return auth()->user()->playlists()->create($requestData);
     }
 }

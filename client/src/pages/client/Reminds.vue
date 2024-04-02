@@ -33,7 +33,7 @@
             <span
               v-if="props.row.group"
               class="remind__group"
-              :style="[props.row.group ? {'background-color': props.row.group} : {'background-color': 'transparent'}]"
+              :style="[props.row.group ? {'background-color': props.row.group.color} : {'background-color': 'transparent'}]"
             >
             </span>
             <q-btn
@@ -57,6 +57,8 @@
     <EditRemindModal
       v-model="showEditModal"
       :remindToUpdate="remindToUpdate"
+      @updated="updateRemindInList"
+      @created="insertRemindToList"
       v-if="showEditModal"
     />
   </template>
@@ -107,7 +109,15 @@ const initUpdateModal = remind => {
 }
 
 const updateRemindInList = remind => {
-  reminds.value.filter(r => r.id === remind.id).map(item => item = remind)
+  reminds.value.filter(r => r.id === remind.id).map(item => {
+    Object.keys(remind).forEach(key => {
+      item[key] = remind[key]
+    })
+  })
+}
+
+const insertRemindToList = remind => {
+  reminds.value.unshift(remind)
 }
 
 const sortReminds = () => {

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('content')->nullable()->default(NULL);
             $table->string('color')->nullable()->default(NULL);
+            $table->bigInteger('sort')->nullable()->default(NULL)->unique();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

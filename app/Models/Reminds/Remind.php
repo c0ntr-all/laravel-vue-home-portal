@@ -4,6 +4,7 @@ namespace App\Models\Reminds;
 
 use App\Helpers\TextHelper;
 use App\Models\Traits\HasDates;
+use App\Models\Traits\HasUser;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -45,19 +46,14 @@ use Illuminate\Support\Carbon;
  */
 class Remind extends Model
 {
-    use HasFactory;
-    use HasDates;
+    use HasFactory,
+        HasDates,
+        HasUser;
 
     protected $casts = [
         'datetime' => 'datetime',
     ];
-
     protected $guarded = [];
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function group(): BelongsTo
     {

@@ -38,16 +38,16 @@
             </q-icon>
           </template>
         </q-input>
-        <div class="relative-position q-gutter-sm" style="height: 48px">
-          <q-radio
-            v-for="group in groups"
-            :key="group.color"
-            v-model="model.group"
-            :val="group.color"
-            :label="group.name"
-            :color="group.color"
-          />
-          <q-inner-loading :showing="getGroupsLoading" />
+        <div class="relative-position q-gutter-sm">
+            <q-radio
+              v-for="group in remindsStore.groups"
+              :key="group.color"
+              v-model="model.group_id"
+              :val="group.id"
+              :label="group.name"
+              :color="group.color"
+            />
+          <q-inner-loading :showing="groupsLoading" />
         </div>
         <div class="justify-start">
           <q-toggle
@@ -61,7 +61,7 @@
       </q-form>
     </template>
     <template #footer>
-      <q-btn label="Сохранить" color="primary" @click="updateRemind" :loading="loading" />
+      <q-btn label="Сохранить" color="primary" @click="saveRemind" :loading="loading" />
       <!--Todo: Need to write cancel update handler for returning previous values to model-->
       <q-btn label="Cancel" v-close-popup />
     </template>
@@ -72,6 +72,8 @@
 import { ref, onMounted, watchEffect, watch } from "vue"
 import { useQuasar } from "quasar"
 import { api } from "boot/axios"
+import { useRemindsStore } from "stores/modules/reminds"
+import getChanges from "src/utils/getChanges"
 import AppModal from "src/components/extra/AppModal.vue"
 
 const $q = useQuasar()
@@ -79,45 +81,88 @@ const props = defineProps({
   modelValue: Boolean,
   remindToUpdate: Object
 });
-const emit = defineEmits(['update:modelValue', 'updated']);
+const emit = defineEmits(['update:modelValue', 'updated', 'created']);
+const remindsStore = useRemindsStore()
 
+const editFields = ['title', 'content', 'group_id', 'datetime', 'is_active']
 const mode = props.remindToUpdate ? 'update' : 'create'
 const text = mode === 'create' ? 'Создать' : 'Редактировать'
 const loading = ref(false)
-const groups = ref([])
 const groupsLoading = ref(false)
-const model = ref(props.remindToUpdate ? props.remindToUpdate : {
-  title: '',
-  content: '',
-  group: '',
-  datetime: '',
-  is_active: true
-})
-
+const model = ref({})
+const rawRemind = ref({}) // Сырой объект с только обновляемыми полями, чтобы потом корректно получить измененные свойства
 const show = ref(props.modelValue)
-const getGroups = async () => {
-  if (!groups.value.length) {
-    groupsLoading.value = true
 
-    await api.get('reminds/groups').then(response => {
-      groups.value = response.data.items
-    }).catch(error => {
-      $q.notify({
-        type: 'negative',
-        message: 'There is a problem with loading groups!'
-      })
-    }).finally(() => {
-      groupsLoading.value = false
+const prepareModel = () => {
+  if (mode === 'update') {
+    rawRemind.value = JSON.parse(JSON.stringify(props.remindToUpdate))
+    editFields.forEach(key => {
+      if (rawRemind.value.hasOwnProperty(key)) {
+        model.value[key] = rawRemind.value[key]
+      } else if (key === 'group_id') {
+        model.value[key] = rawRemind.value['group'] ? rawRemind.value['group']['id'] : null
+      }
     })
+  } else {
+    model.value = editFields.reduce((acc, key) => {
+      if (key === 'is_active') {
+        acc[key] = true
+      } else {
+        acc[key] = ''
+      }
+      return acc
+    }, {})
   }
+}
+
+const getGroups = async () => {
+  groupsLoading.value = true
+  await remindsStore.getGroups().catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: 'There is a problem with loading groups!'
+    })
+  }).finally(() => {
+    groupsLoading.value = false
+  })
+}
+
+const saveRemind = () => {
+  switch(mode) {
+    case 'create':
+      createRemind()
+      break;
+    case 'update':
+      updateRemind()
+      break;
+  }
+}
+
+const createRemind = async () => {
+  loading.value = true
+  const data = model.value
+
+  await api.post(`reminds`, data).then(response => {
+    emit('created', response.data)
+    $q.notify({
+      type: 'positive',
+      message: `Remind has been updated!`
+    })
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: `Server Error: ${error.response.data.message}`
+    })
+  }).finally(() => {
+    loading.value = false
+  })
 }
 
 const updateRemind = async () => {
   loading.value = true
+  const data = getChanges(rawRemind.value, model.value)
 
-  await api.patch(`reminds/${model.value.id}`, {
-    ...model.value
-  }).then(response => {
+  await api.patch(`reminds/${props.remindToUpdate.id}`, data).then(response => {
     emit('updated', response.data)
     $q.notify({
       type: 'positive',
@@ -147,7 +192,10 @@ watch(show, (newVal) => {
 });
 
 onMounted(() => {
-  getGroups()
+  prepareModel()
+  if (!remindsStore.groups.length) {
+    getGroups()
+  }
 })
 </script>
 

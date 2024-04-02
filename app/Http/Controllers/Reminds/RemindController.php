@@ -39,6 +39,8 @@ class RemindController extends Controller
     {
         $updatedRemind = $this->remindService->updateRemind($remind, $request->validated());
 
+        $updatedRemind->load('group');
+
         return new RemindResource($updatedRemind);
     }
 }
