@@ -42,6 +42,19 @@ class RemindGroup extends Model
         'color',
     ];
 
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::addGlobalScope('user', function ($builder) {
+            $builder->where(static::make()->getTable() . '.user_id', '=', auth()->user()->id);
+        });
+
+        static::deleting(function ($group) {
+            $group->reminds()->update(['group_id' => null]);
+        });
+    }
+
     public function reminds(): HasMany
     {
         return $this->hasMany(Remind::class, 'group_id', 'id');

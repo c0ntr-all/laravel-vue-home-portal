@@ -39,14 +39,13 @@
           </template>
         </q-input>
         <div class="relative-position q-gutter-sm">
-            <q-radio
-              v-for="group in remindsStore.groups"
-              :key="group.color"
-              v-model="model.group_id"
-              :val="group.id"
-              :label="group.name"
-              :color="group.color"
-            />
+          <q-select
+            v-model="model.group"
+            :options="remindsStore.groups"
+            label="Группа"
+            :options-html="true"
+            filled
+          />
           <q-inner-loading :showing="groupsLoading" />
         </div>
         <div class="justify-start">
@@ -84,7 +83,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'updated', 'created']);
 const remindsStore = useRemindsStore()
 
-const editFields = ['title', 'content', 'group_id', 'datetime', 'is_active']
+const editFields = ['title', 'content', 'group', 'datetime', 'is_active']
 const mode = props.remindToUpdate ? 'update' : 'create'
 const text = mode === 'create' ? 'Создать' : 'Редактировать'
 const loading = ref(false)
@@ -96,11 +95,19 @@ const show = ref(props.modelValue)
 const prepareModel = () => {
   if (mode === 'update') {
     rawRemind.value = JSON.parse(JSON.stringify(props.remindToUpdate))
+    const preparedGroup = rawRemind.value.group ? {
+        label: `<div class="flex items-center q-gutter-sm"><div style="background-color:${rawRemind.value.group.color}; width: 50px; height: 20px"></div><div>${rawRemind.value.group.name}</div></div>`,
+        value: rawRemind.value.group.id
+      } : {
+      label: `<div class="flex items-center q-gutter-sm"><div style="background-color:#fff; width: 50px; height: 20px"></div><div>Без группы</div></div>`,
+      value: null
+    }
+    rawRemind.value.group = preparedGroup
     editFields.forEach(key => {
       if (rawRemind.value.hasOwnProperty(key)) {
         model.value[key] = rawRemind.value[key]
-      } else if (key === 'group_id') {
-        model.value[key] = rawRemind.value['group'] ? rawRemind.value['group']['id'] : null
+      } else if (key === 'group') {
+        model.value[key] = preparedGroup
       }
     })
   } else {
@@ -128,19 +135,26 @@ const getGroups = async () => {
 }
 
 const saveRemind = () => {
+  const data = getChanges(rawRemind.value, model.value)
+
+  // Convert group to group_id
+  if (data.group) {
+    data.group_id = data.group.value
+    delete data.group
+  }
+
   switch(mode) {
     case 'create':
-      createRemind()
+      createRemind(data)
       break;
     case 'update':
-      updateRemind()
+      updateRemind(data)
       break;
   }
 }
 
-const createRemind = async () => {
+const createRemind = async data => {
   loading.value = true
-  const data = model.value
 
   await api.post(`reminds`, data).then(response => {
     emit('created', response.data)
@@ -158,9 +172,8 @@ const createRemind = async () => {
   })
 }
 
-const updateRemind = async () => {
+const updateRemind = async data => {
   loading.value = true
-  const data = getChanges(rawRemind.value, model.value)
 
   await api.patch(`reminds/${props.remindToUpdate.id}`, data).then(response => {
     emit('updated', response.data)

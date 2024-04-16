@@ -62,7 +62,7 @@ const login = () => {
   }).catch(error => {
     $q.notify({
       type: 'negative',
-      message: error
+      message: error.response.data.message
     });
   })
 }

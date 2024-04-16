@@ -18,7 +18,6 @@ use App\Http\Controllers\Tasks\TaskController;
 use App\Http\Controllers\Tasks\TaskListController;
 use App\Http\Controllers\Users\AuthController;
 use App\Http\Controllers\Users\UserController;
-use App\Http\Controllers\Users\UserSettingsController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\WidgetController;
 use Illuminate\Support\Facades\Route;
@@ -38,8 +37,6 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'index']);
-        Route::get('settings', [UserSettingsController::class, 'index']); //todo: remove
-        Route::patch('settings/update', [UserSettingsController::class, 'update']); //todo: remove
         Route::post('logout', [AuthController::class, 'logout']);
     });
     Route::prefix('widgets')->group(function () {
@@ -60,11 +57,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::delete('{task}/delete', [TaskController::class, 'delete']);
     });
 
-    Route::prefix('reminds')->group(function () {
-        Route::get('/', [RemindController::class, 'index']);
-        Route::post('/', [RemindController::class, 'store']);
-        Route::patch('/{remind}', [RemindController::class, 'update']);
-        Route::get('/groups', [RemindGroupController::class, 'index']);
+    Route::prefix('reminds')->controller(RemindController::class)->group(function () {
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::patch('/{remind}', 'update');
+        Route::prefix('groups')->controller(RemindGroupController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::put('/', 'save');
+            Route::delete('/{remindGroup}', 'delete');
+        });
     });
 
     Route::prefix('music')->group(function () {
