@@ -5,7 +5,7 @@
         <q-skeleton v-for="q in Math.floor(Math.random() * 10)" width="500px" height="70px" square/>
       </template>
       <template v-else>
-        <div v-for="(group, index) in remindGroups" class="flex" style="max-width: 550px; width: 100%">
+        <div v-for="(group, index) in remindsStore.groupsForSettings" class="flex" style="max-width: 550px; width: 100%">
           <q-card class="flex justify-between items-center q-mr-sm" style="flex-basis: 434px">
             <q-card-section>
               <q-input
@@ -57,15 +57,16 @@
 import { ref, onMounted, watch, computed } from "vue"
 import { api } from "src/boot/axios"
 import { useQuasar } from "quasar"
+import { useRemindsStore } from "stores/modules/reminds"
+
 const $q = useQuasar()
+const remindsStore = useRemindsStore()
 
-const remindGroups = ref([])
-let loading = ref(true)
+let loading = ref(false)
 
-const getRemindGroups = async () => {
-  await api.get('reminds/groups').then(response => {
-    remindGroups.value = response.data.items
-  }).catch(error => {
+const loadGroups = async () => {
+  loading.value = true
+  remindsStore.getGroups().catch(() => {
     $q.notify({
       type: 'negative',
       message: error.response.data.message
@@ -77,10 +78,10 @@ const getRemindGroups = async () => {
 
 const deleteRemindGroup = async id => {
   await api.delete(`reminds/groups/${id}`).then(response => {
-    let idx = remindGroups.value.findIndex(group => group.id === id);
+    let idx = remindsStore.groups.findIndex(group => group.id === id);
 
     if (idx !== -1) {
-      remindGroups.value.splice(idx, 1);
+      remindsStore.groups.splice(idx, 1);
     }
     $q.notify({
       type: 'positive',
@@ -112,31 +113,33 @@ const saveRemindGroup = async group => {
 }
 
 const addRow = () => {
-  const lastItem = remindGroups.value[remindGroups.value.length - 1]
+  const lastItem = remindsStore.groups[remindsStore.groups.length - 1]
 
-  if (lastItem.name && lastItem.color || remindGroups.value.length === 0) {
-    remindGroups.value.push({name: '', color: ''})
+  if (lastItem.name && lastItem.color || remindsStore.groups.length === 0) {
+    remindsStore.groups.push({name: '', color: ''})
   }
 }
 
 const removeRow = index => {
-  remindGroups.value.splice(index, 1)
+  remindsStore.groups.splice(index, 1)
 }
 
 onMounted(() => {
-  getRemindGroups().then(() => {
-    const clonedItems = computed(() => JSON.parse(JSON.stringify(remindGroups.value)));
-    watch(clonedItems, (newValue, oldValue) => {
-      newValue.forEach((newGroup, index) => {
-        const oldGroup = oldValue.find(group => group.id === newGroup.id);
-        if (oldGroup) {
-          if (newGroup.name !== oldGroup.name || newGroup.color !== oldGroup.color) {
-            remindGroups.value[index].changed = true
+  if (!remindsStore.groups.length) {
+    loadGroups().then(() => {
+      const clonedItems = computed(() => JSON.parse(JSON.stringify(remindsStore.groups)));
+      watch(clonedItems, (newValue, oldValue) => {
+        newValue.forEach((newGroup, index) => {
+          const oldGroup = oldValue.find(group => group.id === newGroup.id);
+          if (oldGroup) {
+            if (newGroup.name !== oldGroup.name || newGroup.color !== oldGroup.color) {
+              remindsStore.groups[index].changed = true
+            }
           }
-        }
-      })
-    }, { deep: true });
-  })
+        })
+      }, { deep: true });
+    })
+  }
 })
 </script>
 

@@ -2,6 +2,7 @@
   <AppModal
     v-model="show"
     @update="$emit('update:modelValue', $event.target.value)"
+    :actionsAlign="mode === 'update' ? 'between' : 'right'"
   >
     <template #header>{{ text }} напоминание</template>
     <template #body>
@@ -41,7 +42,7 @@
         <div class="relative-position q-gutter-sm">
           <q-select
             v-model="model.group"
-            :options="remindsStore.groups"
+            :options="remindsStore.groupsForSelect"
             label="Группа"
             :options-html="true"
             filled
@@ -59,16 +60,33 @@
         </div>
       </q-form>
     </template>
-    <template #footer>
-      <q-btn label="Сохранить" color="primary" @click="saveRemind" :loading="loading" />
-      <!--Todo: Need to write cancel update handler for returning previous values to model-->
-      <q-btn label="Cancel" v-close-popup />
+    <template #footer="">
+      <div v-if="mode === 'update'">
+        <q-btn label="Удалить" color="red" @click="confirmDeleteRemind = true" :loading="loadingDel" flat />
+        <q-dialog v-model="confirmDeleteRemind" persistent>
+          <q-card>
+            <q-card-section class="row items-center">
+              <q-avatar icon="delete" color="primary" text-color="white" />
+              <span class="q-ml-sm">Вы точно хотите удалить напоминание?</span>
+            </q-card-section>
+
+            <q-card-actions align="right">
+              <q-btn flat label="Cancel" v-close-popup />
+              <q-btn flat label="Удалить" @click="deleteRemind" color="red" v-close-popup />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+      </div>
+      <div>
+        <q-btn class="q-mr-sm" :label="text" color="primary" @click="saveRemind" :loading="loading" />
+        <q-btn label="Cancel" v-close-popup />
+      </div>
     </template>
   </AppModal>
 </template>
 
 <script setup>
-import { ref, onMounted, watchEffect, watch } from "vue"
+import { ref, onMounted, watchEffect, watch, computed } from "vue"
 import { useQuasar } from "quasar"
 import { api } from "boot/axios"
 import { useRemindsStore } from "stores/modules/reminds"
@@ -84,16 +102,20 @@ const emit = defineEmits(['update:modelValue', 'updated', 'created']);
 const remindsStore = useRemindsStore()
 
 const editFields = ['title', 'content', 'group', 'datetime', 'is_active']
-const mode = props.remindToUpdate ? 'update' : 'create'
-const text = mode === 'create' ? 'Создать' : 'Редактировать'
+const mode = ref(props.remindToUpdate ? 'update' : 'create');
+const text = computed(() => {
+  return mode.value === 'create' ? 'Создать' : 'Редактировать';
+});
 const loading = ref(false)
+const loadingDel = ref(false)
 const groupsLoading = ref(false)
 const model = ref({})
 const rawRemind = ref({}) // Сырой объект с только обновляемыми полями, чтобы потом корректно получить измененные свойства
 const show = ref(props.modelValue)
+const confirmDeleteRemind = ref(false)
 
 const prepareModel = () => {
-  if (mode === 'update') {
+  if (mode.value === 'update') {
     rawRemind.value = JSON.parse(JSON.stringify(props.remindToUpdate))
     const preparedGroup = rawRemind.value.group ? {
         label: `<div class="flex items-center q-gutter-sm"><div style="background-color:${rawRemind.value.group.color}; width: 50px; height: 20px"></div><div>${rawRemind.value.group.name}</div></div>`,
@@ -122,7 +144,7 @@ const prepareModel = () => {
   }
 }
 
-const getGroups = async () => {
+const loadGroups = async () => {
   groupsLoading.value = true
   await remindsStore.getGroups().catch(error => {
     $q.notify({
@@ -143,7 +165,7 @@ const saveRemind = () => {
     delete data.group
   }
 
-  switch(mode) {
+  switch(mode.value) {
     case 'create':
       createRemind(data)
       break;
@@ -169,6 +191,7 @@ const createRemind = async data => {
     })
   }).finally(() => {
     loading.value = false
+    show.value = false
   })
 }
 
@@ -188,6 +211,27 @@ const updateRemind = async data => {
     })
   }).finally(() => {
     loading.value = false
+    show.value = false
+  })
+}
+
+const deleteRemind = async () => {
+  loadingDel.value = true
+
+  await api.delete(`reminds/${props.remindToUpdate.id}`).then(response => {
+    emit('deleted', props.remindToUpdate.id)
+    $q.notify({
+      type: 'positive',
+      message: response.data.message
+    })
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: `Server Error: ${error.response.data.message}`
+    })
+  }).finally(() => {
+    loadingDel.value = false
+    show.value = false
   })
 }
 
@@ -207,7 +251,7 @@ watch(show, (newVal) => {
 onMounted(() => {
   prepareModel()
   if (!remindsStore.groups.length) {
-    getGroups()
+    loadGroups()
   }
 })
 </script>

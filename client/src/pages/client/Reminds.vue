@@ -59,6 +59,7 @@
       :remindToUpdate="remindToUpdate"
       @updated="updateRemindInList"
       @created="insertRemindToList"
+      @deleted="deleteRemindFromList"
       v-if="showEditModal"
     />
   </template>
@@ -115,6 +116,10 @@ const updateRemindInList = remind => {
     })
   })
 }
+
+const deleteRemindFromList = id => {
+  reminds.value = reminds.value.filter(remind => remind.id !== id);
+};
 
 const insertRemindToList = remind => {
   reminds.value.unshift(remind)

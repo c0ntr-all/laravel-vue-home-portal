@@ -14,7 +14,7 @@
         <slot name="body" />
       </q-card-section>
 
-      <q-card-actions align="right" class="bg-white">
+      <q-card-actions :align="props.actionsAlign" class="bg-white">
         <slot name="footer" />
       </q-card-actions>
     </q-card>
@@ -26,6 +26,10 @@ import { ref, watchEffect, watch } from "vue"
 
 const props = defineProps({
   modelValue: Boolean,
+  actionsAlign: {
+    type: String,
+    default: 'right'
+  },
 })
 const emit = defineEmits(['update:modelValue']);
 

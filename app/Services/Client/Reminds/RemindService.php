@@ -31,9 +31,17 @@ class RemindService
     {
         $remind->update(array_merge($data, [
             'user_id' => auth()->id(),
-            'group_id' => $data['group_id'] ?? null
         ]));
 
         return $remind;
+    }
+
+    /**
+     * @param Remind $remind
+     * @return bool
+     */
+    public function deleteRemind(Remind $remind): bool
+    {
+        return $remind->delete();
     }
 }

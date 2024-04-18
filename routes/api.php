@@ -61,6 +61,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/', 'index');
         Route::post('/', 'store');
         Route::patch('/{remind}', 'update');
+        Route::delete('/{remind}', 'delete');
         Route::prefix('groups')->controller(RemindGroupController::class)->group(function () {
             Route::get('/', 'index');
             Route::put('/', 'save');

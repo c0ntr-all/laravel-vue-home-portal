@@ -11,6 +11,7 @@ use App\Http\Resources\Reminds\RemindResource;
 use App\Models\Reminds\Remind;
 use App\Repositories\Reminds\RemindRepository;
 use App\Services\Client\Reminds\RemindService;
+use Illuminate\Http\Response;
 
 class RemindController extends Controller
 {
@@ -32,6 +33,8 @@ class RemindController extends Controller
     {
         $newRemind = $this->remindService->createRemind($request->validated());
 
+        $newRemind->load('group');
+
         return new RemindResource($newRemind);
     }
 
@@ -42,5 +45,12 @@ class RemindController extends Controller
         $updatedRemind->load('group');
 
         return new RemindResource($updatedRemind);
+    }
+
+    public function delete(Remind $remind): Response
+    {
+        $this->remindService->deleteRemind($remind);
+
+        return response(['message' => 'Remind deleted successfully!']);
     }
 }
