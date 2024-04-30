@@ -5,11 +5,17 @@ export const useRemindsStore = defineStore({
   id: 'reminds',
   state: () => ({
     groups: [],
+    intervals: []
   }),
   actions: {
     async getGroups() {
       await api.get('reminds/groups').then(response => {
         this.groups = response.data.items
+      })
+    },
+    async getIntervals() {
+      await api.get('reminds/intervals').then(response => {
+        this.intervals = response.data.items
       })
     },
   },

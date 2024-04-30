@@ -28,7 +28,9 @@ class UpdateRequest extends FormRequest
             'content' => 'sometimes|string',
             'group_id' => 'sometimes|numeric|exists:reminds_groups,id',
             'datetime' => 'sometimes|date_format:Y-m-d H:i',
-            'is_active' => 'sometimes|bool'
+            'is_active' => 'sometimes|bool',
+            'is_regular' => 'sometimes|bool',
+            'interval' => 'sometimes|string',
         ];
     }
 }

@@ -49,6 +49,28 @@
           />
           <q-inner-loading :showing="groupsLoading" />
         </div>
+
+        <div class="justify-start">
+          <q-toggle
+            v-model="model.is_regular"
+            checked-icon="alarm"
+            unchecked-icon="remove"
+            label="Регулярное?"
+            left-label
+          />
+        </div>
+
+        <div v-if="model.is_regular" class="relative-position q-gutter-sm">
+          <q-select
+            v-model="model.interval"
+            :options="remindsStore.intervals"
+            label="Интервал"
+            :options-html="true"
+            filled
+          />
+          <q-inner-loading :showing="intervalsLoading" />
+        </div>
+
         <div class="justify-start">
           <q-toggle
             v-model="model.is_active"
@@ -101,14 +123,15 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'updated', 'created']);
 const remindsStore = useRemindsStore()
 
-const editFields = ['title', 'content', 'group', 'datetime', 'is_active']
+const editFields = ['title', 'content', 'group', 'datetime', 'is_active', 'is_regular', 'interval']
 const mode = ref(props.remindToUpdate ? 'update' : 'create');
 const text = computed(() => {
-  return mode.value === 'create' ? 'Создать' : 'Редактировать';
+  return mode.value === 'create' ? 'Создать' : 'Сохранить';
 });
 const loading = ref(false)
 const loadingDel = ref(false)
 const groupsLoading = ref(false)
+const intervalsLoading = ref(false)
 const model = ref({})
 const rawRemind = ref({}) // Сырой объект с только обновляемыми полями, чтобы потом корректно получить измененные свойства
 const show = ref(props.modelValue)
@@ -134,10 +157,14 @@ const prepareModel = () => {
     })
   } else {
     model.value = editFields.reduce((acc, key) => {
-      if (key === 'is_active') {
-        acc[key] = true
-      } else {
-        acc[key] = ''
+      switch (key) {
+        case 'is_active':
+          acc[key] = true
+          break
+        case 'is_regular':
+          acc[key] = false
+          break
+        default: ''
       }
       return acc
     }, {})
@@ -156,6 +183,18 @@ const loadGroups = async () => {
   })
 }
 
+const loadIntervals = async () => {
+  intervalsLoading.value = true
+  await remindsStore.getIntervals().catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: 'There is a problem with loading intervals!'
+    })
+  }).finally(() => {
+    intervalsLoading.value = false
+  })
+}
+
 const saveRemind = () => {
   const data = getChanges(rawRemind.value, model.value)
 
@@ -163,6 +202,10 @@ const saveRemind = () => {
   if (data.group) {
     data.group_id = data.group.value
     delete data.group
+  }
+
+  if (data.interval) {
+    data.interval = data.interval.value
   }
 
   switch(mode.value) {
@@ -249,9 +292,14 @@ watch(show, (newVal) => {
 });
 
 onMounted(() => {
+  console.log(remindsStore.intervals)
+  console.log(remindsStore.groups)
   prepareModel()
   if (!remindsStore.groups.length) {
     loadGroups()
+  }
+  if (!remindsStore.intervals.length) {
+    loadIntervals()
   }
 })
 </script>

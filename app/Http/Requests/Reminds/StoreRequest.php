@@ -28,7 +28,9 @@ class StoreRequest extends FormRequest
             'title' => 'required|string|max:70',
             'content' => 'sometimes|string|max:1000|nullable',
             'datetime' => 'required|date_format:Y-m-d H:i',
-            'is_active' => 'sometimes|bool'
+            'is_active' => 'sometimes|bool',
+            'is_regular' => 'sometimes|bool',
+            'interval' => 'sometimes|string',
         ];
     }
 }

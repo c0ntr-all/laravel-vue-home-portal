@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Reminds;
 
+use App\Enums\Reminds\RemindIntervalEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reminds\IndexRequest;
 use App\Http\Requests\Reminds\StoreRequest;
@@ -52,5 +53,10 @@ class RemindController extends Controller
         $this->remindService->deleteRemind($remind);
 
         return response(['message' => 'Remind deleted successfully!']);
+    }
+
+    public function getIntervals(): Response
+    {
+        return response($this->remindService->getIntervals());
     }
 }

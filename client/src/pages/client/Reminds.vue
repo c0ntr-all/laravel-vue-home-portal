@@ -55,12 +55,12 @@
       </template>
     </q-table>
     <EditRemindModal
+      v-if="showEditModal"
       v-model="showEditModal"
       :remindToUpdate="remindToUpdate"
       @updated="updateRemindInList"
       @created="insertRemindToList"
       @deleted="deleteRemindFromList"
-      v-if="showEditModal"
     />
   </template>
 </template>

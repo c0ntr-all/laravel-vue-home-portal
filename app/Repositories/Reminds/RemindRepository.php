@@ -18,6 +18,9 @@ class RemindRepository
             'reminds.group_id',
             'reminds.datetime',
             'reminds.is_active',
+            'reminds.is_regular',
+            'reminds.interval',
+            'reminds.to_remind_before',
             'reminds_groups.id as g_id',
             'reminds_groups.sort',
         ];

@@ -2,6 +2,7 @@
 
 namespace App\Services\Client\Reminds;
 
+use App\Enums\Reminds\RemindIntervalEnum;
 use App\Models\Reminds\Remind;
 
 class RemindService
@@ -43,5 +44,25 @@ class RemindService
     public function deleteRemind(Remind $remind): bool
     {
         return $remind->delete();
+    }
+
+    /**
+     * Подготовка возможных интервалов для регулярных напоминаний
+     *
+     * @return array
+     */
+    public function getIntervals(): array
+    {
+        $collection = collect(RemindIntervalEnum::toArray());
+
+        return [
+            'count' => $collection->count(),
+            'items' => $collection->map(function ($item) {
+                return [
+                    'label' => RemindIntervalEnum::getLabeL($item),
+                    'value' => $item,
+                ];
+            })
+        ];
     }
 }
