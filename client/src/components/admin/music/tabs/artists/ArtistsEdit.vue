@@ -265,7 +265,7 @@ export default {
         }).catch(error => {
           $q.notify({
             type: 'negative',
-            message: 'Something goes wrong while saving artist'
+            message: error.response.data.message
           })
         }).finally(() => {
           updateButtonLoading.value = false

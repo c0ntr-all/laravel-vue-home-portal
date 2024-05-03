@@ -52,12 +52,12 @@
     <div class="related-albums">
       <div>
         <!-- v-if="loading === false" чтобы компонент дождался загрузки основного альбома -->
-        <relatedAlbums v-if="loading === false" :artistId="album.artist.id" :albumId="parseInt(id)" />
+        <RelatedAlbums v-if="loading === false" :artistId="album.artist.id" :albumId="parseInt(id)" />
       </div>
     </div>
   </template>
 </template>
-<script>
+<script setup>
 import { ref, onMounted, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
 
@@ -65,61 +65,46 @@ import { api } from "src/boot/axios"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
 
 import AlbumPageSkeleton from "src/components/client/music/skeleton/AlbumPage.vue"
-import AlbumCard from "components/client/music/AlbumCard.vue"
 import RelatedAlbums from "components/client/music/RelatedAlbums.vue"
 import MusicTracksList from "src/components/client/music/MusicTracksList.vue"
 
-export default {
-  props: {
-    'id': String
-  },
-  components: { AlbumPageSkeleton, AlbumCard, RelatedAlbums, MusicTracksList },
-  setup(props) {
-    const $router = useRouter()
-    const route = useRoute()
+const props = defineProps({
+'id': String
+})
+const $router = useRouter()
+const route = useRoute()
 
-    const loading = ref(true)
-    const showImage = ref(false)
-    const album = ref({})
+const loading = ref(true)
+const showImage = ref(false)
+const album = ref({})
 
-    const getAlbum = async id => {
-      await api.post(`music/albums/${id}/show`)
-      .then(response => {
-        album.value = response.data.data
-      }).catch(error => {
-        if(error.response.status === 404) {
-          $router.push('/404')
-        }
-      }).finally(() => {
-        loading.value = false
-      })
+const getAlbum = async id => {
+  await api.post(`music/albums/${id}`)
+  .then(response => {
+    album.value = response.data.data
+  }).catch(error => {
+    if(error.response.status === 404) {
+      $router.push('/404')
     }
-
-    const addToPlaylist = () => {
-      musicPlayer.addToPlaylist(album.value.tracks)
-    }
-
-    const musicPlayer = useMusicPlayer()
-
-    onMounted(() => {
-      getAlbum(props.id)
-    })
-
-    watch(() => route.params, (toParams, previousParams) => {
-        getAlbum(toParams.id)
-      }
-    )
-
-    return {
-      loading,
-      showImage,
-      album,
-      musicPlayer,
-      getAlbum,
-      addToPlaylist
-    }
-  }
+  }).finally(() => {
+    loading.value = false
+  })
 }
+
+const addToPlaylist = () => {
+  musicPlayer.addToPlaylist(album.value.tracks)
+}
+
+const musicPlayer = useMusicPlayer()
+
+onMounted(() => {
+  getAlbum(props.id)
+})
+
+watch(() => route.params, (toParams, previousParams) => {
+    getAlbum(toParams.id)
+  }
+)
 </script>
 
 <style lang="scss" scoped>

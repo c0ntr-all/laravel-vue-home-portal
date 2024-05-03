@@ -71,6 +71,7 @@
 
             <AppSlider
               :data="musicPlayer.rewindProgressWidth"
+              :onlyDrop="true"
               @move="changeRewind"
             />
 
@@ -111,43 +112,31 @@
     </q-menu>
   </div>
 </template>
-<script>
-import {ref} from "vue"
-import {useMusicPlayer} from "src/stores/modules/musicPlayer"
+<script setup>
+import { ref } from "vue"
+import { useMusicPlayer } from "src/stores/modules/musicPlayer"
 
 import AppSlider from "src/components/extra/AppSlider.vue"
 import MusicTrackCard from "src/components/client/music/MusicTrackCard.vue"
 
-export default {
-  components: { AppSlider, MusicTrackCard },
-  setup() {
-    const musicPlayer = useMusicPlayer()
+const musicPlayer = useMusicPlayer()
+const dialog = ref(false)
 
-    musicPlayer.init()
+musicPlayer.init()
 
-    const changeRewind = value => {
-      musicPlayer.audio.currentTime = value / 100 * musicPlayer.audio.duration
-    }
-
-    const changeVolume = value => {
-      musicPlayer.audio.volume = value / 100
-    }
-
-    return {
-      dialog: ref(false),
-      hovered: ref(false),
-      musicPlayer,
-      changeRewind,
-      changeVolume,
-      initPlay: track => {
-        musicPlayer.playTrack(track)
-      },
-      rewindNavigate: value => {
-        musicPlayer.audio.currentTime = (value / 100) * musicPlayer.audio.duration;
-      },
-    }
-  }
+const changeRewind = value => {
+  musicPlayer.audio.currentTime = value / 100 * musicPlayer.audio.duration
 }
+
+const changeVolume = value => {
+  // Считается корректно, но ощутимая разница только с 0 по 0.5. С 0.5 по 1 почти ничего не заметно по громкости
+  musicPlayer.audio.volume = value / 100 / 2
+}
+
+const initPlay = track => {
+  musicPlayer.playTrack(track)
+}
+
 </script>
 <style lang="scss" scoped>
 .music-player {

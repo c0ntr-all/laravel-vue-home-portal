@@ -89,13 +89,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
         Route::prefix('artists')->group(function () {
             Route::post('/', [ArtistController::class, 'index']);
-            Route::post('{artist}/show', [ArtistController::class, 'show']);
+            Route::post('{artist}', [ArtistController::class, 'show']);
             Route::post('{artist}/tracks', [ArtistController::class, 'tracks']);
             Route::post('store', [ArtistController::class, 'store']);
             Route::post('update', [ArtistController::class, 'update']);
         });
         Route::prefix('albums')->group(function () {
-            Route::post('/{album}/show', [AlbumController::class, 'show']);
+            Route::post('/{album}', [AlbumController::class, 'show']);
         });
         Route::prefix('tracks')->group(function () {
             Route::post('/', [TrackController::class, 'index']);

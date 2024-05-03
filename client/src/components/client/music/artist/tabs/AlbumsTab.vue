@@ -25,7 +25,7 @@ const props = defineProps({
 })
 
 const getAlbums = async id => {
-  await api.post(`music/artists/${id}/show`)
+  await api.post(`music/artists/${id}`)
     .then(response => {
       const {data: {data}} = response
       albums.value = data.albums

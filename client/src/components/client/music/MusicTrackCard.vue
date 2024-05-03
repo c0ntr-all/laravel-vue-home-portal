@@ -140,167 +140,147 @@
     </q-card>
   </q-dialog>
 </template>
-<script>
+<script setup>
 import { ref, computed, watch } from "vue"
 import { useQuasar } from "quasar"
 import { useMusicPlayer } from "stores/modules/musicPlayer"
 import { api } from "src/boot/axios"
 
-export default {
-  emits: ['play', 'remove'],
-  props: {
-    track: {
-      type: Object,
-      required: true
-    },
-    actions: {
-      type: Array,
-      required: false,
-      default: ['addToPlaylist']
-    },
-    playlist: {
-      type: Number,
-      required: false
-    }
+const emit = defineEmits(['play', 'remove'])
+const props = defineProps({
+  track: {
+    type: Object,
+    required: true
   },
-  setup(props, {emit}) {
-    const $q = useQuasar()
-    const musicPlayer = useMusicPlayer()
+  actions: {
+    type: Array,
+    required: false,
+    default: ['addToPlaylist']
+  },
+  playlist: {
+    type: Number,
+    required: false
+  }
+})
+const $q = useQuasar()
+const musicPlayer = useMusicPlayer()
 
-    const availableActions = [{
-      name: 'addToPlaylist',
-      label: 'Add to playlist',
-      icon: 'add'
-    },{
-      name: 'deleteFromPlaylist',
-      label: 'Remove from playlist',
-      icon: 'delete'
-    }]
+const availableActions = [{
+  name: 'addToPlaylist',
+  label: 'Add to playlist',
+  icon: 'add'
+},{
+  name: 'deleteFromPlaylist',
+  label: 'Remove from playlist',
+  icon: 'delete'
+}]
 
-    const showPlaylistModal = ref(false)
-    const playlists = ref([])
-    const playlistsLoading = ref(false)
-    const filteredPlaylists = ref([])
-    const playlistSearch = ref('')
-    const selectedPlaylists = ref([])
+const showPlaylistModal = ref(false)
+const playlists = ref([])
+const playlistsLoading = ref(false)
+const filteredPlaylists = ref([])
+const playlistSearch = ref('')
+const selectedPlaylists = ref([])
 
-    let rate = computed({
-      get: () => props.track.rate,
-      set: value => props.track.rate = value
+let rate = computed({
+  get: () => props.track.rate,
+  set: value => props.track.rate = value
+})
+
+const filteredActions = computed(() => {
+  return availableActions.filter(item => props.actions.includes(item.name))
+})
+
+const changeRate = async (value) => {
+  const previousRate = props.track.rate
+
+  await api.post(`music/tracks/${props.track.id}/rate`, {
+    rate: value
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: `Server Error: ${error.response.data.message}`
     })
+    rate.value = previousRate
+  })
+}
 
-    const filteredActions = computed(() => {
-      return availableActions.filter(item => props.actions.includes(item.name))
-    })
+const initPlaylistDialog = async () => {
+  playlistsLoading.value = true
 
-    const changeRate = async (value) => {
-      const previousRate = props.track.rate
+  await api.post('music/playlists', {with_tracks: true}).then(response => {
+    playlists.value = response.data.items
+    filteredPlaylists.value = response.data.items
 
-      await api.post(`music/tracks/${props.track.id}/rate`, {
-        rate: value
-      }).catch(error => {
-        $q.notify({
-          type: 'negative',
-          message: `Server Error: ${error.response.data.message}`
-        })
-        rate.value = previousRate
-      })
-    }
-
-    const initPlaylistDialog = async () => {
-      playlistsLoading.value = true
-
-      await api.post('music/playlists', {with_tracks: true}).then(response => {
-        playlists.value = response.data.items
-        filteredPlaylists.value = response.data.items
-
-        response.data.items.forEach(playlist => {
-          if (playlist.tracks.includes(props.track.id)) {
-            selectedPlaylists.value.push(playlist.id)
-          }
-        })
-      }).catch(error => {
-        console.log(error)
-        $q.notify({
-          type: 'negative',
-          message: `Server Error: ${error.response.data.message}`
-        })
-      }).finally(() => {
-        playlistsLoading.value = false
-      })
-    }
-
-    const handleFunction = actionName => {
-      switch(actionName) {
-        case 'addToPlaylist':
-          showPlaylistModal.value = true
-          break;
-
-        case 'deleteFromPlaylist':
-          deleteFromPlaylist()
-          break;
+    response.data.items.forEach(playlist => {
+      if (playlist.tracks.includes(props.track.id)) {
+        selectedPlaylists.value.push(playlist.id)
       }
-    }
-
-    const updatePlaylists = async () => {
-      await api.patch(`music/tracks/${props.track.id}/playlists/update`, {
-        playlists: selectedPlaylists.value
-      }).then(response => {
-        $q.notify({
-          type: 'positive',
-          message: 'Playlists updated!'
-        })
-      }).catch(error => {
-        $q.notify({
-          type: 'negative',
-          message: `Server Error: ${error.response.data.message}`
-        })
-      }).finally(() => {
-        showPlaylistModal.value = false
-      })
-    }
-
-    const deleteFromPlaylist = async () => {
-      await api.post(`music/tracks/${props.track.id}/playlists/delete`, {
-        playlist: props.playlist
-      }).then(response => {
-        emit('remove', props.track.id)
-        $q.notify({
-          type: 'positive',
-          message: 'Track has been removed from playlist!'
-        })
-      }).catch(error => {
-        console.log(error)
-        $q.notify({
-          type: 'negative',
-          message: `Server Error: ${error.response.data.message}`
-        })
-      })
-    }
-
-    watch(playlistSearch, (value) => {
-      filteredPlaylists.value = playlists.value.filter(item =>
-        item.name.toLowerCase().includes(value.toLowerCase())
-      )
     })
+  }).catch(error => {
+    console.log(error)
+    $q.notify({
+      type: 'negative',
+      message: `Server Error: ${error.response.data.message}`
+    })
+  }).finally(() => {
+    playlistsLoading.value = false
+  })
+}
 
-    return {
-      rate,
-      showPlaylistModal,
-      playlistSearch,
-      musicPlayer,
-      playlists,
-      playlistsLoading,
-      filteredPlaylists,
-      selectedPlaylists,
-      filteredActions,
-      handleFunction,
-      initPlaylistDialog,
-      updatePlaylists,
-      changeRate
-    }
+const handleFunction = actionName => {
+  switch(actionName) {
+    case 'addToPlaylist':
+      showPlaylistModal.value = true
+      break;
+
+    case 'deleteFromPlaylist':
+      deleteFromPlaylist()
+      break;
   }
 }
+
+const updatePlaylists = async () => {
+  await api.patch(`music/tracks/${props.track.id}/playlists/update`, {
+    playlists: selectedPlaylists.value
+  }).then(response => {
+    $q.notify({
+      type: 'positive',
+      message: 'Playlists updated!'
+    })
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: `Server Error: ${error.response.data.message}`
+    })
+  }).finally(() => {
+    showPlaylistModal.value = false
+  })
+}
+
+const deleteFromPlaylist = async () => {
+  await api.post(`music/tracks/${props.track.id}/playlists/delete`, {
+    playlist: props.playlist
+  }).then(response => {
+    emit('remove', props.track.id)
+    $q.notify({
+      type: 'positive',
+      message: 'Track has been removed from playlist!'
+    })
+  }).catch(error => {
+    console.log(error)
+    $q.notify({
+      type: 'negative',
+      message: `Server Error: ${error.response.data.message}`
+    })
+  })
+}
+
+watch(playlistSearch, (value) => {
+  filteredPlaylists.value = playlists.value.filter(item =>
+    item.name.toLowerCase().includes(value.toLowerCase())
+  )
+})
 </script>
 <style lang="scss" scoped>
 .music-track {

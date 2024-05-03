@@ -13,46 +13,36 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import { useMusicPlayer } from "stores/modules/musicPlayer"
 import MusicTrackCard from "src/components/client/music/MusicTrackCard.vue"
 
-export default {
-  components: { MusicTrackCard },
-  props: {
-    tracks: {
-      type: Array
-    },
-    actions: {
-      type: Array,
-      required: false
-    },
-    playlist: {
-      type: String,
-      required: false
-    }
+const props = defineProps({
+  tracks: {
+    type: Array
   },
-  setup(props) {
-    const musicPlayer = useMusicPlayer()
-
-    const initPlay = track => {
-      // Replacing playlist with new track
-      if (!musicPlayer.playlist.includes(track)) {
-        musicPlayer.setPlaylist(props.tracks)
-      }
-      musicPlayer.playTrack(track)
-    }
-    const removeTrackFromList = trackId => {
-      const index = props.tracks.indexOf(props.tracks.filter(item => item.id === trackId)[0])
-
-      props.tracks.splice(index, 1)
-    }
-
-    return {
-      initPlay,
-      removeTrackFromList
-    }
+  actions: {
+    type: Array,
+    required: false
+  },
+  playlist: {
+    type: String,
+    required: false
   }
+})
+const musicPlayer = useMusicPlayer()
+
+const initPlay = track => {
+  // Replacing playlist with new track
+  if (!musicPlayer.playlist.includes(track)) {
+    musicPlayer.setPlaylist(props.tracks)
+  }
+  musicPlayer.playTrack(track)
+}
+const removeTrackFromList = trackId => {
+  const index = props.tracks.indexOf(props.tracks.filter(item => item.id === trackId)[0])
+
+  props.tracks.splice(index, 1)
 }
 </script>
 <style lang="scss" scoped>

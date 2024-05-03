@@ -1,5 +1,6 @@
 import { defineStore } from "pinia"
 import { Notify } from "quasar"
+import { ref } from "vue"
 import addZero from "src/utils/addzero"
 import Timer from "src/utils/timer"
 import { api } from "src/boot/axios"
@@ -69,7 +70,7 @@ export const useMusicPlayer = defineStore('musicPlayer', {
       if (this.track?.id !== track.id) {
         this.pause()
         this.track = track
-        this.audio.src = track.link ? track.link : `http://api.home-portal.prod/api/music/tracks/${track.id}/play`
+        this.audio.src = `${process.env.host}/api/music/tracks/${track.id}/play`
 
         this.timer.start(this.getSecondsToScrobble())
         this.isScrobbled = false

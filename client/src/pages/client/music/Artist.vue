@@ -106,14 +106,14 @@ const artist = ref({})
 const loading = ref(true)
 
 const getArtist = async id => {
-  await api.post(`music/artists/${id}/show`)
+  await api.post(`music/artists/${id}`)
     .then(response => {
       artist.value = response.data.data
       loading.value = false
     }).catch(error => {
       $q.notify({
         type: 'negative',
-        message: 'Something goes wrong while loading albums for artist'
+        message: `Server Error: ${error.response.data.message}`
       })
     })
 }

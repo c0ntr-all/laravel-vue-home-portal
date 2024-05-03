@@ -9,37 +9,34 @@
     />
   </div>
 </template>
-<script>
-import { ref } from "vue";
+<script setup>
+import { ref, onMounted } from "vue";
 import AlbumCard from "components/client/music/AlbumCard.vue";
 import { api } from "src/boot/axios";
 
-export default {
-  props: {
-    artistId: Number,
-    albumId: Number
-  },
-  components: {
-    AlbumCard
-  },
-  setup() {
-    const loading = ref(true)
-    const albums = ref([])
-    const getArtist = async (artistId) => {
-      const {data} = await api.post('music/artists', {id: artistId})
+const props = defineProps({
+  artistId: Number,
+  albumId: Number
+})
+const loading = ref(true)
+const albums = ref([])
 
-      albums.value = data.artists?.albums
-    }
-    return {
-      loading,
-      albums,
-      getArtist
-    }
-  },
-  mounted() {
-    this.getArtist(this.artistId)
-  }
+const getArtist = async (artistId) => {
+  await api.post(`music/artists/${artistId}`)
+    .then(response => {
+      albums.value = response.data.data.albums
+      loading.value = false
+    }).catch(error => {
+      $q.notify({
+        type: 'negative',
+        message: `Server Error: ${error.response.data.message}`
+      })
+    })
 }
+
+onMounted(function () {
+  getArtist(props.artistId)
+})
 </script>
 <style lang="scss" scoped>
 .album-card--current {
