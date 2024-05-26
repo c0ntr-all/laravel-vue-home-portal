@@ -291,8 +291,8 @@ class ArtistParseService
             'genre' => $id3TrackInfo['id3v2']['comments']['genre'][0] ?? null,
             'year' => $id3TrackInfo['id3v2']['comments']['year'][0] ?? null,
             'cd' => $id3TrackInfo['id3v2']['comments']['part_of_a_set'][0] ?? null,
-            'playtime_string' => $id3TrackInfo['playtime_string'],
-            'bitrate' => $id3TrackInfo['audio']['bitrate'],
+            'playtime_string' => $id3TrackInfo['playtime_string'] ?? null,
+            'bitrate' => $id3TrackInfo['audio']['bitrate'] ?? null,
             'track_number' => (int) ($id3TrackInfo['id3v2']['comments']['track_number'][0] ?? 0),
         ];
     }
@@ -313,11 +313,15 @@ class ArtistParseService
     /**
      * Форматирует длительность трека в 00:05:34, вместо 05:34:00
      *
-     * @param string $duration
-     * @return string
+     * @param string|null $duration
+     * @return string|null
      */
-    protected function formatDuration(string $duration): string
+    protected function formatDuration(?string $duration): ?string
     {
+        if (!$duration) {
+            return null;
+        }
+
         $durationParts = explode(':', $duration);
 
         if (count($durationParts) == 2) {

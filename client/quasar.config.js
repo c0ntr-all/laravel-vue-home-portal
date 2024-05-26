@@ -65,7 +65,7 @@ module.exports = configure(function (ctx) {
         mode: ctx.dev ? 'test' : 'prod',
         host: ctx.dev
           ? 'http://home-portal.test'
-          : 'http://api.home-portal.prod',
+          : 'https://api.home-portal.prod',
       },
       // rawDefine: {}
       // ignorePublicFolder: true,

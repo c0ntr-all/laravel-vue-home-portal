@@ -191,7 +191,7 @@ import {api} from "boot/axios"
 import deleteFromTree from "src/utils/deleteFromTree"
 import insertIntoTree from "src/utils/insertIntoTree"
 
-import AddTagButton from "components/admin/music/tabs/tags/AddTagButton.vue";
+import AddTagButton from "components/admin/music/tabs/tags/AddTagButton.vue"
 
 const $q = useQuasar()
 
@@ -252,7 +252,7 @@ const addTag = async (event, tagData) => {
   tagData = tagData || {
     name: tagModel.value.name,
     content: tagModel.value.content,
-    parent_id: tagModel.value.parentTag.id
+    parent_id: tagModel.value.parentTag?.id
   }
   await api.put('music/admin/tags/store', tagData).then(response => {
     const {data} = response

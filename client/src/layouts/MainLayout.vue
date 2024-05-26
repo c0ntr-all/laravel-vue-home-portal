@@ -105,7 +105,7 @@
 
     <q-page-container>
       <q-page class="q-pa-lg">
-        <div class="text-h4 q-mb-lg">{{ this.$route.meta.title || 'No Title' }}</div>
+        <div class="text-h4 q-mb-lg">{{ $route.meta.title || 'No Title' }}</div>
         <router-view />
       </q-page>
     </q-page-container>

@@ -14,7 +14,7 @@ class ImageUpload
     private string $diskName;
     private string $sourceName;
 
-    private const BAD_SYMBOLS = [' ', '.'];
+    private const BAD_SYMBOLS = [' ', '.', '/'];
 
     public function __construct($sourceName = 'none', string $folder = 'unsorted', string $diskName = 'public')
     {

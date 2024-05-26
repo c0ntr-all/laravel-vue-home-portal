@@ -128,6 +128,11 @@ const uploadArtist = async () => {
         message: response.data.message
       })
     }
+  }).catch(error => {
+    $q.notify({
+      type: 'negative',
+      message: error.response.data.message
+    })
   }).finally(() => {
     processLoading.value = false
   })
