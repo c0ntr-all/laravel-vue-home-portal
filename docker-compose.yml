@@ -1,0 +1,57 @@
+services:
+    laravel.home_portal:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: laravel.home_portal
+        restart: unless-stopped
+        tty: true
+        environment:
+            SERVICE_NAME: laravel.home_portal
+            SERVICE_TAGS: dev
+        working_dir: /var/www
+        networks:
+            - laravel.home_portal-network
+        depends_on:
+            - mysql
+            - redis
+    mysql:
+        image: mysql:8.2
+        volumes:
+            - ./mysql:/var/lib/mysql
+        container_name: mysql
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "3306:3306"
+        environment:
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+            MYSQL_ROOT_PASSWORD: root
+        networks:
+            - laravel.home_portal-network
+    webserver:
+        image: nginx:alpine
+        container_name: webserver
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - /home/username/unreal_serg:/var/www
+            - ./nginx/conf.d:/etc/nginx/conf.d
+        networks:
+            - laravel.home_portal-network
+        depends_on:
+            - laravel.home_portal
+    redis:
+        image: redis:7.0
+        container_name: redis
+        ports:
+            - "6379:6379"
+        networks:
+            - laravel.home_portal-network
+networks:
+    laravel.home_portal-network:
+        driver: bridge
