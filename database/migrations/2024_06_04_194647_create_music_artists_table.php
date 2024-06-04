@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMusicArtistsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -16,8 +16,8 @@ class CreateMusicArtistsTable extends Migration
         Schema::create('music_artists', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->longText('description')->nullable();
             $table->string('country')->nullable();
-            $table->text('content')->nullable();
             $table->string('image')->nullable()->default(NULL);
             $table->string('path');
 
@@ -35,4 +35,4 @@ class CreateMusicArtistsTable extends Migration
     {
         Schema::dropIfExists('music_artists');
     }
-}
+};

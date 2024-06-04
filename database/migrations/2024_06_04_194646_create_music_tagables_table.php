@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMusicTagablesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -26,7 +26,7 @@ class CreateMusicTagablesTable extends Migration
             $table->foreign('tag_id')
                 ->references('id')
                 ->on('music_tags')
-                ->onDelete('cascade');
+                ->cascadeOnDelete();
         });
     }
 
@@ -39,4 +39,4 @@ class CreateMusicTagablesTable extends Migration
     {
         Schema::dropIfExists('music_tagables');
     }
-}
+};

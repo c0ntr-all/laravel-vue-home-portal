@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('music_tracks', function (Blueprint $table) {
-            $table->string('duration', 10)->nullable()->change();
+        Schema::create('music_album_version_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->longText('description')->nullable()->default(NULL);
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('music_tracks', function (Blueprint $table) {
-            $table->string('duration', 10)->change();
-        });
+        Schema::dropIfExists('music_album_version_types');
     }
 };

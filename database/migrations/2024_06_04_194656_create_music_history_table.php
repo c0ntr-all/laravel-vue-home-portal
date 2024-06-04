@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMusicHistoryTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -14,6 +14,7 @@ class CreateMusicHistoryTable extends Migration
     public function up()
     {
         Schema::create('music_history', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('track_id');
             $table->timestamps();
@@ -38,4 +39,4 @@ class CreateMusicHistoryTable extends Migration
     {
         Schema::dropIfExists('music_history');
     }
-}
+};

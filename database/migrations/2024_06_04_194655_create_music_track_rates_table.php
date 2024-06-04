@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMusicPlaylistsTracksTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -13,25 +13,23 @@ class CreateMusicPlaylistsTracksTable extends Migration
      */
     public function up()
     {
-        Schema::create('music_playlists_tracks', function (Blueprint $table) {
+        Schema::create('music_track_rates', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('track_id');
-            $table->unsignedBigInteger('playlist_id');
+            $table->tinyInteger('rate')->default(3);
             $table->timestamps();
 
             $table->foreign('user_id')
                   ->references('id')
-                  ->on('users');
+                  ->on('users')
+                  ->cascadeOnDelete();
 
             $table->foreign('track_id')
                   ->references('id')
-                  ->on('music_tracks');
-
-            $table->foreign('playlist_id')
-                  ->references('id')
-                  ->on('music_playlists')
-                  ->onDelete('cascade');
+                  ->on('music_tracks')
+                  ->cascadeOnDelete()
+                  ->cascadeOnUpdate();
         });
     }
 
@@ -42,6 +40,6 @@ class CreateMusicPlaylistsTracksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('music_playlists_items');
+        Schema::dropIfExists('music_track_rates');
     }
-}
+};

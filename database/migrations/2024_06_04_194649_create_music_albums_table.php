@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMusicAlbumsTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -15,24 +15,19 @@ class CreateMusicAlbumsTable extends Migration
     {
         Schema::create('music_albums', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('artist_id');
-            $table->integer('year');
-            $table->integer('cd')->nullable()->default(NULL);
+            $table->unsignedBigInteger('album_type_id');
             $table->string('name');
-            $table->string('attributes')->nullable();
-            $table->string('edition')->nullable();
-            $table->text('content')->nullable();
+            $table->longText('description')->nullable();
+            $table->date('date');
+            $table->boolean('is_date_verified')->default(false);
             $table->string('image')->nullable()->default(NULL);
             $table->string('path');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['artist_id', 'name', 'cd'], 'idx_name_cd_unique');
-            $table->foreign('artist_id')
+            $table->foreign('album_type_id')
                   ->references('id')
-                  ->on('music_artists')
-                  ->cascadeOnDelete()
-                  ->cascadeOnUpdate();
+                  ->on('music_album_types');
         });
     }
 
@@ -45,4 +40,4 @@ class CreateMusicAlbumsTable extends Migration
     {
         Schema::dropIfExists('music_albums');
     }
-}
+};
