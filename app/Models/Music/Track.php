@@ -3,24 +3,21 @@
 namespace App\Models\Music;
 
 use App\Casts\TrackDurationCast;
-use App\Models\Traits\HasDates;
 use App\Models\Traits\HasFilters;
 use App\Models\Traits\HasImage;
 use App\Models\Traits\HasMusicTags;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Znck\Eloquent\Relations\BelongsToThrough;
 use App\Helpers\ArrayHelper;
 
 /**
  * App\Models\Music\Track
  *
  * @property int $id
- * @property int|null $album_id
+ * @property int|null $album_disc_id
  * @property int|null $number
  * @property string $name
  * @property int|null $cd
@@ -69,12 +66,9 @@ use App\Helpers\ArrayHelper;
 class Track extends Model
 {
     use SoftDeletes,
-        HasFactory,
-        HasDates,
         HasMusicTags,
         HasImage,
-        HasFilters,
-        \Znck\Eloquent\Traits\BelongsToThrough;
+        HasFilters;
 
     protected $table = 'music_tracks';
 
@@ -84,20 +78,9 @@ class Track extends Model
         'duration' => TrackDurationCast::class
     ];
 
-    public function album(): BelongsTo
+    public function disc(): BelongsTo
     {
-        return $this->belongsTo(Album::class);
-    }
-
-    public function artist(): BelongsToThrough
-    {
-        return $this->belongsToThrough(
-            Artist::class,
-            Album::class,
-            null,
-            '',
-            [Artist::class => 'artist_id', Album::class => 'album_id']
-        );
+        return $this->belongsTo(AlbumDisc::class, 'album_disc_id', 'id');
     }
 
     public function playlists(): belongsToMany

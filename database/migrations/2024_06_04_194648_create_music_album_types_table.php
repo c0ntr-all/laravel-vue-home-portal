@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('music_album_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->longText('description')->nullable()->default(NULL);
             $table->timestamps();
         });
     }

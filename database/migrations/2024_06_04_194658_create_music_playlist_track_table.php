@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('music_playlists_tracks', function (Blueprint $table) {
+        Schema::create('music_playlist_track', function (Blueprint $table) {
+            $table->unsignedBigInteger('idx')->comment('Номер по порядку');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('track_id');
             $table->unsignedBigInteger('playlist_id');
             $table->timestamps();
 
-            $table->primary(['artist_id', 'album_id']);
+            $table->unique(['playlist_id', 'idx'], 'unique_playlist_idx');
 
             $table->foreign('user_id')
                   ->references('id')
@@ -43,6 +44,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('music_playlists_items');
+        Schema::dropIfExists('music_playlist_track');
     }
 };

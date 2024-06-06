@@ -9,6 +9,7 @@ use App\Models\Music\MusicTag;
 use App\Traits\Makeable;
 use getID3;
 use Illuminate\Http\File;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ArtistParseService
@@ -84,7 +85,7 @@ class ArtistParseService
                     ], [
                         'path' => $albumData['path'],
                         'image' => $albumCover,
-                        'year' => $albumData['year'],
+                        'date' => $albumData['date'],
                         'cd' => $albumData['cd']
                     ]);
 
@@ -192,7 +193,8 @@ class ArtistParseService
             'name' => $albumName,
             'cd' => $albumCd,
             'image' => $cover,
-            'year' => $id3TrackInfo['year'],
+            'date' => $this->prepareDate($id3TrackInfo['year']),
+            'is_date_verified' => false,
             'path' => $albumPath,
         ];
         $artist = [
@@ -272,6 +274,22 @@ class ArtistParseService
     private function prepareTagsIds(): void
     {
         $this->tags = MusicTag::whereIn('name', $this->tags)->get()?->pluck('id', 'name')->toArray();
+    }
+
+    private function prepareDate(string $dateString): ?string
+    {
+        // Проверяем, является ли строка датой формата Y (например, "1999")
+        if (preg_match('/^\d{4}$/', $dateString)) {
+            return $dateString . '-01-01';
+        }
+
+        // Проверяем, является ли строка датой формата Y-m-d
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateString)) {
+            return $dateString;
+        }
+
+        // Если строка не соответствует ни одному из форматов, возвращаем NULL
+        return NULL;
     }
 
     /**
