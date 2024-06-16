@@ -2,50 +2,54 @@
 
 namespace App\Services\Music;
 
+use App\Data\Music\ArtistCreateData;
 use App\Filters\Filter;
 use App\Helpers\ImageUpload;
 use App\Models\Music\Artist;
 use App\Repositories\ArtistRepository;
+use Illuminate\Http\File;
 use Illuminate\Pagination\CursorPaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 
-class ArtistService {
-    public function __construct(private ArtistRepository $repository)
+readonly class ArtistService {
+    public function __construct(
+        private ArtistRepository $repository
+    )
     {
     }
 
-    public function getWithPaginate(array $requestData)
+    public function getWithPaginate(array $requestData): LengthAwarePaginator
     {
         $filter = $this->prepareFilters($requestData);
 
         return $this->repository->getWithPaginate($filter);
     }
 
-    public function getWithCursor(array $requestData)
+    public function getWithCursor(array $requestData): CursorPaginator
     {
         $filter = $this->prepareFilters($requestData);
 
         return $this->repository->getWithCursor($filter);
     }
 
-    public function storeArtist(array $requestData)
+    /**
+     * Сохранение исполнителя с изображением
+     *
+     * @param ArtistCreateData $data
+     * @return Artist
+     */
+    public function saveArtist(ArtistCreateData $data): Artist
     {
-        $imagePath = ImageUpload::make()
-                                ->setDiskName('public')
-                                ->setFolder('music/artists/covers')
-                                ->setSourceName($requestData['name'])
-                                ->upload($requestData['image']);
+        $data->image = $this->saveCover($data->image, $data->name, $data->name);
 
-        return Artist::create([
-            'user_id' => auth()->id(),
-            'name' => $requestData['name'],
-            'content' => $requestData['content'],
-            'image' => $imagePath
-        ]);
+        return $this->updateOrCreateArtist($data->toArray());
     }
 
     public function updateArtist(Artist $artist, array $requestData): array
     {
+        //todo: Удалять предыдущее изображение
+        //todo: Передалть используемые на saveArtist
         if (isset($requestData['image'])) {
             $requestData['image'] = ImageUpload::make()
                                           ->setDiskName('public')
@@ -61,6 +65,26 @@ class ArtistService {
         }
 
         return $requestData;
+    }
+
+
+    /**
+     * Обновление или создание исполнителя
+     *
+     * @param array $data
+     * @return Artist
+     */
+    private function updateOrCreateArtist(array $data): Artist
+    {
+        return Artist::updateOrCreate([
+            'name' => $data['name'],
+        ], [
+            'user_id' => $data['user_id'],
+            'description' => $data['description'],
+            'country' => $data['country'],
+            'path' => $data['path'],
+            'image' => $data['image'],
+        ]);
     }
 
     private function prepareFilters(array $requestData): ?Filter
@@ -96,5 +120,24 @@ class ArtistService {
     public function getTracks(Artist $artist): CursorPaginator
     {
         return $artist->tracks()->cursorPaginate(50);
+    }
+
+    /**
+     * Сохранение изображения для исполнителя
+     *
+     * @param string $path
+     * @param string $name
+     * @param string $artistName
+     * @return string
+     */
+    protected function saveCover(string $path, string $name, string $artistName): string
+    {
+        $image = new File($path);
+
+        return ImageUpload::make()
+                          ->setDiskName('public')
+                          ->setFolder("music/artists/{$artistName}/covers")
+                          ->setSourceName($name)
+                          ->upload($image);
     }
 }

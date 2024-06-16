@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('music_artists', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->string('name');
             $table->longText('description')->nullable();
             $table->string('country')->nullable();
@@ -23,6 +24,8 @@ return new class extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('user_id')->on('persons')->references('id');
         });
     }
 

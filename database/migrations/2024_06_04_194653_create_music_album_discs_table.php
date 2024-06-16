@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('album_version_id')->default(1);
             $table->unsignedInteger('number')->default(1);
             $table->longText('description')->nullable()->default(NULL);
+            $table->string('image')->nullable()->default(NULL);
             $table->timestamps();
 
             $table->foreign('album_version_id')

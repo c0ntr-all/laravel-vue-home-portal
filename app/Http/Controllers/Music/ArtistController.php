@@ -15,7 +15,7 @@ use Illuminate\Http\Response;
 class ArtistController extends BaseController
 {
     public function __construct(
-        private ArtistService $service
+        private readonly ArtistService $artistService,
     )
     {
     }
@@ -26,7 +26,7 @@ class ArtistController extends BaseController
      */
     public function index(IndexRequest $request): Response
     {
-        $out = $this->service->getWithCursor($request->validated());
+        $out = $this->artistService->getWithCursor($request->validated());
 
         return $this->sendResponse(new ArtistCollection($out));
     }
@@ -49,7 +49,7 @@ class ArtistController extends BaseController
      */
     public function tracks(Artist $artist, TracksRequest $request): TrackCollection
     {
-        $tracks = $this->service->getTracks($artist);
+        $tracks = $this->artistService->getTracks($artist);
 
         return new TrackCollection($tracks);
     }

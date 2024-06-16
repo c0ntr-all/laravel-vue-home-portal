@@ -2,14 +2,16 @@
 
 namespace App\Services\Music\Parse;
 
+use App\Data\Music\AlbumCreateData;
+use App\Data\Music\ArtistCreateData;
+use App\Data\Music\TrackCreateData;
 use App\Events\TrackParsed;
-use App\Helpers\ImageUpload;
 use App\Models\Music\Artist;
 use App\Models\Music\MusicTag;
+use App\Services\Music\Albums\AlbumService;
+use App\Services\Music\ArtistService;
 use App\Traits\Makeable;
 use getID3;
-use Illuminate\Http\File;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ArtistParseService
@@ -27,20 +29,22 @@ class ArtistParseService
     protected const COVER_EXTENSIONS = ['jpg','jpeg','png','gif'];
     protected const TRACK_EXTENSIONS = ['mp3'];
 
-    public function __construct(array $requestData)
+    public function __construct(
+        private readonly ArtistService $artistService,
+        private readonly AlbumService $albumService,
+    )
     {
         $this->getID3 = new getID3();
-
-        $this->path = $requestData['path'];
-        $this->preview = !empty($requestData['preview']);
     }
 
     /**
      * @throws \Throwable
      */
-    public function process()
+    public function process($data)
     {
-        if ($this->preview) {
+        $this->path = $data['path'];
+
+        if (!empty($data['is_preview'])) {
             return $this->preview();
         } else {
             return $this->upload();
@@ -69,27 +73,19 @@ class ArtistParseService
             foreach ($data as $artistData) {
                 $albumCover = null;
 
-                $artist = Artist::updateOrCreate([
-                    'name' => $artistData['name'],
-                ], [
-                    'path' => $artistData['path']
-                ]);
+                $artistDto = ArtistCreateData::from($artistData);
+                $artistDto->user_id = auth()->user()->id;
+                $artist = $this->artistService->saveArtist($artistDto);
 
                 foreach($artistData['albums'] as $albumData) {
-                    $albumCover = $this->saveCover($albumData['image'], $albumData['name']);
-
-                    $album = $artist->albums()->updateOrCreate([
-                        'artist_id' => $artist->id,
-                        'name' => $albumData['name'],
-                        'cd' => $albumData['cd'],
-                    ], [
-                        'path' => $albumData['path'],
-                        'image' => $albumCover,
-                        'date' => $albumData['date'],
-                        'cd' => $albumData['cd']
-                    ]);
+                    $albumDto = AlbumCreateData::from($albumData);
+                    $albumDto->user_id = auth()->user()->id;
+                    $album = $this->albumService->saveAlbum($artist, $albumDto);
 
                     foreach($albumData['tracks'] as $trackData) {
+                        $trackDto = TrackCreateData::from($trackData);
+                        $trackDto->user_id = auth()->user()->id;
+                        //todo: Формирование Version и CD и прикрепление к ним треков
                         $track = $album->tracks()->updateOrCreate([
                             'album_id' => $album->id,
                             'name' => $trackData['name']
@@ -101,11 +97,11 @@ class ArtistParseService
                             'image' => $albumCover,
                         ]);
 
-                        $socketData = [
-                            'artist' => $artist->name,
-                            'album' => $album->name,
-                            'track' => $trackData['name']
-                        ];
+//                        $socketData = [
+//                            'artist' => $artist->name,
+//                            'album' => $album->name,
+//                            'track' => $trackData['name']
+//                        ];
 
                         if ($trackData['genre'] && array_key_exists($trackData['genre'], $this->tags)) {
                             $track->tags()->syncWithoutDetaching($this->tags[$trackData['genre']]);
@@ -113,10 +109,10 @@ class ArtistParseService
                             $artist->tags()->syncWithoutDetaching($this->tags[$trackData['genre']]);
                         }
 
-                        TrackParsed::dispatch($socketData);
+//                        TrackParsed::dispatch($socketData);
                     }
                 }
-
+                // Добавляем обложку исполнителю на этом этапе, чтобы взять готовую с альбома и не дублировать ее для исполнителя
                 $artist->update(['image' => $albumCover]);
             }
 
@@ -200,10 +196,13 @@ class ArtistParseService
         $artist = [
             'name' => $artistName,
             'path' => $this->path,
+            'image' => $cover,
         ];
+
         if (!in_array($artistName, array_column($this->data, 'name'))) {
             $this->data[] = $artist;
         }
+
         foreach ($this->data as $artistKey => $artistValue) {
             if ($artistValue['name'] == $artistName) {
                 if (!isset($this->data[$artistKey]['albums'])) {
@@ -387,23 +386,5 @@ class ArtistParseService
         $defaultCover = $albumPath . DIRECTORY_SEPARATOR . 'Cover.jpg';
 
         return file_exists($defaultCover) ? $defaultCover : $this->findAnotherImageAsCover($albumPath);
-    }
-
-    /**
-     * Сохраняет изображение на сервер и возвращает полученный путь
-     *
-     * @param string $path
-     * @param string $name
-     * @return string
-     */
-    protected function saveCover(string $path, string $name): string
-    {
-        $image = new File($path);
-
-        return ImageUpload::make()
-                          ->setDiskName('public')
-                          ->setFolder('music/albums/covers')
-                          ->setSourceName($name)
-                          ->upload($image);
     }
 }

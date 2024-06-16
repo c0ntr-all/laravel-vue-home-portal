@@ -15,11 +15,14 @@ use App\Services\Music\Parse\ArtistParseService;
 
 class ArtistController extends BaseController
 {
-    public function __construct(private ArtistService $artistService)
+    public function __construct(
+        private readonly ArtistService      $artistService,
+        private readonly ArtistParseService $artistParseService,
+    )
     {
     }
 
-    public function index(IndexRequest $request)
+    public function index(IndexRequest $request): \Illuminate\Http\Response
     {
         $out = $this->artistService->getWithPaginate($request->validated());
 
@@ -28,7 +31,7 @@ class ArtistController extends BaseController
 
     public function store(StoreRequest $request)
     {
-        $out = $this->artistService->storeArtist($request->validated());
+        $out = $this->artistService->saveArtist($request->validated());
         $message = 'Исполнитель ' . $out->name . ' успешно добавлен!';
 
         return $this->sendResponse(new AdminArtistResource($out), $message);
@@ -41,12 +44,15 @@ class ArtistController extends BaseController
         return $this->sendResponse($out, 'Artist updated successfully!');
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function upload(UploadRequest $request)
     {
-        $result = ArtistParseService::make($request->validated())->process();
+        $out = $this->artistParseService->process($request->validated());
 
-        if ($result) {
-            return $this->sendResponse($result, 'Artist uploaded successfully!');
+        if ($out) {
+            return $this->sendResponse($out, 'Artist uploaded successfully!');
         }
     }
 }

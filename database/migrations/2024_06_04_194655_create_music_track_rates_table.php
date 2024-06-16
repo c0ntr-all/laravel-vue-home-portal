@@ -14,11 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('music_track_rates', function (Blueprint $table) {
-            $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('track_id');
             $table->tinyInteger('rate')->default(3);
             $table->timestamps();
+
+            $table->primary(['user_id', 'track_id']);
 
             $table->foreign('user_id')
                   ->references('id')

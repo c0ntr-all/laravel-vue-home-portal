@@ -33,7 +33,7 @@ class UploadRequest extends FormRequest
                     }
                 }
             ],
-            'preview' => 'sometimes|boolean',
+            'is_preview' => 'sometimes|boolean',
         ];
     }
 }
