@@ -46,25 +46,20 @@ readonly class ArtistService {
         return $this->updateOrCreateArtist($data->toArray());
     }
 
-    public function updateArtist(Artist $artist, array $requestData): array
+    public function updateArtist(Artist $artist, array $data): Artist
     {
         //todo: Удалять предыдущее изображение
-        //todo: Передалть используемые на saveArtist
-        if (isset($requestData['image'])) {
-            $requestData['image'] = ImageUpload::make()
-                                          ->setDiskName('public')
-                                          ->setFolder('music/artists/covers')
-                                          ->setSourceName($requestData['name'])
-                                          ->upload($requestData['image']);
+        if (isset($data['image'])) {
+            $data['image'] = $this->saveCover($data['image'], $artist->name, $artist->name);
         }
 
-        $artist->update($requestData);
+        $artist->update($data);
 
         if (isset($requestData['tags'])) {
             $artist->tags()->sync($requestData['tags']);
         }
 
-        return $requestData;
+        return $artist;
     }
 
 

@@ -62,15 +62,7 @@ class Artist extends Model
 
     protected $table = 'music_artists';
 
-    protected $fillable = [
-        'user_id',
-        'name',
-        'content',
-        'image',
-        'path',
-        'updated_at',
-        'deleted_at'
-    ];
+    protected $guarded = [];
 
     public function albums(): HasMany
     {

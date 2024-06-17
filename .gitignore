@@ -3,7 +3,7 @@
 node_modules/
 npm-debug.log
 yarn-error.log
-.composer.phar
+composer.phar
 
 # Laravel 4 specific
 bootstrap/compiled.php
@@ -21,6 +21,7 @@ public/vendor
 
 #IDE folders
 .idea
+.phpunit.cache
 .phpunit.result.cache
 .phpstorm.meta.php
 _ide_helper.php
