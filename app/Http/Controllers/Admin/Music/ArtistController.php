@@ -11,13 +11,16 @@ use App\Http\Resources\Music\Artists\AdminArtistCollection;
 use App\Http\Resources\Music\Artists\AdminArtistResource;
 use App\Models\Music\Artist;
 use App\Services\Music\ArtistService;
-use App\Services\Music\Parse\ArtistParseService;
+use App\Services\Music\Parse\ArtistUploadService;
+use App\Services\Music\Parse\MusicParseService;
+use Illuminate\Http\Response;
 
 class ArtistController extends BaseController
 {
     public function __construct(
-        private readonly ArtistService      $artistService,
-        private readonly ArtistParseService $artistParseService,
+        private readonly ArtistService       $artistService,
+        private readonly MusicParseService   $musicParseService,
+        private readonly ArtistUploadService $artistUploadService,
     )
     {
     }
@@ -47,12 +50,20 @@ class ArtistController extends BaseController
     /**
      * @throws \Throwable
      */
-    public function upload(UploadRequest $request)
+    public function upload(UploadRequest $request): Response
     {
-        $out = $this->artistParseService->process($request->validated());
+        if ($request->is_preview) {
+            $out = $this->musicParseService->process($request->path);
+            $message = 'Data prepared successfully!';
+        } else {
+            $out = $this->artistUploadService->upload($request->path);
+            $message = 'Artist uploaded successfully!';
+        }
 
         if ($out) {
-            return $this->sendResponse($out, 'Artist uploaded successfully!');
+            return $this->sendResponse($out, $message);
+        } else {
+            return $this->sendError('Something goes wrong!', 500);
         }
     }
 }
