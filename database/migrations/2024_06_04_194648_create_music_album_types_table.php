@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Music\AlbumTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        $types = ['studio', 'ep', 'single', 'maxi-single', 'split', 'demo', 'live', 'promo'];
+        $types = AlbumTypeEnum::toArray();
 
         foreach ($types as $type) {
             DB::table('music_album_types')->insert(['name' => $type]);

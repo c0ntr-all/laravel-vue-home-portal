@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Music\AlbumVersionTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        $types = ['original', 'remastered', 'japanese', 'reissue', 'limited', 'special', 'deluxe', 'expanded', 'anniversary', 'bootleg'];
+        $types = AlbumVersionTypeEnum::toArray();
 
         foreach ($types as $type) {
             DB::table('music_album_version_types')->insert(['name' => $type]);
