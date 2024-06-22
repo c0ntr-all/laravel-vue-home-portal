@@ -78,14 +78,14 @@ class Track extends Model
         'duration' => TrackDurationCast::class
     ];
 
-    public function disc(): BelongsTo
+    public function album(): BelongsTo
     {
-        return $this->belongsTo(AlbumDisc::class, 'album_disc_id', 'id');
+        return $this->belongsTo(Album::class, 'album_id', 'id');
     }
 
     public function playlists(): belongsToMany
     {
-        return $this->belongsToMany(Playlist::class, 'music_playlists_tracks', 'track_id', 'playlist_id');
+        return $this->belongsToMany(Playlist::class, 'music_playlist_track', 'track_id', 'playlist_id');
     }
 
     public function rate(): HasOne

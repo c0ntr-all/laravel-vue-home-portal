@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Services\Music\Albums;
+namespace App\Services\Music;
 
 use App\Data\Music\AlbumCreateData;
 use App\Helpers\ImageUpload;
@@ -10,7 +10,6 @@ use Illuminate\Http\File;
 
 readonly class AlbumService {
     public function __construct(
-        private AlbumVersionService $albumVersionService
     )
     {
     }
@@ -25,10 +24,6 @@ readonly class AlbumService {
         $dto->image = $this->saveCover($dto->image, $dto->name, $artist->name);
 
         $album = $this->updateOrCreateAlbum($artist, $dto->toArray());
-
-        if ($dto->versions) {
-            $this->saveAlbumVersions($album, $dto->versions);
-        }
 
         return $album;
     }
@@ -71,19 +66,5 @@ readonly class AlbumService {
                           ->setFolder("music/artists/{$artistName}/covers")
                           ->setSourceName($name)
                           ->upload($image);
-    }
-
-    /**
-     * Сохранение версий альбома.
-     *
-     * @param Album $album
-     * @param array $data
-     * @return void
-     */
-    private function saveAlbumVersions(Album $album, array $data): void
-    {
-        foreach ($data as $versionData) {
-            $this->albumVersionService->saveAlbumVersion($album, $versionData);
-        }
     }
 }

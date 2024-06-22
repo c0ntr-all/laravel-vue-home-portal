@@ -2,7 +2,11 @@
 
 namespace App\Services\Music\Parse;
 
+use App\Enums\Music\AlbumTypeEnum;
+use App\Enums\Music\AlbumVersionTypeEnum;
 use Exception;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 readonly class MusicParseService
 {
@@ -88,6 +92,9 @@ readonly class MusicParseService
         $allTracksInfo = $this->getTracksInfo($tracks);
         $library = $this->buildLibrary($allTracksInfo);
 
+        $albumTypes = Cache::get('album_types');
+        $albumVersionTypes = Cache::get('album_version_types');
+
         $result = ['artists' => []];
 
         foreach ($library as $artist) {
@@ -97,6 +104,24 @@ readonly class MusicParseService
             ];
 
             foreach ($artist['albums'] as $album) {
+                $albumAttributes = $this->parseAlbumCircleBraces($album['name']);
+
+                if (!empty($albumAttributes)) {
+                    foreach ($albumAttributes[1] as $attribute) {
+                        $attribute = strtolower($attribute);
+                        $albumType = $albumTypes->firstWhere(fn ($type) => $type->slug === $attribute);
+                        $albumVersionType = $albumVersionTypes->firstWhere(fn ($type) => $type->slug === $attribute);
+
+                        if ($albumType) {
+                            $album['album_type_id'] = $albumType->id;
+                        }
+
+                        if ($albumVersionType) {
+                            $album['version_type_id'] = $albumVersionType->id;
+                        }
+                    }
+                }
+
                 $artistData['albums'][] = $album;
             }
 
@@ -134,10 +159,32 @@ readonly class MusicParseService
         return [
             'name' => $track['album'],
             'cd' => $track['cd'] ?? 1,
+            'album_type_id' => 1,
+            'version_type_id' => 1,
             'image' => $this->parseFolderService->getAlbumCover($albumPath),
             'date' => $track['date'],
             'is_date_verified' => false,
             'path' => $albumPath
         ];
+    }
+
+    /**
+     * Извлекает данные из круглых скобок в имени альбома
+     *
+     * @param string $albumName
+     * @return array|null
+     */
+    public function parseAlbumCircleBraces(string $albumName): ?array
+    {
+        if (preg_match_all('/\((.*?)\)/', $albumName, $matches)) {
+            return $matches;
+        }
+
+        return NULL;
+    }
+
+    public function cleanAlbumName(string $albumName): string
+    {
+        return trim(preg_replace('/\s*\(.*?\)\s*/', '', $albumName));
     }
 }

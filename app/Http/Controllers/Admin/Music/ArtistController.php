@@ -56,7 +56,7 @@ class ArtistController extends BaseController
             $out = $this->musicParseService->process($request->path);
             $message = 'Data prepared successfully!';
         } else {
-            $out = $this->artistUploadService->upload($request->path);
+            $out = $this->artistUploadService->process($request->path);
             $message = 'Artist uploaded successfully!';
         }
 

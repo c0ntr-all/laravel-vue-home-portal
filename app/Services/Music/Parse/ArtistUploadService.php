@@ -6,12 +6,16 @@ use App\Data\Music\AlbumCreateData;
 use App\Data\Music\ArtistCreateData;
 use App\Data\Music\TrackCreateData;
 use App\Models\Music\MusicTag;
+use App\Services\Music\AlbumService;
+use App\Services\Music\ArtistService;
 use Illuminate\Support\Facades\DB;
 
 readonly class ArtistUploadService
 {
     public function __construct(
-        private MusicParseTrackService $artistParseService
+        private MusicParseService $musicParseService,
+        private ArtistService $artistService,
+        private AlbumService $albumService,
     )
     {
     }
@@ -20,9 +24,9 @@ readonly class ArtistUploadService
      * @throws \Exception
      * @throws \Throwable
      */
-    public function upload(string $path)
+    public function process(string $path)
     {
-        $data = $this->artistParseService->parseFolder($path);
+        $data = $this->musicParseService->process($path);
 
         return DB::transaction(function () use ($data) {
             $existingTags = $this->prepareTagsIds();

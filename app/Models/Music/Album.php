@@ -10,16 +10,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Music\Album
  *
  * @property int $id
- * @property int $artist_id
- * @property int $year
+ * @property int $parent_id
+ * @property int $album_type_id
+ * @property int $version_type_id
  * @property string $name
- * @property string|null $attributes
- * @property string|null $edition
+ * @property string $description
+ * @property Carbon|null $date
  * @property string|null $content
  * @property string|null $image
  * @property string $path
@@ -70,8 +72,13 @@ class Album extends Model
         return $this->belongsToMany(Artist::class, 'artist_id', 'id');
     }
 
+    /**
+     * Only one nesting level can be.
+     *
+     * @return HasMany
+     */
     public function versions(): HasMany
     {
-        return $this->hasMany(AlbumVersion::class, 'album_id', 'id');
+        return $this->hasMany(__CLASS__, 'parent_id', 'id');
     }
 }

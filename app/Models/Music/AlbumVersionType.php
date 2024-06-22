@@ -20,8 +20,8 @@ class AlbumVersionType extends Model
 
     protected $guarded = [];
 
-    public function albumVersions(): HasMany
+    public function albums(): HasMany
     {
-        return $this->hasMany(AlbumVersion::class, 'version_type_id', 'id');
+        return $this->hasMany(Album::class, 'version_type_id', 'id');
     }
 }

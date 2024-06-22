@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('music_album_version_types', function (Blueprint $table) {
             $table->id();
+            $table->string('slug');
             $table->string('name');
             $table->longText('description')->nullable()->default(NULL);
             $table->timestamps();

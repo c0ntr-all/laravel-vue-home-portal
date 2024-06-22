@@ -13,19 +13,6 @@ class MusicParseFolderService
     }
 
     /**
-     * Проверяет круглые скобки в имени альбома, есть ли там тип альбома, например, Single или EP
-     *
-     * @param $string
-     * @return array
-     */
-    public function getAlbumAttributes($string): array
-    {
-        preg_match_all('/\((.+?)\)/', $string, $matches);
-
-        return $matches;
-    }
-
-    /**
      * Возвращает путь до обложки в папке, если оно есть
      *
      * @param string $albumPath
