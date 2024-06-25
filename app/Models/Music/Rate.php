@@ -2,7 +2,6 @@
 
 namespace App\Models\Music;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -27,15 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Rate extends Model
 {
-    protected $table = 'music_rate';
+    protected $table = 'music_track_rates';
 
-    public const DEFAULT_RATE = 3;
-    public const MIN_RATE = 0;
-    public const MAX_RATE = 4;
-
-    protected $fillable = [
-        'rate',
-        'user_id',
-        'track_id',
-    ];
+    protected $guarded = [];
 }

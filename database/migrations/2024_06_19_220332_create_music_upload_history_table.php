@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('music_uploads_history', function (Blueprint $table) {
+        Schema::create('music_upload_history', function (Blueprint $table) {
             $table->id();
             $table->json('data');
             $table->timestamps();
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('music_uploads_history');
+        Schema::dropIfExists('music_upload_history');
     }
 };

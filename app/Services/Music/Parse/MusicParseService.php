@@ -91,7 +91,7 @@ readonly class MusicParseService
         $albumTypes = Cache::get('album_types');
         $albumVersionTypes = Cache::get('album_version_types');
 
-        $result = ['artists' => []];
+        $result = [];
 
         foreach ($library as $artist) {
             $artistData = [
@@ -123,7 +123,7 @@ readonly class MusicParseService
                 $artistData['albums'][] = $album;
                 $artistData['image'] = $album['image'];
             }
-            $result['artists'][] = $artistData;
+            $result[] = $artistData;
         }
 
         return $result;

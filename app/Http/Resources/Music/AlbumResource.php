@@ -12,6 +12,8 @@ class AlbumResource extends JsonResource
 
     public function toArray($request): array
     {
+        $artist = $this->artists->first();
+
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
@@ -20,7 +22,11 @@ class AlbumResource extends JsonResource
             'content' => $this->content,
             'image' => $this->full_image,
             'createdAt' => $this->created_at,
-            'artist' => ['id' => $this->artist->id, 'name' => $this->artist->name],
+            //todo: Сделать массив исполнителей, когда сплит или фит или еще чего
+            'artist' => [
+                'id' => $artist->id,
+                'name' => $artist->name
+            ],
             'tracks' => TrackResource::collection($this->tracks),
             'tags' => $this->tags->pluck('name')
         ];

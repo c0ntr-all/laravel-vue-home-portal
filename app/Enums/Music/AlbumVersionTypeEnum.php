@@ -18,4 +18,5 @@ enum AlbumVersionTypeEnum: string
     case EXPANDED = 'expanded';
     case ANNIVERSARY = 'anniversary';
     case BOOTLEG = 'bootleg';
+    case COMPILATION = 'compilation';
 }

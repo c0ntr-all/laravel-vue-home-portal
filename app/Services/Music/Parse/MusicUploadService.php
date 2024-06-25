@@ -5,13 +5,14 @@ namespace App\Services\Music\Parse;
 use App\Data\Music\AlbumCreateData;
 use App\Data\Music\ArtistCreateData;
 use App\Data\Music\TrackCreateData;
+use App\Models\Music\MusicUploadHistory;
 use App\Repositories\TagRepository;
 use App\Services\Music\AlbumService;
 use App\Services\Music\ArtistService;
 use App\Services\Music\TrackService;
 use Illuminate\Support\Facades\DB;
 
-readonly class ArtistUploadService
+readonly class MusicUploadService
 {
     public function __construct(
         private MusicParseService $musicParseService,
@@ -34,7 +35,7 @@ readonly class ArtistUploadService
         return DB::transaction(function () use ($data) {
             $existingTags = $this->prepareTagsIds();
 
-            foreach ($data['artists'] as $artistData) {
+            foreach ($data as $artistData) {
                 $artistDto = ArtistCreateData::from($artistData);
                 $artistDto->user_id = auth()->user()->id;
                 //todo: Переделать сохранение изображения. Оно происходит не своевременно
@@ -57,6 +58,7 @@ readonly class ArtistUploadService
                     foreach($albumData['tracks'] as $trackData) {
                         $trackDto = TrackCreateData::from($trackData);
                         $trackDto->user_id = auth()->user()->id;
+                        $trackDto->image = $albumDto->image;
                         $track = $this->trackService->saveTrack($album, $trackDto);
 
 //                        $socketData = [
@@ -76,6 +78,8 @@ readonly class ArtistUploadService
                 }
             }
 
+            $this->saveUploadHistory($data);
+
             return ['artists' => collect($data)->pluck('name')];
         });
     }
@@ -88,5 +92,10 @@ readonly class ArtistUploadService
     private function prepareTagsIds(): ?array
     {
         return $this->tagRepository->getTags()?->pluck('id', 'name')->toArray();
+    }
+
+    private function saveUploadHistory(array $data): void
+    {
+        MusicUploadHistory::create(['data' => json_encode($data, JSON_UNESCAPED_UNICODE)]);
     }
 }

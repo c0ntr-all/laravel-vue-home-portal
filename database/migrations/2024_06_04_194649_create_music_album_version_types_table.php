@@ -5,6 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 return new class extends Migration
 {
@@ -24,7 +25,10 @@ return new class extends Migration
         $types = AlbumVersionTypeEnum::toArray();
 
         foreach ($types as $type) {
-            DB::table('music_album_version_types')->insert(['name' => $type]);
+            DB::table('music_album_version_types')->insert([
+                'name' => $type,
+                'slug' => Str::slug($type)
+            ]);
         }
     }
 

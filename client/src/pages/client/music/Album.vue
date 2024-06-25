@@ -79,7 +79,7 @@ const showImage = ref(false)
 const album = ref({})
 
 const getAlbum = async id => {
-  await api.post(`music/albums/${id}`)
+  await api.get(`music/albums/${id}`)
   .then(response => {
     album.value = response.data.data
   }).catch(error => {

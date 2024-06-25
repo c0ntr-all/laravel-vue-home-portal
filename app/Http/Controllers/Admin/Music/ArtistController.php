@@ -11,16 +11,16 @@ use App\Http\Resources\Music\Artists\AdminArtistCollection;
 use App\Http\Resources\Music\Artists\AdminArtistResource;
 use App\Models\Music\Artist;
 use App\Services\Music\ArtistService;
-use App\Services\Music\Parse\ArtistUploadService;
+use App\Services\Music\Parse\MusicUploadService;
 use App\Services\Music\Parse\MusicParseService;
 use Illuminate\Http\Response;
 
 class ArtistController extends BaseController
 {
     public function __construct(
-        private readonly ArtistService       $artistService,
-        private readonly MusicParseService   $musicParseService,
-        private readonly ArtistUploadService $artistUploadService,
+        private readonly ArtistService      $artistService,
+        private readonly MusicParseService  $musicParseService,
+        private readonly MusicUploadService $artistUploadService,
     )
     {
     }
