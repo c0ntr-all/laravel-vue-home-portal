@@ -36,14 +36,14 @@ readonly class ArtistService {
     /**
      * Сохранение исполнителя с изображением
      *
-     * @param ArtistCreateData $data
+     * @param ArtistCreateData $dto
      * @return Artist
      */
-    public function saveArtist(ArtistCreateData $data): Artist
+    public function saveArtist(ArtistCreateData $dto): Artist
     {
-        $data->image = $this->saveCover($data->image, $data->name, $data->name);
+        $dto->image = $this->saveCover($dto->image, $dto->name, $dto->name);
 
-        return $this->updateOrCreateArtist($data->toArray());
+        return $this->updateOrCreateArtist($dto);
     }
 
     public function updateArtist(Artist $artist, array $data): Artist
@@ -66,19 +66,19 @@ readonly class ArtistService {
     /**
      * Обновление или создание исполнителя
      *
-     * @param array $data
+     * @param ArtistCreateData $dto
      * @return Artist
      */
-    private function updateOrCreateArtist(array $data): Artist
+    private function updateOrCreateArtist(ArtistCreateData $dto): Artist
     {
         return Artist::updateOrCreate([
-            'name' => $data['name'],
+            'name' => $dto->name,
         ], [
-            'user_id' => $data['user_id'],
-            'description' => $data['description'],
-            'country' => $data['country'],
-            'path' => $data['path'],
-            'image' => $data['image'],
+            'user_id' => $dto->user_id,
+            'description' => $dto->description,
+            'country' => $dto->country,
+            'path' => $dto->path,
+            'image' => $dto->image,
         ]);
     }
 

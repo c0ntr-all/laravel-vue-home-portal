@@ -2,11 +2,8 @@
 
 namespace App\Services\Music\Parse;
 
-use App\Enums\Music\AlbumTypeEnum;
-use App\Enums\Music\AlbumVersionTypeEnum;
 use Exception;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 readonly class MusicParseService
 {
@@ -27,8 +24,10 @@ readonly class MusicParseService
         $this->path = $path;
 
         $allTracksPaths = $this->parseFolderService->process($path);
+        $allTracksInfo = $this->getTracksInfo($allTracksPaths);
+        $library = $this->makeLibraryTree($allTracksInfo);
 
-        return $this->makeTracksTree($allTracksPaths);
+        return $this->formatLibraryTree($library);
     }
 
     /**
@@ -57,7 +56,7 @@ readonly class MusicParseService
      * @param array $tracks
      * @return array
      */
-    private function buildLibrary(array $tracks): array
+    private function makeLibraryTree(array $tracks): array
     {
         $library = [];
 
@@ -87,11 +86,8 @@ readonly class MusicParseService
      *
      * @throws Exception
      */
-    private function makeTracksTree(array $tracks): array
+    private function formatLibraryTree(array $library): array
     {
-        $allTracksInfo = $this->getTracksInfo($tracks);
-        $library = $this->buildLibrary($allTracksInfo);
-
         $albumTypes = Cache::get('album_types');
         $albumVersionTypes = Cache::get('album_version_types');
 
@@ -100,17 +96,19 @@ readonly class MusicParseService
         foreach ($library as $artist) {
             $artistData = [
                 'name' => $artist['name'],
+                'path' => $artist['path'],
+                'image' => null,
                 'albums' => []
             ];
 
-            foreach ($artist['albums'] as $album) {
+            foreach ($artist['albums'] as &$album) {
                 $albumAttributes = $this->parseAlbumCircleBraces($album['name']);
 
                 if (!empty($albumAttributes)) {
                     foreach ($albumAttributes[1] as $attribute) {
-                        $attribute = strtolower($attribute);
-                        $albumType = $albumTypes->firstWhere(fn ($type) => $type->slug === $attribute);
-                        $albumVersionType = $albumVersionTypes->firstWhere(fn ($type) => $type->slug === $attribute);
+                        $lowerAttr = strtolower($attribute);
+                        $albumType = $albumTypes->firstWhere(fn ($type) => $type->slug === $lowerAttr);
+                        $albumVersionType = $albumVersionTypes->firstWhere(fn ($type) => $type->slug === $lowerAttr);
 
                         if ($albumType) {
                             $album['album_type_id'] = $albumType->id;
@@ -118,13 +116,13 @@ readonly class MusicParseService
 
                         if ($albumVersionType) {
                             $album['version_type_id'] = $albumVersionType->id;
+                            $album['original_album'] = $this->cleanAlbumName($album['name'], $attribute);
                         }
                     }
                 }
-
                 $artistData['albums'][] = $album;
+                $artistData['image'] = $album['image'];
             }
-
             $result['artists'][] = $artistData;
         }
 
@@ -183,8 +181,8 @@ readonly class MusicParseService
         return NULL;
     }
 
-    public function cleanAlbumName(string $albumName): string
+    public function cleanAlbumName(string $albumName, string $crap): string
     {
-        return trim(preg_replace('/\s*\(.*?\)\s*/', '', $albumName));
+        return trim(str_replace("($crap)", '', $albumName));
     }
 }

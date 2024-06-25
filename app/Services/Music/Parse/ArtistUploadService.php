@@ -5,9 +5,10 @@ namespace App\Services\Music\Parse;
 use App\Data\Music\AlbumCreateData;
 use App\Data\Music\ArtistCreateData;
 use App\Data\Music\TrackCreateData;
-use App\Models\Music\MusicTag;
+use App\Repositories\TagRepository;
 use App\Services\Music\AlbumService;
 use App\Services\Music\ArtistService;
+use App\Services\Music\TrackService;
 use Illuminate\Support\Facades\DB;
 
 readonly class ArtistUploadService
@@ -16,6 +17,8 @@ readonly class ArtistUploadService
         private MusicParseService $musicParseService,
         private ArtistService $artistService,
         private AlbumService $albumService,
+        private TrackService $trackService,
+        private TagRepository $tagRepository,
     )
     {
     }
@@ -31,35 +34,30 @@ readonly class ArtistUploadService
         return DB::transaction(function () use ($data) {
             $existingTags = $this->prepareTagsIds();
 
-            foreach ($data as $artistData) {
-                $albumCover = null;
-
+            foreach ($data['artists'] as $artistData) {
                 $artistDto = ArtistCreateData::from($artistData);
                 $artistDto->user_id = auth()->user()->id;
+                //todo: Переделать сохранение изображения. Оно происходит не своевременно
                 $artist = $this->artistService->saveArtist($artistDto);
 
                 foreach($artistData['albums'] as $albumData) {
                     $albumDto = AlbumCreateData::from($albumData);
                     $albumDto->user_id = auth()->user()->id;
-                    $album = $this->albumService->saveAlbum($artist, $albumDto);
+                    if (isset($albumData['original_album'])) {
+                        $originalAlbum = $albumData['original_album'];
+                        $existingOriginalAlbum = $artist->albums()->where('name', 'like', '%' . $originalAlbum . '%')->first();
 
-                    $albumCover = $album->image;
+                        if ($existingOriginalAlbum) {
+                            $albumDto->parent_id = $existingOriginalAlbum->id;
+                        }
+                    }
+                    $album = $this->albumService->saveAlbum($artist, $albumDto);
+                    $artist->albums()->syncWithoutDetaching([$album->id]);
 
                     foreach($albumData['tracks'] as $trackData) {
                         $trackDto = TrackCreateData::from($trackData);
                         $trackDto->user_id = auth()->user()->id;
-                        //todo: Формирование Version и CD и прикрепление к ним треков
-                        //todo: Парсинг и хранение ремастеров с укзаанием года
-                        $track = $album->tracks()->updateOrCreate([
-                            'album_id' => $album->id,
-                            'name' => $trackData['name']
-                        ],[
-                            'number' => $trackData['number'],
-                            'duration' => $trackData['duration'],
-                            'bitrate' => $trackData['bitrate'],
-                            'path' => $trackData['path'],
-                            'image' => $albumCover,
-                        ]);
+                        $track = $this->trackService->saveTrack($album, $trackDto);
 
 //                        $socketData = [
 //                            'artist' => $artist->name,
@@ -67,7 +65,7 @@ readonly class ArtistUploadService
 //                            'track' => $trackData['name']
 //                        ];
 
-                        if ($trackData['genre'] && array_key_exists($trackData['genre'], $this->tags)) {
+                        if ($trackData['genre'] && array_key_exists($trackData['genre'], $existingTags)) {
                             $track->tags()->syncWithoutDetaching($existingTags[$trackData['genre']]);
                             $album->tags()->syncWithoutDetaching($existingTags[$trackData['genre']]);
                             $artist->tags()->syncWithoutDetaching($existingTags[$trackData['genre']]);
@@ -76,8 +74,6 @@ readonly class ArtistUploadService
 //                        TrackParsed::dispatch($socketData);
                     }
                 }
-                // Добавляем обложку исполнителю на этом этапе, чтобы взять готовую с альбома и не дублировать ее для исполнителя
-                $artist->update(['image' => $albumCover]);
             }
 
             return ['artists' => collect($data)->pluck('name')];
@@ -85,13 +81,12 @@ readonly class ArtistUploadService
     }
 
     /**
-     * Converting only tags names to tags names and ids
-     * todo: Вынести в репозиторий
+     * Preparing tags names and ids
      *
      * @return array|null
      */
     private function prepareTagsIds(): ?array
     {
-        return MusicTag::whereIn('name', $this->tags)->get()?->pluck('id', 'name')->toArray();
+        return $this->tagRepository->getTags()?->pluck('id', 'name')->toArray();
     }
 }

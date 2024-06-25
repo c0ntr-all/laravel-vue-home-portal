@@ -21,32 +21,31 @@ readonly class AlbumService {
      */
     public function saveAlbum(Artist $artist, AlbumCreateData $dto): Album
     {
-        $dto->image = $this->saveCover($dto->image, $dto->name, $artist->name);
+        if ($dto->image) {
+            $dto->image = $this->saveCover($dto->image, $dto->name, $artist->name);
+        }
 
-        $album = $this->updateOrCreateAlbum($artist, $dto->toArray());
-
-        return $album;
+        return $this->updateOrCreateAlbum($dto);
     }
 
     /**
-     * @param Artist $artist
-     * @param array $albumData
+     * @param AlbumCreateData $dto
      * @return Album
      */
-    private function updateOrCreateAlbum(Artist $artist, array $albumData): Album
+    private function updateOrCreateAlbum(AlbumCreateData $dto): Album
     {
-        /** @var Album $album */
-        $album = $artist->albums()->updateOrCreate([
-            'name' => $albumData['name'],
-            'cd' => $albumData['cd'],
+        return Album::updateOrCreate([
+            'name' => $dto->name,
         ], [
-            'path' => $albumData['path'],
-            'image' => $albumData['image'],
-            'date' => $albumData['date'],
-            'cd' => $albumData['cd']
+            'parent_id' => $dto->parent_id,
+            'album_type_id' => $dto->album_type_id,
+            'version_type_id' => $dto->version_type_id,
+            'description' => $dto->description,
+            'date' => $dto->date,
+            'is_date_verified' => $dto->is_date_verified,
+            'image' => $dto->image,
+            'path' => $dto->path
         ]);
-
-        return $album;
     }
 
     /**

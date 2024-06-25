@@ -16,7 +16,7 @@
 
     <div class="text-h6 q-mb-xs">Основные теги</div>
     <q-tree
-      :nodes="commonTags"
+      :nodes="baseTags"
       node-key="name"
       :filter="filter"
       :filter-method="filterMethod"
@@ -113,12 +113,13 @@
         <div class="q-gutter-md">
           <q-input
             v-model="tagModel.name"
+            ref="tagNameRef"
             placeholder="Name"
             dense
             filled
           />
           <q-input
-            v-model="tagModel.content"
+            v-model="tagModel.description"
             placeholder="Description"
             type="textarea"
             dense
@@ -150,7 +151,7 @@
             filled
           />
           <q-input
-            v-model="tagModel.tag.content"
+            v-model="tagModel.tag.description"
             placeholder="Description"
             type="textarea"
             dense
@@ -184,7 +185,7 @@
   </q-dialog>
 </template>
 <script setup>
-import {ref, onMounted} from "vue"
+import {ref, onMounted, nextTick} from "vue"
 import {useQuasar} from "quasar"
 import {api} from "boot/axios"
 
@@ -195,19 +196,24 @@ import AddTagButton from "components/admin/music/tabs/tags/AddTagButton.vue"
 
 const $q = useQuasar()
 
-const commonTags = ref([])
+const baseTags = ref([])
 const secondaryTags = ref([])
 const filter = ref('')
 const filterRef = ref(null)
 const addTagDialog = ref(false)
 const editTagDialog = ref(false)
 const deleteTagDialog = ref(false)
-
+const tagNameRef = ref(null)
 const tagModel = ref({})
 
 const addTagHandler = scope => {
+  console.log(scope, scope.node)
   addTagDialog.value = true
   tagModel.value.parentTag = scope.node
+
+  nextTick(() => {
+    tagNameRef.value.$el.querySelector('input').focus()
+  })
 }
 
 const editTagHandler = scope => {
@@ -237,9 +243,10 @@ const getTags = async () => {
   await api.get('music/admin/tags')
     .then(response => {
       const {data} = response
-
-      commonTags.value = data.items.common
-      secondaryTags.value = data.items.secondary
+      if (response.status === 200) {
+        baseTags.value = data.items.base
+        secondaryTags.value = data.items.secondary
+      }
     }).catch(error => {
       $q.notify({
         type: 'negative',
@@ -248,24 +255,26 @@ const getTags = async () => {
     })
 }
 
-const addTag = async (event, tagData) => {
-  tagData = tagData || {
+const addTag = async (tagData) => {
+  tagData = tagData instanceof PointerEvent ? {
     name: tagModel.value.name,
-    content: tagModel.value.content,
+    description: tagModel.value.description,
     parent_id: tagModel.value.parentTag?.id
-  }
-  await api.put('music/admin/tags/store', tagData).then(response => {
-    const {data} = response
+  } : tagData
+
+  await api.post('music/admin/tags', tagData).then(response => {
+    const {data: {data}} = response
+
     if (Object.keys(tagModel.value).length !== 0) {
       insertIntoTree(
-        tagModel.value.parentTag.common ? commonTags.value : secondaryTags.value,
+        tagModel.value.parentTag.is_base ? baseTags.value : secondaryTags.value,
         tagModel.value.parentTag.id,
-        tagData
+        data
       )
     } else {
-      if (data.common) {
-        commonTags.value.push(data)
-        commonTags.value.sort((a, b) => a.name.localeCompare(b.name));
+      if (data.is_base) {
+        baseTags.value.push(data)
+        baseTags.value.sort((a, b) => a.name.localeCompare(b.name));
       } else {
         secondaryTags.value.push(data)
         secondaryTags.value.sort((a, b) => a.name.localeCompare(b.name));
@@ -290,7 +299,7 @@ const addTag = async (event, tagData) => {
 const editTag = async () => {
   await api.patch(`music/tags/${tagModel.value.tag.id}/update`, {
     name: tagModel.value.tag.name,
-    content: tagModel.value.tag.content
+    description: tagModel.value.tag.description
   }).then(() => {
     $q.notify({
       type: 'positive',
@@ -309,7 +318,7 @@ const editTag = async () => {
 
 const deleteTag = async () => {
   await api.post(`music/tags/${tagModel.value.tag.id}/delete`).then(response => {
-    deleteFromTree(tagModel.value.tag.common ? commonTags.value : secondaryTags.value, tagModel.value.tag.id)
+    deleteFromTree(tagModel.value.tag.is_base ? baseTags.value : secondaryTags.value, tagModel.value.tag.id)
 
     $q.notify({
       type: 'positive',

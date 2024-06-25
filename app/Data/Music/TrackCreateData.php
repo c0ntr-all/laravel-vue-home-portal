@@ -7,7 +7,7 @@ use Spatie\LaravelData\Data;
 class TrackCreateData extends Data
 {
     public int $user_id;
-    public int $album_disc_id = 1;
+    public string $cd;
     public int $number;
     public string $name;
     public string $path;

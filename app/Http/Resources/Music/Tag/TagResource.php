@@ -12,10 +12,10 @@ class TagResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'label' => $this->name,
+            'name' => $this->name,
             'slug' => $this->slug,
             'content' => $this->content,
-            'common' => $this->common,
+            'is_base' => $this->is_base,
             'createdAt' => $this->created_at,
         ];
     }

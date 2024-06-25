@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * @property string $name
  * @property string $slug
  * @property string|null $content
- * @property bool $common
+ * @property bool $is_base
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read Collection<int, \App\Models\Music\Album> $albums
@@ -56,12 +56,12 @@ class MusicTag extends Model
         'name',
         'slug',
         'content',
-        'common',
+        'is_base',
         'updated_at',
     ];
 
     protected $casts = [
-        'common' => 'boolean'
+        'is_base' => 'boolean'
     ];
 
     public function artists(): MorphToMany

@@ -8,6 +8,7 @@ use App\Models\Traits\HasMusicTags;
 use App\Models\Traits\HasImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -64,9 +65,9 @@ class Artist extends Model
 
     protected $guarded = [];
 
-    public function albums(): HasMany
+    public function albums(): BelongsToMany
     {
-        return $this->hasMany(Album::class, 'artist_id', 'id');
+        return $this->belongsToMany(Album::class, 'music_album_artist', 'artist_id', 'album_id');
     }
 
     public function tracks(): HasManyThrough

@@ -27,7 +27,7 @@ class TagService
 
         if ($requestData['parent_id']) {
             $parentTag = MusicTag::find($requestData['parent_id']);
-            $requestData['common'] = $parentTag->common;
+            $requestData['is_base'] = $parentTag->is_base;
         }
 
         return MusicTag::create($requestData);

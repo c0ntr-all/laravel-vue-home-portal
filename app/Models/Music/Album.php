@@ -81,4 +81,9 @@ class Album extends Model
     {
         return $this->hasMany(__CLASS__, 'parent_id', 'id');
     }
+
+    public function tracks(): HasMany
+    {
+        return $this->hasMany(Track::class, 'album_id', 'id');
+    }
 }

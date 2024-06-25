@@ -84,7 +84,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             });
             Route::prefix('tags')->group(function () {
                 Route::get('/', [AdminTagController::class, 'index']);
-                Route::put('store', [AdminTagController::class, 'store']);
+                Route::post('/', [AdminTagController::class, 'store']);
             });
         });
         Route::prefix('artists')->group(function () {

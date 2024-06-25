@@ -10,8 +10,8 @@ class TagTreeCollection extends ResourceCollection
     {
         return [
             'items' => [
-                'common' => $this->collection->filter(fn ($tag) => $tag->common),
-                'secondary' => $this->collection->filter(fn ($tag) => !$tag->common)
+                'base' => $this->collection->filter(fn ($tag) => $tag->is_base),
+                'secondary' => $this->collection->filter(fn ($tag) => !$tag->is_base)
             ],
             'count' => $this->collection->count()
         ];

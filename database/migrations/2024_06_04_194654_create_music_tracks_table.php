@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('album_id')->nullable()->default(NULL);
             $table->integer('number')->nullable()->default(NULL);
             $table->string('name');
-            $table->integer('cd')->nullable()->default(NULL);
+            $table->string('cd', 10)->nullable()->default(NULL);
             $table->string('path')->nullable()->default(NULL);
             $table->string('image')->nullable()->default(NULL);
             $table->string('duration')->nullable()->default(NULL);

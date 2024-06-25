@@ -60,10 +60,10 @@ class ArtistController extends BaseController
             $message = 'Artist uploaded successfully!';
         }
 
-        if ($out) {
+        if (!empty($out)) {
             return $this->sendResponse($out, $message);
         } else {
-            return $this->sendError('Something goes wrong!', 500);
+            return $this->sendError('No data!', 404);
         }
     }
 }

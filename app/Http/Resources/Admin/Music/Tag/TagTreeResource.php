@@ -13,7 +13,7 @@ class TagTreeResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'content' => $this->content,
-            'common' => $this->common,
+            'is_base' => $this->is_base,
             'parent_id' => $this->parent_id,
             'created_at' => $this->created_at,
             'children' => $this->children

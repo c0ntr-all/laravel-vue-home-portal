@@ -17,7 +17,7 @@ class StoreRequest extends FormRequest
             'name' => 'required|string|unique:music_tags|max:30',
             'content' => 'sometimes|string|max:30000',
             'parent_id' => 'sometimes|int',
-            'common' => 'sometimes|boolean',
+            'is_base' => 'sometimes|boolean',
         ];
     }
 }

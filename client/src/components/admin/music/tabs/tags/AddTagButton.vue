@@ -1,7 +1,7 @@
 <template>
   <q-btn
     class="q-mb-md"
-    @click="dialog = true"
+    @click="addTagHandler"
     icon="add"
     label="Добавить тег"
     size="md"
@@ -21,18 +21,19 @@
           <q-input
             v-model="model.name"
             placeholder="Name"
+            ref="tagNameRef"
             dense
             filled
           />
           <q-input
-            v-model="model.content"
+            v-model="model.description"
             placeholder="Описание"
             type="textarea"
             dense
             filled
           />
           <q-checkbox
-            v-model="model.common"
+            v-model="model.is_base"
             label="Основной тег"
             color="primary"
             left-label
@@ -49,17 +50,26 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import {nextTick, ref} from "vue";
 const emit = defineEmits(['tagCreate']);
 
 const dialog = ref(false)
-const model = ref({common: true})
+const model = ref({is_base: true})
+const tagNameRef = ref(null)
+
+const addTagHandler = () => {
+  dialog.value = true
+
+  nextTick(() => {
+    tagNameRef.value.$el.querySelector('input').focus()
+  })
+}
 
 const storeTag = async () => {
   emit('tagCreate', {
     name: model.value.name,
-    content: model.value.content,
-    common: model.value.common
+    description: model.value.description,
+    is_base: model.value.is_base
   })
 }
 </script>
