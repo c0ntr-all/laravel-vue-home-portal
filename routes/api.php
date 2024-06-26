@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\Music\ArtistController as AdminArtistController;
 use App\Http\Controllers\Admin\Music\TagController as AdminTagController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\FinancesController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\Music\AlbumController;
 use App\Http\Controllers\Music\ArtistController;
@@ -41,10 +40,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::prefix('widgets')->group(function () {
         Route::get('get', [WidgetController::class, 'getWidgets']);
-    });
-    Route::prefix('finances')->group(function () {
-        Route::get('/', [FinancesController::class, 'index']);
-        Route::get('{finance}', [FinancesController::class, 'show']);
     });
 
     Route::prefix('tasks')->group(function () {

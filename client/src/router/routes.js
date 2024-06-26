@@ -31,16 +31,6 @@ const routes = [{
     alias: '/',
     menu: true
   }, {
-    path: '/finances',
-    component: () => import('pages/Finances.vue'),
-    meta: {
-      title: 'Финансы',
-      icon: 'account_balance_wallet'
-    },
-    name: 'finances',
-    alias: '/finances',
-    menu: true
-  }, {
     path: '/tasks',
     component: () => import('pages/client/Tasks.vue'),
     meta: {

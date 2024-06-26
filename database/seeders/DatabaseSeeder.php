@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Comment;
-use App\Models\Finances\Finances;
-use App\Models\Finances\FinancesShop;
 use App\Models\Music\Album;
 use App\Models\Music\Artist;
 use App\Models\Music\MusicHistory;
@@ -15,7 +13,6 @@ use App\Models\Tasks\Task;
 use App\Models\Tasks\TaskList;
 use App\Models\User;
 use App\Models\Music\MusicTag;
-use App\Models\Widgets\WidgetPlacement;
 use Database\Seeders\Music\PlaylistTableSeeder;
 use Database\Seeders\Widgets\WidgetPlacementSeeder;
 use Database\Seeders\Widgets\WidgetSeeder;
@@ -42,8 +39,6 @@ class DatabaseSeeder extends Seeder
             $user->reminds()->saveMany($reminds);
         });
 
-        Finances::factory()->count(100)->create();
-        FinancesShop::factory()->count(10)->create();
         TaskList::factory()->count(10)->create();
         Task::factory()->count(50)->create();
 
