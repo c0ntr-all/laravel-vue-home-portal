@@ -38,7 +38,7 @@
           </div>
           <div class="album-head__tags">
             <div class="tags-list q-gutter-sm">
-              <q-chip v-for="tag in album.tags" color="primary" text-color="white">{{ tag }}</q-chip>
+              <q-chip v-for="tag in album.tags" color="primary" text-color="white">{{ tag.name }}</q-chip>
             </div>
           </div>
         </div>

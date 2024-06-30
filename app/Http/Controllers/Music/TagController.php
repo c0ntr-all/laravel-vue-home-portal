@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\Music\Tag\UpdateRequest;
-use App\Http\Resources\Client\Music\Tag\TagResource;
-use App\Http\Resources\Music\Tag\TagSelectCollection;
+use App\Http\Requests\Admin\Music\Tags\UpdateRequest;
+use App\Http\Resources\Client\Music\Tag\TagSelectCollection;
+use App\Http\Resources\Client\Music\Tags\TagResource;
 use App\Models\Music\MusicTag;
 use App\Services\Client\Music\TagService;
 use Illuminate\Http\JsonResponse;

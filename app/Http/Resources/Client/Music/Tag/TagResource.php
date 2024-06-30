@@ -6,15 +6,17 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TagResource extends JsonResource
 {
+    public static $wrap = '';
+
     public function toArray($request): array
     {
         return [
             'id' => $this->id,
-            'label' => $this->name,
+            'name' => $this->name,
             'slug' => $this->slug,
             'content' => $this->content,
-            'common' => $this->common,
-            'created_at' => $this->created_at,
+            'is_base' => $this->is_base,
+            'createdAt' => $this->created_at,
         ];
     }
 }

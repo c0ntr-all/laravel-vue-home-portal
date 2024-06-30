@@ -62,7 +62,7 @@ const processUploadArtist = async () => {
 
   await api.post('music/admin/artists/upload', {
     path: props.fullPath,
-    preview: false
+    is_preview: false
   }).then(response => {
     $q.notify({
       type: 'positive',

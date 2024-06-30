@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Music\Playlist\StoreRequest;
-use App\Http\Resources\Music\Playlists\PlaylistResource;
+use App\Http\Resources\Client\Music\Playlists\PlaylistResource;
+use App\Http\Resources\Client\Music\Playlists\PlaylistsCollection;
 use App\Models\Music\Playlist;
-use App\Http\Resources\Music\Playlists\PlaylistsCollection;
 use App\Repositories\PlaylistRepository;
 
 class PlaylistController extends BaseController

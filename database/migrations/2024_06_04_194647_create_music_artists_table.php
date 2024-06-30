@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('music_artists', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('country_id')->nullable();
             $table->string('name');
             $table->longText('description')->nullable();
-            $table->string('country')->nullable();
             $table->string('image')->nullable()->default(NULL);
             $table->string('path');
 
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->foreign('user_id')->on('users')->references('id');
+            $table->foreign('country_id')->on('countries')->references('id');
         });
     }
 

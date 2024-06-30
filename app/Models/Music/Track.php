@@ -17,7 +17,7 @@ use App\Helpers\ArrayHelper;
  * App\Models\Music\Track
  *
  * @property int $id
- * @property int|null $album_disc_id
+ * @property int $album_id
  * @property int|null $number
  * @property string $name
  * @property int|null $cd
@@ -26,6 +26,7 @@ use App\Helpers\ArrayHelper;
  * @property mixed $duration
  * @property int|null $bitrate
  * @property string|null $link
+ * @property string|null $lyrics
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
@@ -78,6 +79,11 @@ class Track extends Model
         'duration' => TrackDurationCast::class
     ];
 
+    public function artists(): BelongsToMany
+    {
+        return $this->belongsToMany(Artist::class, 'music_track_artist', 'track_id', 'artist_id');
+    }
+
     public function album(): BelongsTo
     {
         return $this->belongsTo(Album::class, 'album_id', 'id');
@@ -98,7 +104,7 @@ class Track extends Model
         $query->where('user_id', $userId);
     }
 
-    public function scopeWhereTags($query, $filters)
+    public function scopeWhereTags($query, $filters): void
     {
         $union = $filters['union'] ?? true;
 
@@ -121,14 +127,14 @@ class Track extends Model
         }
     }
 
-    public function scopeWhereRate($query, $filters)
+    public function scopeWhereRate($query, $filters): void
     {
         $query->whereHas('rate', function ($query) use ($filters) {
             $query->whereIn('rate', $filters['rate']);
         });
     }
 
-    public function scopeOnlyWeb($query)
+    public function scopeOnlyWeb($query): void
     {
         $query->whereNotNull('link');
     }

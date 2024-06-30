@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Resources\Music\Artists\ArtistCollection;
-use App\Models\Music\Album;
 use App\Models\Music\Artist;
 use App\Models\Music\Tag;
 use Illuminate\Support\Facades\Route;

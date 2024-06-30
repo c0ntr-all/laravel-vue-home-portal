@@ -17,9 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('tag_id');
             $table->unsignedBigInteger('tagable_id');
             $table->string('tagable_type');
-            $table->tinyInteger('priority')
-                  ->default(1)
-                  ->comment('Добавлен тег как основной или нет');;
+            $table->unsignedBigInteger('tag_group_id')->default(NULL);
+            $table->timestamps();
 
             $table->primary(['tag_id', 'tagable_id', 'tagable_type']);
 
@@ -27,6 +26,10 @@ return new class extends Migration
                 ->references('id')
                 ->on('music_tags')
                 ->cascadeOnDelete();
+
+            $table->foreign('tag_group_id')
+                  ->references('id')
+                  ->on('music_tag_groups');
         });
     }
 

@@ -12,7 +12,7 @@
         </div>
         <div class="q-gutter-xs">
           <q-chip
-            v-for="tag in artist.tagsNames.common"
+            v-for="tag in artist.tags.names"
             size="md"
             color="primary"
             text-color="white"
@@ -43,6 +43,7 @@ export default {
 .artist-card {
 
   &__image {
+    min-width: 150px;
     width: 150px;
     height: 150px;
   }

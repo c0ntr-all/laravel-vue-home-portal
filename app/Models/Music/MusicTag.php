@@ -51,14 +51,7 @@ class MusicTag extends Model
 
     protected $table ='music_tags';
 
-    protected $fillable = [
-        'parent_id',
-        'name',
-        'slug',
-        'content',
-        'is_base',
-        'updated_at',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'is_base' => 'boolean'
@@ -66,22 +59,23 @@ class MusicTag extends Model
 
     public function artists(): MorphToMany
     {
-        return $this->morphedByMany(Artist::class, 'tagable');
+        return $this->morphedByMany(Artist::class, 'tagable')
+                    ->withTimestamps()
+                    ->using(MusicTagable::class);
     }
 
     public function albums(): MorphToMany
     {
-        return $this->morphedByMany(Album::class, 'tagable');
+        return $this->morphedByMany(Album::class, 'tagable')
+                    ->withTimestamps()
+                    ->using(MusicTagable::class);
     }
 
     public function tracks(): MorphToMany
     {
-        return $this->morphedByMany(Track::class, 'tagable');
-    }
-
-    public function getItems(): Collection
-    {
-        return $this->orderBy('name')->get();
+        return $this->morphedByMany(Track::class, 'tagable')
+                    ->withTimestamps()
+                    ->using(MusicTagable::class);
     }
 
     public function parent(): BelongsTo

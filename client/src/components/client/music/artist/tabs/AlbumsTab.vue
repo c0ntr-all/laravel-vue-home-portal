@@ -25,12 +25,12 @@ const props = defineProps({
 })
 
 const getAlbums = async id => {
-  await api.post(`music/artists/${id}`)
+  await api.get(`music/artists/${id}/albums`)
     .then(response => {
       const {data: {data}} = response
-      albums.value = data.albums
+      albums.value = data.items
     }).catch(error => {
-
+      //todo: добавить вывод оповещения
     }).finally(() => {
       loading.value = false
     })

@@ -66,6 +66,9 @@ class Album extends Model
     protected $table = 'music_albums';
 
     protected $guarded = [];
+    protected $casts = [
+        'date' => 'datetime'
+    ];
 
     public function artists(): BelongsToMany
     {

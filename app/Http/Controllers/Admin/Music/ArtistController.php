@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Admin\Music;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\Admin\Music\Artist\IndexRequest;
-use App\Http\Requests\Admin\Music\Artist\UploadRequest;
+use App\Http\Requests\Admin\Music\Artists\IndexRequest;
+use App\Http\Requests\Admin\Music\Artists\UploadRequest;
 use App\Http\Requests\Music\Artist\StoreRequest;
 use App\Http\Requests\Music\Artist\UpdateRequest;
-use App\Http\Resources\Music\Artists\AdminArtistCollection;
-use App\Http\Resources\Music\Artists\AdminArtistResource;
+use App\Http\Resources\Admin\Music\Artists\ArtistCollection;
+use App\Http\Resources\Admin\Music\Artists\ArtistResource;
 use App\Models\Music\Artist;
 use App\Services\Music\ArtistService;
-use App\Services\Music\Parse\MusicUploadService;
 use App\Services\Music\Parse\MusicParseService;
+use App\Services\Music\Parse\MusicUploadService;
 use Illuminate\Http\Response;
 
 class ArtistController extends BaseController
@@ -29,7 +29,7 @@ class ArtistController extends BaseController
     {
         $out = $this->artistService->getWithPaginate($request->validated());
 
-        return $this->sendResponse(new AdminArtistCollection($out));
+        return $this->sendResponse(new ArtistCollection($out));
     }
 
     public function store(StoreRequest $request)
@@ -37,7 +37,7 @@ class ArtistController extends BaseController
         $out = $this->artistService->saveArtist($request->validated());
         $message = 'Исполнитель ' . $out->name . ' успешно добавлен!';
 
-        return $this->sendResponse(new AdminArtistResource($out), $message);
+        return $this->sendResponse(new ArtistResource($out), $message);
     }
 
     public function update(Artist $artist, UpdateRequest $request)

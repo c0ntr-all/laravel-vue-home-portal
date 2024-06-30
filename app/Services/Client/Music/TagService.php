@@ -2,7 +2,7 @@
 
 namespace App\Services\Client\Music;
 
-use App\Http\Resources\Client\Music\Tag\TagCollection;
+use App\Http\Resources\Client\Music\Tags\TagCollection;
 use App\Models\Music\MusicTag;
 use App\Repositories\TagRepository;
 

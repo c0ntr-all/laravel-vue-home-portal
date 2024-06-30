@@ -3,6 +3,7 @@
 namespace App\Models\Traits;
 
 use App\Models\Music\MusicTag;
+use App\Models\Music\MusicTagable;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait HasMusicTags
@@ -17,6 +18,10 @@ trait HasMusicTags
 
     public function tags(): MorphToMany
     {
-        return $this->morphToMany(MusicTag::class, 'tagable', 'music_tagables', 'tagable_id', 'tag_id');
+        return $this->morphToMany(MusicTag::class, 'tagable', 'music_tagables', 'tagable_id', 'tag_id')
+                    ->withTimestamps()
+                    ->using(MusicTagable::class)
+                    ->withPivot('tag_group_id')
+                    ->as('tagables');
     }
 }

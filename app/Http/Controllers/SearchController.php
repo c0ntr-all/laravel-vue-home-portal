@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Search\SearchRequest;
-use App\Http\Resources\Music\Artists\AdminArtistCollection;
+use App\Http\Resources\Admin\Music\Artists\ArtistCollection;
 use App\Models\Music\Artist;
 
 class SearchController extends Controller
@@ -17,7 +17,7 @@ class SearchController extends Controller
 
     protected function artistsResponse($artists): array
     {
-        $resources = new AdminArtistCollection($artists);
+        $resources = new ArtistCollection($artists);
 
         return ['success' => true, 'data' => $resources];
     }

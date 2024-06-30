@@ -72,7 +72,7 @@ const routes = [{
         title: 'Музыка'
       }
     }, {
-      path: '/music/artists/:id/show',
+      path: '/music/artists/:id',
       component: () => import('pages/client/music/Artist.vue'),
       name: 'artist',
       props: true,

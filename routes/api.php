@@ -84,7 +84,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
         Route::prefix('artists')->group(function () {
             Route::post('/', [ArtistController::class, 'index']);
-            Route::post('{artist}', [ArtistController::class, 'show']);
+            Route::prefix('{artist}')->group(function () {
+                Route::get('/', [ArtistController::class, 'show']);
+                Route::get('/albums', [AlbumController::class, 'getAlbumsByArtist']);
+            });
             Route::post('{artist}/tracks', [ArtistController::class, 'tracks']);
             Route::post('store', [ArtistController::class, 'store']);
             Route::post('update', [ArtistController::class, 'update']);

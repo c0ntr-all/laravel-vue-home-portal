@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Music\MusicHistory\StoreRequest;
+use App\Http\Resources\Client\Music\History\MusicHistoryCollection;
 use App\Models\Music\MusicHistory;
-use App\Http\Resources\Music\MusicHistory\MusicHistoryCollection;
 use App\Services\Music\TrackService;
 
 class MusicHistoryController extends BaseController

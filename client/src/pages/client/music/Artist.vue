@@ -23,10 +23,7 @@
         </div>
         <div class="artist-head__tags">
           <div class="tags-list q-gutter-sm">
-            <q-chip v-for="tag in artist.tagsNames?.common" color="primary" text-color="white">{{ tag }}</q-chip>
-          </div>
-          <div class="tags-list q-gutter-sm">
-            <q-chip v-for="tag in artist.tagsNames?.secondary">{{ tag }}</q-chip>
+            <q-chip v-for="tag in artist.tags.names" color="primary" text-color="white">{{ tag }}</q-chip>
           </div>
         </div>
       </div>
@@ -106,7 +103,7 @@ const artist = ref({})
 const loading = ref(true)
 
 const getArtist = async id => {
-  await api.post(`music/artists/${id}`)
+  await api.get(`music/artists/${id}`)
     .then(response => {
       artist.value = response.data.data
       loading.value = false

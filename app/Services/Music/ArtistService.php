@@ -41,7 +41,9 @@ readonly class ArtistService {
      */
     public function saveArtist(ArtistCreateData $dto): Artist
     {
-        $dto->image = $this->saveCover($dto->image, $dto->name, $dto->name);
+        if ($dto->image) {
+            $dto->image = $this->saveCover($dto->image, $dto->name, $dto->name);
+        }
 
         return $this->updateOrCreateArtist($dto);
     }
@@ -76,7 +78,7 @@ readonly class ArtistService {
         ], [
             'user_id' => $dto->user_id,
             'description' => $dto->description,
-            'country' => $dto->country,
+            'country_id' => $dto->country_id,
             'path' => $dto->path,
             'image' => $dto->image,
         ]);

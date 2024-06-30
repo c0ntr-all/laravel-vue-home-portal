@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Music;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\Music\Artist\TracksRequest;
-use App\Http\Requests\Music\Track\IndexRequest;
 use App\Http\Requests\Music\Track\DeleteFromPlaylistRequest;
+use App\Http\Requests\Music\Track\IndexRequest;
 use App\Http\Requests\Music\Track\PlayRequest;
 use App\Http\Requests\Music\Track\RateRequest;
 use App\Http\Requests\Music\Track\StoreRequest;
 use App\Http\Requests\Music\Track\UpdatePlaylistsRequest;
-use App\Http\Resources\Music\Tracks\TrackCollection;
-use App\Http\Resources\Music\Tracks\TrackResource;
+use App\Http\Resources\Client\Music\Albums\Page\Tracks\TrackCollection;
+use App\Http\Resources\Client\Music\Albums\Page\Tracks\TrackResource;
 use App\Models\Music\Track;
 use App\Services\Music\TrackService;
 use getID3;

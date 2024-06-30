@@ -38,12 +38,12 @@ readonly class MusicUploadService
             foreach ($data as $artistData) {
                 $artistDto = ArtistCreateData::from($artistData);
                 $artistDto->user_id = auth()->user()->id;
-                //todo: Переделать сохранение изображения. Оно происходит не своевременно
                 $artist = $this->artistService->saveArtist($artistDto);
 
                 foreach($artistData['albums'] as $albumData) {
                     $albumDto = AlbumCreateData::from($albumData);
                     $albumDto->user_id = auth()->user()->id;
+
                     if (isset($albumData['original_album'])) {
                         $originalAlbum = $albumData['original_album'];
                         $existingOriginalAlbum = $artist->albums()->where('name', 'like', '%' . $originalAlbum . '%')->first();
@@ -52,6 +52,7 @@ readonly class MusicUploadService
                             $albumDto->parent_id = $existingOriginalAlbum->id;
                         }
                     }
+
                     $album = $this->albumService->saveAlbum($artist, $albumDto);
                     $artist->albums()->syncWithoutDetaching([$album->id]);
 
@@ -59,21 +60,16 @@ readonly class MusicUploadService
                         $trackDto = TrackCreateData::from($trackData);
                         $trackDto->user_id = auth()->user()->id;
                         $trackDto->image = $albumDto->image;
-                        $track = $this->trackService->saveTrack($album, $trackDto);
 
-//                        $socketData = [
-//                            'artist' => $artist->name,
-//                            'album' => $album->name,
-//                            'track' => $trackData['name']
-//                        ];
+                        $track = $this->trackService->saveTrack($album, $trackDto);
+                        $track->artists()->syncWithoutDetaching($artist->id);
 
                         if ($trackData['genre'] && array_key_exists($trackData['genre'], $existingTags)) {
                             $track->tags()->syncWithoutDetaching($existingTags[$trackData['genre']]);
                             $album->tags()->syncWithoutDetaching($existingTags[$trackData['genre']]);
                             $artist->tags()->syncWithoutDetaching($existingTags[$trackData['genre']]);
                         }
-
-//                        TrackParsed::dispatch($socketData);
+                        //todo: Отдать по сокетам инфу
                     }
                 }
             }

@@ -21,21 +21,23 @@ const props = defineProps({
 const loading = ref(true)
 const albums = ref([])
 
-const getArtist = async (artistId) => {
-  await api.post(`music/artists/${artistId}`)
+const getAlbums = async (artistId) => {
+  await api.get(`music/artists/${artistId}/albums`)
     .then(response => {
-      albums.value = response.data.data.albums
-      loading.value = false
+      const {data: {data}} = response
+      albums.value = data.items
     }).catch(error => {
       $q.notify({
         type: 'negative',
         message: `Server Error: ${error.response.data.message}`
       })
+    }).finally(() => {
+      loading.value = false
     })
 }
 
 onMounted(function () {
-  getArtist(props.artistId)
+  getAlbums(props.artistId)
 })
 </script>
 <style lang="scss" scoped>

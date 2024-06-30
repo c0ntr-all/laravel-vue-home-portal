@@ -117,7 +117,7 @@ const uploadArtist = async () => {
 
   await api.post('music/admin/artists/upload', {
     path: fullPath.value,
-    preview: true
+    is_preview: true
   }).then(response => {
     if (response.data.success) {
       artistData.value = response.data.data
