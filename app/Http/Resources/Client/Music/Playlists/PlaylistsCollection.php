@@ -6,8 +6,6 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class PlaylistsCollection extends ResourceCollection
 {
-    public static $wrap = '';
-
     /**
      * Transform the resource collection into an array.
      *

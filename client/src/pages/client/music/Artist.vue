@@ -87,7 +87,7 @@ import { useQuasar } from "quasar"
 import { api } from "src/boot/axios"
 
 import TracksTab from "components/client/music/artist/tabs/TracksTab.vue"
-import AlbumsTab from "components/client/music/artist/tabs/AlbumsTab.vue"
+import AlbumsTab from "components/client/music/artist/tabs/albums/AlbumsTab.vue"
 import SimilarTab from "components/client/music/artist/tabs/SimilarTab.vue"
 import ArtistPageSkeleton from "src/components/client/music/skeleton/ArtistPage.vue"
 

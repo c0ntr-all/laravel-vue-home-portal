@@ -3,10 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Music\AlbumType;
-use App\Models\Music\AlbumVersionType;
 use App\Models\Music\MusicTag;
 use App\Observers\AlbumTypeObserver;
-use App\Observers\AlbumVersionTypeObserver;
 use App\Observers\TagObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -35,15 +33,10 @@ class EventServiceProvider extends ServiceProvider
     {
         MusicTag::observe(TagObserver::class);
         AlbumType::observe(AlbumTypeObserver::class);
-        AlbumVersionType::observe(AlbumVersionTypeObserver::class);
 
         // Initialize cache if not exists
         if (!Cache::has('album_types')) {
             Cache::put('album_types', AlbumType::all(), now()->addDay());
-        }
-
-        if (!Cache::has('album_version_types')) {
-            Cache::put('album_version_types', AlbumVersionType::all(), now()->addDay());
         }
     }
 }

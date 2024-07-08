@@ -21,10 +21,11 @@ return new class extends Migration
                   ->comment('Если есть переиздания');
             $table->unsignedBigInteger('album_type_id')
                   ->default(1);
-            $table->unsignedBigInteger('version_type_id')
-                  ->default(1);
             $table->string('name');
             $table->longText('description')
+                  ->nullable()
+                  ->default(NULL);
+            $table->string('edition')
                   ->nullable()
                   ->default(NULL);
             $table->date('date')
@@ -42,10 +43,6 @@ return new class extends Migration
             $table->foreign('album_type_id')
                   ->references('id')
                   ->on('music_album_types');
-
-            $table->foreign('version_type_id')
-                  ->references('id')
-                  ->on('music_album_version_types');
         });
     }
 

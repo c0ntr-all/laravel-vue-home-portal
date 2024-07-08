@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Client\Music\Albums\Page;
 
 use App\Http\Resources\Client\Music\Albums\Page\Tracks\TrackResource;
+use App\Http\Resources\Client\Music\Albums\Page\Versions\AlbumVersionCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AlbumResource extends JsonResource
@@ -13,9 +14,9 @@ class AlbumResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'parent_id' => $this->parent_id,
             'name' => $this->name,
-            'year' => $this->year,
+            'date' => $this->date->format('Y-m-d'),
             'content' => $this->content,
             'image' => $this->full_image,
             'createdAt' => $this->created_at,
@@ -25,7 +26,8 @@ class AlbumResource extends JsonResource
                 'name' => $artist->name
             ],
             'tracks' => TrackResource::collection($this->tracks),
-            'tags' => TagResource::collection($this->tags)
+            'tags' => TagResource::collection($this->tags),
+            'versions' => new AlbumVersionCollection($this->versions)
         ];
     }
 }

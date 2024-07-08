@@ -6,7 +6,6 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class VideoCollection extends ResourceCollection
 {
-    public static $wrap = '';
     /**
      * Transform the resource collection into an array.
      *

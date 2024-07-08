@@ -13,7 +13,9 @@ enum AlbumTypeEnum: string
     case SINGLE = 'single';
     case MAXI_SINGLE = 'maxi-single';
     case SPLIT = 'split';
-    case DEMO = 'demo';
     case LIVE = 'live';
+    case DEMO = 'demo';
     case PROMO = 'promo';
+    case BOOTLEG = 'bootleg';
+    case COMPILATION = 'compilation';
 }

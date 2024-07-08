@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Resources\RemindGroups;
+namespace App\Http\Resources\Client\Music\Albums\Page\Versions;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class RemindGroupCollection extends ResourceCollection
+class AlbumVersionCollection extends ResourceCollection
 {
     public function toArray($request): array
     {
         return [
             'count' => $this->count(),
-            'items' => $this->collection,
+            'items' => $this->collection
         ];
     }
 }

@@ -2,11 +2,7 @@
   <AlbumPageSkeleton v-if="loading" />
   <template v-else>
     <div class="q-mb-sm">
-      <q-btn
-        icon="arrow_back"
-        color="primary"
-        :to="`/music/artists/${album.artist.id}/albums`"
-      ><div class="q-ml-xs">Вернуться к исполнителю</div></q-btn>
+      <BackButton :album="album" />
     </div>
     <div class="album">
       <div class="album-head q-mb-lg">
@@ -49,6 +45,51 @@
       </div>
     </div>
 
+    <div v-if="album.versions.count" class="album-versions q-mb-lg">
+      <div class="album-versions__title text-h5 q-mb-lg">Другие версии альбома ({{ album.versions.count }})</div>
+      <q-table
+        :card-container-style="'background-color: #ff0000'"
+        :rows="album.versions.items"
+        :columns="[
+          { name: 'id', field: 'id'},
+          { name: 'image', field: 'image', align: 'left', style: 'width: 50px' },
+          { name: 'name', field: 'name', align: 'left', sortable: true },
+          { name: 'date', field: 'date', align: 'left', sortable: true, format: (val, row) => formatDate(val) },
+        ]"
+        :visible-columns="['image', 'name', 'date']"
+        row-key="name"
+        hide-header
+        hide-bottom
+        flat
+      >
+        <template v-slot:body="props">
+<!--          todo: Сделать нормальную ссылку с ховером-->
+          <q-tr
+            class="album-versions__row"
+            :props="props"
+            :key="`m_${props.row.index}`"
+            @click="$router.push(`/music/albums/${props.row.id}/show`)"
+          >
+            <q-td
+              v-for="col in props.cols"
+              :key="col.name"
+              :props="props"
+            >
+              <template v-if="col.name === 'image'">
+                <q-img
+                  :width="'50px'"
+                  :src="col.value"
+                />
+              </template>
+              <template v-else>
+                {{ col.value }}
+              </template>
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
+    </div>
+
     <div class="related-albums">
       <div>
         <!-- v-if="loading === false" чтобы компонент дождался загрузки основного альбома -->
@@ -67,6 +108,7 @@ import { useMusicPlayer } from "stores/modules/musicPlayer"
 import AlbumPageSkeleton from "src/components/client/music/skeleton/AlbumPage.vue"
 import RelatedAlbums from "components/client/music/RelatedAlbums.vue"
 import MusicTracksList from "src/components/client/music/MusicTracksList.vue"
+import BackButton from "components/client/music/album/BackButton.vue"
 
 const props = defineProps({
 'id': String
@@ -77,6 +119,7 @@ const route = useRoute()
 const loading = ref(true)
 const showImage = ref(false)
 const album = ref({})
+const musicPlayer = useMusicPlayer()
 
 const getAlbum = async id => {
   await api.get(`music/albums/${id}`)
@@ -95,7 +138,9 @@ const addToPlaylist = () => {
   musicPlayer.addToPlaylist(album.value.tracks)
 }
 
-const musicPlayer = useMusicPlayer()
+const formatDate = dateString => {
+  return new Date(dateString).getFullYear();
+};
 
 onMounted(() => {
   getAlbum(props.id)
@@ -156,6 +201,16 @@ watch(() => route.params, (toParams, previousParams) => {
       flex: 1 0 45px;
       justify-content: center;
       margin-right: 15px;
+    }
+  }
+}
+.album-versions {
+  max-width: 720px;
+  border-right: 1px solid #ccc;
+
+  &__row {
+    &:hover {
+      cursor: pointer;
     }
   }
 }

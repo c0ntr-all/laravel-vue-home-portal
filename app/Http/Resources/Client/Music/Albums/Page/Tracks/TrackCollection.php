@@ -6,8 +6,6 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class TrackCollection extends ResourceCollection
 {
-    public static $wrap = 'data';
-
     public function withResponse($request, $response): void
     {
         $arrResponse = json_decode($response->getContent(), true);

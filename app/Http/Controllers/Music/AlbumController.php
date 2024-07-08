@@ -13,7 +13,7 @@ class AlbumController extends BaseController
 {
     public function show(Album $album): array|Response
     {
-        $album->load(['tracks.artists', 'tags']);
+        $album->load(['tracks.artists', 'tags', 'versions']);
 
         return $this->sendResponse(new AlbumResource($album), 'Album loaded successfully!');
     }

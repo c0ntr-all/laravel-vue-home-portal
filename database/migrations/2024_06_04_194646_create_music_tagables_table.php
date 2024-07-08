@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tag_id');
             $table->unsignedBigInteger('tagable_id');
             $table->string('tagable_type');
-            $table->unsignedBigInteger('tag_group_id')->default(NULL);
+            $table->unsignedBigInteger('tag_group_id')->nullable()->default(NULL);
             $table->timestamps();
 
             $table->primary(['tag_id', 'tagable_id', 'tagable_type']);

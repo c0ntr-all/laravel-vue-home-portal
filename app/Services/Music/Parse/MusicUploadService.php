@@ -46,6 +46,7 @@ readonly class MusicUploadService
 
                     if (isset($albumData['original_album'])) {
                         $originalAlbum = $albumData['original_album'];
+                        //todo: Переместить в репозиторий
                         $existingOriginalAlbum = $artist->albums()->where('name', 'like', '%' . $originalAlbum . '%')->first();
 
                         if ($existingOriginalAlbum) {

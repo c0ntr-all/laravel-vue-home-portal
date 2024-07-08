@@ -7,8 +7,6 @@ use Illuminate\Support\Collection;
 
 class TagSelectCollection extends ResourceCollection
 {
-    public static $wrap = '';
-
     public function toArray($request): array
     {
         Collection::macro('prepareTags', function (bool $common) {

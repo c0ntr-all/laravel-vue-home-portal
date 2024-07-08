@@ -36,12 +36,12 @@ readonly class AlbumService {
     {
         return Album::updateOrCreate([
             'name' => $dto->name,
+            'date' => $dto->date,
         ], [
             'parent_id' => $dto->parent_id,
             'album_type_id' => $dto->album_type_id,
-            'version_type_id' => $dto->version_type_id,
+            'attributes' => $dto->attributes,
             'description' => $dto->description,
-            'date' => $dto->date,
             'is_date_verified' => $dto->is_date_verified,
             'image' => $dto->image,
             'path' => $dto->path

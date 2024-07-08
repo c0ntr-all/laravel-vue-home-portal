@@ -3,11 +3,25 @@
 namespace App\Services\Music\Parse;
 
 use Exception;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 readonly class MusicParseService
 {
     private string $path;
+
+    private const array VERSION_KEYWORDS = [
+        'edition',
+        'remastered',
+        'japanese',
+        'reissue',
+        'limited',
+        'special',
+        'deluxe',
+        'expanded',
+        'anniversary',
+        'digipack'
+    ];
 
     public function __construct(
         private MusicParseFolderService $parseFolderService,
@@ -65,7 +79,7 @@ readonly class MusicParseService
             $album = $this->getAlbumFromTrack($track);
 
             $artistName = $artist['name'];
-            $albumName = $album['name'];
+            $albumName = $this->addYearToAlbumName($track);
 
             if (!isset($library[$artistName])) {
                 $library[$artistName] = $artist;
@@ -89,7 +103,6 @@ readonly class MusicParseService
     private function formatLibraryTree(array $library): array
     {
         $albumTypes = Cache::get('album_types');
-        $albumVersionTypes = Cache::get('album_version_types');
 
         $result = [];
 
@@ -108,15 +121,15 @@ readonly class MusicParseService
                     foreach ($albumAttributes[1] as $attribute) {
                         $lowerAttr = strtolower($attribute);
                         $albumType = $albumTypes->firstWhere(fn ($type) => $type->slug === $lowerAttr);
-                        $albumVersionType = $albumVersionTypes->firstWhere(fn ($type) => $type->slug === $lowerAttr);
 
+                        // Если не тип альбома то версия или издание
                         if ($albumType) {
                             $album['album_type_id'] = $albumType->id;
-                        }
-
-                        if ($albumVersionType) {
-                            $album['version_type_id'] = $albumVersionType->id;
+                        } else {
                             $album['original_album'] = $this->cleanAlbumName($album['name'], $attribute);
+                            if ($this->checkIsItVersionString($attribute)) {
+                                $album['attributes'] = $attribute;
+                            }
                         }
                     }
                 }
@@ -158,7 +171,6 @@ readonly class MusicParseService
             'name' => $track['album'],
             'cd' => $track['cd'] ?? 1,
             'album_type_id' => 1,
-            'version_type_id' => 1,
             'image' => $this->parseFolderService->getAlbumCover($albumPath),
             'date' => $track['date'],
             'is_date_verified' => false,
@@ -184,5 +196,31 @@ readonly class MusicParseService
     public function cleanAlbumName(string $albumName, string $crap): string
     {
         return trim(str_replace("($crap)", '', $albumName));
+    }
+
+    /**
+     * Сделать имя альбома уникальным с помощью года т.к. ремастеры могут иметь одинаковое имя
+     *
+     * @param array $track
+     * @return string
+     */
+    private function addYearToAlbumName(array $track): string
+    {
+        return $track['album'] . '_' . Carbon::parse($track['date'])->format('Y');
+    }
+
+    /**
+     * @param string $string
+     * @return bool
+     */
+    private function checkIsItVersionString(string $string): bool
+    {
+        foreach (static::VERSION_KEYWORDS as $keyword) {
+            if (str_contains($string, $keyword)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -9,9 +9,9 @@ use Spatie\LaravelData\Data;
 class AlbumCreateData extends Data
 {
     public int $user_id;
-    public ?int $parent_id = NULL;
+    public ?int $parent_id = null;
     public int $album_type_id = 1;
-    public int $version_type_id = 1;
+    public ?string $attributes = null;
     public string $name;
     public ?string $description = null;
     #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d')]
@@ -20,7 +20,7 @@ class AlbumCreateData extends Data
     public ?string $image = null;
     public string $path;
 
-    public function __construct(
-    ) {
+    public function __construct()
+    {
     }
 }

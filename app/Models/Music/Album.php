@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $parent_id
  * @property int $album_type_id
- * @property int $version_type_id
+ * @property string $attributes
  * @property string $name
  * @property string $description
  * @property Carbon|null $date
@@ -67,7 +67,8 @@ class Album extends Model
 
     protected $guarded = [];
     protected $casts = [
-        'date' => 'datetime'
+        'date' => 'datetime',
+        'attributes' => 'array',
     ];
 
     public function artists(): BelongsToMany

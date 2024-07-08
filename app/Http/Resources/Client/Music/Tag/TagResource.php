@@ -6,8 +6,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TagResource extends JsonResource
 {
-    public static $wrap = '';
-
     public function toArray($request): array
     {
         return [
